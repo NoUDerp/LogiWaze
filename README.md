@@ -54,7 +54,7 @@ Map Assignment List
  * CallahansPassageHex
  * DeadLandsHex
  * DrownedValeHex
- * EndlessShoreHex
+ * EndlessShoreHex -> Lazp
  * FarranacCoastHex -> Lazp
  * FishermansRowHex
  * GodcroftsHex		
