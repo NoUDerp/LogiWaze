@@ -7,7 +7,7 @@ To view or help map all the roads in game foxhole: (Once setup a map will take a
 
 Install QGIS from here: https://qgis.org/en/site/forusers/download.html (standalone) and open the program icon/version without "GRASS", QGIS Desktop 3.8.0
 
-Add the world map background tiles layer: 
+Add the world map background layer: 
 * Browser->XYZ Tiles (rightclick)->New Connection
 * Give it a name like "Foxhole World Map" and specify the url as 
 * https://raw.githubusercontent.com/Kastow/Foxhole-Map-Tiles/master/Tiles/{z}/{z}_{x}_{y}.png
