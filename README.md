@@ -40,7 +40,7 @@ Add hex grid border lines for reference:
  * (optionally also change line style to something easy to see, like "topo road"}
 
   Start mapping:
-   * With new layer selected, click "Toggle Editing" buttom, click "Add Line Feature",
+   * With new layer selected, click "Toggle Editing" button, & click "Add Line Feature" button,
    * Start clicking along the roads making sure to make a click/vertex point at each intersection, right click to end line.
    * Keep adding lines, for each road segment until taking a break or done, "Toggle Editing" off, and click save
    * You can also use the "Vertex Tool" to adjust or remove points.
