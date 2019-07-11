@@ -2,7 +2,7 @@
 
 View Demo of one map here: https://foxholestats.com/router/
 
-To view or help map the roads in game foxhole:
+To view or help map all the roads in game foxhole:
 
 Install QGIS from here: https://qgis.org/en/site/forusers/download.html (standalone)
 
