@@ -27,6 +27,7 @@ Add hex grid border lines for reference:
   
   Turn on Snapping:
    * View->Toolbars->Snapping, Then click Magnet Icon to enable.  
+  
   Create a new layer:
    * Click Layer->Create Layer->New Shapefile    
    * Filename = Choose file save location, naming it the map you are working on.
