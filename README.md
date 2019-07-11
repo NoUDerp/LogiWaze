@@ -53,26 +53,26 @@ Add hex grid for reference:
    Also when exporting json for web use, change precision to 0 to save filesize, we dont need that accuracy.
     
 Map Assignment List
-   * AllodsBightHex
-   * CallahansPassageHex
-   * DeadLandsHex
-    DrownedValeHex
-    EndlessShoreHex
-    FarranacCoastHex
-    FishermansRowHex
-    GodcroftsHex		
-    GreatMarchHex
-    HeartlandsHex
-    LinnMercyHex
-    LochMorHex
-    MarbanHollow -> HAYDEN
-    MooringCountyHex
-    OarbreakerHex
-    ReachingTrailHex
-    ShackledChasmHex
-    StonecradleHex
-    TempestIslandHex
-    UmbralWildwoodHex
-    ViperPitHex
-    WeatheredExpanseHex -> DERP
-    WestgateHex
+ * AllodsBightHex
+ * CallahansPassageHex
+ * DeadLandsHex
+ * DrownedValeHex
+ * EndlessShoreHex
+ * FarranacCoastHex
+ * FishermansRowHex
+ * GodcroftsHex		
+ * GreatMarchHex
+ * HeartlandsHex
+ * LinnMercyHex
+ * LochMorHex
+ * MarbanHollow -> HAYDEN
+ * MooringCountyHex
+ * OarbreakerHex
+ * ReachingTrailHex
+ * ShackledChasmHex
+ * StonecradleHex
+ * TempestIslandHex
+ * UmbralWildwoodHex
+ * ViperPitHex
+ * WeatheredExpanseHex -> DERP
+ * WestgateHex
