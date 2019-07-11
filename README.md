@@ -5,7 +5,7 @@ View Demo of one map here: https://foxholestats.com/router/
 
 To view or help map all the roads in game foxhole: (Once setup a map will take about 1 hour to 'catalog')
 
-Install QGIS from here: https://qgis.org/en/site/forusers/download.html (standalone) and open it.
+Install QGIS from here: https://qgis.org/en/site/forusers/download.html (standalone) and open the program icon/version without "GRASS", QGIS Desktop 3.8.0
 
 Add the world map background tiles layer: 
 * Browser->XYZ Tiles (rightclick)->New Connection
