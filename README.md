@@ -10,7 +10,8 @@ Create new project, set CRS to Project CRS EPSG 3857 WGS 84 and save it.
 
 Add the world map background tiles layer: 
   Browser->XYZ Tiles (rightclick)->New Connection
-  Give it a name like "Foxhole World Map" and specify the url as https://raw.githubusercontent.com/Kastow/Foxhole-Map-Tiles/master/Tiles/{z}/{z}_{x}_{y}.png
+  Give it a name like "Foxhole World Map" and specify the url as 
+  https://raw.githubusercontent.com/Kastow/Foxhole-Map-Tiles/master/Tiles/{z}/{z}_{x}_{y}.png
   Set min zoom to 0 and max to 5, Choose OK
   Double click newly added connection to add it your project/map. You should now see the foxhole world map.
 
@@ -29,10 +30,10 @@ Add hex grid for reference:
   Create a new layer:
     Click Layer->Create Layer->New Shapefile
     
-    Filename = Choose file save location, naming it the map you are working on.
-    Geometry Type = Line
-    Additional = Project CRS EPSG 3857 WGS 84
-    OK
+   Filename = Choose file save location, naming it the map you are working on.
+   Geometry Type = Line
+   Additional = Project CRS EPSG 3857 WGS 84
+   OK
 
   Start mapping:
     With new layer selected, click "Toggle Editing" buttom, click "Add Line Feature",
