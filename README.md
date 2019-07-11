@@ -23,7 +23,7 @@ Add hex grid for reference:
   URI = https://raw.githubusercontent.com/hayden-t/foxhole-router/master/grid.geojson
  If this fails with error, save the file locally and add it from there.
   
-  [section to come - add existing region jsons]
+ If you want for reference or examination you can add map geojson's already done from this repository.
   
   To start mapping a new region: (Please contact us to select a map, eg discord, or issues, so we dount double up)
   
