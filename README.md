@@ -2,7 +2,7 @@
 
 View Demo of one map here: https://foxholestats.com/router/
 
-To view or help map the roads in game foxhole:
+To view or help map all the roads in game foxhole:
 
 Install QGIS from here: https://qgis.org/en/site/forusers/download.html (standalone)
 
@@ -24,7 +24,7 @@ Add hex grid for reference:
   
   [section to come - add existing region jsons]
   
-  To start mapping a new region:
+  To start mapping a new region: (Please contact us to select a map, eg discord, or issues, so we dount double up)
   
   Turn on Snapping:
     View->Toolbars->Snapping, Then click Magnet Icon to enable.  
@@ -37,6 +37,7 @@ Add hex grid for reference:
    OK
    
  Hide form by default: Right click Layer->Properties->Form->"Hide Form on add feature" (top right)
+ (optionally also change line style to something easy to see, like "topo road"}
 
   Start mapping:
     With new layer selected, click "Toggle Editing" buttom, click "Add Line Feature",
@@ -52,3 +53,27 @@ Add hex grid for reference:
    QGIS default line type in MultiLineString but the routing library needs LineString, so this can be converted when needed: Vector->Geometry Tools->Multi Parts to Single Parts
    Also when exporting json for web use, change precision to 0 to save filesize, we dont need that accuracy.
     
+Map Assignment List
+ * AllodsBightHex
+ * CallahansPassageHex
+ * DeadLandsHex
+ * DrownedValeHex
+ * EndlessShoreHex
+ * FarranacCoastHex
+ * FishermansRowHex
+ * GodcroftsHex		
+ * GreatMarchHex
+ * HeartlandsHex
+ * LinnMercyHex
+ * LochMorHex
+ * MarbanHollow -> HAYDEN
+ * MooringCountyHex
+ * OarbreakerHex
+ * ReachingTrailHex
+ * ShackledChasmHex
+ * StonecradleHex
+ * TempestIslandHex
+ * UmbralWildwoodHex
+ * ViperPitHex
+ * WeatheredExpanseHex -> DERP
+ * WestgateHex
