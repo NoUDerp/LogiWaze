@@ -48,11 +48,7 @@ Add hex grid border lines for reference:
    * At border edges end your lines on border line (hex grid)
    
    To share work export layer as geojson, but keep your original project and shape files.
-   
-   These following steps dont have to be done right away, but they are needed for final product (dev note)
-   
-   QGIS default line type in MultiLineString but the routing library needs LineString, so this can be converted when needed: Vector->Geometry Tools->Multi Parts to Single Parts
-   Also when exporting json for web use, change precision to 0 to save filesize, we dont need that accuracy.
+
     
 Map Assignment List
  * AllodsBightHex
@@ -81,3 +77,14 @@ Map Assignment List
 
 If you've read this far you may be interested in this :)
 https://en.wikipedia.org/wiki/Null_Island
+
+   
+   These following steps dont have to be done right away, but they are needed for final product (dev note)
+   
+   QGIS default line type in MultiLineString but the routing library needs LineString, so this can be converted when needed: Vector->Geometry Tools->Multi Parts to Single Parts
+   Also when exporting json for web use, change precision to 0 to save filesize, we dont need that accuracy.
+   Libs:
+
+   http://www.liedman.net/geojson-path-finder/
+   http://www.liedman.net/leaflet-routing-machine/
+   
