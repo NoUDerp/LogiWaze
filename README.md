@@ -16,11 +16,11 @@ Add the world map background tiles layer:
 * Set min zoom to 0 and max to 5, Choose OK
 * Double click newly added connection to add it your project/map. You should now see the foxhole world map.
 
-Add hex grid for reference:
+Add hex grid border lines for reference:
  * Layer->Add Layer->Vector Layer
  * Source Type = Protocol HTTP
  * Type = GEOJSON
- * URI = https://raw.githubusercontent.com/hayden-t/foxhole-router/master/grid.geojson
+ * URI = https://raw.githubusercontent.com/hayden-t/foxhole-router/master/hexGridBorders.geojson
  * If this fails with error, save the file locally and add it from there.
   
  If you want for reference or examination you can add map geojson's already done from this repository.
