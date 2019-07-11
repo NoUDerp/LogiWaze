@@ -1,6 +1,6 @@
 # foxhole-router
 
-View Demo of one map here: https://foxholestats.com/router/
+View Demo of one map here: https://foxholestats.com/router/ , but we want it over the whole world !
 
 
 To view or help map all the roads in game foxhole: (Once setup a map will take about 1 hour to 'catalog')
