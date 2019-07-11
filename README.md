@@ -55,14 +55,14 @@ Map Assignment List
  * DeadLandsHex
  * DrownedValeHex
  * EndlessShoreHex
- * FarranacCoastHex
+ * FarranacCoastHex - Leo
  * FishermansRowHex
  * GodcroftsHex		
  * GreatMarchHex
  * HeartlandsHex
  * LinnMercyHex
  * LochMorHex
- * MarbanHollow -> HAYDEN
+ * MarbanHollow -> Hayden
  * MooringCountyHex
  * OarbreakerHex
  * ReachingTrailHex
@@ -71,7 +71,7 @@ Map Assignment List
  * TempestIslandHex
  * UmbralWildwoodHex
  * ViperPitHex
- * WeatheredExpanseHex -> DERP
+ * WeatheredExpanseHex -> Derp
  * WestgateHex
 
 If you've read this far you may be interested in this :)
