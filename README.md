@@ -2,6 +2,7 @@
 
 View Demo of one map here: https://foxholestats.com/router/
 
+
 To view or help map all the roads in game foxhole:
 
 Install QGIS from here: https://qgis.org/en/site/forusers/download.html (standalone)
@@ -42,9 +43,9 @@ Add hex grid for reference:
   Start mapping:
     With new layer selected, click "Toggle Editing" buttom, click "Add Line Feature",
     Start clicking along the roads making sure to make a click/vertex point at each intersection, right click to end line.
-    Keep adding lines until taking a break or done, "Toggle Editing" off, and click save
+    Keep adding lines, for each road segment until taking a break or done, "Toggle Editing" off, and click save
     You can also use the "Vertex Tool" to adjust or remove points.
-    Please continue your lines just past the border line if road crosses map.
+    At border edges end your lines on border line (hex grid)
    
    To share work export layer as geojson. 
    
