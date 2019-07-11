@@ -53,7 +53,7 @@ Map Assignment List
  * AllodsBightHex
  * CallahansPassageHex
  * DeadLandsHex
- * DrownedValeHex
+ * DrownedValeHex -> Lazp
  * EndlessShoreHex -> Lazp
  * FarranacCoastHex -> Lazp
  * FishermansRowHex
