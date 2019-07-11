@@ -55,7 +55,7 @@ Map Assignment List
  * DeadLandsHex
  * DrownedValeHex
  * EndlessShoreHex
- * FarranacCoastHex - Lazp
+ * FarranacCoastHex -> Lazp
  * FishermansRowHex
  * GodcroftsHex		
  * GreatMarchHex
