@@ -46,7 +46,7 @@ Add hex grid border lines for reference:
    * You can also use the "Vertex Tool" to adjust or remove points.
    * At border edges end your lines on border line (hex grid)
    
-   To share work export layer as geojson, but keep your original project and shape files.
+   To submit work, export layer as geojson and create a pull request or send it to me in discord, but keep your original project and shape files. https://discord.gg/dnegnws
 
     
 Map Assignment List
