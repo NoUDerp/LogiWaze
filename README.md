@@ -34,6 +34,8 @@ Add hex grid for reference:
    Geometry Type = Line
    Additional = Project CRS EPSG 3857 WGS 84
    OK
+   
+ Hide form by default: Right click Layer->Properties->Form->"Hide Form on add feature" (top right)
 
   Start mapping:
     With new layer selected, click "Toggle Editing" buttom, click "Add Line Feature",
