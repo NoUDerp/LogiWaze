@@ -47,7 +47,7 @@ Add hex grid for reference:
    * You can also use the "Vertex Tool" to adjust or remove points.
    * At border edges end your lines on border line (hex grid)
    
-   To share work export layer as geojson. 
+   To share work export layer as geojson, but keep your original project and shape files.
    
    These following steps dont have to be done right away, but they are needed for final product (dev note)
    
