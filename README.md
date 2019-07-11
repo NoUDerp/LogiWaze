@@ -21,7 +21,7 @@ Add hex grid border lines for reference:
  * URI = https://raw.githubusercontent.com/hayden-t/foxhole-router/master/hexGridBorders.geojson
  * If this fails with error, save the file locally and add it from there.
   
- If you want for reference or examination you can add map geojson's already done from this repository.
+ If you want for reference or examination you can add map geojson's already done from the mapped folder.
   
   To start mapping a new region: (Please contact us to select a map, eg discord, or issues, so we dount double up)
   
@@ -46,7 +46,7 @@ Add hex grid border lines for reference:
    * You can also use the "Vertex Tool" to adjust or remove points.
    * At border edges end your lines on border line (hex grid)
    
-   To share work export layer as geojson, but keep your original project and shape files.
+   To submit work, export layer as geojson and create a pull request or send it to me in discord, but keep your original project and shape files. https://discord.gg/dnegnws
 
     
 Map Assignment List
