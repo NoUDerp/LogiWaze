@@ -10,42 +10,42 @@ Install QGIS from here: https://qgis.org/en/site/forusers/download.html (standal
 Create new project, set CRS to Project CRS EPSG 3857 WGS 84 and save it.
 
 Add the world map background tiles layer: 
-Browser->XYZ Tiles (rightclick)->New Connection
-Give it a name like "Foxhole World Map" and specify the url as 
-https://raw.githubusercontent.com/Kastow/Foxhole-Map-Tiles/master/Tiles/{z}/{z}_{x}_{y}.png
-Set min zoom to 0 and max to 5, Choose OK
-Double click newly added connection to add it your project/map. You should now see the foxhole world map.
+* Browser->XYZ Tiles (rightclick)->New Connection
+* Give it a name like "Foxhole World Map" and specify the url as 
+* https://raw.githubusercontent.com/Kastow/Foxhole-Map-Tiles/master/Tiles/{z}/{z}_{x}_{y}.png
+* Set min zoom to 0 and max to 5, Choose OK
+* Double click newly added connection to add it your project/map. You should now see the foxhole world map.
 
 Add hex grid for reference:
-  Layer->Add Layer->Vector Layer
-  Source Type = Protocol HTTP
-  Type = GEOJSON
-  URI = https://raw.githubusercontent.com/hayden-t/foxhole-router/master/grid.geojson
- If this fails with error, save the file locally and add it from there.
+ * Layer->Add Layer->Vector Layer
+ * Source Type = Protocol HTTP
+ * Type = GEOJSON
+ * URI = https://raw.githubusercontent.com/hayden-t/foxhole-router/master/grid.geojson
+ * If this fails with error, save the file locally and add it from there.
   
  If you want for reference or examination you can add map geojson's already done from this repository.
   
   To start mapping a new region: (Please contact us to select a map, eg discord, or issues, so we dount double up)
   
   Turn on Snapping:
-    View->Toolbars->Snapping, Then click Magnet Icon to enable.  
+   * View->Toolbars->Snapping, Then click Magnet Icon to enable.  
   Create a new layer:
-    Click Layer->Create Layer->New Shapefile
-    
-   Filename = Choose file save location, naming it the map you are working on.
-   Geometry Type = Line
-   Additional = Project CRS EPSG 3857 WGS 84
-   OK
+   * Click Layer->Create Layer->New Shapefile    
+   * Filename = Choose file save location, naming it the map you are working on.
+   *  Geometry Type = Line
+   * Additional = Project CRS EPSG 3857 WGS 84
+   * OK
    
- Hide form by default: Right click Layer->Properties->Form->"Hide Form on add feature" (top right)
- (optionally also change line style to something easy to see, like "topo road"}
+ Hide form by default: 
+ * Right click Layer->Properties->Form->"Hide Form on add feature" (top right)
+ * (optionally also change line style to something easy to see, like "topo road"}
 
   Start mapping:
-    With new layer selected, click "Toggle Editing" buttom, click "Add Line Feature",
-    Start clicking along the roads making sure to make a click/vertex point at each intersection, right click to end line.
-    Keep adding lines, for each road segment until taking a break or done, "Toggle Editing" off, and click save
-    You can also use the "Vertex Tool" to adjust or remove points.
-    At border edges end your lines on border line (hex grid)
+   * With new layer selected, click "Toggle Editing" buttom, click "Add Line Feature",
+   * Start clicking along the roads making sure to make a click/vertex point at each intersection, right click to end line.
+   * Keep adding lines, for each road segment until taking a break or done, "Toggle Editing" off, and click save
+   * You can also use the "Vertex Tool" to adjust or remove points.
+   * At border edges end your lines on border line (hex grid)
    
    To share work export layer as geojson. 
    
