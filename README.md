@@ -24,7 +24,7 @@ Add hex grid for reference:
   
   [section to come - add existing region jsons]
   
-  To start mapping a new region:
+  To start mapping a new region: (Please contact us to choose a map to work on, eg discord, or issues)
   
   Turn on Snapping:
     View->Toolbars->Snapping, Then click Magnet Icon to enable.  
