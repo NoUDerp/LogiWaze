@@ -77,10 +77,12 @@ If you've read this far you may be interested in this :)
 https://en.wikipedia.org/wiki/Null_Island
 
    
-   These following steps dont have to be done right away, but they are needed for final product (dev note)
+   These following are dev notes:
    
-   QGIS default line type in MultiLineString but the routing library needs LineString, so this can be converted when needed: Vector->Geometry Tools->Multi Parts to Single Parts
-   Also when exporting json for web use, change precision to 0 to save filesize, we dont need that accuracy.
+   QGIS's default line type is MultiLineString but the routing library needs LineString, so this can be converted when needed at the end: Vector->Geometry Tools->Multi Parts to Single Parts
+   Also when exporting json for web use, change precision to 0 to save filesize, we dont need that accuracy, likely in post we can write a script to even further shorten the cord data length.
+   Also i used in my demo the vector geometry "densify" tool to add more points along lines.
+   If you want demo source let me know, im looking for help with it.
    Libs:
 
    http://www.liedman.net/geojson-path-finder/
