@@ -79,5 +79,5 @@ Map Assignment List
  * WeatheredExpanseHex -> DERP
  * WestgateHex
 
-If you've read this far you may be interested in thi- :)
+If you've read this far you may be interested in this :)
 https://en.wikipedia.org/wiki/Null_Island
