@@ -78,3 +78,6 @@ Map Assignment List
  * ViperPitHex
  * WeatheredExpanseHex -> DERP
  * WestgateHex
+
+If you've read this far you may be interested in thi- :)
+https://en.wikipedia.org/wiki/Null_Island
