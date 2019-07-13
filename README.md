@@ -23,7 +23,7 @@ Add hex grid border lines for reference:
   
  If you want for reference or examination you can add map geojson's already done from the mapped folder.
   
-  To start mapping a new region: (Please contact us to select a map, eg discord, or issues, so we dount double up)
+  To start mapping a new region, choose a map not listed in the "Mapped" folder above:
   
   Turn on Snapping:
    * View->Toolbars->Snapping, Then click Magnet Icon to enable.  
@@ -49,30 +49,6 @@ Add hex grid border lines for reference:
    To submit work, export layer as geojson and create a pull request or send it to me in discord, but keep your original project and shape files. https://discord.gg/dnegnws
 
     
-Map Assignment List
- * AllodsBightHex
- * CallahansPassageHex
- * DeadLandsHex
- * DrownedValeHex -> Lazp
- * EndlessShoreHex -> Lazp
- * FarranacCoastHex -> Lazp
- * FishermansRowHex
- * GodcroftsHex		
- * GreatMarchHex
- * HeartlandsHex
- * LinnMercyHex
- * LochMorHex
- * MarbanHollow -> Hayden
- * MooringCountyHex
- * OarbreakerHex
- * ReachingTrailHex
- * ShackledChasmHex
- * StonecradleHex
- * TempestIslandHex
- * UmbralWildwoodHex
- * ViperPitHex
- * WeatheredExpanseHex -> Derp
- * WestgateHex
 
 If you've read this far you may be interested in this :)
 https://en.wikipedia.org/wiki/Null_Island
