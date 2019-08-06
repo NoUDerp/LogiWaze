@@ -1,0 +1,67 @@
+<html>
+<head>
+    <title>Demonstration foxhole router</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin="" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" crossorigin="" />
+</head>
+<body style="background: black">
+    <div id="mapid" style="height: 100%; background: black;"></div>
+
+    <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js" integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og==" crossorigin=""></script>
+
+    <script type="text/javascript">
+
+        var mymap = L.map('mapid',
+            {
+                crs: L.CRS.Simple,
+                maxBounds: L.latLngBounds(L.latLng(-256, 0), L.latLng(0, 256)),
+                noWrap: true,
+                continuousWorld: true,
+                bounds: L.latLngBounds(L.latLng(-256, 0), L.latLng(0, 256))
+            }).setView([0, 0], 2);
+
+        L.tileLayer('https://github.com/Kastow/Foxhole-Map-Tiles/raw/master/Tiles/{z}/{z}_{x}_{y}.png',
+            {
+                crs: L.CRS.Simple,
+                maxZoom: 5,
+                minZoom: 1,
+                noWrap: true,
+                continuousWorld: true,
+                bounds: L.latLngBounds(L.latLng(-256, 0), L.latLng(0, 256)),
+                id: 'Demonstration Map'
+            }).addTo(mymap);
+
+    </script>
+
+    <script src="FoxholeRouter.js">
+    </script>
+
+
+    <script type="text/javascript">
+        var Router = FoxholeRouter.Create(mymap);
+        var Geocoder = FoxholeGeocoder.Create();
+        L.control.layers(null, {
+            'Roads': Router.Roads,
+            'Route': Router.NetworkLayer
+        }, { position: 'bottomright' }).addTo(mymap);
+
+        var startingWaypoints = [
+            L.latLng(-148.2358, 192.46460000000002),
+            L.latLng(-151.9339, 191.6564)
+        ];
+
+        L.Routing.control(
+            {
+                showAlternatives: false,
+                reverseWaypoints: true,
+                maxGeocoderTolerance: 1000000,
+                routeWhileDragging: false,
+                router: Router,
+                geocoder: Geocoder,
+                waypoints: startingWaypoints
+            }
+        ).addTo(mymap);
+
+    </script>
+</body>
+</html>
