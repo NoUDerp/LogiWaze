@@ -1,0 +1,22 @@
+{
+  "name": "demo-map",
+  "version": "1.0.0",
+  "description": "",
+  "repository": "",
+  "homepage": "",
+  "main": "src/index.js",
+  "directories": {},
+  "scripts": { 
+  "build": "webpack --config webpack.config.js --mode production -o FoxholeRouter.js . "
+  },
+  "author": "Derp",
+  "license": "MIT",
+  "dependencies": {
+    "geojson-path-finder": "^1.5.1",
+    "json-loader": "^0.5.7",
+    "leaflet": "^1.5.1",
+    "leaflet-routing-machine": "^3.2.12",
+    "spatiasql": "^3.0.2-beta"
+  },
+  "devDependencies": {}
+}
