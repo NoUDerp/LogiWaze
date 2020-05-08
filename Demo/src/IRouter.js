@@ -2,7 +2,6 @@ define(['leaflet', 'json-loader!../../Mapped/Unified.fitted-for-leaflet.geojson'
     return {
         FoxholeRouter: function(mymap) {
             var FoxholeRouter = {
-                //Roads: L.geoJSON(Paths),
                 Roads: L.geoJSON(Paths).addTo(mymap),
                 renderer: L.canvas().addTo(mymap),
                 NetworkLayer: L.layerGroup().addTo(mymap),
