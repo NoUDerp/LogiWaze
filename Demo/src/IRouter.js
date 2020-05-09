@@ -1,7 +1,8 @@
-define(['leaflet', 'json-loader!../../Mapped/Unified.fitted-for-leaflet.geojson', 'geojson-path-finder', '../towns.json', 'leaflet-routing-machine'], function (L, Paths, PathFinder, towns, routing_machine) {
+define(['leaflet', 'json-loader!../../Mapped/Unified.fitted-for-leaflet.geojson', 'json-loader!../../hex.geojson', 'geojson-path-finder', '../towns.json', 'leaflet-routing-machine'], function (L, Paths, HexBorders, PathFinder, towns, routing_machine) {
     return {
         FoxholeRouter: function(mymap) {
             var FoxholeRouter = {
+		Borders: L.geoJSON(HexBorders).addTo(mymap),
                 Roads: L.geoJSON(Paths).addTo(mymap),
                 renderer: L.canvas().addTo(mymap),
                 NetworkLayer: L.layerGroup().addTo(mymap),
