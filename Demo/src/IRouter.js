@@ -37,7 +37,9 @@ define(['leaflet', 'json-loader!../../Mapped/Unified.fitted-for-leaflet.geojson'
                         var start = waypoints[i].latLng;
                         var finish = waypoints[i + 1].latLng;
                         if (path == null)
+			    {
                             path = FoxholeRouter.pathFinder.findPath({ name: "path", geometry: { coordinates: [start.lng, start.lat] } }, { geometry: { coordinates: [finish.lng, finish.lat] } });
+			    }
                         else {
                             var p = FoxholeRouter.pathFinder.findPath({ name: "path", geometry: { coordinates: [start.lng, start.lat] } }, { geometry: { coordinates: [finish.lng, finish.lat] } });
                             if (p != null && p.path != null) {
@@ -57,7 +59,8 @@ define(['leaflet', 'json-loader!../../Mapped/Unified.fitted-for-leaflet.geojson'
                         var instructions = [];
                         for (var i = 0; i < path.path.length; i++) {
                             coordinates[i] = L.latLng(path.path[i][0], path.path[i][1]);
-                            instructions[i] = "";
+                            instructions[i] = {distance:1, time: 1, text: "x"};
+				
                         }
 
                         var result = call(null, [{
