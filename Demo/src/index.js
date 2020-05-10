@@ -6,9 +6,16 @@ global.FoxholeRouter = {
         return new R.FoxholeRouter(mymap);
     }
 };
+
 global.FoxholeGeocoder = {
     Create: function () {
         var G = require('./IGeocoder.js');
         return G.FoxholeGeocoder();
+    }
+};
+
+global.API = {
+    Create: function () {
+	return require('./API.js').API();
     }
 };
