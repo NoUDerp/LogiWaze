@@ -22,6 +22,7 @@
     "spatiasql": "^3.0.2-beta"
   },
   "devDependencies": {
-    "webpack-cli": "^3.3.11"
+    "webpack-cli": "^3.3.11",
+	"webpack": "*"
   }
 }
