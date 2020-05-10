@@ -15,7 +15,6 @@
   "dependencies": {
     "webpack": "*",
     "webpack-cli": "*",
-    "geojson-path-finder": "^1.5.1",
     "json-loader": "^0.5.7",
     "leaflet": "^1.5.1",
     "leaflet-routing-machine": "^3.2.12",

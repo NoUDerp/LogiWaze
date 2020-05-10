@@ -37,17 +37,7 @@ define(['leaflet', 'json-loader!../../Mapped/Unified.fitted-for-leaflet.geojson'
                         var start = waypoints[i].latLng;
                         var finish = waypoints[i + 1].latLng;
                         if (path == null)
-			    {
                             path = FoxholeRouter.pathFinder.findPath({ name: "path", geometry: { coordinates: [start.lng, start.lat] } }, { geometry: { coordinates: [finish.lng, finish.lat] } });
-			    }
-                        else {
-                            var p = FoxholeRouter.pathFinder.findPath({ name: "path", geometry: { coordinates: [start.lng, start.lat] } }, { geometry: { coordinates: [finish.lng, finish.lat] } });
-                            if (p != null && p.path != null) {
-                                for (var k = 1; k < p.path.length; k++)
-                                    path.path.push(p.path[k]);
-                                path.weight += p.weight;
-                            }
-                        }
                     }
 
                     let call = callback.bind(FoxholeRouter);
