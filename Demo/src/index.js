@@ -1,9 +1,9 @@
 'use strict';
 
 global.FoxholeRouter = {
-    Create: function (mymap) {
+    Create: function (mymap, API) {
         var R = require('./IRouter.js');
-        return new R.FoxholeRouter(mymap);
+        return new R.FoxholeRouter(mymap, API);
     }
 };
 

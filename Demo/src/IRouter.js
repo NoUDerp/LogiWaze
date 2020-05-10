@@ -1,10 +1,40 @@
 define(['leaflet', 'json-loader!../../Mapped/Unified.fitted-for-leaflet.geojson', 'json-loader!../../hex.geojson', 'geojson-path-finder', '../towns.json', 'leaflet-routing-machine'], function (L, Paths, HexBorders, PathFinder, towns, routing_machine) {
     return {
-        FoxholeRouter: function(mymap) {
-            var FoxholeRouter = {
+        FoxholeRouter: function(mymap, API) {
+	var JSONRoads = L.geoJSON(Paths);
+	var RoadsGroup = L.layerGroup().addTo(mymap);
+	var renderer = L.canvas().addTo(mymap);
+	for(var key in JSONRoads._layers)
+	{
+		var layer = JSONRoads._layers[key];
+		for(var k=1; k<layer._latlngs.length; k++)
+		{
+			var region = layer.feature.properties.Region;
+			var lat = layer._latlngs[k-1].lat;
+			var lng = layer._latlngs[k-1].lng;
+			var lat2 = layer._latlngs[k].lat;
+			var lng2 = layer._latlngs[k].lng;
+			if( lat != null && lng != null && lat2 != null && lng2 != null)
+			{
+				var control = API.ownership(lng, lat, region);
+				var color = '#AAAAAA';
+				if(control == "COLONIALS")
+					color = 'green';
+				else if(control == "WARDENS")
+					color = 'blue';
+				else if(control == "OFFLINE")
+					color = 'black';
+			new L.polyline([[lat, lng],[lat2, lng2]], { color: color, weight: 2, opacity: 1.0, renderer: renderer, interactive: false, smoothFactor: 50 }).addTo(RoadsGroup).bringToFront();
+			}
+		}
+	}
+
+	var FoxholeRouter = {
+		API: API,
 		Borders: L.geoJSON(HexBorders).addTo(mymap),
-                Roads: L.geoJSON(Paths).addTo(mymap),
-                renderer: L.canvas().addTo(mymap),
+                Roads: JSONRoads,
+		RoadsCanvas: RoadsGroup,
+                renderer: renderer,
                 NetworkLayer: L.layerGroup().addTo(mymap),
                 pathFinder: new PathFinder(Paths, { precision: 1e-1 }),
                 routeLine: function (route, options) {
@@ -38,6 +68,15 @@ define(['leaflet', 'json-loader!../../Mapped/Unified.fitted-for-leaflet.geojson'
                         var finish = waypoints[i + 1].latLng;
                         if (path == null)
                             path = FoxholeRouter.pathFinder.findPath({ name: "path", geometry: { coordinates: [start.lng, start.lat] } }, { geometry: { coordinates: [finish.lng, finish.lat] } });
+                   
+                        else {
+                            var p = FoxholeRouter.pathFinder.findPath({ name: "path", geometry: { coordinates: [start.lng, start.lat] } }, { geometry: { coordinates: [finish.lng, finish.lat] } });
+                            if (p != null && p.path != null) {
+                                for (var k = 1; k < p.path.length; k++)
+                                    path.path.push(p.path[k]);
+                                path.weight += p.weight;
+                            }
+                        }
                     }
 
                     let call = callback.bind(FoxholeRouter);
@@ -66,11 +105,12 @@ define(['leaflet', 'json-loader!../../Mapped/Unified.fitted-for-leaflet.geojson'
                         }], context);
                         FoxholeRouter.NetworkLayer.clearLayers()
                         for (var i = 0; i < path.path.length - 1; i++) {
+				var control = FoxholeRouter.API.ownership(path.path[i][1], path.path[i][0], path.path[i][2]);
                             new L.polyline(
                                 [
                                     [path.path[i][1], path.path[i][0]],
                                     [path.path[i + 1][1], path.path[i + 1][0]]
-                                ], { color: 'white', weight: 7, opacity: 1.0, renderer: FoxholeRouter.renderer, interactive: false, smoothFactor: 1 }
+                                ], { color: 'white', weight: 5, opacity: 1.0, renderer: FoxholeRouter.renderer, interactive: false, smoothFactor: 1 }
                             ).addTo(FoxholeRouter.NetworkLayer).bringToFront();
                         }
                         return result;
