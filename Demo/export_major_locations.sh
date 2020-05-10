@@ -4,7 +4,9 @@ download()
         (
         echo "["
         first=0
-        for f in `wget -qO - "https://war-service-live.foxholeservices.com/api/worldconquest/maps/"  | jq -r '.[]|.'`; do
+
+        for f in `cat maps.csv`; do 
+		#wget -qO - "https://war-service-live.foxholeservices.com/api/worldconquest/maps/"  | jq -r '.[]|.'`; do
                 if [ "$first" = "1" ]; then echo ","; fi
                 first=1
                 if [ "$f" = "GodcroftsHex" ]; then offsetx="148.15477"; offsety="-23.27272"; fi
