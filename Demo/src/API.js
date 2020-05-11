@@ -87,8 +87,8 @@ define(['jquery'], function ($) {
 											{
 												var x = mapData.mapItems[j].x;
 												var y = mapData.mapItems[j].y;
-												x = 256+(((x*46.54545454545455)+offset.y)-23.27272727272727);
-											        y = -256+((((1-y)*40.30954606705751)+offset.x)-20.15477303352875);
+												x = 256+(((x*46.54545454545455)-offset.y)-23.27272727272727);
+											        y = -256+((((1-y)*40.30954606705751)-offset.x)-20.15477303352875);
 												API.mapControl[mapName].push({x:x, y:y, control: mapData.mapItems[j].teamId });
 											}
 										}
