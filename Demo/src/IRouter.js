@@ -1,7 +1,8 @@
-define(['leaflet', 'json-loader!../../Mapped/Unified.fitted-for-leaflet.geojson', 'geojson-path-finder', '../towns.json', 'leaflet-routing-machine'], function (L, Paths, PathFinder, towns, routing_machine) {
+define(['leaflet', 'json-loader!../../Mapped/Unified.fitted-for-leaflet.geojson', 'json-loader!../../hex.geojson', 'geojson-path-finder', '../towns.json', 'leaflet-routing-machine'], function (L, Paths, HexBorders, PathFinder, towns, routing_machine) {
     return {
         FoxholeRouter: function(mymap) {
             var FoxholeRouter = {
+		Borders: L.geoJSON(HexBorders).addTo(mymap),
                 Roads: L.geoJSON(Paths).addTo(mymap),
                 renderer: L.canvas().addTo(mymap),
                 NetworkLayer: L.layerGroup().addTo(mymap),
@@ -37,14 +38,6 @@ define(['leaflet', 'json-loader!../../Mapped/Unified.fitted-for-leaflet.geojson'
                         var finish = waypoints[i + 1].latLng;
                         if (path == null)
                             path = FoxholeRouter.pathFinder.findPath({ name: "path", geometry: { coordinates: [start.lng, start.lat] } }, { geometry: { coordinates: [finish.lng, finish.lat] } });
-                        else {
-                            var p = FoxholeRouter.pathFinder.findPath({ name: "path", geometry: { coordinates: [start.lng, start.lat] } }, { geometry: { coordinates: [finish.lng, finish.lat] } });
-                            if (p != null && p.path != null) {
-                                for (var k = 1; k < p.path.length; k++)
-                                    path.path.push(p.path[k]);
-                                path.weight += p.weight;
-                            }
-                        }
                     }
 
                     let call = callback.bind(FoxholeRouter);
@@ -56,7 +49,8 @@ define(['leaflet', 'json-loader!../../Mapped/Unified.fitted-for-leaflet.geojson'
                         var instructions = [];
                         for (var i = 0; i < path.path.length; i++) {
                             coordinates[i] = L.latLng(path.path[i][0], path.path[i][1]);
-                            instructions[i] = "";
+                            instructions[i] = {distance:1, time: 1, text: "x"};
+				
                         }
 
                         var result = call(null, [{
