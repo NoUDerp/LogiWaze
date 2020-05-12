@@ -88,6 +88,8 @@ define(['leaflet', 'json-loader!../../Mapped/Unified.fitted-for-leaflet.geojson'
                 renderer: renderer,
                 NetworkLayer: L.layerGroup().addTo(mymap),
                 pathFinder: new PathFinder(Paths, { precision: 1e-1 }),
+		wardenPathFinder: new PathFinder(WardenRoutes, { precision: 1e-1 }),
+		colonialPathFinder: new PathFinder(ColonialRoutes, { precision: 1e-1 }),
                 routeLine: function (route, options) {
                     return new Line(route, options);
                 },
