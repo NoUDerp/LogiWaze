@@ -1,6 +1,57 @@
 define(['leaflet', 'json-loader!../../Mapped/Unified.fitted-for-leaflet.geojson', 'json-loader!../../hex.geojson', 'geojson-path-finder', '../towns.json', 'leaflet-routing-machine'], function (L, Paths, HexBorders, PathFinder, towns, routing_machine) {
     return {
         FoxholeRouter: function(mymap, API) {
+	var WardenRoutes = {crs: Paths.crs, features: []};
+	var ColonialRoutes = {crs: Paths.crs, features: []};
+	for(var i=0;i<Paths.features.length;i++)
+	{
+		var warden_features = [];
+		var colonial_features = [];
+		var last_ownership = "NONE";
+		var last_p = null;
+		for(var k=0;k<Paths.features[i].geometry.coordinates.length;k++)
+		{
+			var p = Paths.features[i].geometry.coordinates[k];
+			var ownership = API.ownership(p[1], p[0], Paths.features[i].properties.Region);
+			if(ownership === "WARDENS" || ownership === "COLONIALS")
+			{
+				var fso = ownership === "COLONIALS" ? colonial_features : warden_features;
+				if(k>0 && last_ownership != ownership)
+				{
+					var fs = last_ownership === "COLONIALS" ? colonial_features : warden_features;
+					break_feature_set = fs.length > 0 && (last_p[0] != p[0] || last_p[1] != p[1]);
+				}
+				else
+					break_feature_set = false;
+
+				if(break_feature_set)
+				{
+					// break the feature set, start a new one with this point
+				
+					if(ownership == "WARDENS")
+					{
+						WardenRoutes.features.push({type:"feature",properties:Paths.features[i].properties,geometries:{type:"LineString", coordinates:warden_features}});
+						warden_features = [];
+					}
+					
+					if(last_ownership == "COLONIALS")
+					{
+						ColonialRoutes.features.push({type:"feature",properties:Paths.features[i].properties,geometries:{type:"LineString",coordinates:colonial_features}});
+						colonial_features = [];
+					}
+				}
+
+				fso.push(p);	
+			}
+			last_p = p;
+			last_ownership = ownership;
+		}
+		if(warden_features.length>0)
+			WardenRoutes.features.push({type:"feature",properties:Paths.features[i].properties,geometries:{type:"LineString", coordinates:warden_features}});
+		if(colonial_features.length>0)
+			ColonialRoutes.features.push({type:"feature",properties:Paths.features[i].properties,geometries:{type:"LineString",coordinates:colonial_features}});
+	}
+		
 	var JSONRoads = L.geoJSON(Paths);
 	var RoadsGroup = L.layerGroup().addTo(mymap);
 	var renderer = L.canvas().addTo(mymap);
