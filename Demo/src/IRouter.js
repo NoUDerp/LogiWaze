@@ -1,6 +1,7 @@
 define(['leaflet', 'json-loader!../../Mapped/Unified.fitted-for-leaflet.geojson', 'json-loader!../../hex.geojson', 'geojson-path-finder', '../towns.json', 'leaflet-routing-machine'], function (L, Paths, HexBorders, PathFinder, towns, routing_machine) {
     return {
         FoxholeRouter: function(mymap, API) {
+	var JSONRoads = L.geoJSON(Paths);
 	var WardenRoutes = {crs: Paths.crs, features: [], type: "FeatureCollection", filter: Paths.filter};
 	var ColonialRoutes = {crs: Paths.crs, features: [], type: "FeatureCollection", filter: Paths.filter};
 	for(var i=0;i<Paths.features.length;i++)
@@ -9,10 +10,12 @@ define(['leaflet', 'json-loader!../../Mapped/Unified.fitted-for-leaflet.geojson'
 		var colonial_features = new Array();
 		var last_ownership = "NONE";
 		var last_p = null;
+		var keys = Object.keys(JSONRoads._layers);
 		for(var k=0;k<Paths.features[i].geometry.coordinates.length;k++)
 		{
 			var p = Paths.features[i].geometry.coordinates[k];
-			var ownership = API.ownership(p[1], p[0], Paths.features[i].properties.Region);
+			var ownership = API.ownership(p[0], p[1], Paths.features[i].properties.Region);
+			JSONRoads._layers[keys[i]]._latlngs[k].ownership = ownership;
 			if(ownership === "WARDENS" || ownership === "COLONIALS")
 			{
 				var fso = ownership === "COLONIALS" ? colonial_features : warden_features;
@@ -52,7 +55,6 @@ define(['leaflet', 'json-loader!../../Mapped/Unified.fitted-for-leaflet.geojson'
 			ColonialRoutes.features.push({type:"Feature",properties:Paths.features[i].properties,geometry:{type:"LineString",coordinates:colonial_features}});
 	}
 		
-	var JSONRoads = L.geoJSON(Paths);
 	var RoadsGroup = L.layerGroup().addTo(mymap);
 	var renderer = L.canvas().addTo(mymap);
 	for(var key in JSONRoads._layers)
@@ -67,7 +69,9 @@ define(['leaflet', 'json-loader!../../Mapped/Unified.fitted-for-leaflet.geojson'
 			var lng2 = layer._latlngs[k].lng;
 			if( lat != null && lng != null && lat2 != null && lng2 != null)
 			{
-				var control = API.ownership(lng, lat, region);
+
+				var control = //API.ownership(lng, lat, region);
+				layer._latlngs[k-1].ownership;
 				var color = '#AAAAAA';
 				if(control == "COLONIALS")
 					color = 'green';
@@ -90,8 +94,8 @@ define(['leaflet', 'json-loader!../../Mapped/Unified.fitted-for-leaflet.geojson'
 		WardenNetworkLayer: L.layerGroup().addTo(mymap),
 		ColonialNetworkLayer: L.layerGroup().addTo(mymap),
                 pathFinder: new PathFinder(Paths, { precision: 1e-1 }),
-		wardenPathFinder: new PathFinder(WardenRoutes, { precision: 1e-1 }),
-		colonialPathFinder: new PathFinder(ColonialRoutes, { precision: 1e-1 }),
+		wardenPathFinder: new PathFinder(WardenRoutes, { precision: 1e-2 }),
+		colonialPathFinder: new PathFinder(ColonialRoutes, { precision: 1e-2 }),
                 routeLine: function (route, options) {
                     return new Line(route, options);
                 },
