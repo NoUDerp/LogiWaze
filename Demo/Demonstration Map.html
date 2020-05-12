@@ -68,7 +68,9 @@
 			}, {
 		    'Borders': Router.Borders,
 		    'Roads': Router.RoadsCanvas,
-	            'Route': Router.NetworkLayer
+	            'Neutral Route': Router.NetworkLayer,
+		    'Colonial Route': Router.ColonialNetworkLayer,
+		    'Wardenn Route': Router.WardenNetworkLayer
 	        }, { position: 'bottomright' }).addTo(mymap);
 
 	        var startingWaypoints = [

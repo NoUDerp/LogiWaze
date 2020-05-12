@@ -1,12 +1,12 @@
 define(['leaflet', 'json-loader!../../Mapped/Unified.fitted-for-leaflet.geojson', 'json-loader!../../hex.geojson', 'geojson-path-finder', '../towns.json', 'leaflet-routing-machine'], function (L, Paths, HexBorders, PathFinder, towns, routing_machine) {
     return {
         FoxholeRouter: function(mymap, API) {
-	var WardenRoutes = {crs: Paths.crs, features: []};
-	var ColonialRoutes = {crs: Paths.crs, features: []};
+	var WardenRoutes = {crs: Paths.crs, features: [], type: "FeatureCollection", filter: Paths.filter};
+	var ColonialRoutes = {crs: Paths.crs, features: [], type: "FeatureCollection", filter: Paths.filter};
 	for(var i=0;i<Paths.features.length;i++)
 	{
-		var warden_features = [];
-		var colonial_features = [];
+		var warden_features = new Array();
+		var colonial_features = new Array();
 		var last_ownership = "NONE";
 		var last_p = null;
 		for(var k=0;k<Paths.features[i].geometry.coordinates.length;k++)
@@ -28,16 +28,16 @@ define(['leaflet', 'json-loader!../../Mapped/Unified.fitted-for-leaflet.geojson'
 				{
 					// break the feature set, start a new one with this point
 				
-					if(ownership == "WARDENS")
+					if(ownership == "WARDENS" && warden_features.length > 1)
 					{
-						WardenRoutes.features.push({type:"feature",properties:Paths.features[i].properties,geometries:{type:"LineString", coordinates:warden_features}});
-						warden_features = [];
+						WardenRoutes.features.push({type:"Feature",properties:Paths.features[i].properties,geometry:{type:"LineString", coordinates:warden_features}});
+						warden_features = new Array();
 					}
 					
-					if(last_ownership == "COLONIALS")
+					if(last_ownership == "COLONIALS" && colonial_features.length > 1)
 					{
-						ColonialRoutes.features.push({type:"feature",properties:Paths.features[i].properties,geometries:{type:"LineString",coordinates:colonial_features}});
-						colonial_features = [];
+						ColonialRoutes.features.push({type:"Feature",properties:Paths.features[i].properties,geometry:{type:"LineString",coordinates:colonial_features}});
+						colonial_features = new Array();
 					}
 				}
 
@@ -46,10 +46,10 @@ define(['leaflet', 'json-loader!../../Mapped/Unified.fitted-for-leaflet.geojson'
 			last_p = p;
 			last_ownership = ownership;
 		}
-		if(warden_features.length>0)
-			WardenRoutes.features.push({type:"feature",properties:Paths.features[i].properties,geometries:{type:"LineString", coordinates:warden_features}});
-		if(colonial_features.length>0)
-			ColonialRoutes.features.push({type:"feature",properties:Paths.features[i].properties,geometries:{type:"LineString",coordinates:colonial_features}});
+		if(warden_features.length>1)
+			WardenRoutes.features.push({type:"Feature",properties:Paths.features[i].properties,geometry:{type:"LineString", coordinates:warden_features}});
+		if(colonial_features.length>1)
+			ColonialRoutes.features.push({type:"Feature",properties:Paths.features[i].properties,geometry:{type:"LineString",coordinates:colonial_features}});
 	}
 		
 	var JSONRoads = L.geoJSON(Paths);
@@ -87,6 +87,8 @@ define(['leaflet', 'json-loader!../../Mapped/Unified.fitted-for-leaflet.geojson'
 		RoadsCanvas: RoadsGroup,
                 renderer: renderer,
                 NetworkLayer: L.layerGroup().addTo(mymap),
+		WardenNetworkLayer: L.layerGroup().addTo(mymap),
+		ColonialNetworkLayer: L.layerGroup().addTo(mymap),
                 pathFinder: new PathFinder(Paths, { precision: 1e-1 }),
 		wardenPathFinder: new PathFinder(WardenRoutes, { precision: 1e-1 }),
 		colonialPathFinder: new PathFinder(ColonialRoutes, { precision: 1e-1 }),
@@ -116,6 +118,9 @@ define(['leaflet', 'json-loader!../../Mapped/Unified.fitted-for-leaflet.geojson'
                     }
 
                     var path = null;
+                    var wardenPath = null;
+		    var colonialPath = null;
+
                     for (var i = 0; i < waypoints.length - 1; i++) {
                         var start = waypoints[i].latLng;
                         var finish = waypoints[i + 1].latLng;
@@ -130,6 +135,31 @@ define(['leaflet', 'json-loader!../../Mapped/Unified.fitted-for-leaflet.geojson'
                                 path.weight += p.weight;
                             }
                         }
+
+			if (wardenPath == null)
+                            wardenPath = FoxholeRouter.wardenPathFinder.findPath({ name: "path", geometry: { coordinates: [start.lng, start.lat] } }, { geometry: { coordinates: [finish.lng, finish.lat] } });
+
+                        else {
+                            var p = FoxholeRouter.wardenPathFinder.findPath({ name: "path", geometry: { coordinates: [start.lng, start.lat] } }, { geometry: { coordinates: [finish.lng, finish.lat] } });
+                            if (p != null && p.path != null) {
+                                for (var k = 1; k < p.path.length; k++)
+                                    wardenPath.path.push(p.path[k]);
+                                wardenPath.weight += p.weight;
+                            }
+                        }
+
+			if (colonialPath == null)
+                            colonialPath = FoxholeRouter.colonialPathFinder.findPath({ name: "path", geometry: { coordinates: [start.lng, start.lat] } }, { geometry: { coordinates: [finish.lng, finish.lat] } });
+
+                        else {
+                            var p = FoxholeRouter.colonialPathFinder.findPath({ name: "path", geometry: { coordinates: [start.lng, start.lat] } }, { geometry: { coordinates: [finish.lng, finish.lat] } });
+                            if (p != null && p.path != null) {
+                                for (var k = 1; k < p.path.length; k++)
+                                    colonialPath.path.push(p.path[k]);
+                                colonialPath.weight += p.weight;
+                            }
+                        }
+
                     }
 
                     let call = callback.bind(FoxholeRouter);
@@ -163,9 +193,33 @@ define(['leaflet', 'json-loader!../../Mapped/Unified.fitted-for-leaflet.geojson'
                                 [
                                     [path.path[i][1], path.path[i][0]],
                                     [path.path[i + 1][1], path.path[i + 1][0]]
-                                ], { color: 'white', weight: 5, opacity: 1.0, renderer: FoxholeRouter.renderer, interactive: false, smoothFactor: 1 }
+                                ], { color: '#888888', weight: 5, opacity: 1.0, renderer: FoxholeRouter.renderer, interactive: false, smoothFactor: 1 }
                             ).addTo(FoxholeRouter.NetworkLayer).bringToFront();
+                        
+
+			FoxholeRouter.WardenNetworkLayer.clearLayers()
+			if(wardenPath!=null)
+				for (var i = 0; i < wardenPath.path.length - 1; i++) {
+                                var control = FoxholeRouter.API.ownership(wardenPath.path[i][1], wardenPath.path[i][0], wardenPath.path[i][2]);                                    new L.polyline(
+                                [
+                                    [wardenPath.path[i][1], wardenPath.path[i][0]],
+                                    [wardenPath.path[i + 1][1], wardenPath.path[i + 1][0]]
+                                ], { color: 'white', weight: 5, opacity: 1.0, renderer: FoxholeRouter.renderer, interactive: false, smoothFactor: 1 }
+                            ).addTo(FoxholeRouter.WardenNetworkLayer).bringToFront();
                         }
+
+			FoxholeRouter.ColonialNetworkLayer.clearLayers()
+			if(colonialPath!=null)
+                        for (var i = 0; i < colonialPath.path.length - 1; i++) {
+                                var control = FoxholeRouter.API.ownership(colonialPath.path[i][1], colonialPath.path[i][0], colonialPath.path[i][2]);                                    new L.polyline(
+                                [
+                                    [colonialPath.path[i][1], colonialPath.path[i][0]],
+                                    [colonialPath.path[i + 1][1], colonialPath.path[i + 1][0]]
+                                ], { color: 'white', weight: 5, opacity: 1.0, renderer: FoxholeRouter.renderer, interactive: false, smoothFactor: 1 }
+                            ).addTo(FoxholeRouter.ColonialNetworkLayer).bringToFront();
+                        }
+
+			}
                         return result;
                     }
                 }
