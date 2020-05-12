@@ -31,13 +31,13 @@ define(['leaflet', 'json-loader!../../Mapped/Unified.fitted-for-leaflet.geojson'
 				{
 					// break the feature set, start a new one with this point
 				
-					if(ownership == "WARDENS" && warden_features.length > 1)
+					if(ownership == "WARDENS" && warden_features.length > 0)
 					{
 						WardenRoutes.features.push({type:"Feature",properties:Paths.features[i].properties,geometry:{type:"LineString", coordinates:warden_features}});
 						warden_features = new Array();
 					}
 					
-					if(last_ownership == "COLONIALS" && colonial_features.length > 1)
+					if(last_ownership == "COLONIALS" && colonial_features.length > 0)
 					{
 						ColonialRoutes.features.push({type:"Feature",properties:Paths.features[i].properties,geometry:{type:"LineString",coordinates:colonial_features}});
 						colonial_features = new Array();
@@ -70,8 +70,7 @@ define(['leaflet', 'json-loader!../../Mapped/Unified.fitted-for-leaflet.geojson'
 			if( lat != null && lng != null && lat2 != null && lng2 != null)
 			{
 
-				var control = //API.ownership(lng, lat, region);
-				layer._latlngs[k-1].ownership;
+				var control = layer._latlngs[k-1].ownership;
 				var color = '#AAAAAA';
 				if(control == "COLONIALS")
 					color = 'green';
@@ -191,20 +190,19 @@ define(['leaflet', 'json-loader!../../Mapped/Unified.fitted-for-leaflet.geojson'
                             instructions: instructions
                         }], context);
                         FoxholeRouter.NetworkLayer.clearLayers()
-                        for (var i = 0; i < path.path.length - 1; i++) {
-				var control = FoxholeRouter.API.ownership(path.path[i][1], path.path[i][0], path.path[i][2]);
-                            new L.polyline(
-                                [
-                                    [path.path[i][1], path.path[i][0]],
-                                    [path.path[i + 1][1], path.path[i + 1][0]]
-                                ], { color: '#888888', weight: 5, opacity: 1.0, renderer: FoxholeRouter.renderer, interactive: false, smoothFactor: 1 }
-                            ).addTo(FoxholeRouter.NetworkLayer).bringToFront();
-                        
+                        if(path!=null)
+			    for (var i = 1; i < path.path.length; i++) 
+			    {
+				new L.polyline([
+                                    [path.path[i-1][1], path.path[i-1][0]],
+                                    [path.path[i][1], path.path[i][0]]
+                                ], { color: '#888888', weight: 5, opacity: 1.0, renderer: FoxholeRouter.renderer, interactive: false, smoothFactor: 1 }).addTo(FoxholeRouter.NetworkLayer).bringToFront();
+			    }
 
 			FoxholeRouter.WardenNetworkLayer.clearLayers()
 			if(wardenPath!=null)
 				for (var i = 0; i < wardenPath.path.length - 1; i++) {
-                                var control = FoxholeRouter.API.ownership(wardenPath.path[i][1], wardenPath.path[i][0], wardenPath.path[i][2]);                                    new L.polyline(
+				new L.polyline(
                                 [
                                     [wardenPath.path[i][1], wardenPath.path[i][0]],
                                     [wardenPath.path[i + 1][1], wardenPath.path[i + 1][0]]
@@ -215,15 +213,14 @@ define(['leaflet', 'json-loader!../../Mapped/Unified.fitted-for-leaflet.geojson'
 			FoxholeRouter.ColonialNetworkLayer.clearLayers()
 			if(colonialPath!=null)
                         for (var i = 0; i < colonialPath.path.length - 1; i++) {
-                                var control = FoxholeRouter.API.ownership(colonialPath.path[i][1], colonialPath.path[i][0], colonialPath.path[i][2]);                                    new L.polyline(
-                                [
-                                    [colonialPath.path[i][1], colonialPath.path[i][0]],
-                                    [colonialPath.path[i + 1][1], colonialPath.path[i + 1][0]]
+				new L.polyline(
+				[
+					[colonialPath.path[i][1], colonialPath.path[i][0]],
+                                	[colonialPath.path[i + 1][1], colonialPath.path[i + 1][0]]
                                 ], { color: 'white', weight: 5, opacity: 1.0, renderer: FoxholeRouter.renderer, interactive: false, smoothFactor: 1 }
                             ).addTo(FoxholeRouter.ColonialNetworkLayer).bringToFront();
                         }
 
-			}
                         return result;
                     }
                 }
