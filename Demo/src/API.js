@@ -83,12 +83,12 @@ define(['jquery'], function ($) {
 										for(var j=0;j<mapData.mapItems.length;j++)
 										{
 											var icon = mapData.mapItems[j].iconType;
-											if(icon == 5 || icon == 6 || icon == 7 || icon == 8 || icon == 9 || icon == 10 || icon == 29)
+											if( (icon >=5 && icon <= 10) || (icon>=45 && icon<=47) || icon == 29)
 											{
 												var x = mapData.mapItems[j].x;
 												var y = mapData.mapItems[j].y;
-												x = 256+(((x*46.54545454545455)-offset.y)-23.27272727272727);
-											        y = -256+((((1-y)*40.30954606705751)-offset.x)-20.15477303352875);
+												x = 256+(((x*46.54545454545455)+offset.y)-23.27272727272727);
+											        y = -256+((((1-y)*40.30954606705751)+offset.x)-20.15477303352875);
 												API.mapControl[mapName].push({x:x, y:y, control: mapData.mapItems[j].teamId });
 											}
 										}
