@@ -1,6 +1,6 @@
-<html>
+﻿<html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Demonstration foxhole router</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin="" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" crossorigin="" />
@@ -31,9 +31,9 @@
                 bounds: L.latLngBounds(L.latLng(-256, 0), L.latLng(0, 256)),
                 id: 'Demonstration Map'
             });
-	SatelliteMap.addTo(mymap);
+        SatelliteMap.addTo(mymap);
 
-	var DrawnMap = L.tileLayer('https://github.com/Kastow/Foxhole-Map-Tiles/raw/master/Tiles/{z}/{z}_{x}_{y}.png',
+        var DrawnMap = L.tileLayer('https://github.com/Kastow/Foxhole-Map-Tiles/raw/master/Tiles/{z}/{z}_{x}_{y}.png',
             {
                 crs: L.CRS.Simple,
                 maxZoom: 5,
@@ -43,7 +43,7 @@
                 bounds: L.latLngBounds(L.latLng(-256, 0), L.latLng(0, 256)),
                 id: 'Demonstration Map'
             });
-	DrawnMap.addTo(mymap);
+        DrawnMap.addTo(mymap);
 
     </script>
 
@@ -52,44 +52,63 @@
 
 
     <script type="text/javascript">
-        var Router = FoxholeRouter.Create(mymap);
-        var Geocoder = FoxholeGeocoder.Create();
-        L.control.layers(
-		{
-			'Map View': DrawnMap,
-			'Satellite View': SatelliteMap
-		}, {
-	    'Borders': Router.Borders,
-	    'Roads': Router.Roads,
-            'Route': Router.NetworkLayer
-        }, { position: 'bottomright' }).addTo(mymap);
+        var APIManager = API.Create();
 
-        var startingWaypoints = [
-            L.latLng(-148.2358, 192.46460000000002),
-            L.latLng(-151.9339, 191.6564)
-        ];
+        APIManager.update(() => {
 
-	Router.Borders.setStyle(
-		{
-			color: "#303030",
-			opacity: '0.5',
-			dashArray: '5, 10'
-		}
-	);
+            var Router = FoxholeRouter.Create(mymap, APIManager);
+            var Geocoder = FoxholeGeocoder.Create();
 
-	Router.Roads.setStyle({color:'purple'});
 
-        Router.Control = L.Routing.control(
-            {
-                showAlternatives: false,
-                reverseWaypoints: true,
-                maxGeocoderTolerance: 1000000,
-                routeWhileDragging: false,
-                router: Router,
-                geocoder: Geocoder,
-                waypoints: startingWaypoints
-            }
-        ).addTo(mymap);
+
+            L.control.layers(
+                {
+                    'Map View': DrawnMap,
+                    'Satellite View': SatelliteMap
+                }, {
+                'Borders': Router.Borders,
+                'Roads': Router.RoadsCanvas,
+                //'Neutral Route': Router.NetworkLayer,
+                //'Colonial Route': Router.ColonialNetworkLayer,
+                //'Warden Route': Router.WardenNetworkLayer
+            }, { position: 'bottomright' }).addTo(mymap);
+
+            var startingWaypoints = [
+                L.latLng(-148.2358, 192.46460000000002),
+                L.latLng(-151.9339, 191.6564)
+            ];
+
+            Router.Borders.setStyle(
+                {
+                    color: "#303030",
+                    opacity: '0.5',
+                    dashArray: '5, 10'
+                }
+            );
+
+            Router.Roads.setStyle({ color: 'purple' });
+
+            Router.Control = L.Routing.control(
+                {
+                    showAlternatives: false,
+                    reverseWaypoints: true,
+                    maxGeocoderTolerance: 1000000,
+                    routeWhileDragging: false,
+                    router: Router,
+                    autoRoute: true,
+                    geocoder: Geocoder,
+                    /*routeLine: function (route, options) {
+                        return new L.Line(route, options);
+                    },*/
+                    lineOptions: { color: 'white' },
+                    fitSelectedRoutes: false
+                }
+            ).addTo(mymap);
+            Router.Control.setWaypoints(startingWaypoints);
+
+
+            //Router.Control.route();
+        });
 
     </script>
 </body>

@@ -13,8 +13,7 @@
   "author": "Derp",
   "license": "MIT",
   "dependencies": {
-    "webpack": "*",
-    "webpack-cli": "*",
+    "jquery": "*",
     "json-loader": "^0.5.7",
     "leaflet": "^1.5.1",
     "leaflet-routing-machine": "^3.2.12",
