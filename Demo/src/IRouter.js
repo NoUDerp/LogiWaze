@@ -227,14 +227,12 @@ define(['leaflet', 'json-loader!../../Mapped/Unified.fitted-for-leaflet.geojson'
                             }
                         }
 
-                        //instructions.splice(instructions.length - 1, 1);
-
-                        var distance = (opath.weight / 256.0) * 12012.0;
+                        var distance = (opath.weight / 256.0) * 12012.0; //map scale 
                         return {
                             name: name,
                             summary:
                             {
-                                totalTime: (distance / 35000.0) * 3600.0,
+                                totalTime: (distance / 35000.0) * 3600.0, // truck speed
                                 modifiedTime: (distance / 35000.0) * 3600.0 * 1.4, //+40% delay for slow trucks
                                 totalDistance: distance
                             },

@@ -10,12 +10,12 @@
 
     <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js" integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og==" crossorigin=""></script>
     <style type="text/css">
-        .leaflet-routing-alt-minimized .detailed-routeinfo
-        {
+
+        .leaflet-routing-alt-minimized .detailed-routeinfo {
             display: none;
         }
-        .leaflet-routing-alt-minimized .summary-routeinfo
-        {
+
+        .leaflet-routing-alt-minimized .summary-routeinfo {
             display: inline !important;
         }
     </style>
@@ -167,9 +167,31 @@
                     summaryTemplate: '<table style=\'border: 0; width: 100%; pointer-events: none;\'><tr><td colspan=\'2\'>{name}<span style=\'margin-left: 1em; display: none\' class=\'summary-routeinfo\'>{distance}</span></td></tr><tr><td rowspan=\'2\' style=\'text-align: center; padding: 4px;\'><span class=\'detailed-routeinfo\'>{distance}</span></td>{time}</tr></table>',
                     formatter: new custom_time_formatter
                 }
-            ).addTo(mymap);
-            Router.Control.setWaypoints(startingWaypoints);
+            ).addTo(mymap).on('waypointschanged', function (event) {
+                var l = "";
+                for (var i = 0; i < event.waypoints.length; i++) {
+                    if (i > 0)
+                        l = l.concat("|");
+                    l = l.concat(event.waypoints[i].latLng.lat.toFixed(4)).concat(",").concat(event.waypoints[i].latLng.lng.toFixed(4));
+                }
+                location.hash = l;
+            });
+
+            // load initial waypoints
+            var points = startingWaypoints;
+            if (typeof (location.hash) != 'undefined' && location.hash != "" && location.hash != "#") {
+                var h = location.hash.substr(1);
+                var l = h.split("|");
+                points = [];
+                for (var i = 0; i < l.length; i++) {
+                    var a = l[i].split(",");
+                    points.push([parseFloat(a[0]), parseFloat(a[1])]);
+                }
+            }
+
+            Router.Control.setWaypoints(points);
         });
+
 
     </script>
 </body>
