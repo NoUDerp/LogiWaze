@@ -14,9 +14,9 @@ define(['leaflet', 'json-loader!../../Mapped/Unified.fitted-for-leaflet.geojson'
                     var p = Paths.features[i].geometry.coordinates[k];
                     var ownership = API.ownership(p[0], p[1], Paths.features[i].properties.Region);
                     JSONRoads._layers[keys[i]]._latlngs[k].ownership = ownership;
-                    if (ownership === "WARDENS" || ownership === "COLONIALS") {
+                    if (ownership === "WARDENS" || ownership === "COLONIALS" || ownership === "NONE") {
                         var fso = ownership === "COLONIALS" ? colonial_features : warden_features;
-                        if (k > 0 && last_ownership != ownership) {
+                        if (k > 0 && last_ownership != ownership && ownership != "NONE") {
                             var fs = last_ownership === "COLONIALS" ? colonial_features : warden_features;
                             break_feature_set = fs.length > 0 && (last_p[0] != p[0] || last_p[1] != p[1]);
                         }
@@ -37,7 +37,12 @@ define(['leaflet', 'json-loader!../../Mapped/Unified.fitted-for-leaflet.geojson'
                             }
                         }
 
-                        fso.push(p);
+                        if (ownership == "NONE") {
+                            warden_features.push(p);
+                            colonial_features.push(p);
+                        }
+                        else
+                            fso.push(p);
                     }
                     last_p = p;
                     last_ownership = ownership;
@@ -50,6 +55,19 @@ define(['leaflet', 'json-loader!../../Mapped/Unified.fitted-for-leaflet.geojson'
 
             var RoadsGroup = L.layerGroup().addTo(mymap);
             var renderer = L.canvas().addTo(mymap);
+
+            for (var key in JSONRoads._layers) {
+                var layer = JSONRoads._layers[key];
+                for (var k = 1; k < layer._latlngs.length; k++) {
+                    var region = layer.feature.properties.Region;
+                    var lat = layer._latlngs[k - 1].lat;
+                    var lng = layer._latlngs[k - 1].lng;
+                    var lat2 = layer._latlngs[k].lat;
+                    var lng2 = layer._latlngs[k].lng;
+                    if (lat != null && lng != null && lat2 != null && lng2 != null)
+                        new L.polyline([[lat, lng], [lat2, lng2]], { color: '#000000', weight: 2, opacity: 1.0, renderer: renderer, interactive: false, smoothFactor: 10 }).addTo(RoadsGroup).bringToFront();
+                }
+            }
             for (var key in JSONRoads._layers) {
                 var layer = JSONRoads._layers[key];
                 for (var k = 1; k < layer._latlngs.length; k++) {
@@ -63,15 +81,16 @@ define(['leaflet', 'json-loader!../../Mapped/Unified.fitted-for-leaflet.geojson'
                         var control = layer._latlngs[k - 1].ownership;
                         var color = '#AAAAAA';
                         if (control == "COLONIALS")
-                            color = 'green';
+                            color = '#516C4B';
                         else if (control == "WARDENS")
-                            color = 'blue';
+                            color = '#235683';
                         else if (control == "OFFLINE")
-                            color = 'black';
-                        new L.polyline([[lat, lng], [lat2, lng2]], { color: color, weight: 2, opacity: 1.0, renderer: renderer, interactive: false, smoothFactor: 50 }).addTo(RoadsGroup).bringToFront();
+                            color = '#505050';
+                        new L.polyline([[lat, lng], [lat2, lng2]], { color: color, weight: 1.5, opacity: 1.0, renderer: renderer, interactive: false, smoothFactor: 10 }).addTo(RoadsGroup).bringToFront();
                     }
                 }
             }
+
 
             var FoxholeRouter = {
                 API: API,
@@ -140,7 +159,6 @@ define(['leaflet', 'json-loader!../../Mapped/Unified.fitted-for-leaflet.geojson'
 
                         if (wardenPath == null)
                             wardenPath = FoxholeRouter.wardenPathFinder.findPath({ name: "path", geometry: { coordinates: [start.lng, start.lat] } }, { geometry: { coordinates: [finish.lng, finish.lat] } });
-
                         else {
                             var p = FoxholeRouter.wardenPathFinder.findPath({ name: "path", geometry: { coordinates: [start.lng, start.lat] } }, { geometry: { coordinates: [finish.lng, finish.lat] } });
                             if (p != null && p.path != null) {
@@ -148,11 +166,12 @@ define(['leaflet', 'json-loader!../../Mapped/Unified.fitted-for-leaflet.geojson'
                                     wardenPath.path.push(p.path[k]);
                                 wardenPath.weight += p.weight;
                             }
+                            else
+                                wardenPath = null;
                         }
 
                         if (colonialPath == null)
                             colonialPath = FoxholeRouter.colonialPathFinder.findPath({ name: "path", geometry: { coordinates: [start.lng, start.lat] } }, { geometry: { coordinates: [finish.lng, finish.lat] } });
-
                         else {
                             var p = FoxholeRouter.colonialPathFinder.findPath({ name: "path", geometry: { coordinates: [start.lng, start.lat] } }, { geometry: { coordinates: [finish.lng, finish.lat] } });
                             if (p != null && p.path != null) {
@@ -160,32 +179,64 @@ define(['leaflet', 'json-loader!../../Mapped/Unified.fitted-for-leaflet.geojson'
                                     colonialPath.path.push(p.path[k]);
                                 colonialPath.weight += p.weight;
                             }
+                            else
+                                colonialPath = null;
                         }
 
                     }
 
                     let call = callback.bind(context);
+                    var directions = ['East', 'Northeast', 'North', 'Northwest', 'West', 'Southwest', 'South', 'Southeast'];
                     var route_builder = function (name, opath, wp) {
                         var coordinates = [];
                         var instructions = [];
+                        var accumulated_distance = 0.0;
+
+                        last_point = L.latLng(opath.path[0][0], opath.path[1][1]);
+                        var last_direction = "";
+
                         for (var i = 0; i < opath.path.length; i++) {
                             coordinates[i] = L.latLng(opath.path[i][1], opath.path[i][0]);
-                            //instructions[i] = { distance: 1, time: 1, text: "x" };
+                            if (i > 0) {
+                                var dy = opath.path[i][0] - opath.path[i - 1][0];
+                                var dx = opath.path[i][1] - opath.path[i - 1][1];
+
+                                angle = Math.atan2(opath.path[i][1] - opath.path[i - 1][1], opath.path[i][0] - opath.path[i - 1][0]);
+                                if (angle < 0)
+                                    angle += Math.PI * 2;
+
+                                var direction = directions[parseInt(Math.round((angle / (Math.PI * 2)) * 8)) % 8];
+                                var distance = (Math.sqrt(dx * dx + dy * dy) / 256.0) * 12012.0;
+
+                                if ((last_direction != direction && (distance + accumulated_distance >= 100 || (i == opath.path.length - 1 && distance + accumulated_distance >= 30)))) {
+                                    angle = Math.atan2(opath.path[i][1] - last_point.lng, opath.path[i][0] - last_point.lat);
+                                    if (angle < 0)
+                                        angle += Math.PI * 2;
+                                    var generaldirection = directions[parseInt(Math.round((angle / (Math.PI * 2)) * 8)) % 8];
+
+                                    if (instructions.length > 0 && instructions[instructions.length - 1].text === generaldirection)
+                                        instructions[instructions.length - 1].distance += (distance + accumulated_distance);
+                                    else
+                                        instructions.push({ distance: distance + accumulated_distance, time: 1, dir: direction, text: generaldirection });
+                                    accumulated_distance = 0.0;
+                                    last_point = L.latLng(opath.path[i][0], opath.path[i][1]);
+                                }
+                                else
+                                    accumulated_distance += distance;
+                                last_direction = direction;
+                            }
                         }
+
+                        //instructions.splice(instructions.length - 1, 1);
+
                         var distance = (opath.weight / 256.0) * 12012.0;
                         return {
                             name: name,
                             summary:
                             {
                                 totalTime: (distance / 35000.0) * 3600.0,
+                                modifiedTime: (distance / 35000.0) * 3600.0 * 1.4, //+40% delay for slow trucks
                                 totalDistance: distance
-                                /*length of a region is 1.89 km
-width of a region is 2.184 km
-surface area of a region is 3.09811 km
-
-playable map length is 9.45 km
-playable map width is 12.012 km
-playable map surface area is 71.257 km*/
                             },
                             inputWaypoints: wp,
                             waypoints: wp,
@@ -198,50 +249,22 @@ playable map surface area is 71.257 km*/
                         call({ status: -1, message: "Could not find a route" }, []);
                     else {
 
-                        var routes = [route_builder("Shortest", path, waypoints)];
+                        if (path != null && (
+                            (wardenPath != null && wardenPath.path.length == path.path.length && wardenPath.path.reduce(function (result, value, index, array) { if (!result) return false; return path.path[index][0] == wardenPath.path[index][0] && path.path[index][1] == wardenPath.path[index][1]; }))
+                            ||
+                            (colonialPath != null && colonialPath.path.length == path.path.length && colonialPath.path.reduce(function (result, value, index, array) { if (!result) return false; return path.path[index][0] == colonialPath.path[index][0] && path.path[index][1] == colonialPath.path[index][1]; }))
+                        )
+                        )
+                            var routes = [];
+                        else
+                            var routes = [route_builder("Shortest Route", path, waypoints)];
+
                         if (wardenPath != null)
-                            routes.push(route_builder("Warden", wardenPath, waypoints));
+                            routes.unshift(route_builder("Warden Route", wardenPath, waypoints));
                         if (colonialPath != null)
-                            routes.push(route_builder("Colonial", colonialPath, waypoints));
+                            routes.unshift(route_builder("Colonial Route", colonialPath, waypoints));
+
                         call(null, routes);
-
-
-                        //var mainRoute = wardenPath != null ? wardenPath : (colonialPath != null ? colonialPath : path);
-                        //for (var i = 1; i < mainRoute.path.length; i++) {
-                        //L.Routing.control.
-                        //}
-
-                        /*FoxholeRouter.NetworkLayer.clearLayers()
-                        if (path != null)
-                            for (var i = 1; i < path.path.length; i++) {
-                                new L.polyline([
-                                    [path.path[i - 1][1], path.path[i - 1][0]],
-                                    [path.path[i][1], path.path[i][0]]
-                                ], { color: '#888888', weight: 1, opacity: 1.0, renderer: FoxholeRouter.renderer, interactive: false, smoothFactor: 1 }).addTo(FoxholeRouter.NetworkLayer).bringToFront();
-                            }
-
-                        FoxholeRouter.WardenNetworkLayer.clearLayers()
-                        if (wardenPath != null)
-                            for (var i = 0; i < wardenPath.path.length - 1; i++) {
-                                new L.polyline(
-                                    [
-                                        [wardenPath.path[i][1], wardenPath.path[i][0]],
-                                        [wardenPath.path[i + 1][1], wardenPath.path[i + 1][0]]
-                                    ], { color: 'white', lineEnd: 'square', fillColor: 'blue', fill: true, weight: 2, renderer: FoxholeRouter.renderer, interactive: true, smoothFactor: 1 }
-                                ).addTo(FoxholeRouter.WardenNetworkLayer).bringToFront();
-                            }
-
-                        FoxholeRouter.ColonialNetworkLayer.clearLayers()
-                        if (colonialPath != null)
-                            for (var i = 0; i < colonialPath.path.length - 1; i++) {
-                                new L.polyline(
-                                    [
-                                        [colonialPath.path[i][1], colonialPath.path[i][0]],
-                                        [colonialPath.path[i + 1][1], colonialPath.path[i + 1][0]]
-                                    ], { color: 'white', fillColor: 'green', weight: 2, fill: true, renderer: FoxholeRouter.renderer, interactive: true, smoothFactor: 1 }
-                                ).addTo(FoxholeRouter.ColonialNetworkLayer).bringToFront();
-                            }
-                            */
                     }
                 }
             };
