@@ -11,6 +11,7 @@
     <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js" integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og==" crossorigin=""></script>
     <style type="text/css">
 
+
         .leaflet-routing-alt-minimized .detailed-routeinfo {
             display: none;
         }
@@ -40,7 +41,7 @@
                 continuousWorld: true,
                 bounds: L.latLngBounds(L.latLng(-256, 0), L.latLng(0, 256)),
                 id: 'LogiWaze'
-             });
+            });
         SatelliteMap.addTo(mymap);
 
 
@@ -82,8 +83,8 @@
             }, { position: 'topright' }).addTo(mymap);
 
             var startingWaypoints = [
-                L.latLng(-148.2358, 192.46460000000002),
-                L.latLng(-151.9339, 191.6564)
+                L.latLng(-67.7688, 152.5585),
+                L.latLng(-187.4801, 97.6007)
             ];
 
             Router.Borders.setStyle(
@@ -93,8 +94,6 @@
                     dashArray: '5, 10'
                 }
             );
-
-            Router.Roads.setStyle({ color: 'purple' });
 
             class custom_formatter extends L.Routing.ItineraryBuilder {
                 constructor() {
@@ -134,7 +133,7 @@
                 formatTime(t) {
                     var t1 = L.Routing.Formatter.prototype.formatTime.call(this, t);
                     var t2 = L.Routing.Formatter.prototype.formatTime.call(this, t * 1.4);
-                    return "<td><div class=\'detailed-routeinfo\'><img src=\'HeavyTruck.png\' style=\'width: 32px; height: 32px; vertical-align: middle; filter: brightness(0%);\' />".concat(t1).concat("</div></td></tr><tr><td><div class=\'detailed-routeinfo\'><img src=\'HeavyTruck.png\' style=\'width: 32px; height: 32px; vertical-align: middle; filter: brightness(70%) sepia(50) saturate(70);\' />").concat(t2).concat("</div></td>");
+                    return "<td><div class=\'detailed-routeinfo\'><img src=\'HeavyTruck.png\' style=\'width: 32px; height: 32px; margin: 0 .5em; vertical-align: middle; filter: brightness(65%) saturate(100)\' />".concat(t1).concat("</div></td></tr><tr><td><div class=\'detailed-routeinfo\'><img src=\'HeavyTruck.png\' style=\'width: 32px; height: 32px; margin: 0 .5em; vertical-align: middle; filter: brightness(90%) sepia(25%) saturate(90)\' />").concat(t2).concat("</div></td>");
                 }
 
             }
@@ -165,7 +164,7 @@
                     },
                     fitSelectedRoutes: false,
                     itineraryBuilder: form,
-                    summaryTemplate: '<table style=\'border: 0; width: 100%; pointer-events: none;\'><tr><td colspan=\'2\'>{name}<span style=\'margin-left: 1em; display: none\' class=\'summary-routeinfo\'>{distance}</span></td></tr><tr><td rowspan=\'2\' style=\'text-align: center; padding: 4px;\'><span class=\'detailed-routeinfo\'>{distance}</span></td>{time}</tr></table>',
+                    summaryTemplate: '<table style=\'border: 0; width: 100%; pointer-events: none;\'><tr><td colspan=\'2\' style=\'font-weight: bold\'><img style=\'margin: 0 .5em; width:32px; height: 32px; vertical-align: middle\' src=\'{name}.webp'.concat().concat('\' />{name}<span style=\'margin-left: 1em; display: none\' class=\'summary-routeinfo\'>{distance}</span></td></tr><tr><td rowspan=\'2\' style=\'text-align: center; padding: 4px;\'><span class=\'detailed-routeinfo\'>{distance}</span></td>{time}</tr></table>'),
                     formatter: new custom_time_formatter
                 }
             ).addTo(mymap).on('waypointschanged', function (event) {

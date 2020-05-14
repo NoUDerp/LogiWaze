@@ -233,7 +233,7 @@ define(['leaflet', 'json-loader!../../Mapped/Unified.fitted-for-leaflet.geojson'
                             summary:
                             {
                                 totalTime: (distance / 35000.0) * 3600.0, // truck speed
-                                modifiedTime: (distance / 35000.0) * 3600.0 * 1.4, //+40% delay for slow trucks
+                                modifiedTime: (distance / 35000.0) * 3600.0 / .75, //+40% delay for slow trucks
                                 totalDistance: distance
                             },
                             inputWaypoints: wp,
