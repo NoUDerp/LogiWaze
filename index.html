@@ -31,7 +31,7 @@
                 bounds: L.latLngBounds(L.latLng(-256, 0), L.latLng(0, 256))
             }).setView([0, 0], 2);
 
-        var SatelliteMap = L.tileLayer('https://github.com/Kastow/Foxhole-Map-Tiles/raw/master/Sat Tiles/{z}/{z}_{x}_{y}.png',
+        var SatelliteMap = L.tileLayer('Sat Tiles/{z}/{z}_{x}_{y}.webp',
             {
                 crs: L.CRS.Simple,
                 maxZoom: 5,
@@ -44,7 +44,7 @@
         SatelliteMap.addTo(mymap);
 
 
-        var DrawnMap = L.tileLayer('https://github.com/Kastow/Foxhole-Map-Tiles/raw/master/Tiles/{z}/{z}_{x}_{y}.png',
+        var DrawnMap = L.tileLayer('Tiles/{z}/{z}_{x}_{y}.webp',
             {
                 crs: L.CRS.Simple,
                 maxZoom: 5,
