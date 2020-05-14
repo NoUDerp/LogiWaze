@@ -141,6 +141,8 @@ define(['leaflet', 'json-loader!../../Mapped/Unified.fitted-for-leaflet.geojson'
                     var path = null;
                     var wardenPath = null;
                     var colonialPath = null;
+                    var no_warden_path = false;
+                    var no_colonial_path = false;
 
                     for (var i = 0; i < waypoints.length - 1; i++) {
                         var start = waypoints[i].latLng;
@@ -157,33 +159,47 @@ define(['leaflet', 'json-loader!../../Mapped/Unified.fitted-for-leaflet.geojson'
                             }
                         }
 
+                        if (!no_warden_path) {
+                            if (wardenPath == null)
+                                wardenPath = FoxholeRouter.wardenPathFinder.findPath({ name: "path", geometry: { coordinates: [start.lng, start.lat] } }, { geometry: { coordinates: [finish.lng, finish.lat] } });
+                            else {
+                                var p = FoxholeRouter.wardenPathFinder.findPath({ name: "path", geometry: { coordinates: [start.lng, start.lat] } }, { geometry: { coordinates: [finish.lng, finish.lat] } });
+                                if (p != null && p.path != null) {
+                                    for (var k = 1; k < p.path.length; k++)
+                                        wardenPath.path.push(p.path[k]);
+                                    wardenPath.weight += p.weight;
+                                }
+                                else
+                                    wardenPath = null;
+                            }
+                        }
                         if (wardenPath == null)
-                            wardenPath = FoxholeRouter.wardenPathFinder.findPath({ name: "path", geometry: { coordinates: [start.lng, start.lat] } }, { geometry: { coordinates: [finish.lng, finish.lat] } });
-                        else {
-                            var p = FoxholeRouter.wardenPathFinder.findPath({ name: "path", geometry: { coordinates: [start.lng, start.lat] } }, { geometry: { coordinates: [finish.lng, finish.lat] } });
-                            if (p != null && p.path != null) {
-                                for (var k = 1; k < p.path.length; k++)
-                                    wardenPath.path.push(p.path[k]);
-                                wardenPath.weight += p.weight;
-                            }
-                            else
-                                wardenPath = null;
-                        }
+                            no_warden_path = true;
 
-                        if (colonialPath == null)
-                            colonialPath = FoxholeRouter.colonialPathFinder.findPath({ name: "path", geometry: { coordinates: [start.lng, start.lat] } }, { geometry: { coordinates: [finish.lng, finish.lat] } });
-                        else {
-                            var p = FoxholeRouter.colonialPathFinder.findPath({ name: "path", geometry: { coordinates: [start.lng, start.lat] } }, { geometry: { coordinates: [finish.lng, finish.lat] } });
-                            if (p != null && p.path != null) {
-                                for (var k = 1; k < p.path.length; k++)
-                                    colonialPath.path.push(p.path[k]);
-                                colonialPath.weight += p.weight;
+                        if (!no_colonial_path) {
+                            if (colonialPath == null)
+                                colonialPath = FoxholeRouter.colonialPathFinder.findPath({ name: "path", geometry: { coordinates: [start.lng, start.lat] } }, { geometry: { coordinates: [finish.lng, finish.lat] } });
+                            else {
+                                var p = FoxholeRouter.colonialPathFinder.findPath({ name: "path", geometry: { coordinates: [start.lng, start.lat] } }, { geometry: { coordinates: [finish.lng, finish.lat] } });
+                                if (p != null && p.path != null) {
+                                    for (var k = 1; k < p.path.length; k++)
+                                        colonialPath.path.push(p.path[k]);
+                                    colonialPath.weight += p.weight;
+                                }
+                                else
+                                    colonialPath = null;
                             }
-                            else
-                                colonialPath = null;
                         }
+                        if (colonialPath == null)
+                            no_colonial_path = true;
 
                     }
+
+                    if (no_colonial_path)
+                        colonialPath = null;
+
+                    if (no_warden_path)
+                        wardenPath = null;
 
                     let call = callback.bind(context);
                     var directions = ['East', 'Northeast', 'North', 'Northwest', 'West', 'Southwest', 'South', 'Southeast'];
