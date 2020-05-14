@@ -1,7 +1,7 @@
 ﻿<html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Demonstration foxhole router</title>
+    <title>LogiWaze</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin="" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" crossorigin="" />
 </head>
@@ -39,9 +39,10 @@
                 noWrap: true,
                 continuousWorld: true,
                 bounds: L.latLngBounds(L.latLng(-256, 0), L.latLng(0, 256)),
-                id: 'Demonstration Map'
-            });
+                id: 'LogiWaze'
+             });
         SatelliteMap.addTo(mymap);
+
 
         var DrawnMap = L.tileLayer('https://github.com/Kastow/Foxhole-Map-Tiles/raw/master/Tiles/{z}/{z}_{x}_{y}.png',
             {
@@ -51,7 +52,7 @@
                 noWrap: true,
                 continuousWorld: true,
                 bounds: L.latLngBounds(L.latLng(-256, 0), L.latLng(0, 256)),
-                id: 'Demonstration Map'
+                id: 'LogiWaze'
             });
         DrawnMap.addTo(mymap);
 
@@ -180,7 +181,7 @@
             // load initial waypoints
             var points = startingWaypoints;
             if (typeof (location.hash) != 'undefined' && location.hash != "" && location.hash != "#") {
-                var h = location.hash.substr(1);
+                var h = decodeURI(location.hash.substr(1));
                 var l = h.split("|");
                 points = [];
                 for (var i = 0; i < l.length; i++) {
