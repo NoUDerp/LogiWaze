@@ -1,7 +1,0 @@
-GetSpatialIndexExtent - INT table
-:memory: #use in-memory database
-SELECT GetSpatialIndexExtent(NULL, 1, 'geom');
-1 # rows (not including the header row)
-1 # columns
-GetSpatialIndexExtent(NULL, 1, 'geom')
-(NULL)

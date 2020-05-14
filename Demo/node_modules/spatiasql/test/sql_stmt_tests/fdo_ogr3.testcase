@@ -1,7 +1,0 @@
-FDO_OGR3
-:memory: #use in-memory database
-SELECT AutoFDOStart('a')
-1 # rows (not including the header row)
-1 # columns
-AutoFDOStart('a')
-0

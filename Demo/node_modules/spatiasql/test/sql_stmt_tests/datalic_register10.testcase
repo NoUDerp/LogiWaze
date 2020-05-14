@@ -1,7 +1,0 @@
-RegisterDataLicense() - Text url
-:memory: #use in-memory database
-SELECT RegisterDataLicense('alicense', 'anurl')
-1 # rows (not including the header row)
-1 # columns
-RegisterDataLicense('alicense', 'anurl')
-1
