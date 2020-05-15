@@ -98,25 +98,17 @@ View Demo of a single map is here: [https://foxholestats.com/router/](https://fo
 Pre-requisites: nodejs, webpack
 
 * install the required packages
-		```
-		npm install
-		```
-
-*some dependencies used in this project are misconfigured and need custom editing once downloaded - often they do not compile due to various problems. For that reason I have included the pre-compiled/built version as FoxholeRouter.js*
+```
+npm install
+```
 
 * build the project
-		```
-		npm run build
-		```
+```
+npm run build
+```
 
 * compiling the maps
-    * Maps are compiled using the included .NET Core C# application *ShrinkUnifiedGeoJSON*
-    * Town information is collected and compiled from the [Foxhole WarAPI](https://github.com/clapfoot/warapi) static requests using the included *static.sh* script and pre-installed [jq](https://stedolan.github.io/jq/) `./static.sh > towns.json`
-    * geojson files were converted from MULTILINESTRING to LINESTRING using [ogr2ogr](https://gdal.org/programs/ogr2ogr.html)
-		```
-		cd Mapped; for f in `ls *.geojson`; do ogr2ogr -f "GeoJSON" -nlt
-		LINESTRING "c-$f" "$f"; mv "c-$f" "$f"; done
-		```
+    * Town information is collected and compiled from the [Foxhole WarAPI](https://github.com/clapfoot/warapi) static requests using the included *static.sh* script `./static.sh > towns.json`
 
 
 ## References  
