@@ -1,5 +1,4 @@
-//'json-loader!../../Mapped/Unified.fitted-for-leaflet.geojson'
-define(['leaflet', 'json-loader!../Roads.geojson', 'json-loader!../../hex.geojson', './geojson-path-finder/index.js', '../towns.json', 'leaflet-routing-machine'],
+define(['leaflet', 'json-loader!../Roads.geojson', 'json-loader!../hex.geojson', './geojson-path-finder/index.js', '../towns.json', 'leaflet-routing-machine'],
     function (L, Paths, HexBorders, PathFinder, towns, routing_machine) {
         return {
             FoxholeRouter: function (mymap, API) {
