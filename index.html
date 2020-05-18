@@ -9,6 +9,7 @@
 
 
 
+
         #map-holder {
             opacity: 0;
             transition: opacity 3s;
@@ -91,7 +92,7 @@
             left: 50%;
             align-content: center;
             vertical-align: middle;
-            transform: translateX(-50%) translateY(25%);        
+            transform: translateX(-50%) translateY(25%);
         }
 
         .loader {
@@ -331,9 +332,11 @@
                 .on('waypointschanged', function (event) {
                     var l = "";
                     for (var i = 0; i < event.waypoints.length; i++) {
-                        if (i > 0)
-                            l = l.concat("|");
-                        l = l.concat(event.waypoints[i].latLng.lat.toFixed(4)).concat(",").concat(event.waypoints[i].latLng.lng.toFixed(4));
+                        if (event.waypoints[i] != null && event.waypoints[i].latLng != null && event.waypoints[i].latLng.lng != null && event.waypoints[i].latLng.lat != null) {
+                            if (i > 0)
+                                l = l.concat("|");
+                            l = l.concat(event.waypoints[i].latLng.lat.toFixed(3)).concat(",").concat(event.waypoints[i].latLng.lng.toFixed(3));
+                        }
                     }
                     location.hash = l;
                 })
