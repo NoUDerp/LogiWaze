@@ -10,6 +10,37 @@
 
 
 
+        .vehicle-speed-panel {
+            width: 100%;
+        }
+
+            .vehicle-speed-panel .fast-truck {
+                height: 28px;
+                margin: 0 4px;
+                vertical-align: middle;
+                filter: brightness(65%) saturate(100);
+            }
+
+            .vehicle-speed-panel .slow-truck {
+                height: 28px;
+                margin: 0 4px;
+                vertical-align: middle;
+                filter: brightness(90%) sepia(25%) saturate(90);
+            }
+
+        .route-summary {
+            border: 0;
+            width: 100%;
+            pointer-events: none;
+        }
+
+            .route-summary img {
+                margin: 0 .5em;
+                width: 32px;
+                height: 32px;
+                vertical-align: middle;
+            }
+
         #map-holder {
             opacity: 0;
             transition: opacity 3s;
@@ -265,23 +296,23 @@
                     var flatbed_time = (distance / 20000.0) * 3600.0; // 20 kmh?
                     var t5 = L.Routing.Formatter.prototype.formatTime.call(this, flatbed_time);
                     var t6 = L.Routing.Formatter.prototype.formatTime.call(this, flatbed_time / .75);
-                    a = "<div class=\'detailed-routeinfo\'><table style=\"width: 100%\">";
+                    a = "<div class=\'detailed-routeinfo\'><table class=\"vehicle-speed-panel\">";
                     a = a.concat("<tr>");
-                    a = a.concat("<td style=\"text-align: right\"><img src=\'Truck.webp\' style=\'height: 28px; margin: 0 4px; vertical-align: middle; filter: brightness(65%) saturate(100)\' /></td>");
+                    a = a.concat("<td style=\"text-align: right\"><img src=\'Truck.webp\' class='fast-truck' /></td>");
                     a = a.concat("<td style=\"text-align: left\">").concat(t1).concat("</td>");
-                    a = a.concat("<td style=\"text-align: right\"><img src=\'Truck.webp\' style=\'height: 28px; margin: 0 4px; vertical-align: middle; filter: brightness(90%) sepia(25%) saturate(90)\' /></td>");
+                    a = a.concat("<td style=\"text-align: right\"><img src=\'Truck.webp\' class='slow-truck' /></td>");
                     a = a.concat("<td style=\"text-align: left\">").concat(t2).concat("</td>");
                     a = a.concat("</tr>");
                     a = a.concat("<tr>");
-                    a = a.concat("<td style=\"text-align: right\"><img src=\'Jeep.webp\' style=\'height: 28px; margin: 0 4px; vertical-align: middle; filter: brightness(65%) saturate(100)\' /></td>");
+                    a = a.concat("<td style=\"text-align: right\"><img src=\'Jeep.webp\' class='fast-truck' /></td>");
                     a = a.concat("<td style=\"text-align: left\">").concat(t3).concat("</td>");
-                    a = a.concat("<td style=\"text-align: right\"><img src=\'Jeep.webp\' style=\'height: 28px; margin: 0 4px; vertical-align: middle; filter: brightness(90%) sepia(25%) saturate(90)\' /></td>");
+                    a = a.concat("<td style=\"text-align: right\"><img src=\'Jeep.webp\' class='slow-truck'  /></td>");
                     a = a.concat("<td style=\"text-align: left\">").concat(t4).concat("</td>");
                     a = a.concat("</tr>");
                     a = a.concat("<tr>");
-                    a = a.concat("<td style=\"text-align: right\"><img src=\'Flatbed.webp\' style=\'height: 28px; margin: 0 4px; vertical-align: middle; filter: brightness(65%) saturate(100)\' /></td>");
+                    a = a.concat("<td style=\"text-align: right\"><img src=\'Flatbed.webp\' class='fast-truck' /></td>");
                     a = a.concat("<td style=\"text-align: left\">").concat(t5).concat("</td>");
-                    a = a.concat("<td style=\"text-align: right\"><img src=\'Flatbed.webp\' style=\'height: 28px; margin: 0 4px; vertical-align: middle; filter: brightness(90%) sepia(25%) saturate(90)\' /></td>");
+                    a = a.concat("<td style=\"text-align: right\"><img src=\'Flatbed.webp\' class='slow-truck' /></td>");
                     a = a.concat("<td style=\"text-align: left\">").concat(t6).concat("</td>");
                     a = a.concat("</tr>");
                     a = a.concat("</table></div>");
@@ -324,8 +355,7 @@
                     },
                     fitSelectedRoutes: 'smart',
                     itineraryBuilder: form,
-                    summaryTemplate: '<table style=\'border: 0; width: 100%; pointer-events: none;\'><tr><td colspan=\'2\'><img style=\'margin: 0 .5em; width:32px; height: 32px; vertical-align: middle\' src=\'{name}.webp'.concat().concat('\' /><span style=\'font-weight: bold\'>{name}</span><span style=\'margin-left: 1em\' class=\'summary-routeinfo\'>{distance}</span></td></tr><tr><td style=\'text-align: center; padding: 4px;\'><div class=\'detailed-routeinfo\'>')
-                        .concat(!window.beta ? "" : '<button class="play-button" style="pointer-events: auto" onclick="window.narrateDirections()">▶</button>').concat('</div></td><td>{time}</td></tr></table>'),
+                    summaryTemplate: Router.summaryTemplate,
                     formatter: new custom_time_formatter(Router)
                 }
             ).addTo(mymap)

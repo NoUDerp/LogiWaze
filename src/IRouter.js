@@ -1,4 +1,4 @@
-define(['leaflet', 'json-loader!../Roads.geojson', 'json-loader!../hex.geojson', './geojson-path-finder/index.js', '../towns.json', 'leaflet-routing-machine'],
+﻿define(['leaflet', 'json-loader!../Roads.geojson', 'json-loader!../hex.geojson', './geojson-path-finder/index.js', '../towns.json', 'leaflet-routing-machine'],
     function (L, Paths, HexBorders, PathFinder, towns, routing_machine) {
         return {
             FoxholeRouter: function (mymap, API) {
@@ -14,7 +14,7 @@ define(['leaflet', 'json-loader!../Roads.geojson', 'json-loader!../hex.geojson',
                     var last_ownership = "NONE";
                     var last_p = null;
                     var keys = Object.keys(JSONRoads._layers);
-                    for (var k = 0; k < Paths.features[i].geometry.coordinates.length ; k++) {
+                    for (var k = 0; k < Paths.features[i].geometry.coordinates.length; k++) {
                         var feature = Paths.features[i];
                         var p = feature.geometry.coordinates[k];
                         if (p != null && p.length != null && p.length > 1 && typeof (p[0]) === 'number' && typeof (p[1]) === 'number') {
@@ -116,6 +116,7 @@ define(['leaflet', 'json-loader!../Roads.geojson', 'json-loader!../hex.geojson',
 
 
                 var FoxholeRouter = {
+                    summaryTemplate: '<table class="route-summary" ><tr><td colspan=\'2\'><img src=\'{name}.webp'.concat().concat('\' /><span>{name}</span><span style=\'font-weight: bold; margin-left: 1em\' class=\'summary-routeinfo\'>{distance}</span></td></tr><tr><td style=\'text-align: center; padding: 4px;\'><div class=\'detailed-routeinfo\'>').concat(!window.beta ? "" : '<button class="play-button" style="pointer-events: auto" onclick="window.narrateDirections()">▶</button>').concat('</div></td><td>{time}</td></tr></table>'),
                     API: API,
                     Voice: default_voice,
                     Synth: synth,
