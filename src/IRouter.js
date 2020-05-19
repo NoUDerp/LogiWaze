@@ -83,7 +83,7 @@ define(['leaflet', 'json-loader!../Roads.geojson', 'json-loader!../hex.geojson',
                         var lat2 = layer._latlngs[k].lat;
                         var lng2 = layer._latlngs[k].lng;
                         if (lat != null && lng != null && lat2 != null && lng2 != null)
-                            new L.polyline([[lat, lng], [lat2, lng2]], { color: '#000000', weight: 4, opacity: .5, renderer: renderer, interactive: false, smoothFactor: 1 }).addTo(RoadsGroup).bringToFront();
+                            new L.polyline([[lat, lng], [lat2, lng2]], { color: '#000000', weight: 4, opacity: .3, renderer: renderer, interactive: false, smoothFactor: 1 }).addTo(RoadsGroup).bringToFront();
                     }
                 }
                 for (var key in JSONRoads._layers) {
