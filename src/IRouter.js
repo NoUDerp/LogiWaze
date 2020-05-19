@@ -18,14 +18,14 @@
                         var feature = Paths.features[i];
                         var p = feature.geometry.coordinates[k];
                         if (p != null && p.length != null && p.length > 1 && typeof (p[0]) === 'number' && typeof (p[1]) === 'number') {
-                            var hash = p[0].toFixed(2).concat("|").concat(p[1].toFixed(2));
+                            var hash = p[0].toFixed(3).concat("|").concat(p[1].toFixed(3));
                             var increment = k == 0 || k == Paths.features[i].geometry.coordinates.length - 1 ? 1 : 2;
                             if (Intersections[hash] == null)
                                 Intersections[hash] = increment;
                             else
                                 Intersections[hash] = Intersections[hash] + increment;
-                            p[0] = parseFloat(p[0].toFixed(3));
-                            p[1] = parseFloat(p[1].toFixed(3));
+                            //p[0] = parseFloat(p[0].toFixed(5));
+                            //p[1] = parseFloat(p[1].toFixed(5));
                         }
                         else
                             p = p;
@@ -134,16 +134,16 @@
                         return angle;
                     },
                     pathFinder: new PathFinder(Paths, {
-                        precision: 1e-3,
+                        //precision: 1e-3,
                         weightFn: function (a, b, props) { var dx = a[0] - b[0]; var dy = a[1] - b[1]; return Math.sqrt(dx * dx + dy * dy); }
                     }),
                     setRoute: (route) => { FoxholeRouter.currentRoute = route; },
                     wardenPathFinder: new PathFinder(WardenRoutes, {
-                        precision: 1e-3,
+                        //precision: 1e-3,
                         weightFn: function (a, b, props) { var dx = a[0] - b[0]; var dy = a[1] - b[1]; return Math.sqrt(dx * dx + dy * dy); }
                     }),
                     colonialPathFinder: new PathFinder(ColonialRoutes, {
-                        precision: 1e-3,
+                        //precision: 1e-3,
                         weightFn: function (a, b, props) { var dx = a[0] - b[0]; var dy = a[1] - b[1]; return Math.sqrt(dx * dx + dy * dy); }
                     }),
                     routeLine: function (route, options) {
@@ -291,7 +291,7 @@
                                     var dx = opath.path[i][1] - opath.path[i - 1][1];
 
                                     var distance = (Math.sqrt(dx * dx + dy * dy) / 256.0) * 12012.0;
-                                    var hash = opath.path[i][0].toFixed(2).concat("|").concat(opath.path[i][1].toFixed(2));
+                                    var hash = opath.path[i][0].toFixed(3).concat("|").concat(opath.path[i][1].toFixed(3));
                                     accumulated_distance += distance;
                                     if ((Intersections[hash] > 2 || i == 1) && i < opath.path.length - 1) { /* if this is an intersection */
                                         crossroads.push({
