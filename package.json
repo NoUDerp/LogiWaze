@@ -20,6 +20,7 @@
     "leaflet-routing-machine": "^3.2.12",
     "@turf/distance": "^6.0.1",
     "@turf/explode": "^5.1.0",
+    "point-in-polygon": "*",
     "tap": "^12.0.0",
     "tap-spec": "^5.0.0",
     "tinyqueue": "^2.0.0",

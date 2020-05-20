@@ -7,15 +7,16 @@ global.FoxholeRouter = {
     }
 };
 
-global.FoxholeGeocoder = {
-    Create: function () {
-        var G = require('./IGeocoder.js');
-        return G.FoxholeGeocoder();
-    }
-};
-
 global.API = {
     Create: function () {
         return require('./API.js').API();
     }
 };
+
+global.FoxholeGeocoder = {
+    Create: function (API) {
+        var G = require('./IGeocoder.js');
+        return G.FoxholeGeocoder(API);
+    }
+};
+

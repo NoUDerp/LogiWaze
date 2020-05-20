@@ -7,7 +7,39 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" crossorigin="" />
     <style type="text/css">
 
+        .town-hall-icon {
+            opacity: .7;
+        }
 
+        .zoom-level-6 {
+            width: 1px !important;
+            height: 1px !important;
+        }
+
+        .zoom-level-5 {
+            width: 2px !important;
+            height: 2px !important;
+        }
+
+        .zoom-level-4 {
+            width: 4px !important;
+            height: 4px !important;
+        }
+
+        .zoom-level-3 {
+            width: 8px !important;
+            height: 8px !important;
+        }
+
+        .zoom-level-2 {
+            width: 16px !important;
+            height: 16px !important;
+        }
+
+        .zoom-level-1 {
+            width: 32px !important;
+            height: 32px !important;
+        }
 
         .route-summary button {
             background: #444857;
@@ -237,7 +269,7 @@
 
         var mymap = L.map('mapid',
             {
-                zoomSnap: 0.25,
+                zoomSnap: 1,
                 crs: L.CRS.Simple,
                 noWrap: true,
                 continuousWorld: true,
@@ -288,15 +320,18 @@
         APIManager.update(() => {
 
             var Router = FoxholeRouter.Create(mymap, APIManager);
-            var Geocoder = FoxholeGeocoder.Create();
+            var Geocoder = FoxholeGeocoder.Create(APIManager);
 
             L.control.layers(
                 {
                     'Satellite View': SatelliteMap,
                     'Map View': DrawnMap
                 }, {
+                'Town Halls': Router.TownHalls,
                 'Borders': Router.Borders,
                 'Roads': Router.RoadsCanvas,
+                'Colonial Roads': Router.ColonialRoadsCanvas,
+                'Warden Roads': Router.WardenRoadsCanvas
             }, { position: 'topright' }).addTo(mymap);
 
             var startingWaypoints = [
@@ -425,11 +460,14 @@
                 {
                     showAlternatives: false,
                     reverseWaypoints: true,
-                    maxGeocoderTolerance: 1000000,
                     routeWhileDragging: false,
                     router: Router,
                     autoRoute: true,
                     geocoder: Geocoder,
+                    plan: new L.Routing.Plan([], {
+                        maxGeocoderTolerance: 100000000,
+                        geocoder: Geocoder
+                    }),
                     routeLine: function (route, options) {
                         if (route.name == "Shortest Route")
                             return L.Routing.line(route, {

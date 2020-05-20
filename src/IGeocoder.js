@@ -1,7 +1,8 @@
 define(['leaflet', '../towns.json'], function (L, towns) {
     return {
-        FoxholeGeocoder: function () {
+        FoxholeGeocoder: function (API) {
             var FoxholeGeocoder = {
+                API: API,
                 /* distance between two strings */
                 levinshtein: function (a, b) {
                     if (a.length == 0) return b.length;
@@ -55,19 +56,22 @@ define(['leaflet', '../towns.json'], function (L, towns) {
 
                 /* The geocoding reverse lookup - nearest point */
                 reverse: function (location, scale, callback, context) {
+                    var region = API.calculateRegion(location.lng, location.lat);
                     let call = callback.bind(context);
                     var townlist = Object.keys(towns);
                     if (townlist.length === 0)
                         return call([], []);
-                    var distance = 10000000;
+                    var distance = -1;
                     var index = -1;
                     for (var i = 0; i < townlist.length; i++) {
-                        var disty = (location.lat - towns[townlist[i]].y);
-                        var distx = (location.lng - towns[townlist[i]].x);
-                        var dist_squared = distx * distx + disty * disty;
-                        if (dist_squared < distance) {
-                            distance = dist_squared;
-                            index = i;
+                        if (towns[townlist[i]].region === region) {
+                            var disty = (location.lat - towns[townlist[i]].y);
+                            var distx = (location.lng - towns[townlist[i]].x);
+                            var dist_squared = distx * distx + disty * disty;
+                            if (distance < 0 || dist_squared < distance) {
+                                distance = dist_squared;
+                                index = i;
+                            }
                         }
                     }
                     if (index == -1)

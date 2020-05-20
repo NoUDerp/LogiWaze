@@ -1,733 +1,616 @@
 {
-  "Buckler Sound": {
-    "x": 58.67491463272725,
-    "y": -88.28171235980238
-  },
-  "Fading Lights": {
-    "x": 69.07626538181816,
-    "y": -95.41221065939726
-  },
-  "The Cord": {
-    "x": 61.09065025454544,
-    "y": -95.52107908451063
-  },
-  "The Heir's Knife": {
-    "x": 47.77505415272725,
-    "y": -98.65651883126793
-  },
-  "The Long Fast": {
-    "x": 54.32509016727272,
-    "y": -103.4037095763116
-  },
-  "The Reach": {
-    "x": 69.6824338181818,
-    "y": -76.25105947141682
-  },
-  "Trammel Pool": {
-    "x": 71.00624938181815,
-    "y": -86.11112553556532
-  },
-  "World's End": {
-    "x": 44.913102618181796,
-    "y": -89.79367707679975
-  },
-  "Belaying Trace": {
-    "x": 186.97350176,
-    "y": -173.78782974182087
-  },
-  "Homesick": {
-    "x": 190.98336567272727,
-    "y": -163.57949564918036
-  },
-  "Mercy's Wail": {
-    "x": 198.39465550545455,
-    "y": -171.14583849705255
-  },
-  "Rumhold": {
-    "x": 186.49370842181818,
-    "y": -157.97574559260292
-  },
-  "Scurvyshire": {
-    "x": 191.89075208727274,
-    "y": -156.61847440197437
-  },
-  "The Stone Plank": {
-    "x": 210.874056,
-    "y": -166.40055116877417
-  },
-  "The Turncoat": {
-    "x": 191.37381454545454,
-    "y": -181.71782153167788
-  },
-  "Titan's End": {
-    "x": 199.55948948363636,
-    "y": -152.54971089220138
-  },
-  "Alchimio Estate": {
-    "x": 223.78755659636363,
-    "y": -131.84517495274045
-  },
-  "Isle of Psyche": {
-    "x": 221.3312547490909,
-    "y": -156.6442062899533
-  },
-  "Liar's Haven": {
-    "x": 240.85556858181818,
-    "y": -154.58825820234912
-  },
-  "Lost Airchal": {
-    "x": 237.62717399272728,
-    "y": -132.01625551887187
-  },
-  "Reef": {
-    "x": 242.73530210909092,
-    "y": -140.62310263294108
-  },
-  "Surge Gate": {
-    "x": 226.83015336727274,
-    "y": -148.40170829468408
-  },
-  "The Gale": {
-    "x": 232.10849076363638,
-    "y": -160.05864251338184
-  },
-  "The Iris": {
-    "x": 238.62292741818183,
-    "y": -147.37034542734415
-  },
-  "The Rush": {
-    "x": 233.7955005090909,
-    "y": -143.11167735776004
-  },
   "Camp Senti": {
+    "region": "GreatMarchHex",
     "x": 122.16120087272728,
     "y": -203.06383369948207
   },
   "Dendró Field": {
+    "region": "GreatMarchHex",
     "x": 140.62498909090908,
     "y": -207.06822552461603
   },
   "Leto": {
+    "region": "GreatMarchHex",
     "x": 116.1767382109091,
     "y": -208.7837514337747
   },
   "Lionsfort": {
+    "region": "GreatMarchHex",
     "x": 137.10822074181817,
     "y": -193.38856191213247
   },
   "Myrmidon's Stay": {
+    "region": "GreatMarchHex",
     "x": 132.92833978181818,
     "y": -197.72485367148244
   },
   "Remnant Villa": {
+    "region": "GreatMarchHex",
     "x": 130.37878923636364,
     "y": -206.17920251706167
   },
   "Sitaria": {
+    "region": "GreatMarchHex",
     "x": 129.74796800000001,
     "y": -213.37137684071192
   },
   "The Swan": {
+    "region": "GreatMarchHex",
     "x": 123.80142498909092,
     "y": -223.67323714213722
   },
   "Violethome": {
+    "region": "GreatMarchHex",
     "x": 119.29612753454546,
     "y": -196.2163970942793
   },
   "Checkpoint Bua": {
+    "region": "MarbanHollow",
     "x": 169.30300185454547,
     "y": -104.53961745808868
   },
   "Lockheed": {
+    "region": "MarbanHollow",
     "x": 169.46084214545454,
     "y": -123.91947171611511
   },
   "Maiden's Veil": {
+    "region": "MarbanHollow",
     "x": 163.72701651636365,
     "y": -108.7081445145667
   },
   "Mox": {
+    "region": "MarbanHollow",
     "x": 172.70073811636365,
     "y": -92.42421455528805
   },
   "Oster Wall": {
+    "region": "MarbanHollow",
     "x": 176.84499923636366,
     "y": -106.68719559343069
   },
   "Sanctum": {
+    "region": "MarbanHollow",
     "x": 150.13411144000003,
     "y": -98.66238486764652
   },
   "The Spitrocks": {
+    "region": "MarbanHollow",
     "x": 156.16519356363636,
     "y": -117.00903693374596
   },
   "Blackthroat": {
+    "region": "ViperPitHex",
     "x": 157.45109459636365,
     "y": -80.77106267930989
   },
   "Earl Crowley": {
+    "region": "ViperPitHex",
     "x": 177.64021436363637,
     "y": -68.09508781840944
   },
   "Fleck Crossing": {
+    "region": "ViperPitHex",
     "x": 164.40767676363637,
     "y": -69.05074250561262
   },
   "Fort Viper": {
+    "region": "ViperPitHex",
     "x": 155.54822890909094,
     "y": -71.52797775202745
   },
   "Kirknell": {
+    "region": "ViperPitHex",
     "x": 152.79494751272728,
     "y": -69.4740451417266
   },
   "Moltworth": {
+    "region": "ViperPitHex",
     "x": 168.65513567272728,
     "y": -76.01669723816178
   },
   "Serenity's Blight": {
+    "region": "ViperPitHex",
     "x": 160.29776200000003,
     "y": -61.53522918914007
   },
   "The Friars": {
+    "region": "ViperPitHex",
     "x": 152.15902349818185,
     "y": -80.26312088003252
   },
   "Firstmarch": {
+    "region": "ShackledChasmHex",
     "x": 178.82623769454545,
     "y": -183.92258233696907
   },
   "Gorgon Grove": {
+    "region": "ShackledChasmHex",
     "x": 150.03270285818184,
     "y": -182.66159573736266
   },
   "Limewood Holdfast": {
+    "region": "ShackledChasmHex",
     "x": 161.58571056727274,
     "y": -187.4546393972485
   },
   "Reflection": {
+    "region": "ShackledChasmHex",
     "x": 149.70414966545457,
     "y": -192.66956760341773
   },
   "Savages": {
+    "region": "ShackledChasmHex",
     "x": 157.80341576,
     "y": -175.75433009150532
   },
   "Silk Farms": {
+    "region": "ShackledChasmHex",
     "x": 160.0884540727273,
     "y": -195.11941331947094
   },
   "The Bell Toll": {
+    "region": "ShackledChasmHex",
     "x": 168.54758774545456,
     "y": -183.74483900596823
   },
   "The Grave of Rastus": {
+    "region": "ShackledChasmHex",
     "x": 169.91537247272728,
     "y": -174.64993640407835
   },
   "The Vanguard": {
+    "region": "ShackledChasmHex",
     "x": 171.8802176218182,
     "y": -193.38932115274545
   },
   "Abandoned Ward": {
+    "region": "DeadLandsHex",
     "x": 123.65217512727273,
     "y": -127.89307489810253
   },
   "Brine Glen": {
-    "x": 133.60482210909092,
-    "y": -133.32902679488478
-  },
-  "Callahan's Belt": {
-    "x": 134.80309294545455,
-    "y": -124.71604980814513
+    "region": "DeadLandsHex",
+    "x": 138.50147607272726,
+    "y": -136.9496947179016
   },
   "Callahan's Boot": {
+    "region": "DeadLandsHex",
     "x": 130.2141021090909,
     "y": -127.62822908757815
   },
   "Callahan's Gate": {
-    "x": 143.65403880727274,
-    "y": -126.64817583833147
+    "region": "DeadLandsHex",
+    "x": 133.81040267636365,
+    "y": -112.2927188566268
   },
   "Iron's End": {
+    "region": "DeadLandsHex",
     "x": 126.19439709090909,
     "y": -118.40932626007677
   },
   "Liberation Point": {
+    "region": "DeadLandsHex",
     "x": 116.03603502545454,
     "y": -130.0868534165738
   },
   "Sun's Hollow": {
+    "region": "DeadLandsHex",
     "x": 117.4505769890909,
     "y": -136.93008815469457
   },
   "The Pits": {
+    "region": "DeadLandsHex",
     "x": 126.37646661818181,
     "y": -133.2313648266735
   },
   "The Salt Farms": {
+    "region": "DeadLandsHex",
     "x": 125.99717236363637,
     "y": -141.6090429001559
   },
   "The Salt March": {
-    "x": 139.16948480000002,
-    "y": -137.31851618083772
+    "region": "DeadLandsHex",
+    "x": 143.0292498618182,
+    "y": -127.27134529670977
   },
   "The Spine": {
+    "region": "DeadLandsHex",
     "x": 119.01551104,
     "y": -117.35135546447341
   },
   "Fort Duncan": {
+    "region": "LinnMercyHex",
     "x": 104.10992544727273,
     "y": -118.57008456951186
   },
   "Hardline": {
+    "region": "LinnMercyHex",
     "x": 86.57057417454544,
     "y": -111.42446575609176
   },
   "Lathair": {
+    "region": "LinnMercyHex",
     "x": 103.60534665454546,
     "y": -100.2633349230642
   },
   "Outwich Ranch": {
+    "region": "LinnMercyHex",
     "x": 108.77731465454545,
     "y": -107.31365189219528
   },
   "Rotdust": {
+    "region": "LinnMercyHex",
     "x": 97.07911538181818,
     "y": -93.80899217396185
   },
   "The Crimson Gardens": {
+    "region": "LinnMercyHex",
     "x": 80.50435302545455,
     "y": -113.02142839121251
   },
   "The First Coin": {
+    "region": "LinnMercyHex",
     "x": 88.82776666909092,
     "y": -116.65088258598556
   },
   "The Last Grove": {
+    "region": "LinnMercyHex",
     "x": 87.63057708363635,
     "y": -123.34785413620199
   },
   "The Long Whine": {
+    "region": "LinnMercyHex",
     "x": 86.47377638545456,
     "y": -96.1540104968949
   },
   "The Prairie Bazaar": {
+    "region": "LinnMercyHex",
     "x": 98.4121353090909,
     "y": -117.53567712215747
   },
   "Ulster Falls": {
+    "region": "LinnMercyHex",
     "x": 91.42037362181819,
     "y": -105.838921909091
   },
   "Barronstown ": {
+    "region": "HeartlandsHex",
     "x": 86.54559834909091,
     "y": -179.45445377315673
   },
   "Barronswall": {
+    "region": "HeartlandsHex",
     "x": 88.14415357818183,
     "y": -184.8132044242159
   },
   "Barrony Ranch": {
+    "region": "HeartlandsHex",
     "x": 87.19582112727272,
     "y": -172.73705576356627
   },
   "Deeplaw Post": {
+    "region": "HeartlandsHex",
     "x": 81.13598787636363,
     "y": -185.81912471226926
   },
   "Fort Providence": {
+    "region": "HeartlandsHex",
     "x": 105.10334461818184,
     "y": -183.59749955318392
   },
   "Greenfield Orchard": {
+    "region": "HeartlandsHex",
     "x": 103.8770185090909,
     "y": -176.5544592633089
   },
   "Oleander Homestead": {
+    "region": "HeartlandsHex",
     "x": 108.349278,
     "y": -188.08882948552153
   },
   "Proexí": {
+    "region": "HeartlandsHex",
     "x": 100.19480573818183,
     "y": -201.96987314062875
   },
   "The Blemish": {
+    "region": "HeartlandsHex",
     "x": 100.03364396363637,
     "y": -187.12655193989954
   },
   "The Plough": {
+    "region": "HeartlandsHex",
     "x": 95.29949507636363,
     "y": -178.3753571475551
   },
-  "Brackish Point": {
-    "x": 188.6487075781818,
-    "y": -114.08412526923172
-  },
-  "Dannan Ridge": {
-    "x": 209.40200712727273,
-    "y": -116.87584511357974
-  },
-  "Enduring Wake": {
-    "x": 184.12536072727272,
-    "y": -132.52441600774947
-  },
-  "Iron Junction": {
-    "x": 191.27978853818183,
-    "y": -139.91816627841723
-  },
-  "Saltbrook Channel": {
-    "x": 189.0847509818182,
-    "y": -124.88281846213377
-  },
-  "The Evil Eye": {
-    "x": 209.17265672727274,
-    "y": -126.3607006517405
-  },
-  "The Old Jack Tar": {
-    "x": 180.19123092363637,
-    "y": -128.2443145463306
-  },
-  "The Overland": {
-    "x": 201.31101774545454,
-    "y": -139.9582327579215
-  },
-  "Tuatha Watchpost": {
-    "x": 214.29164436363635,
-    "y": -130.04532652221553
-  },
-  "Vulpine Watch": {
-    "x": 203.79558711272728,
-    "y": -113.7931544388058
-  },
-  "Wellchurch": {
-    "x": 198.49913003636362,
-    "y": -126.3655660139508
-  },
-  "Woodbind": {
-    "x": 207.0952469818182,
-    "y": -137.4191114747163
-  },
   "Amethyst": {
+    "region": "UmbralWildwoodHex",
     "x": 142.79449134545456,
     "y": -163.82895208120726
   },
   "Atropos' Fate": {
+    "region": "UmbralWildwoodHex",
     "x": 131.39796247272727,
     "y": -179.7709083476123
   },
   "Clotho's Refuge": {
+    "region": "UmbralWildwoodHex",
     "x": 133.27713000727272,
     "y": -161.2144055908787
   },
   "GoldenRoot Ranch": {
+    "region": "UmbralWildwoodHex",
     "x": 112.0214467490909,
     "y": -170.3454884289365
   },
   "Hermit's Rest": {
+    "region": "UmbralWildwoodHex",
     "x": 135.96978501818182,
     "y": -173.0525082427066
   },
   "Lachesis' Tally ": {
+    "region": "UmbralWildwoodHex",
     "x": 143.85133381818184,
     "y": -170.11340823293273
   },
   "Sentry": {
+    "region": "UmbralWildwoodHex",
     "x": 123.15848145454544,
     "y": -181.42168503292348
   },
   "Stray": {
+    "region": "UmbralWildwoodHex",
     "x": 136.22575476363636,
     "y": -155.59300882122403
   },
   "The Foundry": {
+    "region": "UmbralWildwoodHex",
     "x": 117.57242368000001,
     "y": -157.21070749303257
   },
   "Thunder Row": {
+    "region": "UmbralWildwoodHex",
     "x": 116.86868852363637,
     "y": -174.88670424620034
   },
   "Vagrant Bastion": {
+    "region": "UmbralWildwoodHex",
     "x": 128.3564776727273,
     "y": -154.6689568181374
   },
   "Brodytown": {
+    "region": "ReachingTrailHex",
     "x": 125.39939607272726,
     "y": -40.23701248158349
   },
   "Dwyerstown": {
+    "region": "ReachingTrailHex",
     "x": 111.73788020363637,
     "y": -41.89529722294512
   },
   "Elksford": {
+    "region": "ReachingTrailHex",
     "x": 120.11038347636364,
     "y": -47.267012633305825
   },
   "Fort Mac Conaill": {
+    "region": "ReachingTrailHex",
     "x": 137.40823086545456,
     "y": -61.41976358986895
   },
   "Harpy": {
+    "region": "ReachingTrailHex",
     "x": 125.36230074181819,
     "y": -64.16439624107423
   },
   "Ice Ranch": {
+    "region": "ReachingTrailHex",
     "x": 137.5046777018182,
     "y": -42.86190280452834
   },
   "Mousetrap": {
+    "region": "ReachingTrailHex",
     "x": 143.8301370181818,
     "y": -48.71770160004024
   },
   "Nightchurch": {
+    "region": "ReachingTrailHex",
     "x": 122.33191191272726,
     "y": -57.25181820014069
   },
   "Reprieve": {
+    "region": "ReachingTrailHex",
     "x": 130.07993669818183,
     "y": -54.47782125391194
   },
   "The Ark": {
+    "region": "ReachingTrailHex",
     "x": 139.2446761890909,
     "y": -49.71472194341746
   },
-  "Alabastor Island": {
-    "x": 17.94954303999998,
-    "y": -105.39817975096653
-  },
-  "Base Akri": {
-    "x": 42.52431098181816,
-    "y": -108.31581170269604
-  },
-  "Crach Woods": {
-    "x": 25.82024442181816,
-    "y": -108.0062162496053
-  },
-  "Integrum": {
-    "x": 31.186503854545435,
-    "y": -119.02054777776584
-  },
-  "Kofterí Channel": {
-    "x": 25.85468945454545,
-    "y": -123.16669900522203
-  },
-  "Martius": {
-    "x": 37.86332363636362,
-    "y": -99.46396034596302
-  },
-  "Posterus": {
-    "x": 36.9633114181818,
-    "y": -114.16514605630516
-  },
-  "Skelter Course": {
-    "x": 32.191953629090904,
-    "y": -103.43630003554173
-  },
-  "The Conclave": {
-    "x": 11.772917003636337,
-    "y": -117.25525570303276
-  },
-  "The Ides": {
-    "x": 38.759430690909085,
-    "y": -104.02869396168873
-  },
   "Cragstown": {
+    "region": "CallahansPassageHex",
     "x": 128.7768832,
     "y": -73.16969820547214
   },
   "Crumbling Post": {
+    "region": "CallahansPassageHex",
     "x": 121.19779840000001,
     "y": -96.75534327674282
   },
   "Lochan Berth": {
+    "region": "CallahansPassageHex",
     "x": 130.91840698181818,
     "y": -84.61672328469393
   },
   "Overlook Hill": {
+    "region": "CallahansPassageHex",
     "x": 129.17435112727273,
     "y": -93.66237165224445
   },
   "Scáth Passing": {
+    "region": "CallahansPassageHex",
     "x": 120.97626996363635,
     "y": -88.97403969708154
   },
   "Solas Gorge": {
+    "region": "CallahansPassageHex",
     "x": 113.76032442181818,
     "y": -80.86728208271583
   },
   "The Crumbling Passage": {
+    "region": "CallahansPassageHex",
     "x": 125.9262403490909,
     "y": -99.16757938012452
   },
   "The Latch": {
+    "region": "CallahansPassageHex",
     "x": 138.5722018909091,
     "y": -95.07246608442114
   },
   "The Procession": {
+    "region": "CallahansPassageHex",
     "x": 139.70100596363636,
     "y": -85.24353471055937
   },
   "White Chapel": {
+    "region": "CallahansPassageHex",
     "x": 140.26323316363636,
     "y": -78.29782786609516
   },
   "Bootnap": {
+    "region": "DrownedValeHex",
     "x": 177.2646972727273,
     "y": -150.50399019001506
   },
   "Coaldrifter Stead": {
+    "region": "DrownedValeHex",
     "x": 170.46425741818183,
     "y": -161.1685719107702
   },
   "Eastmarch": {
+    "region": "DrownedValeHex",
     "x": 150.50695589090913,
     "y": -149.27576638326104
   },
   "Loggerhead": {
+    "region": "DrownedValeHex",
     "x": 161.77925308363638,
     "y": -140.69003784347183
   },
   "Singing Serpents": {
+    "region": "DrownedValeHex",
     "x": 170.50562003636367,
     "y": -140.60679459988873
   },
   "The Baths": {
+    "region": "DrownedValeHex",
     "x": 157.48920694545455,
     "y": -153.83594743885396
   },
   "The Saltcaps": {
+    "region": "DrownedValeHex",
     "x": 169.10002457454547,
     "y": -134.82397019109933
   },
   "The Wash": {
+    "region": "DrownedValeHex",
     "x": 165.7974681818182,
     "y": -149.69103734232118
   },
   "The Willow Wood": {
+    "region": "DrownedValeHex",
     "x": 153.94386480727275,
     "y": -161.75820584229797
   },
   "Wisp's Warning": {
+    "region": "DrownedValeHex",
     "x": 155.03435917818183,
     "y": -139.84258808625373
   },
-  "Huskhollow": {
-    "x": 62.189008479999984,
-    "y": -130.53066313115397
-  },
-  "Iuxta Homestead": {
-    "x": 68.0828434181818,
-    "y": -115.72438156611483
-  },
-  "Macha's Keening": {
-    "x": 67.58635562181817,
-    "y": -139.38617701324264
-  },
-  "Mara": {
-    "x": 74.7040879272727,
-    "y": -127.36612916333183
-  },
-  "Pleading Wharf": {
-    "x": 64.0594031272727,
-    "y": -136.76607828603878
-  },
-  "Scarp of Ambrose": {
-    "x": 57.11311122909089,
-    "y": -123.13628483775847
-  },
-  "Scythe": {
-    "x": 71.61275573818179,
-    "y": -121.89318963017391
-  },
-  "Terra": {
-    "x": 63.39066130909089,
-    "y": -124.17685561470651
-  },
-  "The Bone Haft": {
-    "x": 58.137103781818155,
-    "y": -116.05208003634428
-  },
-  "The Jade Cove": {
-    "x": 55.02887279999999,
-    "y": -134.00715428837088
-  },
-  "The Spearhead": {
-    "x": 46.73789063272724,
-    "y": -115.96616144818873
-  },
-  "Victa": {
-    "x": 55.47086378181817,
-    "y": -143.0948809848699
-  },
   "Gravekeeper's Holdfast": {
+    "region": "MooringCountyHex",
     "x": 89.56975101818182,
     "y": -74.98279003227407
   },
   "Headstone": {
+    "region": "MooringCountyHex",
     "x": 91.94670729454546,
     "y": -67.34242998972263
   },
   "Luch's Workshop": {
+    "region": "MooringCountyHex",
     "x": 103.41554825454546,
     "y": -55.53921000977476
   },
   "MacConmara Barrows": {
+    "region": "MooringCountyHex",
     "x": 96.95137138181818,
     "y": -79.85008105434721
   },
   "Morrighan's Grave": {
+    "region": "MooringCountyHex",
     "x": 103.73300687272726,
     "y": -71.84872887199225
   },
   "Ogmaran": {
+    "region": "MooringCountyHex",
     "x": 89.889118,
     "y": -54.250957227017665
   },
   "The Cut": {
+    "region": "MooringCountyHex",
     "x": 81.54078112727274,
     "y": -77.27383588850063
   },
   "The Spade": {
+    "region": "MooringCountyHex",
     "x": 77.35612506909092,
     "y": -65.37329455600573
   },
   "The Wind Hills": {
+    "region": "MooringCountyHex",
     "x": 87.30420966545455,
     "y": -83.42130246648995
   },
   "Wiccwalk": {
+    "region": "MooringCountyHex",
     "x": 105.78971832000002,
     "y": -79.3311883606898
   },
   "Feirmor": {
+    "region": "LochMorHex",
     "x": 93.20760410909091,
     "y": -145.5042706193433
   },
   "Market Road": {
+    "region": "LochMorHex",
     "x": 79.32173961454546,
     "y": -148.7646776177222
   },
   "Mercy's Wish": {
+    "region": "LochMorHex",
     "x": 90.97316489454545,
     "y": -133.25475261653654
   },
   "Moon's Copse": {
+    "region": "LochMorHex",
     "x": 105.69325193454546,
     "y": -148.47729877094633
   },
   "The Roilfort": {
+    "region": "LochMorHex",
     "x": 97.0055084,
     "y": -158.60290961314803
   },
   "Tomb of the First": {
+    "region": "LochMorHex",
     "x": 82.21576841454547,
     "y": -136.34255212317905
   },
   "Westmarch": {
+    "region": "LochMorHex",
     "x": 99.11441964363635,
     "y": -134.31881297526425
   }
