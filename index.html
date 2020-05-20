@@ -287,13 +287,13 @@
                 }
 
                 formatTime(distance) {
-                    var time = (distance / 35000.0) * 3600.0; // 35 kmh
+                    var time = distance * Router.truckSpeed;
                     var t1 = L.Routing.Formatter.prototype.formatTime.call(this, time);
                     var t2 = L.Routing.Formatter.prototype.formatTime.call(this, time / .75);
-                    var jeep_time = (distance / 45000.0) * 3600.0; // 40 kmh?
+                    var jeep_time = distance * Router.jeepSpeed;
                     var t3 = L.Routing.Formatter.prototype.formatTime.call(this, jeep_time);
                     var t4 = L.Routing.Formatter.prototype.formatTime.call(this, jeep_time / .75);
-                    var flatbed_time = (distance / 20000.0) * 3600.0; // 20 kmh?
+                    var flatbed_time = distance * Router.flatbedSpeed;
                     var t5 = L.Routing.Formatter.prototype.formatTime.call(this, flatbed_time);
                     var t6 = L.Routing.Formatter.prototype.formatTime.call(this, flatbed_time / .75);
                     a = "<div class=\'detailed-routeinfo\'><table class=\"vehicle-speed-panel\">";

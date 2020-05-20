@@ -133,6 +133,9 @@
                             angle += Math.PI * 2;
                         return angle;
                     },
+                    truckSpeed: 3600.0 / 45000.0, // 45 kmh
+                    jeepSpeed: 3600.0 / 55000.0,
+                    flatbedSpeed: 3600 / 25000.0,
                     pathFinder: new PathFinder(Paths, {
                         //precision: 1e-3,
                         weightFn: function (a, b, props) { var dx = a[0] - b[0]; var dy = a[1] - b[1]; return Math.sqrt(dx * dx + dy * dy); }
