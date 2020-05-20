@@ -8,10 +8,48 @@
     <style type="text/css">
 
 
+        .route-summary button {
+            background: #444857;
+            color: white;
+            font-weight: bold;
+            border-radius: 3px;
+            border: 2px solid transparent;
+            width: 32px;
+            height: 28px;
+            font-size: 18px;
+            margin: 0 2px;
+        }
+
+        .route-summary-header {
+            pointer-events: auto;
+        }
+
+        .route-summary button:hover {
+            opacity: 1;
+            transition: ease-in .2s;
+            background-color: #555968;
+        }
+
+        .audio-controls {
+            transform: translateY(2px);
+            height: 28px;
+            margin-left: auto;
+            display: inline;
+            float: right;
+            vertical-align: middle;
+            display: table-cell;
+            vertical-align: middle;
+        }
+
+
 
 
         .vehicle-speed-panel {
             width: 100%;
+        }
+
+        .no-click, .vehicle-speed-panel {
+            pointer-events: none !important;
         }
 
             .vehicle-speed-panel .fast-truck {
@@ -31,7 +69,7 @@
         .route-summary {
             border: 0;
             width: 100%;
-            pointer-events: none;
+            /*pointer-events: none;*/
         }
 
             .route-summary img {
@@ -116,6 +154,14 @@
 
         .leaflet-zoom-anim .leaflet-zoom-animated {
             transition-duration: .1s;
+        }
+
+        .leaflet-routing-container {
+            opacity: .85;
+        }
+
+        .leaflet-routing-geocoder input {
+            padding: 0 4px;
         }
 
         .logo {
@@ -249,7 +295,7 @@
                     var container = document.createElement("TR");
                     var divider1 = document.createElement("TD");
 
-                    divider1.innerText = distance.concat(" ").concat(text);
+                    divider1.innerText = text;
                     divider1.style = "font-size: x-small; width: 100%";
 
                     container.appendChild(divider1);
@@ -326,9 +372,24 @@
             }
 
             var form = new custom_formatter();
-
+            window.playing = false;
             window.narrateDirections = function () {
-                Router.narrate();
+                if (!window.playing) {
+                    window.playing = true;
+                    x = document.getElementsByClassName("play-button");
+                    if (x != null)
+                        for (var i = 0; i < x.length; i++);
+                            //x[i].innerText = "❙❙";
+                    Router.narrate();
+                }
+                else {
+                    window.playing = false;
+                    x = document.getElementsByClassName("play-button");
+                    if (x != null)
+                        for (var i = 0; i < x.length; i++);
+                            //x[i].innerText = "▶";
+                    Router.pauseNarrate();
+                }
             };
 
             Router.Control = L.Routing.control(
@@ -358,18 +419,19 @@
                     summaryTemplate: Router.summaryTemplate,
                     formatter: new custom_time_formatter(Router)
                 }
-            ).addTo(mymap)
-                .on('waypointschanged', function (event) {
-                    var l = "";
-                    for (var i = 0; i < event.waypoints.length; i++) {
-                        if (event.waypoints[i] != null && event.waypoints[i].latLng != null && event.waypoints[i].latLng.lng != null && event.waypoints[i].latLng.lat != null) {
-                            if (i > 0)
-                                l = l.concat("|");
-                            l = l.concat(event.waypoints[i].latLng.lat.toFixed(3)).concat(",").concat(event.waypoints[i].latLng.lng.toFixed(3));
-                        }
+            ).addTo(mymap);
+
+            Router.Control.on('waypointschanged', function (event) {
+                var l = "";
+                for (var i = 0; i < event.waypoints.length; i++) {
+                    if (event.waypoints[i] != null && event.waypoints[i].latLng != null && event.waypoints[i].latLng.lng != null && event.waypoints[i].latLng.lat != null) {
+                        if (i > 0)
+                            l = l.concat("|");
+                        l = l.concat(event.waypoints[i].latLng.lat.toFixed(3)).concat(",").concat(event.waypoints[i].latLng.lng.toFixed(3));
                     }
-                    location.hash = l;
-                })
+                }
+                location.hash = l;
+            })
                 .on('routeselected', function (event) {
                     Router.setRoute(event.route);
                 });
