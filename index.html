@@ -8,20 +8,49 @@
     <style type="text/css">
 
 
+
         .route-summary button {
             background: #444857;
             color: white;
             font-weight: bold;
             border-radius: 3px;
             border: 2px solid transparent;
-            width: 32px;
-            height: 28px;
             font-size: 18px;
-            margin: 0 2px;
+            margin: 0 4px;
         }
+
+        .play-button {
+            /*  border: 1px solid red;*/
+            display: inline-block;
+            transition: all 0.5s ease;
+        }
+
+            .play-button .triangle {
+                transition: all 0.7s ease-in-out;
+                stroke-dasharray: 240;
+                stroke-dashoffset: 480;
+                stroke: #FFFFFF;
+                transform: translateY(0)
+            }
+
+            .play-button svg {
+                width: 22px;
+                height: 22px;
+            }
+
+
+            .play-button:hover .triangle {
+                stroke-dashoffset: 0;
+                opacity: 1;
+                stroke: #FFFFFF;
+                animation: none nudge 0.7s ease-in-out;
+            }
+
 
         .route-summary-header {
             pointer-events: auto;
+            padding: 4px 0;
+            line-height: 38px;
         }
 
         .route-summary button:hover {
@@ -31,7 +60,7 @@
         }
 
         .audio-controls {
-            transform: translateY(2px);
+            transform: translateY(5px);
             height: 28px;
             margin-left: auto;
             display: inline;
@@ -156,7 +185,7 @@
             transition-duration: .1s;
         }
 
-        .leaflet-routing-container {
+        .leaflet-routing-container, .leaflet-control-layers {
             opacity: .85;
         }
 
@@ -379,7 +408,7 @@
                     x = document.getElementsByClassName("play-button");
                     if (x != null)
                         for (var i = 0; i < x.length; i++);
-                            //x[i].innerText = "❙❙";
+                    //x[i].innerText = "❙❙";
                     Router.narrate();
                 }
                 else {
@@ -387,7 +416,7 @@
                     x = document.getElementsByClassName("play-button");
                     if (x != null)
                         for (var i = 0; i < x.length; i++);
-                            //x[i].innerText = "▶";
+                    //x[i].innerText = "▶";
                     Router.pauseNarrate();
                 }
             };
