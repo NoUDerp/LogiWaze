@@ -138,8 +138,9 @@
                     }
                 }
 
-                var ScaleTownHalls = function () {
-                    var zoom = mymap.getZoom();
+                var ScaleTownHalls = function (zoom) {
+                    if (zoom == null)
+                        zoom = mymap.getZoom();
                     var scale = Math.round(32.0 * Math.sqrt(zoom / 6));
                     var x = document.getElementsByClassName('town-hall-icon');
                     if (x != null)
@@ -151,7 +152,7 @@
                         }
                 };
 
-                mymap.on('zoomend', ScaleTownHalls);
+                mymap.on('zoomanim', (e) => { ScaleTownHalls(e.zoom); });
 
                 for (var key in JSONRoads._layers) {
                     var layer = JSONRoads._layers[key];
