@@ -308,14 +308,15 @@
 
     <script type="text/javascript">
         var APIManager = API.Create();
-
+        
         const urlParams = new URLSearchParams(window.location.search);
         const myParam = urlParams.get('beta');
         window.beta = myParam != null;
 
         APIManager.update(() => {
 
-            var Router = FoxholeRouter.Create(mymap, APIManager);
+            var VoiceNarrator = Narrator.Create();
+            var Router = FoxholeRouter.Create(mymap, APIManager, VoiceNarrator);
             var Geocoder = FoxholeGeocoder.Create(APIManager);
 
             L.control.layers(

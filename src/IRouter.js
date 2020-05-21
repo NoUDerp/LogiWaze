@@ -1,7 +1,7 @@
 ﻿define(['leaflet', 'json-loader!../Roads.geojson', 'json-loader!../hex.geojson', './geojson-path-finder/index.js', 'leaflet-routing-machine'],
     function (L, Paths, HexBorders, PathFinder, routing_machine) {
         return {
-            FoxholeRouter: function (mymap, API) {
+            FoxholeRouter: function (mymap, API, Narrator) {
                 var JSONRoads = L.geoJSON(Paths);
                 var MainRoutes = { crs: Paths.crs, features: [], type: "FeatureCollection", filter: Paths.filter };
                 var WardenRoutes = { crs: Paths.crs, features: [], type: "FeatureCollection", filter: Paths.filter };
@@ -204,9 +204,6 @@
                     }
                 }
 
-                const synth = window.speechSynthesis;
-                var v = window.speechSynthesis.getVoices();
-                var default_voice = v[Math.round(Math.random() * v.length).toFixed()];
 
                 var playbutton = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/" x="0px" y="0px" width="32px" height="32px" viewBox="20 20 173.7 173.7" enable-background="new 0 0 213.7 213.7" xml:space="preserve"><polygon class="triangle" id="XMLID_18_" fill="none" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" points="73.5,62.5 148.5,105.8 73.5,149.1 "/></svg>'
                 //: 120
@@ -216,8 +213,6 @@
                     TownHalls: TownHalls,
                     API: API,
                     ScaleTownHalls: ScaleTownHalls,
-                    Voice: default_voice,
-                    Synth: synth,
                     Borders: L.geoJSON(HexBorders).addTo(mymap),
                     Roads: JSONRoads,
                     RoadsCanvas: RoadsGroup,
@@ -256,10 +251,10 @@
                     angleToDirection: function (angle) {
                         return FoxholeRouter.cardinalDirections[parseInt(Math.round((angle / (Math.PI * 2)) * 8)) % 8];
                     },
-                    instructionQueue: [],
+                    instructionQueue: Narrator.instructions,
                     giveDirections: function (instructions) {
                         var time = 0;
-                        FoxholeRouter.instructionQueue = [];
+                        Narrator.clearInstructions();
                         for (var i = 0; i < instructions.length; i++) {
                             var direction = instructions[i];
                             var delta = i == 0 ? 0.0 : (instructions[i - 1].distance / 35000.0) * 3600.0;
@@ -280,16 +275,9 @@
                         const direction = FoxholeRouter.instructionQueue[0];
                         FoxholeRouter.instructionQueue.splice(0, 1);
                         setTimeout(function () {
-                            var utter = new SpeechSynthesisUtterance();
-                            utter.rate = 1;
-                            utter.pitch = 0.5;
-                            utter.text = direction.text;
-                            utter.voice = FoxholeRouter.Voice;
+                        
                             FoxholeRouter.queueNextInstruction();
-                            // event after text has been spoken
-                            //utter.onend = function () { alert('Speech has finished'); }
-                            // speak
-                            FoxholeRouter.Synth.speak(utter);
+                            Narrator.speak(direction.text);
                         }, direction.time * 1000.0);
                     },
                     route: function (waypoints, callback, context, options) {
