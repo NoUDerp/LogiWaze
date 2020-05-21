@@ -324,12 +324,12 @@
 
             L.control.layers(
                 {
-                    'Satellite View': SatelliteMap,
-                    'Map View': DrawnMap
+                    'Map View': DrawnMap,
+                    'Satellite View': SatelliteMap
                 }, {
                 'Town Halls': Router.TownHalls,
                 'Borders': Router.Borders,
-                'Roads': Router.RoadsCanvas,
+                'Uncontrolled Roads': Router.RoadsCanvas,
                 'Colonial Roads': Router.ColonialRoadsCanvas,
                 'Warden Roads': Router.WardenRoadsCanvas
             }, { position: 'topright' }).addTo(mymap);
