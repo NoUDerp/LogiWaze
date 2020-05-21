@@ -138,18 +138,20 @@
                     }
                 }
 
-                //mymap.on('zoomend', function () {
-                //    var zoom = mymap.getZoom();
-                //    var x = document.getElementsByClassName('town-hall-icon');
-                //    if (x != null)
-                //        for (var i = 0; i < x.length; i++) {
-                //            for (var v = 1; v <= 5; v++)
-                //                if (v == zoom)
-                //                    x[i].classList.add("zoom-level-".concat(zoom));
-                //                else
-                //                    x[i].classList.remove("zoom-level-".concat(zoom));
-                //        }
-                //});
+                var ScaleTownHalls = function () {
+                    var zoom = mymap.getZoom();
+                    var scale = Math.round(32.0 * Math.sqrt(zoom / 6));
+                    var x = document.getElementsByClassName('town-hall-icon');
+                    if (x != null)
+                        for (var i = 0; i < x.length; i++) {
+                            x[i].style.width = scale.toFixed().toString().concat("px");
+                            x[i].style.height = scale.toFixed().toString().concat("px");
+                            x[i].style["margin-left"] = (-scale / 2).toFixed().toString().concat("px");
+                            x[i].style["margin-top"] = (-scale / 2).toFixed().toString().concat("px");
+                        }
+                };
+
+                mymap.on('zoomend', ScaleTownHalls);
 
                 for (var key in JSONRoads._layers) {
                     var layer = JSONRoads._layers[key];
@@ -212,6 +214,7 @@
                         .concat(!window.beta ? "" : '<div class="audio-controls detailed-summary"><button class="play-button" style="pointer-events: auto" onclick="window.narrateDirections()">'.concat(playbutton).concat('</button></div>')).concat('</td></tr><tr><td class="no-click">{time}</td></tr></table>'),
                     TownHalls: TownHalls,
                     API: API,
+                    ScaleTownHalls: ScaleTownHalls,
                     Voice: default_voice,
                     Synth: synth,
                     Borders: L.geoJSON(HexBorders).addTo(mymap),

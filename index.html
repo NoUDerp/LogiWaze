@@ -517,6 +517,8 @@
 
             Router.Control.setWaypoints(points);
 
+            Router.ScaleTownHalls();
+
             document.getElementById("map-holder").style.opacity = '1';
             document.getElementById("loader-holder").style.opacity = '0';
             setTimeout(() => { document.getElementById("loader-holder").style.display = 'none'; }, 1000);
