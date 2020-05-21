@@ -3,19 +3,21 @@
         return {
             FoxholeRouter: function (mymap, API) {
                 var JSONRoads = L.geoJSON(Paths);
+                var MainRoutes = { crs: Paths.crs, features: [], type: "FeatureCollection", filter: Paths.filter };
                 var WardenRoutes = { crs: Paths.crs, features: [], type: "FeatureCollection", filter: Paths.filter };
                 var ColonialRoutes = { crs: Paths.crs, features: [], type: "FeatureCollection", filter: Paths.filter };
 
                 var Intersections = {};
 
+                var keys = Object.keys(JSONRoads._layers);
                 for (var i = 0; i < Paths.features.length; i++) {
+                    var feature = Paths.features[i];
                     var warden_features = new Array();
                     var colonial_features = new Array();
+                    var all_features = new Array();
                     var last_ownership = "NONE";
                     var last_p = null;
-                    var keys = Object.keys(JSONRoads._layers);
-                    for (var k = 0; k < Paths.features[i].geometry.coordinates.length; k++) {
-                        var feature = Paths.features[i];
+                    for (var k = 0; k < feature.geometry.coordinates.length; k++) {
                         var p = feature.geometry.coordinates[k];
                         if (p != null && p.length != null && p.length > 1) {
                             var hash = p[0].toFixed(3).concat("|").concat(p[1].toFixed(3));
@@ -26,7 +28,12 @@
                         var region = Paths.features[i].properties.region;
                         var ownership = API.ownership(p[0], p[1], region).ownership;
                         JSONRoads._layers[keys[i]]._latlngs[k].ownership = ownership;
-                        if (ownership != "OFFLINE") {
+
+                        if (API.mapControl[feature.properties.region] != null)
+                            all_features.push(p);
+
+                        if (ownership != "OFFLINE" && ownership != "") {
+
                             var fso = ownership === "COLONIALS" ? colonial_features : warden_features;
                             if (k > 0 && last_ownership != ownership && ownership != "NONE") {
                                 var fs = last_ownership === "COLONIALS" ? colonial_features : warden_features;
@@ -49,6 +56,7 @@
                                 }
                             }
 
+
                             if (ownership == "NONE") {
                                 warden_features.push(p);
                                 colonial_features.push(p);
@@ -63,6 +71,9 @@
                         WardenRoutes.features.push({ type: "Feature", properties: Paths.features[i].properties, geometry: { type: "LineString", coordinates: warden_features } });
                     if (colonial_features.length > 1)
                         ColonialRoutes.features.push({ type: "Feature", properties: Paths.features[i].properties, geometry: { type: "LineString", coordinates: colonial_features } });
+                    if (all_features.length > 1)
+                        MainRoutes.features.push({ type: "Feature", properties: Paths.features[i].properties, geometry: { type: "LineString", coordinates: all_features } });
+
                 }
 
                 var RoadsGroup = L.layerGroup().addTo(mymap);
@@ -221,7 +232,7 @@
                     truckSpeed: 3600.0 / 45000.0, // 45 kmh
                     jeepSpeed: 3600.0 / 55000.0,
                     flatbedSpeed: 3600 / 25000.0,
-                    pathFinder: new PathFinder(Paths, {
+                    pathFinder: new PathFinder(MainRoutes, {
                         weightFn: function (a, b, props) { var dx = a[0] - b[0]; var dy = a[1] - b[1]; return Math.sqrt(dx * dx + dy * dy); }
                     }),
                     setRoute: (route) => { FoxholeRouter.currentRoute = route; },
