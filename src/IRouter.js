@@ -125,7 +125,7 @@
                             L.marker([th.y, th.x], {
                                 icon: L.icon({
                                     iconUrl: 'MapIcons/'.concat(icon),
-                                    iconSize: [16, 16],
+                                    iconSize: [24, 24],
                                     //iconAnchor: [22, 24],
                                     //popupAnchor: [-3, -76],
                                     //shadowUrl: 'my-icon-shadow.png',
