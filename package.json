@@ -27,6 +27,7 @@
     "turf-point": "^2.0.1"
   },
   "devDependencies": {
+	  "make": "*",
     "webpack-cli": "^3.3",
     "webpack": "*",
     "jq": "*"
