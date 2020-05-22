@@ -126,13 +126,7 @@
                                 icon: L.icon({
                                     iconUrl: 'MapIcons/'.concat(icon),
                                     iconSize: [24, 24],
-                                    //iconAnchor: [22, 24],
-                                    //popupAnchor: [-3, -76],
-                                    //shadowUrl: 'my-icon-shadow.png',
-                                    //shadowRetinaUrl: 'my-icon-shadow@2x.png',
-                                    //shadowSize: [28, 28],
                                     className: "town-hall-icon"
-                                    //shadowAnchor: [22, 94]
                                 })
                             }).addTo(TownHalls);
                     }
@@ -245,40 +239,11 @@
                         return new Line(route, options);
                     },
                     narrate: function () {
-                        FoxholeRouter.giveDirections(FoxholeRouter.currentRoute.instructions);
+                        Narrator.giveDirections(FoxholeRouter.currentRoute.instructions);
                     },
                     cardinalDirections: ['East', 'Northeast', 'North', 'Northwest', 'West', 'Southwest', 'South', 'Southeast'],
                     angleToDirection: function (angle) {
                         return FoxholeRouter.cardinalDirections[parseInt(Math.round((angle / (Math.PI * 2)) * 8)) % 8];
-                    },
-                    instructionQueue: Narrator.instructions,
-                    giveDirections: function (instructions) {
-                        var time = 0;
-                        Narrator.clearInstructions();
-                        for (var i = 0; i < instructions.length; i++) {
-                            var direction = instructions[i];
-                            var delta = i == 0 ? 0.0 : (instructions[i - 1].distance / 35000.0) * 3600.0;
-                            FoxholeRouter.instructionQueue.push(
-                                {
-                                    time: delta,
-                                    text: direction.text
-                                }
-                            );
-                            time += delta;
-                        }
-                        FoxholeRouter.queueNextInstruction();
-                    },
-                    queueNextInstruction: function () {
-                        if (FoxholeRouter.instructionQueue === null || FoxholeRouter.instructionQueue.length == 0)
-                            return;
-
-                        const direction = FoxholeRouter.instructionQueue[0];
-                        FoxholeRouter.instructionQueue.splice(0, 1);
-                        setTimeout(function () {
-                        
-                            FoxholeRouter.queueNextInstruction();
-                            Narrator.speak(direction.text);
-                        }, direction.time * 1000.0);
                     },
                     route: function (waypoints, callback, context, options) {
                         // modify new waypoints to find closest ones
