@@ -9,20 +9,37 @@ define(null, function () {
                 voices: voices,
                 selectedVoice: selected_voice,
                 instructions: [],
+                currentInstruction: -1,
+                paused: false,
                 speak: function (text) {
                     var utter = new SpeechSynthesisUtterance();
                     utter.rate = 1.2;
-                    utter.pitch = 1.0;//0.65;
+                    utter.pitch = 1.0;
+                    utter.volume = .5;
                     utter.text = text;
                     utter.voice = Narrator.selectedVoice;
                     Narrator.speechSynthesis.speak(utter);
                 },
+
                 clearInstructions: function () {
-                    Narrator.instructions.splice(0, Narrator.instructions.length);
+                    Narrator.instructions = [];
+                    this.currentInstruction = -1;
                 },
+
                 giveDirections: function (instructions) {
                     var time = 0;
-                    Narrator.clearInstructions();
+                    if (instructions.length == Narrator.instructions.length) {
+                        var clear = false;
+                        for (var i = 0; i < instructions.length; i++)
+                            if (instructions[i] != Narrator.instructions[i]) {
+                                clear = true;
+                                break;
+                            }
+                    }
+
+                    //if (clear)
+                        Narrator.clearInstructions();
+
                     for (var i = 0; i < instructions.length; i++) {
                         var direction = instructions[i];
                         var delta = i == 0 ? 0.0 : (instructions[i - 1].distance / 35000.0) * 3600.0;
@@ -36,12 +53,32 @@ define(null, function () {
                     }
                     Narrator.queueNextInstruction();
                 },
+                pauseNarration: function () {
+
+                },
+                resumeNarration: function () {
+
+                },
                 queueNextInstruction: function () {
                     if (Narrator.instructions === null || Narrator.instructions.length == 0)
                         return;
 
-                    const direction = Narrator.instructions[0];
-                    Narrator.instructions.splice(0, 1);
+                    var index = ++Narrator.currentInstruction;
+
+                    var f = document.getElementsByClassName("narrator-step-".concat(index - 1));
+                    if (f != null && f.length > 0) {
+                        f[0].style.background = null;
+                        f[0].style.color = null;
+                    }
+
+                    var f = document.getElementsByClassName("narrator-step-".concat(index));
+                    if (f != null && f.length > 0) {
+                        f[0].style.background = "#666666"
+                        f[0].style.color = "#FFFFFF"
+                    }
+
+
+                    const direction = Narrator.instructions[index];
                     setTimeout(function () {
 
                         Narrator.queueNextInstruction();

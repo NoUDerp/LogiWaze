@@ -8,6 +8,8 @@
                 var ColonialRoutes = { crs: Paths.crs, features: [], type: "FeatureCollection", filter: Paths.filter };
 
                 var Intersections = {};
+                var BorderCache = {};
+                var BorderCrossings = {};
 
                 var keys = Object.keys(JSONRoads._layers);
                 for (var i = 0; i < Paths.features.length; i++) {
@@ -19,11 +21,15 @@
                     var last_p = null;
                     for (var k = 0; k < feature.geometry.coordinates.length; k++) {
                         var p = feature.geometry.coordinates[k];
-                        if (p != null && p.length != null && p.length > 1) {
-                            var hash = p[0].toFixed(3).concat("|").concat(p[1].toFixed(3));
-                            var increment = k == 0 || k == Paths.features[i].geometry.coordinates.length - 1 ? 1 : 2;
-                            Intersections[hash] = Intersections[hash] == null ? increment : (Intersections[hash] = Intersections[hash] + increment);
-                        }
+                        var hash = p[0].toFixed(3).concat("|").concat(p[1].toFixed(3));
+                        var increment = k == 0 || k == feature.geometry.coordinates.length - 1 ? 1 : 2;
+
+                        Intersections[hash] = Intersections[hash] == null ? increment : (Intersections[hash] + increment);
+
+                        if (BorderCache[hash] == null)
+                            BorderCache[hash] = feature.properties.region;
+                        else if (BorderCache[hash] != feature.properties.region)
+                            BorderCrossings[hash] = 1;
 
                         var region = Paths.features[i].properties.region;
                         var ownership = API.ownership(p[0], p[1], region).ownership;
@@ -151,7 +157,7 @@
                 for (var key in JSONRoads._layers) {
                     var layer = JSONRoads._layers[key];
                     for (var k = 1; k < layer._latlngs.length; k++) {
-                        var region = layer.feature.properties.Region;
+                        var region = layer.feature.properties.region;
                         var lat = layer._latlngs[k - 1].lat;
                         var lng = layer._latlngs[k - 1].lng;
                         var lat2 = layer._latlngs[k].lat;
@@ -175,7 +181,7 @@
                 for (var key in JSONRoads._layers) {
                     var layer = JSONRoads._layers[key];
                     for (var k = 1; k < layer._latlngs.length; k++) {
-                        var region = layer.feature.properties.Region;
+                        var region = layer.feature.properties.region;
                         var lat = layer._latlngs[k - 1].lat;
                         var lng = layer._latlngs[k - 1].lng;
                         var lat2 = layer._latlngs[k].lat;
@@ -197,7 +203,7 @@
                         }
                     }
                 }
-
+                var highlighter = L.layerGroup().addTo(mymap);
 
                 var playbutton = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/" x="0px" y="0px" width="32px" height="32px" viewBox="20 20 173.7 173.7" enable-background="new 0 0 213.7 213.7" xml:space="preserve"><polygon class="triangle" id="XMLID_18_" fill="none" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" points="73.5,62.5 148.5,105.8 73.5,149.1 "/></svg>'
                 //: 120
@@ -226,13 +232,16 @@
                     jeepSpeed: 3600.0 / 55000.0,
                     flatbedSpeed: 3600 / 25000.0,
                     pathFinder: new PathFinder(MainRoutes, {
+                        compact: null,
                         weightFn: function (a, b, props) { var dx = a[0] - b[0]; var dy = a[1] - b[1]; return Math.sqrt(dx * dx + dy * dy); }
                     }),
                     setRoute: (route) => { FoxholeRouter.currentRoute = route; },
                     wardenPathFinder: WardenRoutes != null && WardenRoutes.features != null && WardenRoutes.features.length > 0 ? new PathFinder(WardenRoutes, {
+                        compact: null,
                         weightFn: function (a, b, props) { var dx = a[0] - b[0]; var dy = a[1] - b[1]; return Math.sqrt(dx * dx + dy * dy); }
                     }) : null,
                     colonialPathFinder: ColonialRoutes != null && ColonialRoutes.features != null && ColonialRoutes.features.length > 0 ? new PathFinder(ColonialRoutes, {
+                        compact: null,
                         weightFn: function (a, b, props) { var dx = a[0] - b[0]; var dy = a[1] - b[1]; return Math.sqrt(dx * dx + dy * dy); }
                     }) : null,
                     routeLine: function (route, options) {
@@ -246,6 +255,7 @@
                         return FoxholeRouter.cardinalDirections[parseInt(Math.round((angle / (Math.PI * 2)) * 8)) % 8];
                     },
                     route: function (waypoints, callback, context, options) {
+                        highlighter.clearLayers();
                         // modify new waypoints to find closest ones
                         for (var i = 0; i < waypoints.length; i++) {
                             var closestPoint = null;
@@ -282,7 +292,7 @@
                             else {
                                 var p = FoxholeRouter.pathFinder.findPath({ name: "path", geometry: { coordinates: [start.lng, start.lat] } }, { geometry: { coordinates: [finish.lng, finish.lat] } });
                                 if (p != null && p.path != null) {
-                                    for (var k = 1; k < p.path.length; k++)
+                                    for (var k = 0; k < p.path.length; k++)
                                         path.path.push(p.path[k]);
                                     path.weight += p.weight;
                                 }
@@ -294,7 +304,7 @@
                                 else {
                                     var p = FoxholeRouter.wardenPathFinder.findPath({ name: "path", geometry: { coordinates: [start.lng, start.lat] } }, { geometry: { coordinates: [finish.lng, finish.lat] } });
                                     if (p != null && p.path != null) {
-                                        for (var k = 1; k < p.path.length; k++)
+                                        for (var k = 0; k < p.path.length; k++)
                                             wardenPath.path.push(p.path[k]);
                                         wardenPath.weight += p.weight;
                                     }
@@ -311,7 +321,7 @@
                                 else {
                                     var p = FoxholeRouter.colonialPathFinder.findPath({ name: "path", geometry: { coordinates: [start.lng, start.lat] } }, { geometry: { coordinates: [finish.lng, finish.lat] } });
                                     if (p != null && p.path != null) {
-                                        for (var k = 1; k < p.path.length; k++)
+                                        for (var k = 0; k < p.path.length; k++)
                                             colonialPath.path.push(p.path[k]);
                                         colonialPath.weight += p.weight;
                                     }
@@ -345,51 +355,46 @@
 
                                     var distance = (Math.sqrt(dx * dx + dy * dy) / 256.0) * 12012.0;
                                     var hash = opath.path[i][0].toFixed(3).concat("|").concat(opath.path[i][1].toFixed(3));
-                                    accumulated_distance += distance;
-                                    if ((Intersections[hash] > 2 || i == 1) && i < opath.path.length - 1) { /* if this is an intersection */
+                                    var border = BorderCrossings[hash] === 1;
+                                    if ((border || Intersections[hash] > 2 || i == 1 || i == opath.path.length - 1)) { /* if this is an intersection */
+                                        var region = opath.path[i][2];
                                         crossroads.push({
-                                            angleIn: FoxholeRouter.angleToDirection(FoxholeRouter.calculateAngle(opath.path[i - 1], opath.path[i])),
-                                            angleOut: i < opath.path.length - 1 ? FoxholeRouter.angleToDirection(FoxholeRouter.calculateAngle(opath.path[i], opath.path[i + 1])) : null,
+                                            angleIn: FoxholeRouter.calculateAngle(opath.path[i - 1], opath.path[i]),
+                                            angleOut: i < opath.path.length - 1 ? FoxholeRouter.calculateAngle(opath.path[i], opath.path[i + 1]) : null,
                                             coordinates: [opath.path[i - 1], opath.path[i]],
-                                            distanceFromLast: accumulated_distance
+                                            distanceFromLast: accumulated_distance,
+                                            region: region,
+                                            border: border
                                         });
-                                        accumulated_distance = 0;
+                                        accumulated_distance = distance;
                                     }
-                                }
-                                else {
-                                    crossroads.push({
-                                        angleIn: null,
-                                        angleOut: i < opath.path.length - 1 ? FoxholeRouter.angleToDirection(FoxholeRouter.calculateAngle(opath.path[i], opath.path[i + 1])) : null,
-                                        coordinates: [opath.path[i]],
-                                        distanceFromLast: 0
-                                    })
+                                    else
+                                        accumulated_distance += distance;
                                 }
                             }
 
-                            for (var i = 0; i < crossroads.length; i++) {
+                            var turns = {
+                                0: 'Continue', 1: 'Veer left', 2: 'Turn left', 3: 'Sharp turn left', 4: 'About turn', 5: 'Sharp turn right', 6: 'Turn right', 7: 'Veer right',
+                                "-1": 'Veer right', "-2": 'Turn right', "-3": 'Sharp turn right', "-4": 'About turn', "-5": 'Sharp turn left', "-6": 'Turn left', "-7": 'Veer left',
+                            };
+
+
+                            for (var i = 0; i < crossroads.length - 1; i++) {
                                 var j = crossroads[i];
-                                if (j.angleIn === null && i == 0)
-                                    instructions.push({ distance: 0, time: 0, text: "Drive ".concat(j.angleOut) });
-                                else {
-                                    if (j.angleIn === j.angleOut) {
-                                        var text = "Continue driving ".concat(j.angleOut).concat(" through the intersection");
-                                        if (i < crossroads.length - 1)
-                                            text = text.concat(". Proceed for ").concat(crossroads[i].distanceFromLast.toFixed()).concat(" meters.");
-                                        else
-                                            text = text.concat(".");
-                                        instructions.push({ distance: j.distanceFromLast, time: 0, text: text });
+                                {
+                                    var direction = FoxholeRouter.angleToDirection(j.angleOut);
+                                    var jangleIn = parseInt(Math.round((j.angleIn / (Math.PI * 2)) * 8)) % 8;
+                                    var jangleOut = parseInt(Math.round((j.angleOut / (Math.PI * 2)) * 8)) % 8;
+                                    var border = i < crossroads.length - 1 && crossroads[i + 1].border ? 1 : 0;
+                                    if (jangleIn == jangleOut)
+                                        var text = "Continue ".concat(direction).concat(" ").concat(i < crossroads.length - 1 ? crossroads[i + 1].distanceFromLast.toFixed().toString().concat(" meters") : '');
+                                    else {
+                                        var text = turns[jangleOut - jangleIn].concat(' and drive ').concat(direction).concat(' for ').concat(crossroads[i + 1].distanceFromLast.toFixed().toString()).concat(" meters");
                                     }
-                                    else if (j.angleOut != null) {
-                                        var text = "Turn ".concat(j.angleOut).concat(" at the intersection");
-                                        if (i < crossroads.length - 1)
-                                            text = text.concat(" and continue for ").concat(crossroads[i].distanceFromLast.toFixed()).concat(" meters.");
-                                        else
-                                            text = text.concat(".");
-                                        instructions.push({ distance: j.distanceFromLast, time: 0, text: text });
-                                    }
+                                    instructions.push({ distance: crossroads[i + 1].distanceFromLast, time: 0, text: j.region.concat('|').concat(text).concat('|').concat(border.toString()) });
                                 }
                             }
-                            instructions.push({ distance: 0, time: 0, text: "You have reached your destination." });
+                            instructions.push({ distance: 0, time: 0, text: crossroads[crossroads.length - 1].region.concat("|").concat("You have arrived at your destination.|0") });
 
 
                             var distance = (opath.weight / 256.0) * 12012.0; //map scale 

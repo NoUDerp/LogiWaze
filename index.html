@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" crossorigin="" />
     <style type="text/css">
 
+
         .leaflet-marker-draggable {
             z-index: -10000;
         }
@@ -312,7 +313,7 @@
 
     <script type="text/javascript">
         var APIManager = API.Create();
-        
+
         const urlParams = new URLSearchParams(window.location.search);
         const myParam = urlParams.get('beta');
         window.beta = myParam != null;
@@ -348,24 +349,78 @@
             );
 
             class custom_formatter extends L.Routing.ItineraryBuilder {
-                constructor() {
+                constructor(API) {
                     super();
                     this.index = 0;
+                    this.counter = 1;
+                    this.lastRegion = "";
+                    this.API = API;
                 }
 
                 createStep(text, distance, steps) {
                     if (!window.beta)
                         return document.createTextNode("");
 
+                    var region;
+                    var border = 0;
+                    if (text.indexOf("|") >= 0) {
+                        var u = text.split("\|");
+                        region = u[0];
+                        text = u[1];
+                        border = parseInt(u[2]);
+                    }
+                    else
+                        region = "";
+
+
+                    if (region != this.lastRegion) {
+                        var container2 = document.createElement("TR");
+                        container2.classList.add("narrator-step-".concat((this.counter++).toString()));
+                        container2.classList.add("narrator-steps");
+                        container2.style.padding = "1px 2px";
+                        var divider2 = document.createElement("TD");
+                        divider2.innerText = this.API.mapRegionName(region);
+                        divider2.style["font-size"] = "normal";
+                        divider2.style.width = "100%";
+                        divider2.style["pointer-events"] = "none";
+                        container2.appendChild(divider2);
+                        this.block.appendChild(container2);
+                    }
+
+                    if (border === 1) {
+                        var container3 = document.createElement("TR");
+                        container3.style.padding = "1px 2px";
+                        var divider3 = document.createElement("TD");
+                        divider3.innerText = "You are approaching a border crossing, check your radio";
+                        divider3.style = "font-size: x-small; width: 100%";
+                        divider3.style["padding-left"] = "2em";
+                        container3.appendChild(divider3);
+                        this.block.appendChild(container3);
+                    }
+
+                    this.lastRegion = region;
+
                     var container = document.createElement("TR");
+                    container.classList.add("narrator-step-".concat((this.counter++).toString()));
+                    container.classList.add("narrator-steps");
+                    container.style.padding = "1px 2px";
                     var divider1 = document.createElement("TD");
 
-                    divider1.innerText = text;
+                    if (border === 1)
+                        divider1.innerText = text.concat(" and cross the border");
+                    else
+                        divider1.innerText = text;
                     divider1.style = "font-size: x-small; width: 100%";
-
+                    divider1.style["padding-left"] = "2em";
                     container.appendChild(divider1);
                     container.index = this.index++;
                     this.block.appendChild(container);
+
+
+
+
+
+
                     return container;
                 }
 
@@ -436,7 +491,7 @@
 
             }
 
-            var form = new custom_formatter();
+            var form = new custom_formatter(APIManager);
             window.playing = false;
             window.narrateDirections = function () {
                 if (!window.playing) {

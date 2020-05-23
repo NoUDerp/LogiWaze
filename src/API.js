@@ -10,32 +10,39 @@ define(['jquery', 'point-in-polygon'], function ($, pip) {
 			var ox = 128;
 			var oy = -127;
 			var regions = [
-				{ name: "GodcroftsHex", y: .5 * height + oy, x: 2.25 * width + ox },
-				{ name: "DeadLandsHex", y: oy, x: ox },
-				{ name: "ReachingTrailHex", y: oy + 2 * height, x: ox },
-				{ name: "CallahansPassageHex", y: oy + height, x: ox },
-				{ name: "MarbanHollow", y: oy + .5 * height, x: ox + .75 * width },
-				{ name: "UmbralWildwoodHex", y: oy - height, x: ox },
-				{ name: "HeartlandsHex", y: oy - 1.5 * height, x: ox - .75 * width },
-				{ name: "LochMorHex", y: oy - .5 * height, x: ox - .75 * width },
-				{ name: "LinnMercyHex", y: oy + .5 * height, x: ox - .75 * width },
-				{ name: "StonecradleHex", y: oy + height, x: ox - 1.5 * width },
-				{ name: "FarranacCoastHex", y: oy, x: ox - 1.5 * width },
-				{ name: "WestgateHex", y: oy - height, x: ox - 1.5 * width },
-				{ name: "FishermansRowHex", y: oy - .5 * height, x: ox - 2.25 * width },
-				{ name: "OarbreakerHex", y: oy + .5 * height, x: ox - 2.25 * width },
-				{ name: "GreatMarchHex", y: oy - 2 * height, x: ox },
-				{ name: "TempestIslandHex", y: oy - .5 * height, x: ox + 2.25 * width },
-				{ name: "EndlessShoreHex", y: oy, x: ox + 1.5 * width },
-				{ name: "AllodsBightHex", y: oy - height, x: ox + 1.5 * width },
-				{ name: "WeatheredExpanseHex", y: oy + height, x: ox + 1.5 * width },
-				{ name: "DrownedValeHex", y: oy - .5 * height, x: ox + .75 * width },
-				{ name: "ShackledChasmHex", y: oy - 1.5 * height, x: ox + .75 * width },
-				{ name: "ViperPitHex", y: oy + 1.5 * height, x: ox + .75 * width },
-				{ name: "MooringCountyHex", y: oy + 1.5 * height, x: ox - .75 * width }
+				{ name: "GodcroftsHex", realName: "Godcrofts", y: .5 * height + oy, x: 2.25 * width + ox },
+				{ name: "DeadLandsHex", realName: "Deadlands", y: oy, x: ox },
+				{ name: "ReachingTrailHex", realName: "Reaching Trail", y: oy + 2 * height, x: ox },
+				{ name: "CallahansPassageHex", realName: "Callahan's Passage", y: oy + height, x: ox },
+				{ name: "MarbanHollow", realName: "Marban Hollow", y: oy + .5 * height, x: ox + .75 * width },
+				{ name: "UmbralWildwoodHex", realName: "Umbral Wildwood", y: oy - height, x: ox },
+				{ name: "HeartlandsHex", realName: "Heartlands", y: oy - 1.5 * height, x: ox - .75 * width },
+				{ name: "LochMorHex", realName: "Loch Mor", y: oy - .5 * height, x: ox - .75 * width },
+				{ name: "LinnMercyHex", realName: "Linn of Mercy", y: oy + .5 * height, x: ox - .75 * width },
+				{ name: "StonecradleHex", realName: "Stonecradle", y: oy + height, x: ox - 1.5 * width },
+				{ name: "FarranacCoastHex", realName: "Farranac Coast", y: oy, x: ox - 1.5 * width },
+				{ name: "WestgateHex", realName: "Westgate", y: oy - height, x: ox - 1.5 * width },
+				{ name: "FishermansRowHex", realName: "Fisherman's Row", y: oy - .5 * height, x: ox - 2.25 * width },
+				{ name: "OarbreakerHex", realName: "Oarbreaker", y: oy + .5 * height, x: ox - 2.25 * width },
+				{ name: "GreatMarchHex", realName: "The Great March", y: oy - 2 * height, x: ox },
+				{ name: "TempestIslandHex", realName: "Tempest Island", y: oy - .5 * height, x: ox + 2.25 * width },
+				{ name: "EndlessShoreHex", realName: "Endless Shore", y: oy, x: ox + 1.5 * width },
+				{ name: "AllodsBightHex", realName: "Allods Bight", y: oy - height, x: ox + 1.5 * width },
+				{ name: "WeatheredExpanseHex", realName: "Weathered Expanse", y: oy + height, x: ox + 1.5 * width },
+				{ name: "DrownedValeHex", realName: "Drowned Vale", y: oy - .5 * height, x: ox + .75 * width },
+				{ name: "ShackledChasmHex", realName: "Shackled Chasm", y: oy - 1.5 * height, x: ox + .75 * width },
+				{ name: "ViperPitHex", realName: "Viper Pit", y: oy + 1.5 * height, x: ox + .75 * width },
+				{ name: "MooringCountyHex", realName: "Mooring County", y: oy + 1.5 * height, x: ox - .75 * width }
 			];
 
+			var regionNameMap = [];
+			for (var i = 0; i < regions.length; i++)
+				regionNameMap[regions[i].name] = regions[i].realName;
+
 			var API = {
+				mapRegionName: function (x) {
+					return regionNameMap[x];
+				},
 				calculateRegion: function (x, y) {
 					for (var i = 0; i < regions.length; i++) {
 						var region = regions[i];
