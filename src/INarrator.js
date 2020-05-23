@@ -38,18 +38,22 @@ define(null, function () {
                     }
 
                     //if (clear)
-                        Narrator.clearInstructions();
+                    Narrator.clearInstructions();
 
                     for (var i = 0; i < instructions.length; i++) {
                         var direction = instructions[i];
                         var text = direction.text.split(/\|/)[1];
+                        var border = instructions[i].border;
+
+
+
                         var delta = i == 0 ? 0.0 : (instructions[i - 1].distance / 35000.0) * 3600.0;
-                        Narrator.instructions.push(
-                            {
-                                time: delta,
-                                text: text
-                            }
-                        );
+                        if (border) {
+                            Narrator.instructions.push({ time: delta, text: "You are approaching a border crossing, check your radio" });
+                            Narrator.instructions.push({ time: 0, text: text }
+                        }
+                        else
+                            Narrator.instructions.push({ time: delta, text: text });
                         time += delta;
                     }
                     Narrator.queueNextInstruction();
