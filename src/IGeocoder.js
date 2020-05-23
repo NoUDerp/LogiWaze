@@ -1,6 +1,11 @@
 define(['leaflet', '../towns.json'], function (L, towns) {
     return {
+
         FoxholeGeocoder: function (API) {
+            var l = Object.keys(towns);
+            for (var i = 0; i < l.length; i++)
+                towns[l[i]].region = API.calculateRegion(towns[l[i]].x, towns[l[i]].y);
+
             var FoxholeGeocoder = {
                 API: API,
                 /* distance between two strings */

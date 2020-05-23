@@ -364,7 +364,8 @@
                                             coordinates: [opath.path[i - 1], opath.path[i]],
                                             distanceFromLast: accumulated_distance,
                                             region: region,
-                                            border: border
+                                            border: border,
+
                                         });
                                         accumulated_distance = distance;
                                     }
@@ -385,7 +386,7 @@
                                     var direction = FoxholeRouter.angleToDirection(j.angleOut);
                                     var jangleIn = parseInt(Math.round((j.angleIn / (Math.PI * 2)) * 8)) % 8;
                                     var jangleOut = parseInt(Math.round((j.angleOut / (Math.PI * 2)) * 8)) % 8;
-                                    var border = i < crossroads.length - 1 && crossroads[i + 1].border ? 1 : 0;
+                                    var border = i < crossroads.length - 1 && crossroads[i].border ? 1 : 0;
                                     if (jangleIn == jangleOut)
                                         var text = "Continue ".concat(direction).concat(" ").concat(i < crossroads.length - 1 ? crossroads[i + 1].distanceFromLast.toFixed().toString().concat(" meters") : '');
                                     else {
@@ -394,7 +395,7 @@
                                     instructions.push({ distance: crossroads[i + 1].distanceFromLast, time: 0, text: j.region.concat('|').concat(text).concat('|').concat(border.toString()) });
                                 }
                             }
-                            instructions.push({ distance: 0, time: 0, text: crossroads[crossroads.length - 1].region.concat("|").concat("You have arrived at your destination.|0") });
+                            instructions.push({ distance: 0, time: 0, text: crossroads[crossroads.length - 1].region.concat("|").concat("You have arrived at your destination.|0|0") });
 
 
                             var distance = (opath.weight / 256.0) * 12012.0; //map scale 

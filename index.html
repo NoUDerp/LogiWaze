@@ -354,11 +354,14 @@
                     super();
                     this.index = 0;
                     this.counter = 1;
-                    this.lastRegion = "";
+                    this.first = true;
                     this.API = API;
+                    this.newRegion = true;
                 }
 
                 createStep(text, distance, steps) {
+                    if (!window.beta)
+                        return document.createTextNode("");
 
                     var region;
                     var border = 0;
@@ -372,7 +375,7 @@
                         region = "";
 
 
-                    if (region != this.lastRegion) {
+                    if (this.newRegion || this.first) {
                         var container2 = document.createElement("TR");
                         container2.style.padding = "1px 2px";
                         var divider2 = document.createElement("TD");
@@ -382,6 +385,8 @@
                         divider2.style["pointer-events"] = "none";
                         container2.appendChild(divider2);
                         this.block.appendChild(container2);
+                        this.first = false;
+                        this.newRegion = false;
                     }
 
                     if (border === 1) {
@@ -393,9 +398,9 @@
                         divider3.style["padding-left"] = "2em";
                         container3.appendChild(divider3);
                         this.block.appendChild(container3);
+                        this.newRegion = true;
                     }
 
-                    this.lastRegion = region;
 
                     var container = document.createElement("TR");
                     container.classList.add("narrator-step-".concat((this.counter++).toString()));
@@ -422,6 +427,8 @@
                 }
 
                 createContainer(className) {
+                    if (!window.beta)
+                        return document.createElement("DIV");
                     var table = document.createElement("TABLE");
                     table.setAttribute("style", "width: 100%");
                     if (className != null)
@@ -433,6 +440,8 @@
                 }
 
                 createStepsContainer(container) {
+                    if (!window.beta)
+                        return document.createTextNode("");
                     this.block = L.Routing.ItineraryBuilder.prototype.createStepsContainer(container);
                     this.container.appendChild(this.block);
                     return this.block;
