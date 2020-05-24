@@ -1,0 +1,48 @@
+create table water as select ogc_fid, water, ATM_Transform(ATM_Transform(geometry, ATM_CreateScale(3557.20762492683,3557.20762492683)), ATM_CreateTranslate(-20034395.3438689559698105, -15766502.4733419306576252)) as geometry from water2 where water=255;
+
+insert or ignore into hexes(geometry, region) select intersection(b.geometry, a.geometry) [geometry], a.region [region] from [hexesbackup] a inner join [modland] b on intersects(a.geometry, b.geometry);
+
+8862 height on image now
+//20037508.3427892439067364
+Tag 33922: 0.000000,0.000000,0.000000,-20036543.421849,20032843.727756,0.000000
+Tag 33922: 0.000000,0.000000,0.000000,-20034395.3438689559698105,20064890.2524273246526718,0.000000
+-20034395.3438689559698105,-15766502.4733419306576252 : 20064890.2524273246526718,15763081.1209345236420631
+and pixel scale!
+3557.20762492683 3557.20762492683
+
+
+ogr2ogr water2.sqlite -f SQLite water.sqlite -dsco SPATIALITE=YES
+
+scale by 40099285.5962962806224823‬
+then subtract ... -20034395.3438689559698105 from X, and -15766502.4733419306576252 from Y
+
+
++proj=longlat +datum=WGS84 +no_defs|GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563,AUTHORITY["EPSG","7030"]],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",1.0,AUTHORITY["EPSG","9122"]],AXIS["Latitude",NORTH],AXIS["Longitude",EAST],AUTHORITY["EPSG","4326"]]
+
+update spatial_ref_sys set srtext="+proj=longlat +datum=WGS84 +no_defs|GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84
+",6378137,298.257223563,AUTHORITY["EPSG","7030"]],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degr
+ee",1.0,AUTHORITY["EPSG","9122"]],AXIS["Latitude",NORTH],AXIS["Longitude",EAST],AUTHORITY["EPSG","4326"]]" where f_table_name='water2
+';
+
+
+
+create table water3 as select ogc_fid, ATM_Transform(geometry,ATM_CreateTranslate(-20034.3953438689559698105, -15766.5024733419306576252)) as geometry from water;
+//ATM_Transform(, )
+delete from water; 
+insert into water select * from water2;
+drop table water2;
+vacuum;
+
+
+OFFSETX/OFFSETY = -20034395.3438689559698105,-15766502.4733419306576252 
+WIDTH/HEIGHT = 20064890.2524273246526718,15763081.1209345236420631
+
+need to convert:
+
+0.0000000000000000,0.0000000000000000
+11264.0000000000000000,9756.0000000000000000
+
+xscale = 20064890.2524273246526718/11264.0000000000000000  = 1781.329035
+yscale = 15763081.1209345236420631/8192.0000000000000000 = 1924.204238 <- odd.
+
+create table water as select ogc_fid, ATM_Transform(ATM_Transform(geometry, ATM_CreateScale(1781.329035*2,1781.329035*2)), ATM_CreateTranslate(-20034395.3438689559698105, -15766502.4733419306576252 / 0.86602540378443864676372317075294‬)) as geometry from water2;

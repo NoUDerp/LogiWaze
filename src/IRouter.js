@@ -28,7 +28,7 @@
 
                         if (BorderCache[hash] == null)
                             BorderCache[hash] = feature.properties.region;
-                        else if (BorderCache[hash] != feature.properties.region)
+                        else if (BorderCache[hash] != feature.properties.region && feature.properties != null && feature.properties.region != null)
                             BorderCrossings[hash] = 1;
 
                         var region = Paths.features[i].properties.region;
@@ -129,6 +129,8 @@
                         var icon = resolveIcon(data);
                         if (icon != null)
                             L.marker([th.y, th.x], {
+                                clickable: false,
+                                zIndexOffset: -1000,
                                 icon: L.icon({
                                     iconUrl: 'MapIcons/'.concat(icon),
                                     iconSize: [24, 24],
@@ -204,6 +206,18 @@
                     }
                 }
                 var highlighter = L.layerGroup().addTo(mymap);
+                var borderLayer = L.layerGroup().addTo(mymap);
+                if (beta) {
+                    var k = Object.keys(BorderCrossings);
+                    for (var i = 0; i < k.length; i++) {
+                        var b = k[i].split(/\|/);
+                        L.circleMarker([parseFloat(b[1]), parseFloat(b[0])], {
+                            color: '#FF0000',
+                            clickable: false,
+                            zIndexOffset: -1000
+                        }).addTo(TownHalls);
+                    }
+                }
 
                 var playbutton = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/" x="0px" y="0px" width="32px" height="32px" viewBox="20 20 173.7 173.7" enable-background="new 0 0 213.7 213.7" xml:space="preserve"><polygon class="triangle" id="XMLID_18_" fill="none" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" points="73.5,62.5 148.5,105.8 73.5,149.1 "/></svg>'
                 //: 120
