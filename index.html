@@ -9,6 +9,7 @@
 
 
 
+
         .leaflet-marker-draggable {
             z-index: -10000;
         }
@@ -281,6 +282,7 @@
 
             }).setView([-128, 128], 2);
 
+
         var SatelliteMap = L.tileLayer('Beta/{z}_{x}_{y}.webp',
             {
                 crs: L.CRS.Simple,
@@ -306,6 +308,18 @@
             });
         DrawnMap.addTo(mymap);
 
+        var VividMap = L.tileLayer('Skaj/{z}_{x}_{y}.webp',
+            {
+                crs: L.CRS.Simple,
+                maxZoom: 5,
+                minZoom: 1,
+                noWrap: true,
+                continuousWorld: true,
+                bounds: L.latLngBounds(L.latLng(-256, 0), L.latLng(0, 256)),
+                id: 'LogiWaze - Vivid'
+            });
+        VividMap.addTo(mymap);
+
     </script>
 
     <script src="FoxholeRouter.js">
@@ -328,7 +342,8 @@
             L.control.layers(
                 {
                     'Drawn Map': DrawnMap,
-                    'Vivid Map': SatelliteMap
+                    'Satellite Map': SatelliteMap
+                    'Vivid Map': VividMap,
                 }, {
                 'Town Halls': Router.TownHalls,
                 'Borders': Router.Borders,
