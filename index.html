@@ -375,8 +375,8 @@
                 }
 
                 createStep(text, distance, steps) {
-                    if (!window.beta)
-                        return document.createTextNode("");
+                    //if (!window.beta)
+                      //  return document.createTextNode("");
 
                     var region;
                     var border = 0;
@@ -442,8 +442,9 @@
                 }
 
                 createContainer(className) {
-                    if (!window.beta)
-                        return document.createElement("DIV");
+                    //if (!window.beta)
+                        //return document.createElement("DIV");
+
                     var table = document.createElement("TABLE");
                     table.setAttribute("style", "width: 100%");
                     if (className != null)
@@ -455,8 +456,9 @@
                 }
 
                 createStepsContainer(container) {
-                    if (!window.beta)
-                        return document.createTextNode("");
+                    //if (!window.beta)
+                      //  return document.createTextNode("");
+
                     this.block = L.Routing.ItineraryBuilder.prototype.createStepsContainer(container);
                     this.container.appendChild(this.block);
                     return this.block;

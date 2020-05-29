@@ -12,6 +12,27 @@
                 var BorderCrossings = {};
 
                 var keys = Object.keys(JSONRoads._layers);
+
+                for (var i = 0; i < Paths.features.length; i++) {
+                    var feature = Paths.features[i];
+                    var scratch = {};
+                    for (var k = 0; k < feature.geometry.coordinates.length; k++) {
+                        var p = feature.geometry.coordinates[k];
+                        var hash = p[0].toFixed(3).concat("|").concat(p[1].toFixed(3));
+                        if (scratch[hash] === true) {
+                            feature.geometry.coordinates.splice(k, 1);
+                            k--;
+                        }
+                        else
+                            scratch[hash] = true;
+                    }
+                    if (feature.geometry.coordinates.length < 2) {
+                        Paths.features.splice(i, 1);
+                        keys.splice(i, 1);
+                        i--;
+                    }
+                }
+
                 for (var i = 0; i < Paths.features.length; i++) {
                     var feature = Paths.features[i];
                     var warden_features = new Array();
@@ -19,12 +40,14 @@
                     var all_features = new Array();
                     var last_ownership = "NONE";
                     var last_p = null;
+
                     for (var k = 0; k < feature.geometry.coordinates.length; k++) {
                         var p = feature.geometry.coordinates[k];
                         var hash = p[0].toFixed(3).concat("|").concat(p[1].toFixed(3));
-                        var increment = k == 0 || k == feature.geometry.coordinates.length - 1 ? 1 : 2;
+                        var increment = (k === 0 || k == feature.geometry.coordinates.length - 1) ? 1 : 2;
 
                         Intersections[hash] = Intersections[hash] == null ? increment : (Intersections[hash] + increment);
+
 
                         if (BorderCache[hash] == null)
                             BorderCache[hash] = feature.properties.region;
@@ -214,9 +237,24 @@
                         L.circleMarker([parseFloat(b[1]), parseFloat(b[0])], {
                             color: '#FF0000',
                             clickable: false,
-                            zIndexOffset: -1000
+                            zIndexOffset: -1000,
+                            opacity: .5
                         }).addTo(TownHalls);
                     }
+
+                    var k = Object.keys(Intersections);
+                    for (var i = 0; i < k.length; i++) {
+                        if (Intersections[k[i]] > 2) {
+                            var b = k[i].split(/\|/);
+                            L.circleMarker([parseFloat(b[1]), parseFloat(b[0])], {
+                                color: '#00FF00',
+                                clickable: false,
+                                zIndexOffset: -2000,
+                                opacity: .5
+                            }).addTo(TownHalls);
+                        }
+                    }
+
                 }
 
                 var playbutton = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/" x="0px" y="0px" width="32px" height="32px" viewBox="20 20 173.7 173.7" enable-background="new 0 0 213.7 213.7" xml:space="preserve"><polygon class="triangle" id="XMLID_18_" fill="none" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" points="73.5,62.5 148.5,105.8 73.5,149.1 "/></svg>'
@@ -359,7 +397,6 @@
                             var coordinates = [];
                             var instructions = [];
                             var accumulated_distance = 0.0;
-
                             var crossroads = [];
                             for (var i = 0; i < opath.path.length; i++) {
                                 coordinates[i] = L.latLng(opath.path[i][1], opath.path[i][0]);
@@ -369,19 +406,23 @@
 
                                     var distance = (Math.sqrt(dx * dx + dy * dy) / 256.0) * 12012.0;
                                     var hash = opath.path[i][0].toFixed(3).concat("|").concat(opath.path[i][1].toFixed(3));
-                                    var border = BorderCrossings[hash] === 1;
-                                    if ((border || Intersections[hash] > 2 || i == 1 || i == opath.path.length - 1)) { /* if this is an intersection */
+                                    var lastHash = opath.path[i - 1][0].toFixed(3).concat("|").concat(opath.path[i - 1][1].toFixed(3));
+                                    var borderStart = BorderCrossings[lastHash] === 1;
+                                    var borderEnd = BorderCrossings[hash] === 1;
+                                    var intersection = Intersections[hash] > 2 || i == 1 || i == opath.path.length - 1;
+
+                                    if (intersection || borderStart) { /* if this is an intersection or border */
                                         var region = opath.path[i][2];
                                         crossroads.push({
                                             angleIn: FoxholeRouter.calculateAngle(opath.path[i - 1], opath.path[i]),
                                             angleOut: i < opath.path.length - 1 ? FoxholeRouter.calculateAngle(opath.path[i], opath.path[i + 1]) : null,
                                             coordinates: [opath.path[i - 1], opath.path[i]],
-                                            distanceFromLast: accumulated_distance,
+                                            distanceFromLast: accumulated_distance + distance,
                                             region: region,
-                                            border: border,
+                                            border: borderStart,
 
                                         });
-                                        accumulated_distance = distance;
+                                        accumulated_distance = 0;
                                     }
                                     else
                                         accumulated_distance += distance;
@@ -400,7 +441,7 @@
                                     var direction = FoxholeRouter.angleToDirection(j.angleOut);
                                     var jangleIn = parseInt(Math.round((j.angleIn / (Math.PI * 2)) * 8)) % 8;
                                     var jangleOut = parseInt(Math.round((j.angleOut / (Math.PI * 2)) * 8)) % 8;
-                                    var border = i < crossroads.length - 1 && crossroads[i].border ? 1 : 0;
+                                    var border = i < crossroads.length - 1 && (i < crossroads.length - 1 && crossroads[i + 1].border) ? 1 : 0;
                                     if (jangleIn == jangleOut)
                                         var text = "Continue ".concat(direction).concat(" ").concat(i < crossroads.length - 1 ? crossroads[i + 1].distanceFromLast.toFixed().toString().concat(" meters") : '');
                                     else {
