@@ -371,7 +371,6 @@
                     this.counter = 1;
                     this.first = true;
                     this.API = API;
-                    this.newRegion = true;
                 }
 
                 createStep(text, distance, steps) {
@@ -380,17 +379,19 @@
 
                     var region;
                     var border = 0;
+                    var newRegion = false;
                     if (text.indexOf("|") >= 0) {
                         var u = text.split("\|");
                         region = u[0];
                         text = u[1];
                         border = parseInt(u[2]);
+                        newRegion = parseInt(u[3]) === 1;
                     }
                     else
                         region = "";
 
 
-                    if (this.newRegion || this.first) {
+                    if (newRegion || this.first) {
                         var container2 = document.createElement("TR");
                         container2.style.padding = "1px 2px";
                         var divider2 = document.createElement("TD");
@@ -401,7 +402,6 @@
                         container2.appendChild(divider2);
                         this.block.appendChild(container2);
                         this.first = false;
-                        this.newRegion = false;
                     }
 
                     if (border === 1) {
@@ -413,7 +413,6 @@
                         divider3.style["padding-left"] = "2em";
                         container3.appendChild(divider3);
                         this.block.appendChild(container3);
-                        this.newRegion = true;
                     }
 
 
@@ -573,6 +572,7 @@
                     }
                 }
                 location.hash = l;
+
             })
                 .on('routeselected', function (event) {
                     Router.setRoute(event.route);

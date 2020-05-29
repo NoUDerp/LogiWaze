@@ -398,6 +398,7 @@
                             var instructions = [];
                             var accumulated_distance = 0.0;
                             var crossroads = [];
+                            var last_region = null;
                             for (var i = 0; i < opath.path.length; i++) {
                                 coordinates[i] = L.latLng(opath.path[i][1], opath.path[i][0]);
                                 if (i > 0) {
@@ -420,12 +421,13 @@
                                             distanceFromLast: accumulated_distance + distance,
                                             region: region,
                                             border: borderStart,
-
+                                            regionChange: region != last_region
                                         });
                                         accumulated_distance = 0;
                                     }
                                     else
                                         accumulated_distance += distance;
+                                    last_region = region;
                                 }
                             }
 
@@ -442,15 +444,16 @@
                                     var jangleIn = parseInt(Math.round((j.angleIn / (Math.PI * 2)) * 8)) % 8;
                                     var jangleOut = parseInt(Math.round((j.angleOut / (Math.PI * 2)) * 8)) % 8;
                                     var border = i < crossroads.length - 1 && (i < crossroads.length - 1 && crossroads[i + 1].border) ? 1 : 0;
+                                    var region_change = i == 0 || crossroads[i].regionChange;
                                     if (jangleIn == jangleOut)
                                         var text = "Continue ".concat(direction).concat(" ").concat(i < crossroads.length - 1 ? crossroads[i + 1].distanceFromLast.toFixed().toString().concat(" meters") : '');
                                     else {
                                         var text = turns[jangleOut - jangleIn].concat(' and drive ').concat(direction).concat(' for ').concat(crossroads[i + 1].distanceFromLast.toFixed().toString()).concat(" meters");
                                     }
-                                    instructions.push({ distance: crossroads[i + 1].distanceFromLast, time: 0, text: j.region.concat('|').concat(text).concat('|').concat(border.toString()) });
+                                    instructions.push({ distance: crossroads[i + 1].distanceFromLast, time: 0, text: j.region.concat('|').concat(text).concat('|').concat(border.toString()).concat('|').concat(region_change ? '1' : '0') });
                                 }
                             }
-                            instructions.push({ distance: 0, time: 0, text: crossroads[crossroads.length - 1].region.concat("|").concat("You have arrived at your destination.|0|0") });
+                            instructions.push({ distance: 0, time: 0, text: crossroads[crossroads.length - 1].region.concat("|").concat("You have arrived at your destination.|0|0|0") });
 
 
                             var distance = (opath.weight / 256.0) * 12012.0; //map scale 
