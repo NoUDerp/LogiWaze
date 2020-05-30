@@ -26,3 +26,8 @@ global.Narrator = {
     }
 };
 
+global.YouTube = {
+	Create: function() {
+		return require('./IYouTube.js').YouTube();
+	}
+};

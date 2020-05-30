@@ -7,6 +7,58 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" crossorigin="" />
     <style type="text/css">
 
+        .turn-right {
+            fill: blue;
+            width: 24px;
+            height: 24px;
+            background-image: url("data:image/svg+xml;base64,PHN2ZyBoZWlnaHQ9JzMwMHB4JyB3aWR0aD0nMzAwcHgnICBmaWxsPSIjMDAwMDAwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2ZXJzaW9uPSIxLjEiIHg9IjBweCIgeT0iMHB4IiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgMTAwIDEwMDsiIHhtbDpzcGFjZT0icHJlc2VydmUiPjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+Cgkuc3Qwe2ZpbGw6bm9uZTtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MztzdHJva2UtbWl0ZXJsaW1pdDoxMDt9Cgkuc3Qxe2ZpbGw6bm9uZTtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MztzdHJva2UtbGluZWNhcDpyb3VuZDtzdHJva2UtbGluZWpvaW46cm91bmQ7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQoJLnN0MntmaWxsOiMwMDAwMDA7fQoJLnN0M3tmaWxsOm5vbmU7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjM7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQoJLnN0NHtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9Cgkuc3Q1e3N0cm9rZTojMDAwMDAwO3N0cm9rZS1taXRlcmxpbWl0OjEwO30KCS5zdDZ7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQoJLnN0N3tmaWxsOm5vbmU7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjI7c3Ryb2tlLWxpbmVjYXA6cm91bmQ7c3Ryb2tlLWxpbmVqb2luOnJvdW5kO3N0cm9rZS1taXRlcmxpbWl0OjEwO30KPC9zdHlsZT48cGF0aCBkPSJNNzYuNywyNi40bC0yMS4xLTkuNHY0LjloLTguMWMtMTMuNCwwLTI0LjMsMTAuOS0yNC4zLDI0LjN2MzYuOGg5VjQ2LjJjMC04LjQsNi44LTE1LjMsMTUuMy0xNS4zaDguMXY0LjlMNzYuNywyNi40eiI+PC9wYXRoPjwvc3ZnPg==");
+        }
+
+        .turn-left {
+            fill: blue;
+            width: 24px;
+            height: 24px;
+            background-image: url("data:image/svg+xml;base64,PHN2ZyBoZWlnaHQ9JzMwMHB4JyB3aWR0aD0nMzAwcHgnICBmaWxsPSIjMDAwMDAwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2ZXJzaW9uPSIxLjEiIHg9IjBweCIgeT0iMHB4IiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgMTAwIDEwMDsiIHhtbDpzcGFjZT0icHJlc2VydmUiPjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+Cgkuc3Qwe2ZpbGw6bm9uZTtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MztzdHJva2UtbWl0ZXJsaW1pdDoxMDt9Cgkuc3Qxe2ZpbGw6bm9uZTtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MztzdHJva2UtbGluZWNhcDpyb3VuZDtzdHJva2UtbGluZWpvaW46cm91bmQ7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQoJLnN0MntmaWxsOiMwMDAwMDA7fQoJLnN0M3tmaWxsOm5vbmU7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjM7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQoJLnN0NHtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9Cgkuc3Q1e3N0cm9rZTojMDAwMDAwO3N0cm9rZS1taXRlcmxpbWl0OjEwO30KCS5zdDZ7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQoJLnN0N3tmaWxsOm5vbmU7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjI7c3Ryb2tlLWxpbmVjYXA6cm91bmQ7c3Ryb2tlLWxpbmVqb2luOnJvdW5kO3N0cm9rZS1taXRlcmxpbWl0OjEwO30KPC9zdHlsZT48cGF0aCBkPSJNNTIuNSwyMS45aC04LjF2LTQuOWwtMjEuMSw5LjRsMjEuMSw5LjR2LTQuOWg4LjFjOC40LDAsMTUuMiw2LjgsMTUuMiwxNS4zdjM2LjhoOVY0Ni4yQzc2LjcsMzIuOCw2NS45LDIxLjksNTIuNSwyMS45eiI+PC9wYXRoPjwvc3ZnPg==");
+        }
+
+        .veer-right {
+            fill: blue;
+            width: 24px;
+            height: 24px;
+            background-image: url("data:image/svg+xml;base64,PHN2ZyBoZWlnaHQ9JzMwMHB4JyB3aWR0aD0nMzAwcHgnICBmaWxsPSIjMDAwMDAwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2ZXJzaW9uPSIxLjEiIHg9IjBweCIgeT0iMHB4IiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgMTAwIDEwMDsiIHhtbDpzcGFjZT0icHJlc2VydmUiPjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+Cgkuc3Qwe2ZpbGw6bm9uZTtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MztzdHJva2UtbWl0ZXJsaW1pdDoxMDt9Cgkuc3Qxe2ZpbGw6bm9uZTtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MztzdHJva2UtbGluZWNhcDpyb3VuZDtzdHJva2UtbGluZWpvaW46cm91bmQ7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQoJLnN0MntmaWxsOiMwMDAwMDA7fQoJLnN0M3tmaWxsOm5vbmU7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjM7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQoJLnN0NHtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9Cgkuc3Q1e3N0cm9rZTojMDAwMDAwO3N0cm9rZS1taXRlcmxpbWl0OjEwO30KCS5zdDZ7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQoJLnN0N3tmaWxsOm5vbmU7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjI7c3Ryb2tlLWxpbmVjYXA6cm91bmQ7c3Ryb2tlLWxpbmVqb2luOnJvdW5kO3N0cm9rZS1taXRlcmxpbWl0OjEwO30KPC9zdHlsZT48cG9seWdvbiBwb2ludHM9IjgyLjYsMTcuNCA2MSwyNS43IDY0LjUsMjkuMiAxNy40LDc2LjIgMjMuOCw4Mi42IDcwLjgsMzUuNSA3NC4zLDM5ICI+PC9wb2x5Z29uPjwvc3ZnPg==");
+        }
+
+        .veer-left {
+            fill: blue;
+            width: 24px;
+            height: 24px;
+            background-image: url("data:image/svg+xml;base64,PHN2ZyBoZWlnaHQ9JzMwMHB4JyB3aWR0aD0nMzAwcHgnICBmaWxsPSIjMDAwMDAwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2ZXJzaW9uPSIxLjEiIHg9IjBweCIgeT0iMHB4IiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgMTAwIDEwMDsiIHhtbDpzcGFjZT0icHJlc2VydmUiPjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+Cgkuc3Qwe2ZpbGw6bm9uZTtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MztzdHJva2UtbWl0ZXJsaW1pdDoxMDt9Cgkuc3Qxe2ZpbGw6bm9uZTtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MztzdHJva2UtbGluZWNhcDpyb3VuZDtzdHJva2UtbGluZWpvaW46cm91bmQ7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQoJLnN0MntmaWxsOiMwMDAwMDA7fQoJLnN0M3tmaWxsOm5vbmU7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjM7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQoJLnN0NHtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9Cgkuc3Q1e3N0cm9rZTojMDAwMDAwO3N0cm9rZS1taXRlcmxpbWl0OjEwO30KCS5zdDZ7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQoJLnN0N3tmaWxsOm5vbmU7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjI7c3Ryb2tlLWxpbmVjYXA6cm91bmQ7c3Ryb2tlLWxpbmVqb2luOnJvdW5kO3N0cm9rZS1taXRlcmxpbWl0OjEwO30KPC9zdHlsZT48cG9seWdvbiBwb2ludHM9IjM1LjUsMjkuMiAzOSwyNS43IDE3LjQsMTcuNCAyNS43LDM5IDI5LjIsMzUuNSA3Ni4yLDgyLjYgODIuNiw3Ni4yICI+PC9wb2x5Z29uPjwvc3ZnPg==");
+        }
+
+        .turn-about {
+            fill: blue;
+            width: 24px;
+            height: 24px;
+            background-image: url("data:image/svg+xml;base64,PHN2ZyBoZWlnaHQ9JzMwMHB4JyB3aWR0aD0nMzAwcHgnICBmaWxsPSIjMDAwMDAwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2ZXJzaW9uPSIxLjEiIHg9IjBweCIgeT0iMHB4IiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgMTAwIDEwMDsiIHhtbDpzcGFjZT0icHJlc2VydmUiPjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+Cgkuc3Qwe2ZpbGw6bm9uZTtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MztzdHJva2UtbWl0ZXJsaW1pdDoxMDt9Cgkuc3Qxe2ZpbGw6bm9uZTtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MztzdHJva2UtbGluZWNhcDpyb3VuZDtzdHJva2UtbGluZWpvaW46cm91bmQ7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQoJLnN0MntmaWxsOiMwMDAwMDA7fQoJLnN0M3tmaWxsOm5vbmU7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjM7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQoJLnN0NHtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9Cgkuc3Q1e3N0cm9rZTojMDAwMDAwO3N0cm9rZS1taXRlcmxpbWl0OjEwO30KCS5zdDZ7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQoJLnN0N3tmaWxsOm5vbmU7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjI7c3Ryb2tlLWxpbmVjYXA6cm91bmQ7c3Ryb2tlLWxpbmVqb2luOnJvdW5kO3N0cm9rZS1taXRlcmxpbWl0OjEwO30KPC9zdHlsZT48cGF0aCBkPSJNODUuMiw0NC4ybC05LjQtMjEuMWwtOS40LDIxLjFoNC45YzAsMTMuMS0xMC43LDIzLjctMjMuOCwyMy43Yy0xMy4xLDAtMjMuOC0xMC43LTIzLjgtMjMuOGgtOWMwLDE4LjEsMTQuNywzMi44LDMyLjgsMzIuOCAgYzE4LjEsMCwzMi43LTE0LjcsMzIuOC0zMi43SDg1LjJ6Ij48L3BhdGg+PC9zdmc+");
+        }
+
+        .continue {
+            fill: blue;
+            width: 24px;
+            height: 24px;
+            background-image: url("data:image/svg+xml;base64,PHN2ZyBoZWlnaHQ9JzI0cHgnIHdpZHRoPScyNHB4JyBmaWxsPSIjMDAwMDAwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2ZXJzaW9uPSIxLjEiIHg9IjBweCIgeT0iMHB4IiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgMTAwIDEwMDsiIHhtbDpzcGFjZT0icHJlc2VydmUiPjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+DQoJLnN0MHtmaWxsOm5vbmU7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjM7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDF7ZmlsbDpub25lO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDozO3N0cm9rZS1saW5lY2FwOnJvdW5kO3N0cm9rZS1saW5lam9pbjpyb3VuZDtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0MntmaWxsOiMwMDAwMDA7fQ0KCS5zdDN7ZmlsbDpub25lO3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDozO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q0e3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDoyO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q1e3N0cm9rZTojMDAwMDAwO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q2e3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDoyO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q3e2ZpbGw6bm9uZTtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MjtzdHJva2UtbGluZWNhcDpyb3VuZDtzdHJva2UtbGluZWpvaW46cm91bmQ7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KPC9zdHlsZT48cG9seWdvbiBwb2ludHM9IjU0LjIsMjcuMyA1OC43LDI3LjMgNTAsMTEgNDEuMywyNy4zIDQ1LjgsMjcuMyA0NS44LDcyLjcgNTQuMiw3Mi43ICI+PC9wb2x5Z29uPjwvc3ZnPg==");
+        }
+
+        .compass {
+            fill: #444857;
+            width: 24px;
+            height: 24px;
+            background-image: url("data:image/svg+xml;base64,PHN2ZyBoZWlnaHQ9JzMwMHB4JyB3aWR0aD0nMzAwcHgnICBmaWxsPSIjMDAwMDAwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4bWw6c3BhY2U9InByZXNlcnZlIiB2ZXJzaW9uPSIxLjEiIHN0eWxlPSJzaGFwZS1yZW5kZXJpbmc6Z2VvbWV0cmljUHJlY2lzaW9uO3RleHQtcmVuZGVyaW5nOmdlb21ldHJpY1ByZWNpc2lvbjtpbWFnZS1yZW5kZXJpbmc6b3B0aW1pemVRdWFsaXR5OyIgdmlld0JveD0iMCAwIDg0NyA4NDciIHg9IjBweCIgeT0iMHB4IiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCI+PGRlZnM+PHN0eWxlIHR5cGU9InRleHQvY3NzIj4KICAgCiAgICAuZmlsMCB7ZmlsbDojMDAwMDAwfQogICAKICA8L3N0eWxlPjwvZGVmcz48Zz48cG9seWdvbiBjbGFzcz0iZmlsMCIgcG9pbnRzPSIxODAsNzYyIDQxOSw4NSA2NjcsNzU1IDQxNyw1OTIgIj48L3BvbHlnb24+PC9nPjwvc3ZnPg==");
+        }
+
+
+
+
         .leaflet-marker-draggable {
             z-index: -10000;
         }
@@ -218,6 +270,31 @@
             }
         }
 
+        .leaflet-control-youtube-interior {
+            background-image: url(images/command.png);
+            width: 330px;
+            height: 175px;
+            /*background-position: 50% 50%;
+            background-repeat: no-repeat;
+            display: block;
+            /*padding: 3px;*/
+            /*border-radius: 4px;*/
+            box-shadow: 0 1px 7px rgba(0, 0, 0, 0.65);
+            cursor: auto;
+            text-align: center;
+            background-color: #FFFFFF;
+            margin-bottom: 10px;
+            opacity: .75;
+            padding: 4px;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+            border: 2px solid rgba(0,0,0,0.2);
+            background-clip: padding-box;
+        }
+
+            .leaflet-control-youtube-interior:hover {
+                background-color: #F4F4F4;
+            }
     </style>
 </head>
 
@@ -233,6 +310,11 @@
     <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js" integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og==" crossorigin=""></script>
 
     <script type="text/javascript">
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const myParam = urlParams.get('beta');
+        window.beta = myParam != null;
+
 
         var mymap = L.map('mapid',
             {
@@ -282,18 +364,50 @@
                 id: 'LogiWaze - Vivid'
             }).addTo(mymap);
 
+        if (window.beta) {
+            L.Control.YouTube = L.Control.extend({
+                options: {
+                    position: 'bottomright',
+                },
+
+                onAdd: function (map) {
+                    var controlDiv = L.DomUtil.create('div', 'leaflet-control-youtube');
+                    L.DomEvent
+                        .addListener(controlDiv, 'click', L.DomEvent.stopPropagation)
+                        .addListener(controlDiv, 'click', L.DomEvent.preventDefault)
+                        .addListener(controlDiv, 'click', function () {
+                            //MapShowCommand();
+                        });
+
+                    var controlUI = L.DomUtil.create('div', 'leaflet-control-youtube-interior leaflet-bar', controlDiv);
+                    controlUI.title = 'Music';
+                    var youtubeembed = L.DomUtil.create('div', 'youtube-player', controlUI);
+                    youtubeembed.innerHTML = "<iframe style=\"width: 100%; height: 100%\" src=\"https://www.youtube.com/embed/videoseries?list=PLx0sYbCqOb8TBPRdmBHs5Iftvv9TPboYG\" frameborder=\"0\" allow=\"autoplay; encrypted-media\" allowfullscreen></iframe>";
+                    return controlDiv;
+                }
+            });
+
+            L.control.youtube = function (options) {
+                return new L.Control.YouTube(options);
+            };
+
+            L.control.youtube().addTo(mymap);
+        }
+
     </script>
 
     <script src="FoxholeRouter.js">
     </script>
 
+    <script src="https://www.youtube.com/iframe_api">
+    </script>
 
     <script type="text/javascript">
+
+        var YT = YouTube.Create().Control().addTo(mymap);
+
         var APIManager = API.Create();
 
-        const urlParams = new URLSearchParams(window.location.search);
-        const myParam = urlParams.get('beta');
-        window.beta = myParam != null;
 
         APIManager.update(() => {
 
@@ -342,12 +456,14 @@
                     var region;
                     var border = 0;
                     var newRegion = false;
+                    var turnicon = "";
                     if (text.indexOf("|") >= 0) {
                         var u = text.split("\|");
                         region = u[0];
                         text = u[1];
                         border = parseInt(u[2]);
                         newRegion = parseInt(u[3]) === 1;
+                        turnicon = u[4];
                     }
                     else
                         region = "";
@@ -357,6 +473,7 @@
                         var container2 = document.createElement("TR");
                         container2.style.padding = "1px 2px";
                         var divider2 = document.createElement("TD");
+                        divider2.setAttribute("colspan", "2");
                         divider2.innerText = this.API.mapRegionName(region);
                         divider2.style["font-size"] = "normal";
                         divider2.style.width = "100%";
@@ -370,6 +487,7 @@
                         var container3 = document.createElement("TR");
                         container3.style.padding = "1px 2px";
                         var divider3 = document.createElement("TD");
+                        divider3.setAttribute("colspan", "2");
                         divider3.innerText = "You are approaching a border crossing, check your radio";
                         divider3.style = "font-size: x-small; width: 100%";
                         divider3.style["padding-left"] = "2em";
@@ -382,6 +500,11 @@
                     container.classList.add("narrator-step-".concat((this.counter++).toString()));
                     container.classList.add("narrator-steps");
                     container.style.padding = "1px 2px";
+                    var divider2 = document.createElement("TD");
+
+                    if (turnicon != "" && turnicon != null && window.beta)
+                        divider2.innerHTML = "<div class=\"".concat(turnicon.replace(' ', '-').toLowerCase()).concat('"></div>');
+
                     var divider1 = document.createElement("TD");
 
                     if (border === 1)
@@ -390,6 +513,7 @@
                         divider1.innerText = text;
                     divider1.style = "font-size: x-small; width: 100%";
                     divider1.style["padding-left"] = "2em";
+                    container.appendChild(divider2);
                     container.appendChild(divider1);
                     container.index = this.index++;
                     this.block.appendChild(container);
