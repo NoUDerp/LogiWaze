@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" crossorigin="" />
     <style type="text/css">
 
+
+
         .turn-right {
             fill: blue;
             width: 24px;
@@ -271,9 +273,9 @@
         }
 
         .leaflet-control-youtube-interior {
-            background-image: url(images/command.png);
             width: 330px;
             height: 175px;
+            margin-top: 28px;
             /*background-position: 50% 50%;
             background-repeat: no-repeat;
             display: block;
@@ -284,7 +286,7 @@
             text-align: center;
             background-color: #FFFFFF;
             margin-bottom: 10px;
-            opacity: .75;
+            opacity: .85;
             padding: 4px;
             box-sizing: border-box;
             margin-bottom: 20px;
@@ -364,10 +366,15 @@
                 id: 'LogiWaze - Vivid'
             }).addTo(mymap);
 
+        function SetYouTubePlaylist() {
+            var list = document.getElementById("youtube-selector").value;
+            document.getElementById("youtube-player").src = "https://www.youtube.com/embed/videoseries?list=".concat(list);
+        }
+
         if (window.beta) {
             L.Control.YouTube = L.Control.extend({
                 options: {
-                    position: 'bottomright',
+                    position: 'bottomleft',
                 },
 
                 onAdd: function (map) {
@@ -382,7 +389,9 @@
                     var controlUI = L.DomUtil.create('div', 'leaflet-control-youtube-interior leaflet-bar', controlDiv);
                     controlUI.title = 'Music';
                     var youtubeembed = L.DomUtil.create('div', 'youtube-player', controlUI);
-                    youtubeembed.innerHTML = "<iframe style=\"width: 100%; height: 100%\" src=\"https://www.youtube.com/embed/videoseries?list=PLkQvYA5-_pJ1sRms9hkr1q3DHUQvaK7iF\" frameborder=\"0\" allow=\"autoplay; encrypted-media\" allowfullscreen></iframe>";
+                    //PLv1A0_5bkdtBP9rIciaA1tH1LxVcC3Y5_
+                    var selector = "<div style=\"padding: 2px\"><select style=\"font-size: 14px; width:100%; height: 24px;\" id=\"youtube-selector\" onchange=\"SetYouTubePlaylist()\"><option value=\"PLkQvYA5-_pJ1sRms9hkr1q3DHUQvaK7iF\">Derp's Out Of Logi Babylon Mix</option><option value=\"PLv1A0_5bkdtBP9rIciaA1tH1LxVcC3Y5_\">Caovia's Rolling Hills</select></div>";
+                    youtubeembed.innerHTML = selector.concat("<iframe id=\"youtube-player\" style=\"width: 100%;height: calc(100% - 28px);\" src=\"https://www.youtube.com/embed/videoseries?list=PLkQvYA5-_pJ1sRms9hkr1q3DHUQvaK7iF\" frameborder=\"0\" allow=\"autoplay; encrypted-media\" allowfullscreen></iframe>");
                     return controlDiv;
                 }
             });
@@ -419,7 +428,8 @@
                 'Borders': Router.Borders,
                 'Uncontrolled Roads': Router.RoadsCanvas,
                 'Colonial Roads': Router.ColonialRoadsCanvas,
-                'Warden Roads': Router.WardenRoadsCanvas
+                'Warden Roads': Router.WardenRoadsCanvas,
+                'Debug Markers': Router.Debug
             }, { position: 'topright' }).addTo(mymap);
 
             var startingWaypoints = [

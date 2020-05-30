@@ -230,6 +230,7 @@
                 }
                 var highlighter = L.layerGroup().addTo(mymap);
                 var borderLayer = L.layerGroup().addTo(mymap);
+                var debug_markers = L.layerGroup();
                 if (beta) {
                     var k = Object.keys(BorderCrossings);
                     for (var i = 0; i < k.length; i++) {
@@ -239,7 +240,7 @@
                             clickable: false,
                             zIndexOffset: -1000,
                             opacity: .5
-                        }).addTo(TownHalls);
+                        }).addTo(debug_markers);
                     }
 
                     var k = Object.keys(Intersections);
@@ -251,7 +252,7 @@
                                 clickable: false,
                                 zIndexOffset: -2000,
                                 opacity: .5
-                            }).addTo(TownHalls);
+                            }).addTo(debug_markers);
                         }
                     }
 
@@ -264,6 +265,7 @@
                         .concat(!window.beta ? "" : '<div class="audio-controls detailed-summary"><button class="play-button" style="pointer-events: auto" onclick="window.narrateDirections()">'.concat(playbutton).concat('</button></div>')).concat('</td></tr><tr><td class="no-click">{time}</td></tr></table>'),
                     TownHalls: TownHalls,
                     API: API,
+                    Debug: debug_markers,
                     ScaleTownHalls: ScaleTownHalls,
                     Borders: L.geoJSON(HexBorders).addTo(mymap),
                     Roads: JSONRoads,
