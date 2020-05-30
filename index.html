@@ -7,41 +7,8 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" crossorigin="" />
     <style type="text/css">
 
-
-
-
         .leaflet-marker-draggable {
             z-index: -10000;
-        }
-
-        .zoom-level-6 {
-            width: 1px !important;
-            height: 1px !important;
-        }
-
-        .zoom-level-5 {
-            width: 2px !important;
-            height: 2px !important;
-        }
-
-        .zoom-level-4 {
-            width: 4px !important;
-            height: 4px !important;
-        }
-
-        .zoom-level-3 {
-            width: 8px !important;
-            height: 8px !important;
-        }
-
-        .zoom-level-2 {
-            width: 16px !important;
-            height: 16px !important;
-        }
-
-        .zoom-level-1 {
-            width: 32px !important;
-            height: 32px !important;
         }
 
         .route-summary button {
@@ -55,7 +22,6 @@
         }
 
         .play-button {
-            /*  border: 1px solid red;*/
             display: inline-block;
             transition: all 0.5s ease;
         }
@@ -133,7 +99,6 @@
         .route-summary {
             border: 0;
             width: 100%;
-            /*pointer-events: none;*/
         }
 
             .route-summary img {
@@ -197,9 +162,6 @@
             padding: 0;
             margin: 0;
         }
-        /*.leaflet-routing-alt-minimized .summary-routeinfo {
-            display: inline !important;
-        }*/
 
         @font-face {
             font-family: 'Renner';
@@ -255,8 +217,10 @@
                 transform: rotate(360deg);
             }
         }
+
     </style>
 </head>
+
 <body style="background: black">
     <div id="loader-holder">
         <div class="logo" style="font-size: 72px">LW</div>
@@ -282,43 +246,41 @@
 
             }).setView([-128, 128], 2);
 
-
         var SatelliteMap = L.tileLayer('Beta/{z}_{x}_{y}.webp',
             {
                 crs: L.CRS.Simple,
-                maxZoom: 5,
+                maxNativeZoom: 5,
+                maxZoom: 7,
                 minZoom: 1,
                 noWrap: true,
                 continuousWorld: true,
                 bounds: L.latLngBounds(L.latLng(-256, 0), L.latLng(0, 256)),
                 id: 'LogiWaze - Satellite'
-            });
-        SatelliteMap.addTo(mymap);
-
+            }).addTo(mymap);
 
         var DrawnMap = L.tileLayer('Tiles/{z}_{x}_{y}.webp',
             {
                 crs: L.CRS.Simple,
-                maxZoom: 5,
+                maxNativeZoom: 5,
+                maxZoom: 7,
                 minZoom: 1,
                 noWrap: true,
                 continuousWorld: true,
                 bounds: L.latLngBounds(L.latLng(-256, 0), L.latLng(0, 256)),
                 id: 'LogiWaze'
-            });
-        DrawnMap.addTo(mymap);
+            }).addTo(mymap);
 
         var VividMap = L.tileLayer('Skaj/{z}_{x}_{y}.webp',
             {
                 crs: L.CRS.Simple,
-                maxZoom: 5,
+                maxNativeZoom: 5,
+                maxZoom: 7,
                 minZoom: 1,
                 noWrap: true,
                 continuousWorld: true,
                 bounds: L.latLngBounds(L.latLng(-256, 0), L.latLng(0, 256)),
                 id: 'LogiWaze - Vivid'
-            });
-        VividMap.addTo(mymap);
+            }).addTo(mymap);
 
     </script>
 
@@ -375,7 +337,7 @@
 
                 createStep(text, distance, steps) {
                     //if (!window.beta)
-                      //  return document.createTextNode("");
+                    //  return document.createTextNode("");
 
                     var region;
                     var border = 0;
@@ -442,7 +404,7 @@
 
                 createContainer(className) {
                     //if (!window.beta)
-                        //return document.createElement("DIV");
+                    //return document.createElement("DIV");
 
                     var table = document.createElement("TABLE");
                     table.setAttribute("style", "width: 100%");
@@ -456,7 +418,7 @@
 
                 createStepsContainer(container) {
                     //if (!window.beta)
-                      //  return document.createTextNode("");
+                    //  return document.createTextNode("");
 
                     this.block = L.Routing.ItineraryBuilder.prototype.createStepsContainer(container);
                     this.container.appendChild(this.block);
