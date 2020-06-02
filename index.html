@@ -460,13 +460,13 @@
                         controlUI.title = 'Music';
 
                         var playlists = {
-                            "Out Of Logi Babylon": "PLkQvYA5-_pJ1sRms9hkr1q3DHUQvaK7iF",
+                            "Out Of Logi Babylon":    "PLkQvYA5-_pJ1sRms9hkr1q3DHUQvaK7iF",
                             "Caovia's Rolling Hills": "PLv1A0_5bkdtBP9rIciaA1tH1LxVcC3Y5_"
                         };
 
                         var options = "";
                         var keys = Object.keys(playlists);
-                        var selected = parseInt((Math.random() * keys.length).toFixed());
+                        var selected = parseInt((Math.random() * keys.length).toFixed().toString());
                         for (var i = 0; i < keys.length; i++) {
                             var option = document.createElement("option");
                             option.setAttribute("value", playlists[keys[i]]);
