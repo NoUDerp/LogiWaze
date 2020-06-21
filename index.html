@@ -12,6 +12,7 @@
 
 
 
+
         .turn-right {
             fill: blue;
             width: 24px;
@@ -476,12 +477,26 @@
     <script type="text/javascript">
         var APIManager = API.Create();
 
+        var VoiceNarrator = Narrator.Create();
+        function updateSlider(slider) {
+            //slider.oninput = function () {
+            var calculatedSpeed = Math.pow(slider.value / 100.0, 2) * 2.5 + .5;
+            VoiceNarrator.setSpeed(calculatedSpeed);
+            // change all other voice sliders to the same value
+            var other = document.getElementsByClassName("slider");
+            if (other != null)
+                for (var i = 0; i < other.length; i++)
+                    if (other[i] != slider)
+                        other[i].value = slider.value;
+        }
+
 
         APIManager.update(() => {
 
-            var VoiceNarrator = Narrator.Create();
             var Router = FoxholeRouter.Create(mymap, APIManager, VoiceNarrator);
             var Geocoder = FoxholeGeocoder.Create(APIManager);
+
+
 
             L.control.layers(
                 {
