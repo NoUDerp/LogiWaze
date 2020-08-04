@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" crossorigin="" />
     <style type="text/css">
 
+	/* delete this after fix */
+	.route-summary { display: none }
 
         .turn-right {
             fill: blue;
@@ -328,7 +330,7 @@
 
             }).setView([-128, 128], 2);
 
-        var SatelliteMap = L.tileLayer('Beta/{z}_{x}_{y}.webp',
+        var SatelliteMap = L.tileLayer('Sat-Tiles-Main/{z}_{x}_{y}.webp',
             {
                 crs: L.CRS.Simple,
                 maxNativeZoom: 5,
@@ -352,7 +354,7 @@
                 id: 'LogiWaze'
             }).addTo(mymap);
 
-        var VividMap = L.tileLayer('Skaj/{z}_{x}_{y}.webp',
+        /*var VividMap = L.tileLayer('Skaj/{z}_{x}_{y}.webp',
             {
                 crs: L.CRS.Simple,
                 maxNativeZoom: 5,
@@ -362,7 +364,7 @@
                 continuousWorld: true,
                 bounds: L.latLngBounds(L.latLng(-256, 0), L.latLng(0, 256)),
                 id: 'LogiWaze - Vivid'
-            }).addTo(mymap);
+            }).addTo(mymap);*/
 
         if (window.beta) {
             L.Control.YouTube = L.Control.extend({
@@ -412,9 +414,9 @@
 
             L.control.layers(
                 {
-                    'Drawn Map': DrawnMap,
                     'Satellite Map': SatelliteMap,
-                    'Vivid Map': VividMap
+                    'Drawn Map': DrawnMap
+                    //,'Vivid Map': VividMap
                 }, {
                 'Town Halls': Router.TownHalls,
                 'Borders': Router.Borders,
@@ -628,12 +630,12 @@
                         if (route.name == "Shortest Route")
                             return L.Routing.line(route, {
                                 addWaypoints: options.addWaypoints, styles: [
-                                    { color: 'black', opacity: 0.15, weight: 9 }, { color: 'white', opacity: 0.8, weight: 6 }, { color: '#9E3031', opacity: 1, weight: 2 }
+                                    { color: 'black', opacity: 0.15, weight: 7 }, { color: 'white', opacity: 0.8, weight: 6 }, { color: '#9E3031', opacity: 1, weight: 2, dashArray: '5,5' }
                                 ]
                             });
                         return L.Routing.line(route, {
                             addWaypoints: options.addWaypoints, styles: [
-                                { color: 'black', opacity: 0.15, weight: 9 }, { color: 'white', opacity: 0.8, weight: 6 }, { color: '#5E9339', opacity: 1, weight: 2 }
+                                { color: 'black', opacity: 0.15, weight: 7 }, { color: 'white', opacity: 0.8, weight: 6 }, { color: '#5E9339', opacity: 1, weight: 2 , dashArray: '5,5'}
                             ]
                         });
                     },
