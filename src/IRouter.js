@@ -259,10 +259,12 @@
                 }
 
                 var playbutton = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/" x="0px" y="0px" width="32px" height="32px" viewBox="20 20 173.7 173.7" enable-background="new 0 0 213.7 213.7" xml:space="preserve"><polygon class="triangle" id="XMLID_18_" fill="none" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" points="73.5,62.5 148.5,105.8 73.5,149.1 "/></svg>'
+
+                var speed = beta ? '<tr class="detailed-routeinfo"><td colspan="2"><span class="slow"></span><span class="slidecontainer"><input type="range" min="d /1" max="100" value="50" class="slider" oninput="updateSlider(this)"></span><span class="fast"></span></td></tr>' : '';
                 //: 120
                 var FoxholeRouter = {
                     summaryTemplate: '<table class="route-summary"><tr class="route-summary-header"><td><img src=\'{name}.webp\' /><span>{name}</span><span style=\'font-weight: bold; margin-left: 1em\' class=\'summary-routeinfo\'>{distance}</span>'
-                        .concat(!window.beta ? "" : '<div class="audio-controls detailed-summary"><button class="play-button" style="pointer-events: auto" onclick="window.narrateDirections()">'.concat(playbutton).concat('</button></div>')).concat('</td></tr><tr><td class="no-click">{time}</td></tr></table>'),
+                        .concat(!window.beta ? "" : '<div class="audio-controls detailed-routeinfo"><button class="play-button" style="pointer-events: auto" onclick="window.narrateDirections()">'.concat(playbutton).concat('</button></div>')).concat('</td></tr>').concat(speed).concat('<tr><td class="no-click">{time}</td></tr></table>'),
                     TownHalls: TownHalls,
                     API: API,
                     Debug: debug_markers,

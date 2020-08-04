@@ -11,6 +11,10 @@ define(null, function () {
                 instructions: [],
                 currentInstruction: -1,
                 paused: false,
+                speed: 1.0,
+                setSpeed: function (speed) {
+                    Narrator.speed = speed;
+                },
                 speak: function (text) {
                     var utter = new SpeechSynthesisUtterance();
                     utter.rate = 1.2;
@@ -88,7 +92,7 @@ define(null, function () {
 
                         Narrator.queueNextInstruction();
                         Narrator.speak(direction.text);
-                    }, direction.time * 1000.0);
+                    }, direction.time * 1000.0 / Narrator.speed);
                 }
             };
             return Narrator;
