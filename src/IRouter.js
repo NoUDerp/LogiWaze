@@ -183,24 +183,18 @@
                     var layer = JSONRoads._layers[key];
                     for (var k = 1; k < layer._latlngs.length; k++) {
                         var region = layer.feature.properties.region;
+                        var tier = layer.feature.properties.tier;
                         var lat = layer._latlngs[k - 1].lat;
                         var lng = layer._latlngs[k - 1].lng;
                         var lat2 = layer._latlngs[k].lat;
                         var lng2 = layer._latlngs[k].lng;
+
+			var tiercolor = tier == 3 ? '#5a9565' : ( tier == 2 ? '#94954e' : '#957458');
+
                         if (lat != null && lng != null && lat2 != null && lng2 != null) {
                             var control = layer._latlngs[k - 1].ownership;
-                            if (control == "COLONIALS")
-                                new L.polyline([[lat, lng], [lat2, lng2]], { color: '#000000', weight: 4, opacity: .15, renderer: renderer, interactive: false, smoothFactor: 1 }).addTo(ColonialRoadsGroup).bringToFront();
-
-                            else if (control == "WARDENS")
-                                new L.polyline([[lat, lng], [lat2, lng2]], { color: '#000000', weight: 4, opacity: .15, renderer: renderer, interactive: false, smoothFactor: 1 }).addTo(WardenRoadsGroup).bringToFront();
-
-                            else if (control == "OFFLINE")
-                                new L.polyline([[lat, lng], [lat2, lng2]], { color: '#000000', weight: 4, opacity: .15, renderer: renderer, interactive: false, smoothFactor: 1 }).addTo(RoadsGroup).bringToFront();
-
-                            else if (control === "NONE")
-                                new L.polyline([[lat, lng], [lat2, lng2]], { color: '#000000', weight: 4, opacity: .15, renderer: renderer, interactive: false, smoothFactor: 1 }).addTo(RoadsGroup).bringToFront();
-                        }
+		            new L.polyline([[lat, lng], [lat2, lng2]], { color: tiercolor, weight: 10, opacity: 1.0, renderer: renderer, interactive: false, smoothFactor: 1 }).addTo(RoadsGroup).bringToFront();
+			}
                     }
                 }
                 for (var key in JSONRoads._layers) {
@@ -215,16 +209,16 @@
 
                             var control = layer._latlngs[k - 1].ownership;
                             if (control == "COLONIALS")
-                                new L.polyline([[lat, lng], [lat2, lng2]], { color: '#516C4B', weight: 3, opacity: 1.0, renderer: renderer, interactive: false, smoothFactor: 1 }).addTo(ColonialRoadsGroup).bringToFront();
+                                new L.polyline([[lat, lng], [lat2, lng2]], { color: '#516C4B', weight: 5, opacity: 1.0, renderer: renderer, interactive: false, smoothFactor: 1 }).addTo(ColonialRoadsGroup).bringToFront();
 
                             else if (control == "WARDENS")
-                                new L.polyline([[lat, lng], [lat2, lng2]], { color: '#235683', weight: 3, opacity: 1.0, renderer: renderer, interactive: false, smoothFactor: 1 }).addTo(WardenRoadsGroup).bringToFront();
+                                new L.polyline([[lat, lng], [lat2, lng2]], { color: '#235683', weight: 5, opacity: 1.0, renderer: renderer, interactive: false, smoothFactor: 1 }).addTo(WardenRoadsGroup).bringToFront();
 
                             else if (control == "OFFLINE")
-                                new L.polyline([[lat, lng], [lat2, lng2]], { color: '#505050', weight: 3, opacity: 1.0, renderer: renderer, interactive: false, smoothFactor: 1 }).addTo(RoadsGroup).bringToFront();
+                                new L.polyline([[lat, lng], [lat2, lng2]], { color: '#505050', weight: 5, opacity: 1.0, renderer: renderer, interactive: false, smoothFactor: 1 }).addTo(RoadsGroup).bringToFront();
 
                             else if (control === "NONE")
-                                new L.polyline([[lat, lng], [lat2, lng2]], { color: '#CCCCCC', weight: 3, opacity: 1.0, renderer: renderer, interactive: false, smoothFactor: 1 }).addTo(RoadsGroup).bringToFront();
+                                new L.polyline([[lat, lng], [lat2, lng2]], { color: '#CCCCCC', weight: 5, opacity: 1.0, renderer: renderer, interactive: false, smoothFactor: 1 }).addTo(RoadsGroup).bringToFront();
                         }
                     }
                 }
@@ -455,7 +449,7 @@
                                     else {
                                         var text = turns[jangleOut - jangleIn].concat(' and drive ').concat(direction).concat(' for ').concat(crossroads[i + 1].distanceFromLast.toFixed().toString()).concat(" meters");
                                     }
-                                    instructions.push({ distance: crossroads[i + 1].distanceFromLast, time: 0, text: j.region.concat('|').concat(text).concat('|').concat(border.toString()).concat('|').concat(region_change ? '1' : '0').concat('|').concat(turnicon) });
+                                    instructions.push({ distance: crossroads[i + 1].distanceFromLast, time: 0, text: j.region.concat('|').concat(text).concat('|').concat(border.toString()).concat('|').concat(region_change ? '1' : '0').concat('|').concat(turnicon).concat('|').concat(j.tier) });
                                 }
                             }
                             instructions.push({ distance: 0, time: 0, text: crossroads[crossroads.length - 1].region.concat("|").concat("You have arrived at your destination.|0|0|0|") });

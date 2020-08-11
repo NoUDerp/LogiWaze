@@ -1,17 +1,14 @@
 ﻿<html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="viewpor" content="width:1024" />
     <meta name="viewport" content="initial-scale=1, maximum-scale=1" />
     <title>LogiWaze</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin="" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" crossorigin="" />
     <style type="text/css">
 
-
-
-
-
+	/* delete this after fix */
+	.route-summary { display: none }
 
         .turn-right {
             fill: blue;
@@ -97,67 +94,13 @@
                 height: 22px;
             }
 
-        .audio-speed-slider {
-            width: 100%;
-            appearance: none;
-            height: 25px; /* Specified height */
-            background: #444857; /* Grey background */
-            outline: none; /* Remove outline */
-            opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
-            -webkit-transition: .2s; /* 0.2 seconds transition on hover */
-            transition: opacity .2s;
-        }
 
-        .slidecontainer input {
-            width: calc(100% - 68px);
-        }
-
-        .fast {
-            display: inline-block;
-            width: 32px;
-            height: 32px;
-            background-size: 32px 32px;
-            background-image: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+CjwhLS0gQ3JlYXRlZCB3aXRoIElua3NjYXBlIChodHRwOi8vd3d3Lmlua3NjYXBlLm9yZy8pIC0tPgoKPHN2ZwogICB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iCiAgIHhtbG5zOmNjPSJodHRwOi8vY3JlYXRpdmVjb21tb25zLm9yZy9ucyMiCiAgIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyIKICAgeG1sbnM6c3ZnPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIKICAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIgogICB4bWxuczpzb2RpcG9kaT0iaHR0cDovL3NvZGlwb2RpLnNvdXJjZWZvcmdlLm5ldC9EVEQvc29kaXBvZGktMC5kdGQiCiAgIHhtbG5zOmlua3NjYXBlPSJodHRwOi8vd3d3Lmlua3NjYXBlLm9yZy9uYW1lc3BhY2VzL2lua3NjYXBlIgogICB3aWR0aD0iMTAwcHgiCiAgIGhlaWdodD0iMTAwcHgiCiAgIHZpZXdCb3g9IjIyMCAwIDExMCA3MCIKICAgaWQ9InN2ZzQzNzEiCiAgIHZlcnNpb249IjEuMSI+CiAgPGRlZnMKICAgICBpZD0iZGVmczQzNzMiIC8+CiAgPHNvZGlwb2RpOm5hbWVkdmlldwogICAgIGlkPSJiYXNlIgogICAgIHBhZ2Vjb2xvcj0iI2ZmZmZmZmZmIgogICAgIHNob3dncmlkPSJmYWxzZSIKICAgICBmaXQtbWFyZ2luLXRvcD0iMCIKICAgICBmaXQtbWFyZ2luLWxlZnQ9IjAiCiAgICAgZml0LW1hcmdpbi1yaWdodD0iMCIKICAgICBmaXQtbWFyZ2luLWJvdHRvbT0iMCIKLz4KICA8bWV0YWRhdGEKICAgICBpZD0ibWV0YWRhdGE0Mzc2Ij4KICAgIDxyZGY6UkRGPgogICAgICA8Y2M6V29yawogICAgICAgICByZGY6YWJvdXQ9IiI+CiAgICAgICAgPGRjOmZvcm1hdD5pbWFnZS9zdmcreG1sPC9kYzpmb3JtYXQ+CiAgICAgICAgPGRjOnR5cGUKICAgICAgICAgICByZGY6cmVzb3VyY2U9Imh0dHA6Ly9wdXJsLm9yZy9kYy9kY21pdHlwZS9TdGlsbEltYWdlIiAvPgogICAgICAgIDxkYzp0aXRsZT48L2RjOnRpdGxlPgogICAgICA8L2NjOldvcms+CiAgICA8L3JkZjpSREY+CiAgPC9tZXRhZGF0YT4KICA8ZwogICAgIGlua3NjYXBlOmxhYmVsPSJMYXllciAxIgogICAgIGlua3NjYXBlOmdyb3VwbW9kZT0ibGF5ZXIiCiAgICAgaWQ9ImxheWVyMSIKICAgICB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwLC0xMTApIj4KICAgIDxnCiAgICAgICB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxMDAsMCkiCiAgICAgICBpZD0ibGF5ZXIxLTEiCiAgICAgICBpbmtzY2FwZTpsYWJlbD0iTGF5ZXIgMSI+CiAgICAgIDxwYXRoCiAgICAgICAgIHNvZGlwb2RpOm5vZGV0eXBlcz0iY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjIgogICAgICAgICBpbmtzY2FwZTpjb25uZWN0b3ItY3VydmF0dXJlPSIwIgogICAgICAgICBpZD0icGF0aDQzMDEiCiAgICAgICAgIGQ9Im0gMTgzLjQ5NDE0LDExNS4yMzA0NyBjIC0zLjgxMDk4LDEyLjI0MTc5IDEyLjg0OTY4LDE5Ljk1NjA0IDExLjU3MDAxLDI0LjA1NzUyIC02LjY0NzE0LDIuNTU4OSAtMTMuOTk5MzcsLTEuMTg3MDIgLTIwLjk4NDA3LDAuODc4MDMgLTUuNzIxMjQsLTAuMzgzMTkgLTExLjMyNDg5LDEuMDI1MTggLTE2LjQzMTY1LDMuNTMyNjEgLTYuMTM2MSwxLjk4MjI0IC0xMC4xNjk3Nyw3LjE2NTUgLTE0Ljg2Mzc5LDExLjIyNTQ1IC0zLjQ2NDIxLDEuNTY4NDYgLTQuNDg5NDMsNi4yMTY5NCAtNi44MDQxNyw3Ljk3ODI2IC0zLjY3MjIzLC0wLjUxMTMxIC0xMi41MjQwMSwtMC4zMDk3NSAtNy45Njg3NSw2LjMyMDMyIDEuMjIwNTYsMi4zODE2OCA1Ljc0NDgxLDYuMzIzNTYgNy41ODk4NCw0LjU2MDU0IC0yLjM3Nzg3LDIuODU0ODkgLTQuNzY2MjIsMS40MTc1OSAtNi4zMTE4Niw0LjkyMTQ5IC0yLjA5OTczLDQuMTg2MjcgLTIuNTQ0MjEsOS4xMTAzOSAtNC41MDY1LDEzLjI0NjQ4IC0wLjUyOTkyLDIuOTUzNjQgMC4yNTAyNSwxMS4xNDM1MyAzLjk1NzAzLDkuMjg3MTEgNy4yNzQzNiwtNC40ODQ5NyAxLjc0MjQsLTE5LjYyMTU5IDE5LjI3NTU1LC0xOC4xNDUwMSA0LjU2ODMxLC0wLjQzMzMyIDcuNzg4NjIsLTQuNDY0ODEgMTEuMjg1LC03LjA3Mzc0IDIuNzIwMzcsLTAuODM1MDIgNS45ODg5OCwtMi43OTMzMyA4LjMwODk4LC00LjA4MjMgNS4yMTA1MiwtMi43OTI3OCAyMy40NDA3MSwtNS44ODQ1IDI1LjAzNzEzLC00Ljk1MTYxIDUuMzg2ODgsMS41MjY5IDExLjI0NTgsMC45ODc0NSAxNi41MjEyLDMuMTcxMTQgMi43MDc3NiwxLjQ1Nzc0IDExLjE5NTM3LDUuNjcyODYgMTAuNTUzNywtMC4xMDQyMiAtMC4zNDcyNywtMi41MDM4IC02Ljc1NTI4LC01LjUxNzc5IC0xLjE3NzgxLC00LjAyMTY0IDMuODczNSwwLjU0NzA3IDkuODcyODgsNC4wNTMyNSAxMi4yNjI2NiwtMC40NDEwNiAtMC4xOTEzMiwtNC44NjU2MSAtNS4xODEyNSwtMS45MjE4MSAtNy41MTM5MSwtMy40OTkzMSAtMi41MzEwOCwtMC45MzY3MyAtMy41OTIxOCwtMS43MjA1OSAtNi44MDM1OCwtMi40MjI1OSAtNS45NzQ3LC0wLjY5ODAyIC0wLjk1ODMsLTUuMDQ3ODkgMi41ODc0LC00Ljg2OTIzIDUuODgyNjMsLTAuMjg4NzcgNC4wNTYxNSwtOC41MDM0MyAxLjU2OTM5LC0xMS4yODQ3NyAtMi40OTEyNCwtNS4yMjEwMSAtNy44MjU2LC04LjA0MTcyIC0xMy4xOTQ3NywtOS40MjggLTIuMzQ5MTEsLTQuODY1NTMgLTQuMjYxMzksLTEwLjA3OTUyIC03LjcwMzczLC0xNC4yODQ5OCAtMi40MDA0MSwtMi4zNDk1MSAtOC4wNTg2LC00LjQ3NjUyIC0xMC4xMTQ2MywtMi4yNzk0OCAtMS4wNzQ3MywwLjM1Mjk5IC00LjQxNTc1LC03LjY3MjA4IC02LjEzODY3LC0yLjI5MTAxIHoiCiAgICAgICAgIHN0eWxlPSJmaWxsOiM0NDQ4NTciIC8+CiAgICA8L2c+CjwvZz4KPC9zdmc+Cg==")
-        }
-
-        .slow {
-            display: inline-block;
-            width: 32px;
-            height: 32px;
-            background-size: 32px 32px;
-            background-image: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+CjwhLS0gQ3JlYXRlZCB3aXRoIElua3NjYXBlIChodHRwOi8vd3d3Lmlua3NjYXBlLm9yZy8pIC0tPgoKPHN2ZwogICB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iCiAgIHhtbG5zOmNjPSJodHRwOi8vY3JlYXRpdmVjb21tb25zLm9yZy9ucyMiCiAgIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyIKICAgeG1sbnM6c3ZnPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIKICAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIgogICB4bWxuczpzb2RpcG9kaT0iaHR0cDovL3NvZGlwb2RpLnNvdXJjZWZvcmdlLm5ldC9EVEQvc29kaXBvZGktMC5kdGQiCiAgIHhtbG5zOmlua3NjYXBlPSJodHRwOi8vd3d3Lmlua3NjYXBlLm9yZy9uYW1lc3BhY2VzL2lua3NjYXBlIgogICB3aWR0aD0iMTAwcHgiCiAgIGhlaWdodD0iMTAwcHgiCiAgIHZpZXdCb3g9IjE5MCAxMDAgMTIwIDEwMCIKICAgaWQ9InN2ZzQzNzEiCiAgIHZlcnNpb249IjEuMSI+CiAgPGRlZnMKICAgICBpZD0iZGVmczQzNzMiIC8+CiAgPHNvZGlwb2RpOm5hbWVkdmlldwogICAgIGlkPSJiYXNlIgogICAgIHBhZ2Vjb2xvcj0iI2ZmZmZmZmZmIgogICAgIHNob3dncmlkPSJmYWxzZSIKICAgICBmaXQtbWFyZ2luLXRvcD0iMCIKICAgICBmaXQtbWFyZ2luLWxlZnQ9IjAiCiAgICAgZml0LW1hcmdpbi1yaWdodD0iMCIKICAgICBmaXQtbWFyZ2luLWJvdHRvbT0iMCIKLz4KICA8bWV0YWRhdGEKICAgICBpZD0ibWV0YWRhdGE0Mzc2Ij4KICAgIDxyZGY6UkRGPgogICAgICA8Y2M6V29yawogICAgICAgICByZGY6YWJvdXQ9IiI+CiAgICAgICAgPGRjOmZvcm1hdD5pbWFnZS9zdmcreG1sPC9kYzpmb3JtYXQ+CiAgICAgICAgPGRjOnR5cGUKICAgICAgICAgICByZGY6cmVzb3VyY2U9Imh0dHA6Ly9wdXJsLm9yZy9kYy9kY21pdHlwZS9TdGlsbEltYWdlIiAvPgogICAgICAgIDxkYzp0aXRsZT48L2RjOnRpdGxlPgogICAgICA8L2NjOldvcms+CiAgICA8L3JkZjpSREY+CiAgPC9tZXRhZGF0YT4KICA8ZwogICAgICAgdHJhbnNmb3JtPSJtYXRyaXgoMC4wODc4MDgzNiwwLDAsMC4wODc4MDgzNiwzMjMuNjAzODMsMTc4Ljc2MDA5KSIKICAgICAgIGlkPSJsYXllcjEtOCIKICAgICAgIGlua3NjYXBlOmxhYmVsPSJMYXllciAxIj4KICAgICAgPHBhdGgKICAgICAgICAgaW5rc2NhcGU6Y29ubmVjdG9yLWN1cnZhdHVyZT0iMCIKICAgICAgICAgaWQ9InBhdGg1MzA2IgogICAgICAgICBkPSJtIC04MzEuNDEyNTgsLTQwNC41Njk3NSBjIC0xMjQuNjY0MjQsMi40MzA5NCAtMjYyLjc4NDMyLDEyLjQ0MTExIC0zNjEuMzcwMDIsOTguMjQ5MDUgLTczLjg3MzMsNTkuODYzMzggLTEzNy41ODg3LDE0Mi44Njk2OCAtMTQ1LjY1NTQsMjQwLjU3OTA3OSAtMjQuMDU5LC01LjU2MjY2MiAtMTE1LjkwMTYsLTQuNzQ5NjMxIC01OS41MjI2LDI4LjA1NjI2OSA1MS41OTI2LDI5LjU2MzAzMzcgMTE4Ljg4MjMsMTYuMzYyNjg2IDE2Ny43NTAyLDUyLjQwODA1MyAtMi40NjgxLDI5LjEwMjU0MiAtNzcuMiwxMy4xNDMwNTYgLTk1LjA1NjYsNDcuMTkyOTI4IC0zNC40NzQ1LDE4Ljc3NzYxNyAtMjQuNjc5NCwxMjIuMDIxNTkxIDIzLjE4NjIsOTQuNDgxMzgxIDQ2LjMyMDEsLTYuNjE2MTEgOTMuNTM0NiwtMi42NDI5NCAxMzkuNzAxNCwtMTAuNzE2NzYgMzcuOTk1NCwtMTUuNTMyNyAzNC4wNTg4LC03MC4yNDMxOTkgODIuODIyMSwtNDguOTQzNzcyIDc0LjE4MzYsMS45MDkyMjIgMTQ4Ljg3NDgzLC0xNC43NTI0MjkgMjIyLjQ4MjMzLDAuMDgzNiAxMDYuOTUyNjQsNC42ODQ1NDIgMjE0LjU3MTY1LC0xMC42NTIyMDkgMzE2LjM3NzI0LC00My41NzUzOCAxNi44NzAyLDQ0LjM2MDM5NCAzNy44OTU1Miw5OS4zNTU3OTIgODcuMDQ3NDcsMTE1LjI2Njk1MiA1NS4zMjAwNCw0LjQwMTUgNzEuMTUwNjgsLTU5LjY5NSA1Ni44NzU1OSwtMTAyLjk0MDQyMSAtNy44NDUxMywtNTIuOTM3MTM3IC0yNC44ODUxNCwtMTAzLjkyNjI4NCAtNDMuMTc4OTIsLTE1NC4wMzU1MTEgNjIuMjE3MjksLTQ1LjM0ODM5OCAxNTEuMDM5MDMsLTUuMjYyODU2IDIxMS42NjA0OSwtNTMuMzc4Nzk4IDQ2LjUzNzYzLC0zOC4xNDgxOCAxLjM3NjQ4LC0xMDQuMjE1MTUgLTQ3LjcxNDI2LC0xMDkuNzYyMSAtNjguNDY3NCwtOS42Nzc5MSAtMTI4Ljc0NDc1LDM1LjEzMzc1IC0xOTUuMzk5MzYsNDAuMDgyMzEgLTk5LjY0NzYxLC05My43MjI0IC0yMTMuODI2NjYsLTE5Ni41MjM2MiAtMzYwLjAwNTg2LC0xOTMuMDQ2ODggeiIKICAgICAgICAgc3R5bGU9ImZpbGw6IzQ0NDg1NyIgLz4KPC9nPgo8L3N2Zz4K")
-        }
-
-        .audio-speed-slider:hover {
-            opacity: 1; /* Fully shown on mouse-over */
-        }
-
-        .audio-speed-slider::-webkit-slider-thumb {
-            -webkit-appearance: none; /* Override default look */
-            appearance: none;
-            width: 25px; /* Set a specific slider handle width */
-            height: 25px; /* Slider handle height */
-            background: #4CAF50; /* Green background */
-            cursor: pointer; /* Cursor on hover */
-        }
-
-        .slider-container {
-            width: 100%;
-        }
-
-        .audio-speed-slider::-moz-range-thumb {
-            width: 25px; /* Set a specific slider handle width */
-            height: 25px; /* Slider handle height */
-            background: #4CAF50; /* Green background */
-            cursor: pointer; /* Cursor on hover */
-        }
-
-        .play-button:hover .triangle {
-            stroke-dashoffset: 0;
-            opacity: 1;
-            stroke: #FFFFFF;
-            animation: none nudge 0.7s ease-in-out;
-        }
+            .play-button:hover .triangle {
+                stroke-dashoffset: 0;
+                opacity: 1;
+                stroke: #FFFFFF;
+                animation: none nudge 0.7s ease-in-out;
+            }
 
 
         .route-summary-header {
@@ -330,57 +273,30 @@
             }
         }
 
-        .leaflet-control-youtube-toggle {
-            width: 44px !important;
-            height: 44px !important;
-            border: none !important;
-            background-size: 26px 26px !important;
-            background-position: 50% 50%;
-            background-repeat: no-repeat;
-            cursor: pointer;
-            border-radius: 2px;
-            background-image: url("data:image/svg+xml;base64,PHN2ZyBoZWlnaHQ9JzMwMHB4JyB3aWR0aD0nMzAwcHgnICBmaWxsPSIjMDAwMDAwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2ZXJzaW9uPSIxLjEiIHg9IjBweCIgeT0iMHB4IiB2aWV3Qm94PSIwIDAgNjQgNjQiIHN0eWxlPSJlbmFibGUtYmFja2dyb3VuZDpuZXcgMCAwIDY0IDY0OyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+PGc+PHBhdGggZD0iTTIzLDI4YzAsMS42NTQsMS4zNDYsMywzLDNzMy0xLjM0NiwzLTN2LTVoNnYyaC0xYy0xLjY1NCwwLTMsMS4zNDYtMywzczEuMzQ2LDMsMywzczMtMS4zNDYsMy0zVjE3SDI3djhoLTEgICBDMjQuMzQ2LDI1LDIzLDI2LjM0NiwyMywyOHogTTM1LDI4YzAsMC41NTItMC40NDgsMS0xLDFzLTEtMC40NDgtMS0xczAuNDQ4LTEsMS0xaDFWMjh6IE0zNSwxOXYyaC02di0ySDM1eiBNMjYsMjdoMXYxICAgYzAsMC41NTItMC40NDgsMS0xLDFzLTEtMC40NDgtMS0xUzI1LjQ0OCwyNywyNiwyN3oiPjwvcGF0aD48cGF0aCBkPSJNNTUsNTdWMjRDNTUsMTEuMzE3LDQ0LjY4MywxLDMyLDFTOSwxMS4zMTcsOSwyNHYzM2MtMi4yMDYsMC00LDEuNzk0LTQsNHYyaDU0di0yQzU5LDU4Ljc5NCw1Ny4yMDYsNTcsNTUsNTd6IE01MSw1N3YtOCAgIGgtMnY4aC0yVjQ3aDZ2MTBINTF6IE0zMiwxM2M2LjA2NSwwLDExLDQuOTM1LDExLDExdjlIMjF2LTlDMjEsMTcuOTM1LDI1LjkzNSwxMywzMiwxM3ogTTMzLDExLjA1MXYtMiAgIGMxLjEyOSwwLjA3NSwyLjIyNSwwLjI2NiwzLjI3MiwwLjU3N2wtMC43NDgsMS44N0MzNC43MTEsMTEuMjY5LDMzLjg2OCwxMS4xMTcsMzMsMTEuMDUxeiBNMzMsNy4wNTF2LTQgICBjMS45MTIsMC4wOTEsMy43NiwwLjQyMyw1LjUwNSwwLjk5M0wzNy4wMiw3Ljc1OEMzNS43MzksNy4zNjEsMzQuMzg5LDcuMTMyLDMzLDcuMDUxeiBNMzEsNy4wNTEgICBjLTEuMzg5LDAuMDgxLTIuNzM5LDAuMzExLTQuMDIsMC43MDdsLTEuNDg1LTMuNzE0QzI3LjI0LDMuNDczLDI5LjA4OCwzLjE0MSwzMSwzLjA1MVY3LjA1MXogTTMxLDkuMDUxdjIgICBjLTAuODY4LDAuMDY3LTEuNzExLDAuMjE4LTIuNTI0LDAuNDQ4bC0wLjc0OC0xLjg3QzI4Ljc3NSw5LjMxNiwyOS44NzEsOS4xMjYsMzEsOS4wNTF6IE0yNi41OTksMTIuMTkgICBDMjIuMTIyLDE0LjI0NiwxOSwxOC43NiwxOSwyNHYxMWgyNlYyNGMwLTUuMjQtMy4xMjItOS43NTQtNy41OTktMTEuODFsMC43NDQtMS44NTlDNDMuMzU3LDEyLjY4NCw0NywxNy45MTksNDcsMjR2MTNIMTdWMjQgICBjMC02LjA4MSwzLjY0My0xMS4zMTYsOC44NTUtMTMuNjY5TDI2LjU5OSwxMi4xOXogTTUzLDQ1aC00VjMzaDRWNDV6IE0zMSw1MWgydjJoLTJWNTF6IE0zMyw0OWgtMnYtMmgyVjQ5eiBNMjUsNDV2LTZoMTR2NkgyNXogICAgTTE3LDM5aDZ2NmgtNlYzOXogTTIzLDUxaDJ2MmgtMlY1MXogTTI1LDQ5aC0ydi0yaDJWNDl6IE0zOSw1MWgydjJoLTJWNTF6IE00MSw0OWgtMnYtMmgyVjQ5eiBNNDEsNDV2LTZoNnY2SDQxeiBNNTMsMzFoLTR2LTJoNCAgIFYzMXogTTUzLDI3aC00di0yaDRWMjd6IE01Mi45NDksMjNoLTRjLTAuMDQtMC42NzgtMC4xMTQtMS4zNDYtMC4yMzEtMmg0LjA0MkM1Mi44NTUsMjEuNjU4LDUyLjkxNywyMi4zMjQsNTIuOTQ5LDIzeiBNMTUuMDUxLDIzICAgaC00YzAuMDMyLTAuNjc2LDAuMDk0LTEuMzQyLDAuMTg5LTJoNC4wNDJDMTUuMTY0LDIxLjY1NCwxNS4wOSwyMi4zMjIsMTUuMDUxLDIzeiBNMTUsMjV2MmgtNHYtMkgxNXogTTE1LDI5djJoLTR2LTJIMTV6IE0xNSwzMyAgIHYxMmgtNFYzM0gxNXogTTIxLDQ3djEwaC0yVjQ3SDIxeiBNMjMsNTVoMnYyaC0yVjU1eiBNMjcsNDdoMnYxMGgtMlY0N3ogTTMxLDU1aDJ2MmgtMlY1NXogTTM1LDQ3aDJ2MTBoLTJWNDd6IE0zOSw1NWgydjJoLTJWNTV6ICAgIE00Myw0N2gydjEwaC0yVjQ3eiBNNTIuMzczLDE5aC00LjEyNmMtMS40NTMtNC43MTEtNC45MDYtOC41NDQtOS4zNTktMTAuNTI4bDEuNDg3LTMuNzE4QzQ2LjMwNyw3LjM0Niw1MC44MDIsMTIuNjAyLDUyLjM3MywxOXogICAgTTIzLjYyNCw0Ljc1NGwxLjQ4NywzLjcxOGMtNC40NTMsMS45ODQtNy45MDYsNS44MTctOS4zNTksMTAuNTI4aC00LjEyNkMxMy4xOTgsMTIuNjAyLDE3LjY5Myw3LjM0NiwyMy42MjQsNC43NTR6IE0xMSw0N2g2djEwICAgaC0ydi04aC0ydjhoLTJWNDd6IE03LDYxYzAtMS4xMDMsMC44OTctMiwyLTJoNDZjMS4xMDMsMCwyLDAuODk3LDIsMkg3eiI+PC9wYXRoPjxyZWN0IHg9IjE5IiB5PSI0MSIgd2lkdGg9IjIiIGhlaWdodD0iMiI+PC9yZWN0PjxyZWN0IHg9IjQzIiB5PSI0MSIgd2lkdGg9IjIiIGhlaWdodD0iMiI+PC9yZWN0PjxyZWN0IHg9IjI3IiB5PSI0MSIgd2lkdGg9IjEwIiBoZWlnaHQ9IjIiPjwvcmVjdD48L2c+PC9zdmc+");
-        }
-
-        .leaflet-control-youtube-expanded {
-            display: none;
-        }
-
-        .youtube-player-contents {
-            display: none;
-            padding: 5px !important;
-            border-radius: 2px;
-        }
-
-            .youtube-player-contents a {
-                display: inline;
-            }
-
         .leaflet-control-youtube-interior {
-            /*width: 330px;
-            height: 175px;*/
-            border: 2px solid rgba(0,0,0,0.2) !important;
-            /*border-radius: 2px;*/
+            width: 330px;
+            height: 175px;
+            /*background-position: 50% 50%;
+            background-repeat: no-repeat;
+            display: block;
+            /*padding: 3px;*/
+            /*border-radius: 4px;*/
             box-shadow: 0 1px 7px rgba(0, 0, 0, 0.65);
             cursor: auto;
             text-align: center;
-            opacity: .85;
+            background-color: #FFFFFF;
+            margin-bottom: 10px;
+            opacity: .75;
+            padding: 4px;
             box-sizing: border-box;
-            /*background-clip: padding-box;*/
+            margin-bottom: 20px;
+            border: 2px solid rgba(0,0,0,0.2);
+            background-clip: padding-box;
         }
 
-        .youtube-player-contents select {
-            display: block;
-            margin: 4px 0;
-            font-size: 12px;
-            width: 100%;
-            height: 24px;
-            border: 1px solid #ccc;
-        }
-
-        .leaflet-control-youtube-interior:hover {
-            background-color: #F4F4F4;
-        }
+            .leaflet-control-youtube-interior:hover {
+                background-color: #F4F4F4;
+            }
     </style>
 </head>
 
@@ -391,10 +307,7 @@
         </div>
     </div>
     <div id="map-holder">
-        <div id="mapid" style="height: 100%;
-        width: 100%;
-        background: black;
-"></div>
+        <div id="mapid" style="height: 100%; width: 100%; background: black;"></div>
     </div>
     <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js" integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og==" crossorigin=""></script>
 
@@ -417,7 +330,7 @@
 
             }).setView([-128, 128], 2);
 
-        var SatelliteMap = L.tileLayer('Beta/{z}_{x}_{y}.webp',
+        var SatelliteMap = L.tileLayer('Sat-Tiles-Main/{z}_{x}_{y}.webp',
             {
                 crs: L.CRS.Simple,
                 maxNativeZoom: 5,
@@ -441,7 +354,7 @@
                 id: 'LogiWaze'
             }).addTo(mymap);
 
-        var VividMap = L.tileLayer('Skaj/{z}_{x}_{y}.webp',
+        /*var VividMap = L.tileLayer('Skaj/{z}_{x}_{y}.webp',
             {
                 crs: L.CRS.Simple,
                 maxNativeZoom: 5,
@@ -451,23 +364,38 @@
                 continuousWorld: true,
                 bounds: L.latLngBounds(L.latLng(-256, 0), L.latLng(0, 256)),
                 id: 'LogiWaze - Vivid'
-            }).addTo(mymap);
+            }).addTo(mymap);*/
 
-        function SetYouTubePlaylist() {
-            var list = document.getElementById("youtube-selector").value;
-            document.getElementById("youtube-player").src = "https://www.youtube.com/embed/videoseries?list=".concat(list);
+        if (window.beta) {
+            L.Control.YouTube = L.Control.extend({
+                options: {
+                    position: 'bottomright',
+                },
+
+                onAdd: function (map) {
+                    var controlDiv = L.DomUtil.create('div', 'leaflet-control-youtube');
+                    L.DomEvent
+                        .addListener(controlDiv, 'click', L.DomEvent.stopPropagation)
+                        .addListener(controlDiv, 'click', L.DomEvent.preventDefault)
+                        .addListener(controlDiv, 'click', function () {
+                            //MapShowCommand();
+                        });
+
+                    var controlUI = L.DomUtil.create('div', 'leaflet-control-youtube-interior leaflet-bar', controlDiv);
+                    controlUI.title = 'Music';
+                    var youtubeembed = L.DomUtil.create('div', 'youtube-player', controlUI);
+                    //PLv1A0_5bkdtBP9rIciaA1tH1LxVcC3Y5_
+                    youtubeembed.innerHTML = "<iframe style=\"width: 100%; height: 100%\" src=\"https://www.youtube.com/embed/videoseries?list=PLkQvYA5-_pJ1sRms9hkr1q3DHUQvaK7iF\" frameborder=\"0\" allow=\"autoplay; encrypted-media\" allowfullscreen></iframe>";
+                    return controlDiv;
+                }
+            });
+
+            L.control.youtube = function (options) {
+                return new L.Control.YouTube(options);
+            };
+
+            L.control.youtube().addTo(mymap);
         }
-
-        function showJukebox() {
-            document.getElementsByClassName('youtube-player-contents')[0].style.display = "block";
-            document.getElementsByClassName('leaflet-control-youtube-toggle')[0].style.display = "none";
-        }
-        function hideJukebox() {
-            document.getElementsByClassName('youtube-player-contents')[0].style.display = "none";
-            document.getElementsByClassName('leaflet-control-youtube-toggle')[0].style.display = "block";
-        }
-
-
 
     </script>
 
@@ -477,32 +405,18 @@
     <script type="text/javascript">
         var APIManager = API.Create();
 
-        var VoiceNarrator = Narrator.Create();
-        function updateSlider(slider) {
-            //slider.oninput = function () {
-            var calculatedSpeed = Math.pow(slider.value / 100.0, 2) * 2.5 + .5;
-            VoiceNarrator.setSpeed(calculatedSpeed);
-            // change all other voice sliders to the same value
-            var other = document.getElementsByClassName("slider");
-            if (other != null)
-                for (var i = 0; i < other.length; i++)
-                    if (other[i] != slider)
-                        other[i].value = slider.value;
-        }
-
 
         APIManager.update(() => {
 
+            var VoiceNarrator = Narrator.Create();
             var Router = FoxholeRouter.Create(mymap, APIManager, VoiceNarrator);
             var Geocoder = FoxholeGeocoder.Create(APIManager);
 
-
-
             L.control.layers(
                 {
-                    'Drawn Map': DrawnMap,
                     'Satellite Map': SatelliteMap,
-                    'Vivid Map': VividMap
+                    'Drawn Map': DrawnMap
+                    //,'Vivid Map': VividMap
                 }, {
                 'Town Halls': Router.TownHalls,
                 'Borders': Router.Borders,
@@ -511,67 +425,6 @@
                 'Warden Roads': Router.WardenRoadsCanvas,
                 'Debug Markers': Router.Debug
             }, { position: 'topright' }).addTo(mymap);
-
-            //if (window.beta)
-            {
-                L.Control.YouTube = L.Control.extend({
-                    options: {
-                        position: 'topleft',
-                    },
-
-                    onAdd: function (map) {
-                        var controlDiv = L.DomUtil.create('div', 'leaflet-control-youtube');
-                        L.DomEvent
-                            .addListener(controlDiv, 'click', L.DomEvent.stopPropagation)
-                            .addListener(controlDiv, 'click', L.DomEvent.preventDefault)
-                            .addListener(controlDiv, 'click', function () {
-                            });
-
-                        var controlUI = L.DomUtil.create('div', 'leaflet-control-youtube-interior leaflet-bar', controlDiv);
-                        controlUI.setAttribute("onmouseleave", "hideJukebox()");
-                        controlUI.title = 'Music';
-
-                        var playlists = {
-                            "Xanxth's \"Colonial National Guard\"": "PLP_k06DgiSSLDyzQZWAoHHW8bAXGO21AG",
-                            "Derp's \"Out Of Logi Babylon\"": "PLkQvYA5-_pJ1sRms9hkr1q3DHUQvaK7iF",
-                            "DragonZephyr's \"Caovia's Rolling Hills\"": "PLv1A0_5bkdtBP9rIciaA1tH1LxVcC3Y5_",
-                            "Skaj's \"Electro-Dungeon\"": "PLoxO-JyRQapNGIQg6c1ZeVbggI_DiJ0I2",
-                            "Foxhole A.M.": "PLkQvYA5-_pJ3Jq4YR2KmzhPEgTwuD8PkL"
-                        };
-
-                        var options = "";
-                        var keys = Object.keys(playlists);
-                        var selected = parseInt((Math.random() * 1000).toFixed().toString()) % keys.length;
-                        for (var i = 0; i < keys.length; i++) {
-                            var option = document.createElement("option");
-                            option.setAttribute("value", playlists[keys[i]]);
-                            option.innerText = keys[i];
-                            if (i === selected)
-                                option.setAttribute("selected", "selected");
-                            options = options.concat(option.outerHTML);
-                        }
-                        var toggle = "<a class='leaflet-control-youtube-toggle' href='#' title='Jukebox' onmouseover='showJukebox()' onclick='showJukebox()''></a>";
-                        var selector = toggle.concat("<div class='youtube-player-contents' style='padding: 2px'><select id=\"youtube-selector\" onchange=\"SetYouTubePlaylist()\">").concat(options).concat("</select>");
-
-                        var frame = document.createElement("iframe");
-                        frame.setAttribute("id", "youtube-player");
-                        frame.style.width = "450px";
-                        frame.style.height = "300px";
-                        frame.setAttribute("src", "https://www.youtube.com/embed/videoseries?list=".concat(playlists[keys[selected]]));
-                        frame.setAttribute("frameborder", "0");
-                        frame.setAttribute("allow", "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture");
-                        frame.setAttribute("allowfullscreen", "true");
-                        controlUI.innerHTML = selector.concat(frame.outerHTML).concat("</div>");
-                        return controlDiv;
-                    }
-                });
-
-                L.control.youtube = function (options) {
-                    return new L.Control.YouTube(options);
-                };
-
-                L.control.youtube().addTo(mymap);
-            }
 
             var startingWaypoints = [
                 L.latLng(-67.7688, 152.5585),
@@ -777,12 +630,12 @@
                         if (route.name == "Shortest Route")
                             return L.Routing.line(route, {
                                 addWaypoints: options.addWaypoints, styles: [
-                                    { color: 'black', opacity: 0.15, weight: 9 }, { color: 'white', opacity: 0.8, weight: 6 }, { color: '#9E3031', opacity: 1, weight: 2 }
+                                    { color: 'black', opacity: 0.15, weight: 7 }, { color: 'white', opacity: 0.8, weight: 6 }, { color: '#9E3031', opacity: 1, weight: 2, dashArray: '5,5' }
                                 ]
                             });
                         return L.Routing.line(route, {
                             addWaypoints: options.addWaypoints, styles: [
-                                { color: 'black', opacity: 0.15, weight: 9 }, { color: 'white', opacity: 0.8, weight: 6 }, { color: '#5E9339', opacity: 1, weight: 2 }
+                                { color: 'black', opacity: 0.15, weight: 7 }, { color: 'white', opacity: 0.8, weight: 6 }, { color: '#5E9339', opacity: 1, weight: 2 , dashArray: '5,5'}
                             ]
                         });
                     },
