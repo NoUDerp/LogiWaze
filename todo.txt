@@ -1,3 +1,4 @@
+error when stacking points together
 replace drawn map
 add second satellite map (updated)
 remove spedometer
