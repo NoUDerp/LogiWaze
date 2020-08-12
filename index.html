@@ -330,12 +330,17 @@
 
             }).setView([-128, 128], 2);
 
+	var pane = mymap.createPane('imagebg');
+	mymap.getPane('imagebg').style.zIndex = 50;
+	L.imageOverlay("Background.webp", [[-256-64-32, -256-7], [128-32, 512+7]], {pane:'imagebg'}).addTo(mymap);
+
+
         var SatelliteMap = L.tileLayer('Sat-Tiles-Main/{z}_{x}_{y}.webp',
             {
                 crs: L.CRS.Simple,
                 maxNativeZoom: 5,
                 maxZoom: 7,
-                minZoom: 1,
+                minZoom: 2,
                 noWrap: true,
                 continuousWorld: true,
                 bounds: L.latLngBounds(L.latLng(-256, 0), L.latLng(0, 256)),
@@ -347,7 +352,7 @@
                 crs: L.CRS.Simple,
                 maxNativeZoom: 5,
                 maxZoom: 7,
-                minZoom: 1,
+                minZoom: 2,
                 noWrap: true,
                 continuousWorld: true,
                 bounds: L.latLngBounds(L.latLng(-256, 0), L.latLng(0, 256)),
