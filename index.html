@@ -271,30 +271,57 @@
             }
         }
 
-        .leaflet-control-youtube-interior {
-            width: 330px;
-            height: 175px;
-            /*background-position: 50% 50%;
+        .leaflet-control-youtube-toggle {
+            width: 44px !important;
+            height: 44px !important;
+            border: none !important;
+            background-size: 26px 26px !important;
+            background-position: 50% 50%;
             background-repeat: no-repeat;
-            display: block;
-            /*padding: 3px;*/
-            /*border-radius: 4px;*/
+            cursor: pointer;
+            border-radius: 2px;
+            background-image: url("data:image/svg+xml;base64,PHN2ZyBoZWlnaHQ9JzMwMHB4JyB3aWR0aD0nMzAwcHgnICBmaWxsPSIjMDAwMDAwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2ZXJzaW9uPSIxLjEiIHg9IjBweCIgeT0iMHB4IiB2aWV3Qm94PSIwIDAgNjQgNjQiIHN0eWxlPSJlbmFibGUtYmFja2dyb3VuZDpuZXcgMCAwIDY0IDY0OyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+PGc+PHBhdGggZD0iTTIzLDI4YzAsMS42NTQsMS4zNDYsMywzLDNzMy0xLjM0NiwzLTN2LTVoNnYyaC0xYy0xLjY1NCwwLTMsMS4zNDYtMywzczEuMzQ2LDMsMywzczMtMS4zNDYsMy0zVjE3SDI3djhoLTEgICBDMjQuMzQ2LDI1LDIzLDI2LjM0NiwyMywyOHogTTM1LDI4YzAsMC41NTItMC40NDgsMS0xLDFzLTEtMC40NDgtMS0xczAuNDQ4LTEsMS0xaDFWMjh6IE0zNSwxOXYyaC02di0ySDM1eiBNMjYsMjdoMXYxICAgYzAsMC41NTItMC40NDgsMS0xLDFzLTEtMC40NDgtMS0xUzI1LjQ0OCwyNywyNiwyN3oiPjwvcGF0aD48cGF0aCBkPSJNNTUsNTdWMjRDNTUsMTEuMzE3LDQ0LjY4MywxLDMyLDFTOSwxMS4zMTcsOSwyNHYzM2MtMi4yMDYsMC00LDEuNzk0LTQsNHYyaDU0di0yQzU5LDU4Ljc5NCw1Ny4yMDYsNTcsNTUsNTd6IE01MSw1N3YtOCAgIGgtMnY4aC0yVjQ3aDZ2MTBINTF6IE0zMiwxM2M2LjA2NSwwLDExLDQuOTM1LDExLDExdjlIMjF2LTlDMjEsMTcuOTM1LDI1LjkzNSwxMywzMiwxM3ogTTMzLDExLjA1MXYtMiAgIGMxLjEyOSwwLjA3NSwyLjIyNSwwLjI2NiwzLjI3MiwwLjU3N2wtMC43NDgsMS44N0MzNC43MTEsMTEuMjY5LDMzLjg2OCwxMS4xMTcsMzMsMTEuMDUxeiBNMzMsNy4wNTF2LTQgICBjMS45MTIsMC4wOTEsMy43NiwwLjQyMyw1LjUwNSwwLjk5M0wzNy4wMiw3Ljc1OEMzNS43MzksNy4zNjEsMzQuMzg5LDcuMTMyLDMzLDcuMDUxeiBNMzEsNy4wNTEgICBjLTEuMzg5LDAuMDgxLTIuNzM5LDAuMzExLTQuMDIsMC43MDdsLTEuNDg1LTMuNzE0QzI3LjI0LDMuNDczLDI5LjA4OCwzLjE0MSwzMSwzLjA1MVY3LjA1MXogTTMxLDkuMDUxdjIgICBjLTAuODY4LDAuMDY3LTEuNzExLDAuMjE4LTIuNTI0LDAuNDQ4bC0wLjc0OC0xLjg3QzI4Ljc3NSw5LjMxNiwyOS44NzEsOS4xMjYsMzEsOS4wNTF6IE0yNi41OTksMTIuMTkgICBDMjIuMTIyLDE0LjI0NiwxOSwxOC43NiwxOSwyNHYxMWgyNlYyNGMwLTUuMjQtMy4xMjItOS43NTQtNy41OTktMTEuODFsMC43NDQtMS44NTlDNDMuMzU3LDEyLjY4NCw0NywxNy45MTksNDcsMjR2MTNIMTdWMjQgICBjMC02LjA4MSwzLjY0My0xMS4zMTYsOC44NTUtMTMuNjY5TDI2LjU5OSwxMi4xOXogTTUzLDQ1aC00VjMzaDRWNDV6IE0zMSw1MWgydjJoLTJWNTF6IE0zMyw0OWgtMnYtMmgyVjQ5eiBNMjUsNDV2LTZoMTR2NkgyNXogICAgTTE3LDM5aDZ2NmgtNlYzOXogTTIzLDUxaDJ2MmgtMlY1MXogTTI1LDQ5aC0ydi0yaDJWNDl6IE0zOSw1MWgydjJoLTJWNTF6IE00MSw0OWgtMnYtMmgyVjQ5eiBNNDEsNDV2LTZoNnY2SDQxeiBNNTMsMzFoLTR2LTJoNCAgIFYzMXogTTUzLDI3aC00di0yaDRWMjd6IE01Mi45NDksMjNoLTRjLTAuMDQtMC42NzgtMC4xMTQtMS4zNDYtMC4yMzEtMmg0LjA0MkM1Mi44NTUsMjEuNjU4LDUyLjkxNywyMi4zMjQsNTIuOTQ5LDIzeiBNMTUuMDUxLDIzICAgaC00YzAuMDMyLTAuNjc2LDAuMDk0LTEuMzQyLDAuMTg5LTJoNC4wNDJDMTUuMTY0LDIxLjY1NCwxNS4wOSwyMi4zMjIsMTUuMDUxLDIzeiBNMTUsMjV2MmgtNHYtMkgxNXogTTE1LDI5djJoLTR2LTJIMTV6IE0xNSwzMyAgIHYxMmgtNFYzM0gxNXogTTIxLDQ3djEwaC0yVjQ3SDIxeiBNMjMsNTVoMnYyaC0yVjU1eiBNMjcsNDdoMnYxMGgtMlY0N3ogTTMxLDU1aDJ2MmgtMlY1NXogTTM1LDQ3aDJ2MTBoLTJWNDd6IE0zOSw1NWgydjJoLTJWNTV6ICAgIE00Myw0N2gydjEwaC0yVjQ3eiBNNTIuMzczLDE5aC00LjEyNmMtMS40NTMtNC43MTEtNC45MDYtOC41NDQtOS4zNTktMTAuNTI4bDEuNDg3LTMuNzE4QzQ2LjMwNyw3LjM0Niw1MC44MDIsMTIuNjAyLDUyLjM3MywxOXogICAgTTIzLjYyNCw0Ljc1NGwxLjQ4NywzLjcxOGMtNC40NTMsMS45ODQtNy45MDYsNS44MTctOS4zNTksMTAuNTI4aC00LjEyNkMxMy4xOTgsMTIuNjAyLDE3LjY5Myw3LjM0NiwyMy42MjQsNC43NTR6IE0xMSw0N2g2djEwICAgaC0ydi04aC0ydjhoLTJWNDd6IE03LDYxYzAtMS4xMDMsMC44OTctMiwyLTJoNDZjMS4xMDMsMCwyLDAuODk3LDIsMkg3eiI+PC9wYXRoPjxyZWN0IHg9IjE5IiB5PSI0MSIgd2lkdGg9IjIiIGhlaWdodD0iMiI+PC9yZWN0PjxyZWN0IHg9IjQzIiB5PSI0MSIgd2lkdGg9IjIiIGhlaWdodD0iMiI+PC9yZWN0PjxyZWN0IHg9IjI3IiB5PSI0MSIgd2lkdGg9IjEwIiBoZWlnaHQ9IjIiPjwvcmVjdD48L2c+PC9zdmc+");
+        }
+
+        .leaflet-control-youtube-expanded {
+            display: none;
+        }
+
+        .youtube-player-contents {
+            display: none;
+            padding: 5px !important;
+            border-radius: 2px;
+        }
+
+            .youtube-player-contents a {
+                display: inline;
+            }
+
+        .leaflet-control-youtube-interior {
+            /*width: 330px;
+            height: 175px;*/
+            border: 2px solid rgba(0,0,0,0.2) !important;
+            /*border-radius: 2px;*/
             box-shadow: 0 1px 7px rgba(0, 0, 0, 0.65);
             cursor: auto;
             text-align: center;
-            background-color: #FFFFFF;
-            margin-bottom: 10px;
-            opacity: .75;
-            padding: 4px;
+            opacity: .85;
             box-sizing: border-box;
-            margin-bottom: 20px;
-            border: 2px solid rgba(0,0,0,0.2);
-            background-clip: padding-box;
+            /*background-clip: padding-box;*/
         }
 
-            .leaflet-control-youtube-interior:hover {
-                background-color: #F4F4F4;
-            }
+        .youtube-player-contents select {
+            display: block;
+            margin: 4px 0;
+            font-size: 12px;
+            width: 100%;
+            height: 24px;
+            border: 1px solid #ccc;
+        }
+
+        .leaflet-control-youtube-interior:hover {
+            background-color: #F4F4F4;
+        }
     </style>
 </head>
 
@@ -328,9 +355,9 @@
 
             }).setView([-128, 128], 2);
 
-	var pane = mymap.createPane('imagebg');
-	mymap.getPane('imagebg').style.zIndex = 50;
-	L.imageOverlay("Background.webp", [[-256-64-32, -256-7], [128-32, 512+7]], {pane:'imagebg'}).addTo(mymap);
+        var pane = mymap.createPane('imagebg');
+        mymap.getPane('imagebg').style.zIndex = 50;
+        L.imageOverlay("Background.webp", [[-256 - 64 - 32, -256 - 7], [128 - 32, 512 + 7]], { pane: 'imagebg' }).addTo(mymap);
 
 
         var SatelliteMap = L.tileLayer('Sat-Tiles-Main/{z}_{x}_{y}.webp',
@@ -369,36 +396,27 @@
                 id: 'LogiWaze - Vivid'
             }).addTo(mymap);*/
 
-        if (window.beta) {
-            L.Control.YouTube = L.Control.extend({
-                options: {
-                    position: 'bottomright',
-                },
 
-                onAdd: function (map) {
-                    var controlDiv = L.DomUtil.create('div', 'leaflet-control-youtube');
-                    L.DomEvent
-                        .addListener(controlDiv, 'click', L.DomEvent.stopPropagation)
-                        .addListener(controlDiv, 'click', L.DomEvent.preventDefault)
-                        .addListener(controlDiv, 'click', function () {
-                            //MapShowCommand();
-                        });
+        L.control.youtube = function (options) {
+            return new L.Control.YouTube(options);
+        };
 
-                    var controlUI = L.DomUtil.create('div', 'leaflet-control-youtube-interior leaflet-bar', controlDiv);
-                    controlUI.title = 'Music';
-                    var youtubeembed = L.DomUtil.create('div', 'youtube-player', controlUI);
-                    //PLv1A0_5bkdtBP9rIciaA1tH1LxVcC3Y5_
-                    youtubeembed.innerHTML = "<iframe style=\"width: 100%; height: 100%\" src=\"https://www.youtube.com/embed/videoseries?list=PLkQvYA5-_pJ1sRms9hkr1q3DHUQvaK7iF\" frameborder=\"0\" allow=\"autoplay; encrypted-media\" allowfullscreen></iframe>";
-                    return controlDiv;
-                }
-            });
+        L.control.youtube().addTo(mymap);
 
-            L.control.youtube = function (options) {
-                return new L.Control.YouTube(options);
-            };
-
-            L.control.youtube().addTo(mymap);
+        function SetYouTubePlaylist() {
+            var list = document.getElementById("youtube-selector").value;
+            document.getElementById("youtube-player").src = "https://www.youtube.com/embed/videoseries?list=".concat(list);
         }
+
+        function showJukebox() {
+            document.getElementsByClassName('youtube-player-contents')[0].style.display = "block";
+            document.getElementsByClassName('leaflet-control-youtube-toggle')[0].style.display = "none";
+        }
+        function hideJukebox() {
+            document.getElementsByClassName('youtube-player-contents')[0].style.display = "none";
+            document.getElementsByClassName('leaflet-control-youtube-toggle')[0].style.display = "block";
+        }
+
 
     </script>
 
@@ -428,6 +446,67 @@
                 'Warden Roads': Router.WardenRoadsCanvas,
                 'Debug Markers': Router.Debug
             }, { position: 'topright' }).addTo(mymap);
+
+            //if (window.beta)
+            {
+                L.Control.YouTube = L.Control.extend({
+                    options: {
+                        position: 'topleft',
+                    },
+
+                    onAdd: function (map) {
+                        var controlDiv = L.DomUtil.create('div', 'leaflet-control-youtube');
+                        L.DomEvent
+                            .addListener(controlDiv, 'click', L.DomEvent.stopPropagation)
+                            .addListener(controlDiv, 'click', L.DomEvent.preventDefault)
+                            .addListener(controlDiv, 'click', function () {
+                            });
+
+                        var controlUI = L.DomUtil.create('div', 'leaflet-control-youtube-interior leaflet-bar', controlDiv);
+                        controlUI.setAttribute("onmouseleave", "hideJukebox()");
+                        controlUI.title = 'Music';
+
+                        var playlists = {
+                            "Xanxth's \"Colonial National Guard\"": "PLP_k06DgiSSLDyzQZWAoHHW8bAXGO21AG",
+                            "Derp's \"Out Of Logi Babylon\"": "PLkQvYA5-_pJ1sRms9hkr1q3DHUQvaK7iF",
+                            "DragonZephyr's \"Caovia's Rolling Hills\"": "PLv1A0_5bkdtBP9rIciaA1tH1LxVcC3Y5_",
+                            "Skaj's \"Electro-Dungeon\"": "PLoxO-JyRQapNGIQg6c1ZeVbggI_DiJ0I2",
+                            "Foxhole A.M.": "PLkQvYA5-_pJ3Jq4YR2KmzhPEgTwuD8PkL"
+                        };
+
+                        var options = "";
+                        var keys = Object.keys(playlists);
+                        var selected = parseInt((Math.random() * 1000).toFixed().toString()) % keys.length;
+                        for (var i = 0; i < keys.length; i++) {
+                            var option = document.createElement("option");
+                            option.setAttribute("value", playlists[keys[i]]);
+                            option.innerText = keys[i];
+                            if (i === selected)
+                                option.setAttribute("selected", "selected");
+                            options = options.concat(option.outerHTML);
+                        }
+                        var toggle = "<a class='leaflet-control-youtube-toggle' href='#' title='Jukebox' onmouseover='showJukebox()' onclick='showJukebox()''></a>";
+                        var selector = toggle.concat("<div class='youtube-player-contents' style='padding: 2px'><select id=\"youtube-selector\" onchange=\"SetYouTubePlaylist()\">").concat(options).concat("</select>");
+
+                        var frame = document.createElement("iframe");
+                        frame.setAttribute("id", "youtube-player");
+                        frame.style.width = "450px";
+                        frame.style.height = "300px";
+                        frame.setAttribute("src", "https://www.youtube.com/embed/videoseries?list=".concat(playlists[keys[selected]]));
+                        frame.setAttribute("frameborder", "0");
+                        frame.setAttribute("allow", "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture");
+                        frame.setAttribute("allowfullscreen", "true");
+                        controlUI.innerHTML = selector.concat(frame.outerHTML).concat("</div>");
+                        return controlDiv;
+                    }
+                });
+
+                L.control.youtube = function (options) {
+                    return new L.Control.YouTube(options);
+                };
+
+                L.control.youtube().addTo(mymap);
+            }
 
             var startingWaypoints = [
                 L.latLng(-67.7688, 152.5585),
@@ -638,7 +717,7 @@
                             });
                         return L.Routing.line(route, {
                             addWaypoints: options.addWaypoints, styles: [
-                                { color: 'black', opacity: 0.15, weight: 7 }, { color: 'white', opacity: 0.8, weight: 6 }, { color: '#5E9339', opacity: 1, weight: 2 , dashArray: '5,5'}
+                                { color: 'black', opacity: 0.15, weight: 7 }, { color: 'white', opacity: 0.8, weight: 6 }, { color: '#5E9339', opacity: 1, weight: 2, dashArray: '5,5' }
                             ]
                         });
                     },
