@@ -8,6 +8,7 @@ define(['leaflet', '../towns.json'], function (L, towns) {
 
             var FoxholeGeocoder = {
                 API: API,
+                Towns: towns,
                 /* distance between two strings */
                 levinshtein: function (a, b) {
                     if (a.length == 0) return b.length;

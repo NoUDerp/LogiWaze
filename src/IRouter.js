@@ -1,5 +1,5 @@
-﻿define(['leaflet', 'json-loader!../Roads.geojson', 'json-loader!../hex.geojson', './geojson-path-finder/index.js', 'leaflet-routing-machine'],
-    function (L, Paths, HexBorders, PathFinder, routing_machine) {
+﻿define(['leaflet', 'json-loader!../Roads.geojson', 'json-loader!../hex.geojson', './geojson-path-finder/index.js', 'leaflet-routing-machine', '../towns.json'],
+    function (L, Paths, HexBorders, PathFinder, routing_machine, towns) {
         return {
             FoxholeRouter: function (mymap, API, Narrator) {
                 var JSONRoads = L.geoJSON(Paths);
@@ -163,6 +163,13 @@
                     }
                 }
 
+                var ks = Object.keys(towns);
+                for (var t = 0; t < ks.length; t++) {
+                    var th = towns[ks[t]];
+                    var b = new L.Marker([th.y, th.x], { icon: new L.DivIcon({ className: 'town-label', html: '<span>'.concat(ks[t]).concat('</span>') }) });
+                    b.addTo(TownHalls);
+                }
+
                 var ScaleTownHalls = function (zoom) {
                     if (zoom == null)
                         zoom = mymap.getZoom();
@@ -175,6 +182,12 @@
                             x[i].style["margin-left"] = (-scale / 2).toFixed().toString().concat("px");
                             x[i].style["margin-top"] = (-scale / 2).toFixed().toString().concat("px");
                         }
+
+                    var y = document.getElementsByClassName('town-label');
+                    var visible = zoom > 2 ? 'block' : 'none';
+                    if (y != null)
+                        for (var i = 0; i < y.length; i++)
+                            y[i].style["display"] = visible;
                 };
 
                 mymap.on('zoomanim', (e) => { ScaleTownHalls(e.zoom); });
@@ -189,12 +202,12 @@
                         var lat2 = layer._latlngs[k].lat;
                         var lng2 = layer._latlngs[k].lng;
 
-			var tiercolor = tier == 3 ? '#5a9565' : ( tier == 2 ? '#94954e' : '#957458');
+                        var tiercolor = tier == 3 ? '#5a9565' : (tier == 2 ? '#94954e' : '#957458');
 
                         if (lat != null && lng != null && lat2 != null && lng2 != null) {
                             var control = layer._latlngs[k - 1].ownership;
-		            new L.polyline([[lat, lng], [lat2, lng2]], { color: tiercolor, weight: 10, opacity: 1.0, renderer: renderer, interactive: false, smoothFactor: 1 }).addTo(RoadsGroup).bringToFront();
-			}
+                            new L.polyline([[lat, lng], [lat2, lng2]], { color: tiercolor, weight: 10, opacity: 1.0, renderer: renderer, interactive: false, smoothFactor: 1 }).addTo(RoadsGroup).bringToFront();
+                        }
                     }
                 }
                 for (var key in JSONRoads._layers) {

@@ -298,16 +298,12 @@
             }
 
         .leaflet-control-youtube-interior {
-            /*width: 330px;
-            height: 175px;*/
             border: 2px solid rgba(0,0,0,0.2) !important;
-            /*border-radius: 2px;*/
             box-shadow: 0 1px 7px rgba(0, 0, 0, 0.65);
             cursor: auto;
             text-align: center;
             opacity: .85;
             box-sizing: border-box;
-            /*background-clip: padding-box;*/
         }
 
         .youtube-player-contents select {
@@ -321,6 +317,12 @@
 
         .leaflet-control-youtube-interior:hover {
             background-color: #F4F4F4;
+        }
+
+        .town-label span {
+            color: white;
+            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+            white-space: nowrap;
         }
     </style>
 </head>
@@ -384,7 +386,7 @@
                 id: 'LogiWaze'
             }).addTo(mymap);
 
-        /*var VividMap = L.tileLayer('Skaj/{z}_{x}_{y}.webp',
+        var VividMap = L.tileLayer('Skaj/{z}_{x}_{y}.webp',
             {
                 crs: L.CRS.Simple,
                 maxNativeZoom: 5,
@@ -394,7 +396,7 @@
                 continuousWorld: true,
                 bounds: L.latLngBounds(L.latLng(-256, 0), L.latLng(0, 256)),
                 id: 'LogiWaze - Vivid'
-            }).addTo(mymap);*/
+            }).addTo(mymap);
 
 
         L.control.youtube = function (options) {
@@ -424,6 +426,9 @@
     </script>
 
     <script type="text/javascript">
+
+
+
         var APIManager = API.Create();
 
 
@@ -431,13 +436,14 @@
 
             var VoiceNarrator = Narrator.Create();
             var Router = FoxholeRouter.Create(mymap, APIManager, VoiceNarrator);
+
             var Geocoder = FoxholeGeocoder.Create(APIManager);
 
             L.control.layers(
                 {
                     'Satellite Map': SatelliteMap,
-                    'Drawn Map': DrawnMap
-                    //,'Vivid Map': VividMap
+                    'Drawn Map': DrawnMap,
+                    'Vivid Map': VividMap
                 }, {
                 'Town Halls': Router.TownHalls,
                 'Borders': Router.Borders,
@@ -530,8 +536,6 @@
                 }
 
                 createStep(text, distance, steps) {
-                    //if (!window.beta)
-                    //  return document.createTextNode("");
 
                     var region;
                     var border = 0;
@@ -598,17 +602,10 @@
                     container.index = this.index++;
                     this.block.appendChild(container);
 
-
-
-
-
-
                     return container;
                 }
 
                 createContainer(className) {
-                    //if (!window.beta)
-                    //return document.createElement("DIV");
 
                     var table = document.createElement("TABLE");
                     table.setAttribute("style", "width: 100%");
@@ -621,8 +618,6 @@
                 }
 
                 createStepsContainer(container) {
-                    //if (!window.beta)
-                    //  return document.createTextNode("");
 
                     this.block = L.Routing.ItineraryBuilder.prototype.createStepsContainer(container);
                     this.container.appendChild(this.block);
