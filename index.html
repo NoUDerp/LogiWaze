@@ -1,7 +1,7 @@
 ﻿<html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="initial-scale=1, maximum-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>LogiWaze</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin="" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" crossorigin="" />
@@ -323,7 +323,30 @@
             color: white;
             text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
             white-space: nowrap;
+            position: relative;
+            left: -100%;
         }
+
+        .leaflet-top.leaflet-left .leaflet-control
+        {
+            clear: none;
+        }
+
+        @media only screen and (max-width: 600px) {
+            .leaflet-top.leaflet-right {
+                width: 100%;
+                top: unset !important;
+                left: 0;
+                right: unset !important;
+                bottom: 0;
+            }
+
+            .leaflet-top.leaflet-right .leaflet-routing-alt {
+                max-height: 25vh;
+                overflow-y: scroll;
+            }
+        }
+
     </style>
 </head>
 
@@ -451,7 +474,7 @@
                 'Colonial Roads': Router.ColonialRoadsCanvas,
                 'Warden Roads': Router.WardenRoadsCanvas,
                 'Debug Markers': Router.Debug
-            }, { position: 'topright' }).addTo(mymap);
+            }, { position: 'topleft' }).addTo(mymap);
 
             //if (window.beta)
             {
