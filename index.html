@@ -161,6 +161,16 @@
                 vertical-align: middle;
             }
 
+        .leaflet-control-container .leaflet-routing-container-hide {
+            width: 38px !important;
+            height: 36px !important;
+        }
+
+        .leaflet-control-attribution 
+        {
+            display: none;
+        }
+
         #map-holder {
             opacity: 0;
             transition: opacity 3s;
@@ -332,6 +342,11 @@
             clear: none;
         }
 
+/*        .leaflet-top.leaflet-right .leaflet-routing-container
+        {
+            padding-top: 0;
+        }
+*/
         @media only screen and (max-width: 600px) {
             .leaflet-top.leaflet-right {
                 width: 100%;
@@ -345,6 +360,11 @@
                 max-height: 25vh;
                 overflow-y: scroll;
             }
+
+                .leaflet-top.leaflet-right .leaflet-routing-container.leaflet-routing-collapsible.leaflet-routing-container-hide {
+                    margin-bottom: 10px !important;
+                }
+
         }
 
     </style>
