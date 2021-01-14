@@ -111,7 +111,7 @@
                 var renderer = L.canvas({ tolerance: .2 }).addTo(mymap);
 
                 var TownHalls = L.layerGroup().addTo(mymap);
-
+                var Resources = L.layerGroup().addTo(mymap);
 
 
                 var resolveIcon = function (ic) {
@@ -137,8 +137,55 @@
                     else if (ic.ownership == "NONE");
                     else
                         return null;
+
+
                     return icon.concat('.webp');
                 };
+
+                var resolveResource = function (ic) {
+                    if (ic.icon == null)
+                        return null;
+
+                    if (ic.icon == 20)
+                        return 'MapIconSalvage.webp';
+                    if (ic.icon == 21)
+                        return 'MapIconComponents.webp';
+                    if (ic.icon == 23)
+                        return 'MapIconSulfur.webp';
+                    if (ic.icon == 32)
+                        return 'MapIconSulfurMine.webp';
+                    if (ic.icon == 38)
+                        return 'MapIconSalvageMine.webp';
+                    if (ic.icon == 40)
+                        return 'MapIconComponentMine.webp';
+                    if (ic.icon == 41)
+                        return 'MapIconOilWell.webp';
+
+                    return null;
+                }
+
+                var rkeys = Object.keys(API.resources);
+
+                for (var t = 0; t < rkeys.length; t++) {
+                    var region = API.resources[rkeys[t]];
+                    var keys2 = Object.keys(region);
+                    for (var k = 0; k < keys2.length; k++) {
+
+                        var th = region[keys2[k]];
+                        var data = { ownership: th.control, icon: th.mapIcon };
+                        var icon = resolveResource(data);
+                        if (icon != null)
+                            L.marker([th.y, th.x], {
+                                clickable: false,
+                                zIndexOffset: -1001,
+                                icon: L.icon({
+                                    iconUrl: 'MapIcons/'.concat(icon),
+                                    iconSize: [24, 24],
+                                    className: "resource-icon"
+                                })
+                            }).addTo(Resources);
+                    }
+                }
 
                 var keys = Object.keys(API.mapControl);
 
@@ -170,7 +217,7 @@
                     b.addTo(TownHalls);
                 }
 
-                var ScaleTownHalls = function (zoom) {
+                function scale_th(zoom) {
                     if (zoom == null)
                         zoom = mymap.getZoom();
                     var scale = Math.round(32.0 * Math.sqrt(zoom / 6));
@@ -182,14 +229,34 @@
                             x[i].style["margin-left"] = (-scale / 2).toFixed().toString().concat("px");
                             x[i].style["margin-top"] = (-scale / 2).toFixed().toString().concat("px");
                         }
-
                     var y = document.getElementsByClassName('town-label');
                     var visible = zoom > 2 ? 'block' : 'none';
                     if (y != null)
                         for (var i = 0; i < y.length; i++)
                             y[i].style["display"] = visible;
+                }
+
+                function scale_r(zoom) {
+                    if (zoom == null)
+                        zoom = mymap.getZoom();
+                    var scale = Math.round(32.0 * Math.sqrt(zoom / 6));
+                    var x = document.getElementsByClassName('resource-icon');
+                    if (x != null)
+                        for (var i = 0; i < x.length; i++) {
+                            x[i].style.width = (scale * .65).toFixed().toString().concat("px");
+                            x[i].style.height = (scale * .65).toFixed().toString().concat("px");
+                            x[i].style["margin-left"] = (-scale / 2).toFixed().toString().concat("px");
+                            x[i].style["margin-top"] = (-scale / 2).toFixed().toString().concat("px");
+                        }
+
+                }
+
+                var ScaleTownHalls = function (zoom) {
+                    scale_th(zoom);
+                    scale_r(zoom);
                 };
 
+                mymap.on('overlayadd', (e) => { if (e.layer == Resources) scale_r(null); else if (e.layer == TownHalls) scale_th(null); });
                 mymap.on('zoomanim', (e) => { ScaleTownHalls(e.zoom); });
 
                 for (var key in JSONRoads._layers) {
@@ -273,6 +340,7 @@
                     summaryTemplate: '<table class="route-summary"><tr class="route-summary-header"><td><img src=\'{name}.webp\' /><span>{name}</span><span style=\'font-weight: bold; margin-left: 1em\' class=\'summary-routeinfo\'>{distance}</span>'
                         .concat(!window.beta ? "" : '<div class="audio-controls detailed-routeinfo"><button class="play-button" style="pointer-events: auto" onclick="window.narrateDirections()">'.concat(playbutton).concat('</button></div>')).concat('</td></tr>').concat(speed).concat('<tr><td class="no-click">{time}</td></tr></table>'),
                     TownHalls: TownHalls,
+                    Resources: Resources,
                     API: API,
                     Debug: debug_markers,
                     ScaleTownHalls: ScaleTownHalls,

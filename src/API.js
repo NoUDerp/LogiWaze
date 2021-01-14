@@ -53,6 +53,7 @@ define(['jquery', 'point-in-polygon'], function ($, pip) {
 					}
 				},
 				mapControl: {},
+				resources: {},
 				remapXY: function (f) {
 					if (f === "GodcroftsHex") return { x: 148.15477, y: -23.27272 };
 					if (f === "DeadLandsHex") return { x: 128, y: -128 };
@@ -129,6 +130,7 @@ define(['jquery', 'point-in-polygon'], function ($, pip) {
 										success: function (mapData) {
 											if (mapData.mapItems.length > 0) {
 												API.mapControl[mapName] = [];
+												API.resources[mapName] = [];
 												var offset = API.remapXY(mapName);
 												for (var j = 0; j < mapData.mapItems.length; j++) {
 													var icon = mapData.mapItems[j].iconType;
@@ -140,6 +142,14 @@ define(['jquery', 'point-in-polygon'], function ($, pip) {
 														var key = x.toFixed(3).toString().concat('|').concat(y.toFixed(3).toString());
 														API.mapControl[mapName][key] = { x: x, y: y, control: mapData.mapItems[j].teamId, mapIcon: icon };
 													}
+													else {
+														var x = mapData.mapItems[j].x;
+														var y = mapData.mapItems[j].y;
+														x = 256 + (((x * 46.54545454545455) + offset.y) - 23.27272727272727);
+														y = -256 + ((((1 - y) * 40.30954606705751) + offset.x) - 20.15477303352875);
+														var key = x.toFixed(3).toString().concat('|').concat(y.toFixed(3).toString());
+														API.resources[mapName][key] = { x: x, y: y, control: mapData.mapItems[j].teamId, mapIcon: icon };
+                                                    }
 												}
 											}
 
