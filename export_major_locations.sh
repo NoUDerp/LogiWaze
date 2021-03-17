@@ -34,7 +34,7 @@ download()
                 if [ "$f" = "DrownedValeHex" ]; then offsetx="107.84523"; offsety="-93.09091"; fi
                 if [ "$f" = "ShackledChasmHex" ]; then offsetx="67.535675"; offsety="-93.09091"; fi
                 if [ "$f" = "ViperPitHex" ]; then offsetx="188.46432"; offsety="-93.09091"; fi
-                wget -qO - "https://war-service-live.foxholeservices.com/api/worldconquest/maps/$f/static" | jq "[.mapTextItems[] | if .mapMarkerType==\"Major\" then {\"key\":.text, \"value\": {x:(256+(((.x*46.54545454545455)+$offsety)-23.27272727272727)), y:(-256+((((1-.y)*40.30954606705751)+$offsetx)-20.15477303352875))}} else empty end]"
+                wget -qO - "https://war-service-live.foxholeservices.com/api/worldconquest/maps/$f/static" | jq "[.mapTextItems[] | {\"key\":.text, \"value\": {x:(256+(((.x*46.54545454545455)+$offsety)-23.27272727272727)), y:(-256+((((1-.y)*40.30954606705751)+$offsetx)-20.15477303352875))}}]"
         done
         echo "]"
         ) |     jq '.|flatten|from_entries'
