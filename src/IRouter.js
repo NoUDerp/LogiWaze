@@ -212,9 +212,13 @@
 
                 var ks = Object.keys(towns);
                 for (var t = 0; t < ks.length; t++) {
+
                     var th = towns[ks[t]];
-                    var b = new L.Marker([th.y, th.x], { icon: new L.DivIcon({ className: 'town-label', html: '<span>'.concat(ks[t]).concat('</span>') }) });
-                    b.addTo(TownHalls);
+                    if (th.major == 1)
+                        new L.Marker([th.y, th.x], { icon: new L.DivIcon({ className: 'town-label', html: '<span>'.concat(ks[t]).concat('</span>') }) }).addTo(TownHalls);
+                    else
+                        new L.Marker([th.y, th.x], { icon: new L.DivIcon({ className: 'minor-town-label', html: '<span>'.concat(ks[t]).concat('</span>') }) }).addTo(TownHalls);
+
                 }
 
                 function scale_th(zoom) {
@@ -234,6 +238,13 @@
                     if (y != null)
                         for (var i = 0; i < y.length; i++)
                             y[i].style["display"] = visible;
+
+                    var y = document.getElementsByClassName('minor-town-label');
+                    var visible = zoom > 3 ? 'block' : 'none';
+                    if (y != null)
+                        for (var i = 0; i < y.length; i++)
+                            y[i].style["display"] = visible;
+
                 }
 
                 function scale_r(zoom) {
