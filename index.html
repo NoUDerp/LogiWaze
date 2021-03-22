@@ -474,10 +474,10 @@
 
     <script type="text/javascript">
 
+        var shard = urlParams.get('shard');
 
 
         var APIManager = API.Create();
-
 
         APIManager.update(() => {
 
@@ -807,7 +807,7 @@
             document.getElementById("map-holder").style.opacity = '1';
             document.getElementById("loader-holder").style.opacity = '0';
             setTimeout(() => { document.getElementById("loader-holder").style.display = 'none'; }, 1000);
-        });
+        }, shard);
 
 
     </script>

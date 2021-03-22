@@ -108,9 +108,15 @@ define(['jquery', 'point-in-polygon'], function ($, pip) {
 					return { ownership: control, icon: icon };
 				},
 
-				update: function (completionCallback) {
+				update: function (completionCallback, shard) {
+
+					if (shard == null)
+						shard = 'war-service-live';
+					else
+						shard = 'war-service-live-'.concat(shard);
+
 					$.ajax({
-						url: "https://war-service-live.foxholeservices.com/api/worldconquest/maps",
+						url: "https://".concat(shard).concat(".foxholeservices.com/api/worldconquest/maps"),
 						type: 'GET',
 						crossDomain: true,
 						data: "json",
@@ -122,7 +128,7 @@ define(['jquery', 'point-in-polygon'], function ($, pip) {
 								const mapName = maps[i];
 								$.ajax(
 									{
-										url: "https://war-service-live.foxholeservices.com/api/worldconquest/maps/".concat(maps[i]).concat("/dynamic/public"),
+										url: "https://".concat(shard).concat(".foxholeservices.com/api/worldconquest/maps/").concat(maps[i]).concat("/dynamic/public"),
 										type: 'GET',
 										crossDomain: true,
 										data: "json",
