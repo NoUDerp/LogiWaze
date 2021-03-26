@@ -112,6 +112,10 @@
 
                 var TownHalls = L.layerGroup().addTo(mymap);
                 var Resources = L.layerGroup().addTo(mymap);
+                var Components = L.layerGroup().addTo(mymap);
+                var Salvage = L.layerGroup().addTo(mymap);
+                var Fuel = L.layerGroup().addTo(mymap);
+                var Sulfur = L.layerGroup().addTo(mymap);
 
 
                 var resolveIcon = function (ic) {
@@ -174,7 +178,26 @@
                         var th = region[keys2[k]];
                         var data = { ownership: th.control, icon: th.mapIcon };
                         var icon = resolveResource(data);
-                        if (icon != null)
+                        if (icon != null) {
+                            var ResourceLayer = Resources;
+                            switch (data.icon) {
+                                case 21:
+                                case 40:
+                                    ResourceLayer = Components;
+                                    break;
+                                case 23:
+                                case 32:
+                                    ResourceLayer = Sulfur;
+                                    break;
+                                case 38:
+                                case 20:
+                                    ResourceLayer = Salvage;
+                                    break;
+                                case 41:
+                                    ResourceLayer = Fuel;
+                                    break;
+                            }
+
                             L.marker([th.y, th.x], {
                                 clickable: false,
                                 zIndexOffset: -1001,
@@ -183,7 +206,8 @@
                                     iconSize: [24, 24],
                                     className: "resource-icon"
                                 })
-                            }).addTo(Resources);
+                            }).addTo(ResourceLayer);
+                        }
                     }
                 }
 
@@ -284,7 +308,7 @@
 
                         if (lat != null && lng != null && lat2 != null && lng2 != null) {
                             var control = layer._latlngs[k - 1].ownership;
-                            new L.polyline([[lat, lng], [lat2, lng2]], { color: tiercolor, weight: 10, opacity: 1.0, renderer: renderer, interactive: false, smoothFactor: 0 }).addTo(RoadsGroup).bringToFront();
+                            new L.polyline([[lat, lng], [lat2, lng2]], { color: tiercolor, weight: 10, opacity: 1.0, renderer: renderer, interactive: false, smoothFactor: 48 }).addTo(RoadsGroup).bringToFront();
                         }
                     }
                 }
@@ -300,16 +324,16 @@
 
                             var control = layer._latlngs[k - 1].ownership;
                             if (control == "COLONIALS")
-                                new L.polyline([[lat, lng], [lat2, lng2]], { color: '#516C4B', weight: 5, opacity: 1.0, renderer: renderer, interactive: false, smoothFactor: 1 }).addTo(ColonialRoadsGroup).bringToFront();
+                                new L.polyline([[lat, lng], [lat2, lng2]], { color: '#516C4B', weight: 5, opacity: 1.0, renderer: renderer, interactive: false, smoothFactor: 48 }).addTo(ColonialRoadsGroup).bringToFront();
 
                             else if (control == "WARDENS")
-                                new L.polyline([[lat, lng], [lat2, lng2]], { color: '#235683', weight: 5, opacity: 1.0, renderer: renderer, interactive: false, smoothFactor: 1 }).addTo(WardenRoadsGroup).bringToFront();
+                                new L.polyline([[lat, lng], [lat2, lng2]], { color: '#235683', weight: 5, opacity: 1.0, renderer: renderer, interactive: false, smoothFactor: 48 }).addTo(WardenRoadsGroup).bringToFront();
 
                             else if (control == "OFFLINE")
-                                new L.polyline([[lat, lng], [lat2, lng2]], { color: '#505050', weight: 5, opacity: 1.0, renderer: renderer, interactive: false, smoothFactor: 1 }).addTo(RoadsGroup).bringToFront();
+                                new L.polyline([[lat, lng], [lat2, lng2]], { color: '#505050', weight: 5, opacity: 1.0, renderer: renderer, interactive: false, smoothFactor: 48 }).addTo(RoadsGroup).bringToFront();
 
                             else if (control === "NONE")
-                                new L.polyline([[lat, lng], [lat2, lng2]], { color: '#CCCCCC', weight: 5, opacity: 1.0, renderer: renderer, interactive: false, smoothFactor: 1 }).addTo(RoadsGroup).bringToFront();
+                                new L.polyline([[lat, lng], [lat2, lng2]], { color: '#CCCCCC', weight: 5, opacity: 1.0, renderer: renderer, interactive: false, smoothFactor: 48 }).addTo(RoadsGroup).bringToFront();
                         }
                     }
                 }
@@ -352,6 +376,10 @@
                         .concat(!window.beta ? "" : '<div class="audio-controls detailed-routeinfo"><button class="play-button" style="pointer-events: auto" onclick="window.narrateDirections()">'.concat(playbutton).concat('</button></div>')).concat('</td></tr>').concat(speed).concat('<tr><td class="no-click">{time}</td></tr></table>'),
                     TownHalls: TownHalls,
                     Resources: Resources,
+                    Components: Components,
+                    Fuel: Fuel,
+                    Salvage: Salvage,
+                    Sulfur: Sulfur,
                     API: API,
                     Debug: debug_markers,
                     ScaleTownHalls: ScaleTownHalls,
