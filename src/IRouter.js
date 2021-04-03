@@ -108,6 +108,7 @@
                 var RoadsGroup = L.layerGroup().addTo(mymap);
                 var WardenRoadsGroup = L.layerGroup().addTo(mymap);
                 var ColonialRoadsGroup = L.layerGroup().addTo(mymap);
+                var NeutralRoadsGroup = L.layerGroup().addTo(mymap);
                 var renderer = L.canvas({ tolerance: .2 }).addTo(mymap);
 
                 var TownHalls = L.layerGroup().addTo(mymap);
@@ -286,13 +287,66 @@
 
                 }
 
+                var ScaleNeutralRoads = function (zoom) {
+                    if (zoom == null)
+                        zoom = mymap.getZoom();
+                    scale = 8.0 * zoom / 6;
+                    NeutralRoadsGroup.eachLayer(function (layer) {
+                        layer.options.weight = scale;
+                    });
+                };
+
+                var ScaleWardenRoads = function (zoom) {
+                    if (zoom == null)
+                        zoom = mymap.getZoom();
+                    var scale = 8.0 * zoom / 6;
+                    WardenRoadsGroup.eachLayer(function (layer) {
+                        layer.options.weight = scale;
+                    });
+                };
+
+                var ScaleColonialRoads = function (zoom) {
+                    if (zoom == null)
+                        zoom = mymap.getZoom();
+                    var scale = 8.0 * zoom / 6;
+                    ColonialRoadsGroup.eachLayer(function (layer) {
+                        layer.options.weight = scale;
+                    });
+                };
+
+                var ScaleRoadTypes = function (zoom) {
+                    if (zoom == null)
+                        zoom = mymap.getZoom();
+                    var scale = 16.0 * zoom / 6;
+                    RoadsGroup.eachLayer(function (layer) {
+                        layer.options.weight = scale;
+                    });
+                };
+
+                var ScaleRoads = function (zoom) {
+                    ScaleRoadTypes(zoom);
+                    ScaleWardenRoads(zoom);
+                    ScaleNeutralRoads(zoom);
+                    ScaleColonialRoads(zoom);
+                };
+
                 var ScaleTownHalls = function (zoom) {
                     scale_th(zoom);
                     scale_r(zoom);
                 };
 
-                mymap.on('overlayadd', (e) => { if (e.layer == Resources) scale_r(null); else if (e.layer == TownHalls) scale_th(null); });
-                mymap.on('zoomanim', (e) => { ScaleTownHalls(e.zoom); });
+                mymap.on('overlayadd', (e) => {
+                    if (e.layer == Resources) scale_r(null); else if (e.layer == TownHalls) scale_th(null);
+                    else if (e.layer == ColonialRoadsGroup)
+                        ScaleColonialRoads(null);
+                    else if (e.layer == WardenRoadsGroup)
+                        ScaleWardenRoads(null);
+                    else if (e.layer == NeutralRoadsGroup)
+                        ScaleNeutralRoads(null);
+                    else if (e.layer == RoadsGroup)
+                        ScaleRoadTypes(null);
+                });
+                mymap.on('zoomanim', (e) => { ScaleTownHalls(e.zoom); ScaleRoads(e.zoom); });
 
                 for (var key in JSONRoads._layers) {
                     var layer = JSONRoads._layers[key];
@@ -333,7 +387,7 @@
                                 new L.polyline([[lat, lng], [lat2, lng2]], { color: '#505050', weight: 5, opacity: 1.0, renderer: renderer, interactive: false, smoothFactor: 48 }).addTo(RoadsGroup).bringToFront();
 
                             else if (control === "NONE")
-                                new L.polyline([[lat, lng], [lat2, lng2]], { color: '#CCCCCC', weight: 5, opacity: 1.0, renderer: renderer, interactive: false, smoothFactor: 48 }).addTo(RoadsGroup).bringToFront();
+                                new L.polyline([[lat, lng], [lat2, lng2]], { color: '#CCCCCC', weight: 5, opacity: 1.0, renderer: renderer, interactive: false, smoothFactor: 48 }).addTo(NeutralRoadsGroup).bringToFront();
                         }
                     }
                 }
@@ -383,8 +437,10 @@
                     API: API,
                     Debug: debug_markers,
                     ScaleTownHalls: ScaleTownHalls,
+                    ScaleRoads: ScaleRoads,
                     Borders: L.geoJSON(HexBorders).addTo(mymap),
                     Roads: JSONRoads,
+                    NeutralRoadsCanvas: NeutralRoadsGroup,
                     RoadsCanvas: RoadsGroup,
                     WardenRoadsCanvas: WardenRoadsGroup,
                     ColonialRoadsCanvas: ColonialRoadsGroup,

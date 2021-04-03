@@ -470,6 +470,8 @@
                     'Uncontrolled Roads': Router.RoadsCanvas,
                     'Colonial Roads': Router.ColonialRoadsCanvas,
                     'Warden Roads': Router.WardenRoadsCanvas,
+                    'Uncontrolled Roads': Router.NeutralRoadsCanvas,
+                    'Road Quality': Router.RoadsCanvas,
                     /*'Debug Markers': Router.Debug,*/
                     "Salvage": Router.Salvage,
                     "Components": Router.Components,
@@ -788,6 +790,8 @@
 
             Router.Control.setWaypoints(points);
             Router.ScaleTownHalls();
+            Router.ScaleRoads();
+
 
             document.getElementById("map-holder").style.opacity = '1';
             document.getElementById("loader-holder").style.opacity = '0';
