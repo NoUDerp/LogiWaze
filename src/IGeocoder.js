@@ -60,6 +60,31 @@ define(['leaflet', '../towns.json'], function (L, towns) {
                     }
                 },
 
+                lookup: function (q) {
+                    var query = q.toLowerCase();
+                    var townkey = Object.keys(towns).find(key => key.toLowerCase() === query);
+                    if (townkey != null) {
+                        var town = towns[townkey];
+                        return { x: town.x, y: town.y };
+                    }
+                    else
+                        return null;
+                },
+
+                /* The geocoding reverse lookup - nearest point */
+                reverseExact: function (location) {
+                    var region = API.calculateRegion(location.lng, location.lat);
+                    var townlist = Object.keys(towns);
+                    if (townlist.length === 0)
+                        return null;
+
+                    var index = -1;
+                    for (var i = 0; i < townlist.length; i++)
+                        if (towns[townlist[i]].region === region) 
+                            if (location.lat === towns[townlist[i]].y && location.lng === towns[townlist[i]].x)
+                                return townlist[i];
+                    return null;
+                },
                 /* The geocoding reverse lookup - nearest point */
                 reverse: function (location, scale, callback, context) {
                     var region = API.calculateRegion(location.lng, location.lat);
@@ -95,7 +120,6 @@ define(['leaflet', '../towns.json'], function (L, towns) {
                     var townlist = Object.keys(towns);
                     if (townlist.length === 0)
                         return call([], []);
-                    var index = -1;
                     var results = [];
                     for (var i = 0; i < townlist.length; i++) {
                         var townname = townlist[i].toLowerCase();
