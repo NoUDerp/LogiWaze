@@ -766,7 +766,11 @@
                     if (event.waypoints[i] != null && event.waypoints[i].latLng != null && event.waypoints[i].latLng.lng != null && event.waypoints[i].latLng.lat != null) {
                         if (i > 0)
                             l = l.concat("|");
-                        l = l.concat(event.waypoints[i].latLng.lat.toFixed(3)).concat(",").concat(event.waypoints[i].latLng.lng.toFixed(3));
+                        var s = Geocoder.reverseExact(event.waypoints[i].latLng);
+                        if (s == null)
+                            l = l.concat(event.waypoints[i].latLng.lat.toFixed(3)).concat(",").concat(event.waypoints[i].latLng.lng.toFixed(3));
+                        else
+                            l = l.concat(s);
                     }
                 }
                 location.hash = l;
@@ -780,11 +784,20 @@
             var points = startingWaypoints;
             if (typeof (location.hash) != 'undefined' && location.hash != "" && location.hash != "#") {
                 var h = decodeURI(location.hash.substr(1));
+
                 var l = h.split("|");
                 points = [];
                 for (var i = 0; i < l.length; i++) {
+                    // if this is a town name locate it
+
                     var a = l[i].split(",");
-                    points.push([parseFloat(a[0]), parseFloat(a[1])]);
+                    if (a.length < 2)
+                    {
+                        var u = Geocoder.lookup(a[0]);
+                        points.push([u.y, u.x]);
+                    }
+                    else
+                        points.push([parseFloat(a[0]), parseFloat(a[1])]);
                 }
             }
 
