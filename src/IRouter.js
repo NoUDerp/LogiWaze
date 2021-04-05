@@ -109,10 +109,6 @@
                 var WardenRoadsGroup = L.layerGroup().addTo(mymap);
                 var ColonialRoadsGroup = L.layerGroup().addTo(mymap);
                 var NeutralRoadsGroup = L.layerGroup().addTo(mymap);
-                var Refineries = L.layerGroup().addTo(mymap);
-                var Factories = L.layerGroup().addTo(mymap);
-                var Storage = L.layerGroup().addTo(mymap);
-
                 var renderer = L.canvas({ tolerance: .2 }).addTo(mymap);
 
                 var TownHalls = L.layerGroup().addTo(mymap);
@@ -136,18 +132,6 @@
                         icon = 'MapIconKeep'
                     else if (ic.icon >= 45 && ic.icon <= 47)
                         icon = 'MapIconRelicBase';
-                    else if (ic.icon == 17)
-                        icon = 'MapIconManufacturing';
-                    else if (ic.icon == 51)
-                        icon = 'MapIconMassProductionFactory';
-                    else if (ic.icon == 34)
-                        icon = 'MapIconFactory';
-                    else if (ic.icon == 33)
-                        icon = 'MapIconStorageFacility';
-                    else if (ic.icon == 39)
-                        icon = 'MapIconConstructionYard';
-                    else if (ic.icon == 52)
-                        icon = 'MapIconSeaport';
                     else
                         return null;
 
@@ -237,21 +221,6 @@
 
                         var th = region[keys2[k]];
                         var data = { ownership: th.control, icon: th.mapIcon };
-                        var TH = TownHalls;
-                        switch (th.mapIcon) {
-                            case 17:
-                                TH = Refineries;
-                                break;
-                            case 39:
-                            case 51:
-                            case 34:
-                                TH = Factories;
-                                break;
-                            case 33:
-                            case 52:
-                                TH = Storage;
-                                break;
-                        }
                         var icon = resolveIcon(data);
                         if (icon != null)
                             L.marker([th.y, th.x], {
@@ -262,7 +231,7 @@
                                     iconSize: [24, 24],
                                     className: "town-hall-icon"
                                 })
-                            }).addTo(TH);
+                            }).addTo(TownHalls);
                     }
                 }
 
@@ -455,7 +424,7 @@
                 var playbutton = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/" x="0px" y="0px" width="32px" height="32px" viewBox="20 20 173.7 173.7" enable-background="new 0 0 213.7 213.7" xml:space="preserve"><polygon class="triangle" id="XMLID_18_" fill="none" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" points="73.5,62.5 148.5,105.8 73.5,149.1 "/></svg>'
 
                 var speed = beta ? '<tr class="detailed-routeinfo"><td colspan="2"><span class="slow"></span><span class="slidecontainer"><input type="range" min="d /1" max="100" value="50" class="slider" oninput="updateSlider(this)"></span><span class="fast"></span></td></tr>' : '';
-
+                //: 120
                 var FoxholeRouter = {
                     summaryTemplate: '<table class="route-summary"><tr class="route-summary-header"><td><img src=\'{name}.webp\' /><span>{name}</span><span style=\'font-weight: bold; margin-left: 1em\' class=\'summary-routeinfo\'>{distance}</span>'
                         .concat(!window.beta ? "" : '<div class="audio-controls detailed-routeinfo"><button class="play-button" style="pointer-events: auto" onclick="window.narrateDirections()">'.concat(playbutton).concat('</button></div>')).concat('</td></tr>').concat(speed).concat('<tr><td class="no-click">{time}</td></tr></table>'),
@@ -471,9 +440,6 @@
                     ScaleRoads: ScaleRoads,
                     Borders: L.geoJSON(HexBorders).addTo(mymap),
                     Roads: JSONRoads,
-                    Factories: Factories,
-                    Refineries: Refineries,
-                    Storage: Storage,
                     NeutralRoadsCanvas: NeutralRoadsGroup,
                     RoadsCanvas: RoadsGroup,
                     WardenRoadsCanvas: WardenRoadsGroup,
@@ -500,30 +466,20 @@
                         compact: null,
                         weightFn: function (a, b, props) { var dx = a[0] - b[0]; var dy = a[1] - b[1]; return Math.sqrt(dx * dx + dy * dy); }
                     }) : null,
-
                     colonialPathFinder: ColonialRoutes != null && ColonialRoutes.features != null && ColonialRoutes.features.length > 0 ? new PathFinder(ColonialRoutes, {
                         compact: null,
                         weightFn: function (a, b, props) { var dx = a[0] - b[0]; var dy = a[1] - b[1]; return Math.sqrt(dx * dx + dy * dy); }
                     }) : null,
-
                     routeLine: function (route, options) {
                         return new Line(route, options);
                     },
-
                     narrate: function () {
                         Narrator.giveDirections(FoxholeRouter.currentRoute.instructions);
                     },
-
                     cardinalDirections: ['East', 'Northeast', 'North', 'Northwest', 'West', 'Southwest', 'South', 'Southeast'],
-
                     angleToDirection: function (angle) {
                         return FoxholeRouter.cardinalDirections[parseInt(Math.round((angle / (Math.PI * 2)) * 8)) % 8];
                     },
-
-                    LocateTown: function (name) {
-
-                    },
-
                     route: function (waypoints, callback, context, options) {
                         highlighter.clearLayers();
                         // modify new waypoints to find closest ones
