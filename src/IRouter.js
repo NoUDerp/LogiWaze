@@ -109,6 +109,10 @@
                 var WardenRoadsGroup = L.layerGroup().addTo(mymap);
                 var ColonialRoadsGroup = L.layerGroup().addTo(mymap);
                 var NeutralRoadsGroup = L.layerGroup().addTo(mymap);
+                var Refineries = L.layerGroup().addTo(mymap);
+                var Factories = L.layerGroup().addTo(mymap);
+                var Storage = L.layerGroup().addTo(mymap);
+
                 var renderer = L.canvas({ tolerance: .2 }).addTo(mymap);
 
                 var TownHalls = L.layerGroup().addTo(mymap);
@@ -132,6 +136,18 @@
                         icon = 'MapIconKeep'
                     else if (ic.icon >= 45 && ic.icon <= 47)
                         icon = 'MapIconRelicBase';
+                    else if (ic.icon == 17)
+                        icon = 'MapIconManufacturing';
+                    else if (ic.icon == 51)
+                        icon = 'MapIconMassProductionFactory';
+                    else if (ic.icon == 34)
+                        icon = 'MapIconFactory';
+                    else if (ic.icon == 33)
+                        icon = 'MapIconStorageFacility';
+                    else if (ic.icon == 39)
+                        icon = 'MapIconConstructionYard';
+                    else if (ic.icon == 52)
+                        icon = 'MapIconSeaport';
                     else
                         return null;
 
@@ -221,6 +237,21 @@
 
                         var th = region[keys2[k]];
                         var data = { ownership: th.control, icon: th.mapIcon };
+                        var TH = TownHalls;
+                        switch (th.mapIcon) {
+                            case 17:
+                                TH = Refineries;
+                                break;
+                            case 39:
+                            case 51:
+                            case 34:
+                                TH = Factories;
+                                break;
+                            case 33:
+                            case 52:
+                                TH = Storage;
+                                break;
+                        }
                         var icon = resolveIcon(data);
                         if (icon != null)
                             L.marker([th.y, th.x], {
@@ -231,7 +262,7 @@
                                     iconSize: [24, 24],
                                     className: "town-hall-icon"
                                 })
-                            }).addTo(TownHalls);
+                            }).addTo(TH);
                     }
                 }
 
@@ -440,6 +471,9 @@
                     ScaleRoads: ScaleRoads,
                     Borders: L.geoJSON(HexBorders).addTo(mymap),
                     Roads: JSONRoads,
+                    Factories: Factories,
+                    Refineries: Refineries,
+                    Storage: Storage,
                     NeutralRoadsCanvas: NeutralRoadsGroup,
                     RoadsCanvas: RoadsGroup,
                     WardenRoadsCanvas: WardenRoadsGroup,
@@ -487,7 +521,7 @@
                     },
 
                     LocateTown: function (name) {
-                        
+
                     },
 
                     route: function (waypoints, callback, context, options) {

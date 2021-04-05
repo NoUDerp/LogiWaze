@@ -140,7 +140,7 @@ define(['jquery', 'point-in-polygon'], function ($, pip) {
 												var offset = API.remapXY(mapName);
 												for (var j = 0; j < mapData.mapItems.length; j++) {
 													var icon = mapData.mapItems[j].iconType;
-													if ((icon >= 5 && icon <= 10) || (icon >= 45 && icon <= 47) || icon == 29) {
+													if ((icon >= 5 && icon <= 10) || (icon >= 45 && icon <= 47) || icon == 29 || icon == 17 || icon == 34 || icon == 51 || icon == 39 || icon == 52 || icon == 33 || icon == 18 || icon == 19) {
 														var x = mapData.mapItems[j].x;
 														var y = mapData.mapItems[j].y;
 														x = 256 + (((x * 46.54545454545455) + offset.y) - 23.27272727272727);
