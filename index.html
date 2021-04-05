@@ -796,8 +796,13 @@
                     var a = l[i].split(",");
                     if (a.length < 2)
                     {
-                        var u = Geocoder.lookup(a[0]);
-                        points.push([u.y, u.x]);
+                        if (a[0] != '') {
+                            var u = Geocoder.lookup(a[0]);
+                            points.push([u.y, u.x]);
+                        }
+                        else {
+                            points.push([]);
+                        }
                     }
                     else
                         points.push([parseFloat(a[0]), parseFloat(a[1])]);
