@@ -465,7 +465,6 @@
                 },
                 {
                     'Town Halls': Router.TownHalls,
-                    /*'Resources': Router.Resources,*/
                     'Borders': Router.Borders,
                     'Uncontrolled Roads': Router.RoadsCanvas,
                     'Colonial Roads': Router.ColonialRoadsCanvas,
@@ -475,13 +474,15 @@
                     'Refineries': Router.Refineries,
                     'Factories': Router.Factories,
                     'Storage': Router.Storage,
-                    /*'Debug Markers': Router.Debug,*/
                     "Salvage": Router.Salvage,
                     "Components": Router.Components,
                     "Fuel": Router.Fuel,
-                    "Sulfur": Router.Sulfur
+                    "Sulfur": Router.Sulfur,
                 },
-                { position: 'topleft' }
+                {
+                    position: 'topleft',
+                    autoZIndex: false
+                }
             ).addTo(mymap);
 
             let originalInitTile = L.GridLayer.prototype._initTile;
@@ -763,30 +764,187 @@
                 }
             ).addTo(mymap);
 
-            Router.Control.on('waypointschanged', function (event) {
+            var waypoints = [];
+
+            var active_layers = {};
+            var no_update = false;
+
+            function sequence_layers() {
+                no_update = true;
+                var keys = Object.keys(active_layers);
+                for (var i = 0; i < keys.length; i++) {
+                    switch (keys[i]) {
+                        case "Town Halls":
+                            Router.TownHalls.remove();
+                            if (active_layers[keys[i]])
+                                Router.TownHalls.addTo(mymap);
+                            break;
+                        case "Borders":
+                            Router.Borders.remove();
+                            if (active_layers[keys[i]])
+                                Router.Borders.addTo(mymap);
+                            break;
+                        case "Warden Roads":
+                            Router.WardenRoadsCanvas.remove();
+                            if (active_layers[keys[i]])
+                                Router.WardenRoadsCanvas.addTo(mymap);
+                            break;
+                        case "Colonial Roads":
+                            Router.ColonialRoadsCanvas.remove();
+                            if (active_layers[keys[i]])
+                                Router.ColonialRoadsCanvas.addTo(mymap);
+                            break;
+                        case "Road Quality":
+                            Router.RoadsCanvas.remove();
+                            if (active_layers[keys[i]])
+                                Router.RoadsCanvas.addTo(mymap);
+                            break;
+                        case "Uncontrolled Roads":
+                            Router.NeutralRoadsCanvas.remove();
+                            if (active_layers[keys[i]])
+                                Router.NeutralRoadsCanvas.addTo(mymap);
+                            break;
+                        case "Refineries":
+                            Router.Refineries.remove();
+                            if (active_layers[keys[i]])
+                                Router.Refineries.addTo(mymap);
+                            break;
+                        case "Factories":
+                            Router.Factories.remove();
+                            if (active_layers[keys[i]])
+                                Router.Factories.addTo(mymap);
+                            break;
+                        case "Storage":
+                            Router.Storage.remove();
+                            if (active_layers[keys[i]])
+                                Router.Storage.addTo(mymap);
+                            break;
+                        case "Salvage":
+                            Router.Salvage.remove();
+                            if (active_layers[keys[i]])
+                                Router.Salvage.addTo(mymap);
+                            break;
+                        case "Components":
+                            Router.Components.remove();
+                            if (active_layers[keys[i]])
+                                Router.Components.addTo(mymap);
+                            break;
+                        case "Fuel":
+                            Router.Fuel.remove();
+                            if (active_layers[keys[i]])
+                                Router.Fuel.addTo(mymap);
+                            break;
+                        case "Sulfur":
+                            Router.Sulfur.remove();
+                            if (active_layers[keys[i]])
+                                Router.Sulfur.addTo(mymap);
+                            break;
+                    }
+                }
+                Router.ScaleTownHalls(null);
+                Router.ScaleRoads(null);
+                no_update = false;
+            }
+
+            function update_state() {
                 var l = "";
-                for (var i = 0; i < event.waypoints.length; i++) {
-                    if (event.waypoints[i] != null && event.waypoints[i].latLng != null && event.waypoints[i].latLng.lng != null && event.waypoints[i].latLng.lat != null) {
+                for (var i = 0; i < waypoints.length; i++)
+                    if (waypoints[i] != null && waypoints[i].latLng != null && waypoints[i].latLng.lng != null && waypoints[i].latLng.lat != null) {
                         if (i > 0)
                             l = l.concat("|");
-                        var s = Geocoder.reverseExact(event.waypoints[i].latLng);
+                        var s = Geocoder.reverseExact(waypoints[i].latLng);
                         if (s == null)
-                            l = l.concat(event.waypoints[i].latLng.lat.toFixed(3)).concat(",").concat(event.waypoints[i].latLng.lng.toFixed(3));
+                            l = l.concat(waypoints[i].latLng.lat.toFixed(3)).concat(",").concat(waypoints[i].latLng.lng.toFixed(3));
                         else
                             l = l.concat(s);
                     }
-                }
-                location.hash = l;
 
-            })
-                .on('routeselected', function (event) {
-                    Router.setRoute(event.route);
-                });
+                var counter = 0;
+                var keys = Object.keys(active_layers);
+                for (var i = 0; i < keys.length; i++)
+                    if (active_layers[keys[i]] === true)
+                        switch (keys[i]) {
+                            case "Town Halls":
+                                counter |= 1;
+                                break;
+                            case "Borders":
+                                counter |= 2;
+                                break;
+                            case "Warden Roads":
+                                counter |= 4;
+                                break;
+                            case "Colonial Roads":
+                                counter |= 8;
+                                break;
+                            case "Road Quality":
+                                counter |= 16;
+                                break;
+                            case "Uncontrolled Roads":
+                                counter |= 32;
+                                break;
+                            case "Refineries":
+                                counter |= 64;
+                                break;
+                            case "Factories":
+                                counter |= 128;
+                                break;
+                            case "Storage":
+                                counter |= 256;
+                                break;
+                            case "Salvage":
+                                counter |= 512;
+                                break;
+                            case "Components":
+                                counter |= 1024;
+                                break;
+                            case "Fuel":
+                                counter |= 2048;
+                                break;
+                            case "Sulfur":
+                                counter |= 4096;
+                                break;
+                        }
+
+                l = l.concat(':').concat(counter.toString(16).toUpperCase());
+                location.hash = l;
+            }
+
+            mymap.on('overlayadd', function (event) {
+                if (no_update) return;
+                active_layers[event.name] = true; update_state(); sequence_layers();
+            });
+            mymap.on('overlayremove', function (event) {
+                if (no_update) return;
+                active_layers[event.name] = false; update_state();
+            });
 
             // load initial waypoints
             var points = startingWaypoints;
+            var layers = 8192 - 1;
             if (typeof (location.hash) != 'undefined' && location.hash != "" && location.hash != "#") {
                 var h = decodeURI(location.hash.substr(1));
+                var j = h.split(':');
+
+                // filter layers
+                if (j.length > 1)
+                    layers = parseInt(j[1], 16);
+
+                Router.Control.on('waypointschanged', function (event) {
+                    waypoints = [];
+                    for (var i = 0; i < event.waypoints.length; i++)
+                        waypoints.push(event.waypoints[i]);
+                    update_state();
+
+                })
+                    .on('routeselected', function (event) {
+                        Router.setRoute(event.route);
+                    });
+
+
+                h = j[0];
+
+
+
 
                 var l = h.split("|");
                 points = [];
@@ -794,8 +952,7 @@
                     // if this is a town name locate it
 
                     var a = l[i].split(",");
-                    if (a.length < 2)
-                    {
+                    if (a.length < 2) {
                         if (a[0] != '') {
                             var u = Geocoder.lookup(a[0]);
                             points.push([u.y, u.x]);
@@ -809,7 +966,68 @@
                 }
             }
 
+            active_layers["Road Quality"] = (layers & 16) != 0;
+            active_layers["Borders"] = (layers & 2) != 0;
+            active_layers["Warden Roads"] = (layers & 4) != 0;
+            active_layers["Colonial Roads"] = (layers & 8) != 0;
+            active_layers["Uncontrolled Roads"] = (layers & 32) != 0;
+            active_layers["Refineries"] = (layers & 64) != 0;
+            active_layers["Factories"] = (layers & 128) != 0;
+            active_layers["Storage"] = (layers & 256) != 0;
+            active_layers["Salvage"] = (layers & 512) != 0;
+            active_layers["Components"] = (layers & 1024) != 0;
+            active_layers["Fuel"] = (layers & 2048) != 0;
+            active_layers["Sulfur"] = (layers & 4096) != 0;
+            active_layers["Town Halls"] = (layers & 1) != 0;
+
+            var keys = Object.keys(active_layers);
+            for (var i = 0; i < keys.length; i++)
+                if (false == active_layers[keys[i]])
+                    switch (keys[i]) {
+                        case "Town Halls":
+                            Router.TownHalls.remove();
+                            break;
+                        case "Borders":
+                            Router.Borders.remove();
+                            break;
+                        case "Warden Roads":
+                            Router.WardenRoadsCanvas.remove();
+                            break;
+                        case "Colonial Roads":
+                            Router.ColonialRoadsCanvas.remove();
+                            break;
+                        case "Road Quality":
+                            Router.RoadsCanvas.remove();
+                            break;
+                        case "Uncontrolled Roads":
+                            Router.NeutralRoadsCanvas.remove();
+                            break;
+                        case "Refineries":
+                            Router.Refineries.remove();
+                            break;
+                        case "Factories":
+                            Router.Factories.remove();
+                            break;
+                        case "Storage":
+                            Router.Storage.remove();
+                            break;
+                        case "Salvage":
+                            Router.Salvage.remove();
+                            break;
+                        case "Components":
+                            Router.Components.remove();
+                            break;
+                        case "Fuel":
+                            Router.Fuel.remove();
+                            break;
+                        case "Sulfur":
+                            Router.Sulfur.remove();
+                            break;
+                    }
+
             Router.Control.setWaypoints(points);
+            update_state();
+            sequence_layers();
             Router.ScaleTownHalls();
             Router.ScaleRoads();
 

@@ -105,22 +105,30 @@
 
                 }
 
-                var RoadsGroup = L.layerGroup().addTo(mymap);
-                var WardenRoadsGroup = L.layerGroup().addTo(mymap);
-                var ColonialRoadsGroup = L.layerGroup().addTo(mymap);
-                var NeutralRoadsGroup = L.layerGroup().addTo(mymap);
-                var Refineries = L.layerGroup().addTo(mymap);
-                var Factories = L.layerGroup().addTo(mymap);
-                var Storage = L.layerGroup().addTo(mymap);
+                var RoadsPane = mymap.createPane('Roads');
+                var MarkersPane = mymap.createPane('Markers');
+                var QualityPane = mymap.createPane('Road Quality');
+
+                mymap.getPane('Road Quality').style.zIndex = 500;
+                mymap.getPane('Roads').style.zIndex = 600;
+                mymap.getPane('Markers').style.zIndex = 700;
+
+                var RoadsGroup = L.layerGroup({ pane: 'Road Quality' }).addTo(mymap).setZIndex(1);
+                var WardenRoadsGroup = L.layerGroup({ pane: 'Roads' }).addTo(mymap).setZIndex(2);
+                var ColonialRoadsGroup = L.layerGroup({ pane: 'Roads' }).addTo(mymap).setZIndex(2);
+                var NeutralRoadsGroup = L.layerGroup({ pane: 'Roads' }).addTo(mymap).setZIndex(2);
+                var Refineries = L.layerGroup({ pane: 'Markers' }).addTo(mymap).setZIndex(2);
+                var Factories = L.layerGroup({ pane: 'Markers' }).addTo(mymap).setZIndex(2);
+                var Storage = L.layerGroup({ pane: 'Markers' }).addTo(mymap).setZIndex(2);
 
                 var renderer = L.canvas({ tolerance: .2 }).addTo(mymap);
 
-                var TownHalls = L.layerGroup().addTo(mymap);
-                var Resources = L.layerGroup().addTo(mymap);
-                var Components = L.layerGroup().addTo(mymap);
-                var Salvage = L.layerGroup().addTo(mymap);
-                var Fuel = L.layerGroup().addTo(mymap);
-                var Sulfur = L.layerGroup().addTo(mymap);
+                var TownHalls = L.layerGroup({ pane: 'Markers' }).addTo(mymap).setZIndex(2);
+                var Resources = L.layerGroup({ pane: 'Markers' }).addTo(mymap).setZIndex(2);
+                var Components = L.layerGroup({ pane: 'Markers' }).addTo(mymap).setZIndex(2);
+                var Salvage = L.layerGroup({ pane: 'Markers' }).addTo(mymap).setZIndex(2);
+                var Fuel = L.layerGroup({ pane: 'Markers' }).addTo(mymap).setZIndex(2);
+                var Sulfur = L.layerGroup({ pane: 'Markers' }).addTo(mymap).setZIndex(2);
 
 
                 var resolveIcon = function (ic) {
