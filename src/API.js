@@ -96,13 +96,15 @@ define(['jquery', 'point-in-polygon'], function ($, pip) {
                     var keys = Object.keys(u);
                     for (var i = 0; i < keys.length; i++) {
                         var j = u[keys[i]];
-                        var px = j.x;
-                        var py = j.y;
-                        var distanceCalculation = (x - px) * (x - px) + (y - py) * (y - py);
-                        if (distanceSquared < 0 || distanceCalculation < distanceSquared) {
-                            control = j.control;
-                            icon = j.mapIcon;
-                            distanceSquared = distanceCalculation;
+                        if (j.town) {
+                            var px = j.x;
+                            var py = j.y;
+                            var distanceCalculation = (x - px) * (x - px) + (y - py) * (y - py);
+                            if (distanceSquared < 0 || distanceCalculation < distanceSquared) {
+                                control = j.control;
+                                icon = j.mapIcon;
+                                distanceSquared = distanceCalculation;
+                            }
                         }
                     }
                     return { ownership: control, icon: icon };
@@ -146,8 +148,7 @@ define(['jquery', 'point-in-polygon'], function ($, pip) {
                                                         x = 256 + (((x * 46.54545454545455) + offset.y) - 23.27272727272727);
                                                         y = -256 + ((((1 - y) * 40.30954606705751) + offset.x) - 20.15477303352875);
                                                         var key = x.toFixed(3).toString().concat('|').concat(y.toFixed(3).toString());
-                                                        if ((icon >= 5 && icon <= 10) || (icon >= 45 && icon <= 47) || icon == 29)
-                                                            API.mapControl[mapName][key] = { x: x, y: y, control: mapData.mapItems[j].teamId, mapIcon: icon };
+                                                        API.mapControl[mapName][key] = { x: x, y: y, control: mapData.mapItems[j].teamId, mapIcon: icon, town: ((icon >= 5 && icon <= 10) || (icon >= 45 && icon <= 47) || icon == 29) };
                                                     }
                                                     else {
                                                         var x = mapData.mapItems[j].x;
