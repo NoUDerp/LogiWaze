@@ -57,7 +57,11 @@
             background-image: url("data:image/svg+xml;base64,PHN2ZyBoZWlnaHQ9JzMwMHB4JyB3aWR0aD0nMzAwcHgnICBmaWxsPSIjMDAwMDAwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4bWw6c3BhY2U9InByZXNlcnZlIiB2ZXJzaW9uPSIxLjEiIHN0eWxlPSJzaGFwZS1yZW5kZXJpbmc6Z2VvbWV0cmljUHJlY2lzaW9uO3RleHQtcmVuZGVyaW5nOmdlb21ldHJpY1ByZWNpc2lvbjtpbWFnZS1yZW5kZXJpbmc6b3B0aW1pemVRdWFsaXR5OyIgdmlld0JveD0iMCAwIDg0NyA4NDciIHg9IjBweCIgeT0iMHB4IiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCI+PGRlZnM+PHN0eWxlIHR5cGU9InRleHQvY3NzIj4KICAgCiAgICAuZmlsMCB7ZmlsbDojMDAwMDAwfQogICAKICA8L3N0eWxlPjwvZGVmcz48Zz48cG9seWdvbiBjbGFzcz0iZmlsMCIgcG9pbnRzPSIxODAsNzYyIDQxOSw4NSA2NjcsNzU1IDQxNyw1OTIgIj48L3BvbHlnb24+PC9nPjwvc3ZnPg==");
         }
 
-
+        .layer-icon {
+            max-width: 16px;
+            max-height: 16px;
+            margin-right: 4px;
+        }
 
 
         .leaflet-marker-draggable {
@@ -464,20 +468,19 @@
                     'Drawn Map': DrawnMap
                 },
                 {
-                    'Town Halls': Router.TownHalls,
-                    'Borders': Router.Borders,
-                    'Uncontrolled Roads': Router.RoadsCanvas,
-                    'Colonial Roads': Router.ColonialRoadsCanvas,
-                    'Warden Roads': Router.WardenRoadsCanvas,
-                    'Uncontrolled Roads': Router.NeutralRoadsCanvas,
-                    'Road Quality': Router.RoadsCanvas,
-                    'Refineries': Router.Refineries,
-                    'Factories': Router.Factories,
-                    'Storage': Router.Storage,
-                    "Salvage": Router.Salvage,
-                    "Components": Router.Components,
-                    "Fuel": Router.Fuel,
-                    "Sulfur": Router.Sulfur,
+                    '<img src="MapIcons/MapIconStaticBase3.webp" class="layer-icon">Town Halls': Router.TownHalls,
+                    '<img src="MapIcons/fencing.webp" class="layer-icon">Borders': Router.Borders,
+                    '<img src="MapIcons/road-route.webp" class="layer-icon">Road Quality': Router.RoadsCanvas,
+                    '<img src="Colonial Route.webp" class="layer-icon">Colonial Roads': Router.ColonialRoadsCanvas,
+                    '<img src="Warden Route.webp" class="layer-icon">Warden Roads': Router.WardenRoadsCanvas,
+                    '<img src="Shortest Route.webp" class="layer-icon">Uncontrolled Roads': Router.NeutralRoadsCanvas,
+                    '<img src="MapIcons/MapIconManufacturing.webp" class="layer-icon">Refineries': Router.Refineries,
+                    '<img src="MapIcons/MapIconFactory.webp" class="layer-icon">Factories': Router.Factories,
+                    '<img src="MapIcons/MapIconStorageFacility.webp" class="layer-icon">Storage': Router.Storage,
+                    '<img src="MapIcons/MapIconSalvage.webp" class="layer-icon">Salvage': Router.Salvage,
+                    '<img src="MapIcons/MapIconComponents.webp" class="layer-icon">Components': Router.Components,
+                    '<img src="MapIcons/MapIconFuel.webp" class="layer-icon">Fuel': Router.Fuel,
+                    '<img src="MapIcons/MapIconSulfur.webp" class="layer-icon">Sulfur': Router.Sulfur,
                 },
                 {
                     position: 'topleft',
