@@ -774,7 +774,7 @@
                 no_update = true;
                 var keys = Object.keys(active_layers);
                 for (var i = 0; i < keys.length; i++) {
-                    switch (keys[i]) {
+                    switch (keys[i].replace(/<.*> */, '')) {
                         case "Town Halls":
                             Router.TownHalls.remove();
                             if (active_layers[keys[i]])
@@ -864,7 +864,7 @@
                 var keys = Object.keys(active_layers);
                 for (var i = 0; i < keys.length; i++)
                     if (active_layers[keys[i]] === true)
-                        switch (keys[i]) {
+                        switch (keys[i].replace(/<.*> */, '')) {
                             case "Town Halls":
                                 counter |= 1;
                                 break;
@@ -912,11 +912,11 @@
 
             mymap.on('overlayadd', function (event) {
                 if (no_update) return;
-                active_layers[event.name] = true; update_state(); sequence_layers();
+                active_layers[event.name.replace(/<.*> */,'')] = true; update_state(); sequence_layers();
             });
             mymap.on('overlayremove', function (event) {
                 if (no_update) return;
-                active_layers[event.name] = false; update_state();
+                active_layers[event.name.replace(/<.*> */, '')] = false; update_state();
             });
 
             // load initial waypoints
@@ -984,7 +984,7 @@
             var keys = Object.keys(active_layers);
             for (var i = 0; i < keys.length; i++)
                 if (false == active_layers[keys[i]])
-                    switch (keys[i]) {
+                    switch (keys[i].replace(/<.*> */, '')) {
                         case "Town Halls":
                             Router.TownHalls.remove();
                             break;
