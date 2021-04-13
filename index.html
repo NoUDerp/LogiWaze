@@ -736,14 +736,14 @@
             Router.Control = L.Routing.control(
                 {
                     showAlternatives: false,
-                    reverseWaypoints: true,
                     routeWhileDragging: false,
                     router: Router,
                     autoRoute: true,
                     geocoder: Geocoder,
                     plan: new L.Routing.Plan([], {
                         maxGeocoderTolerance: 100000000,
-                        geocoder: Geocoder
+                        geocoder: Geocoder,
+                        reverseWaypoints: true
                     }),
                     routeLine: function (route, options) {
                         if (route.name == "Shortest Route")
@@ -764,6 +764,39 @@
                     formatter: new custom_time_formatter(Router)
                 }
             ).addTo(mymap);
+
+            function createButton(label, container, image) {
+                var btn = L.DomUtil.create('img', '', container);
+                btn.setAttribute('src', image);
+                btn.setAttribute('style', 'max-width: 32px; max-height: 32px; margin: 4px;');
+                btn.innerHTML = label;
+                return btn;
+            }
+
+            mymap.on('click', function (e) {
+                var container = L.DomUtil.create('div'),
+                    startBtn = createButton('Start here', container, 'ray-start-arrow.svg'),
+                    destBtn = createButton('End here', container, 'ray-end.svg');
+
+                L.DomEvent.on(startBtn, 'click', function () {
+                    Router.Control.spliceWaypoints(0, 1, e.latlng);
+                    mymap.closePopup();
+                });
+
+                L.DomEvent.on(destBtn, 'click', function () {
+                    Router.Control.spliceWaypoints(Router.Control.getWaypoints().length - 1, 1, e.latlng);
+                    mymap.closePopup();
+                });
+
+                container.setAttribute('style', 'width: 66px; padding: 0');
+
+                L.popup()
+                    .setContent(container)
+                    .setLatLng(e.latlng)
+                    .openOn(mymap);
+            });
+
+
 
             var waypoints = [];
 
