@@ -781,11 +781,14 @@
                 L.DomEvent.on(startBtn, 'click', function () {
                     Router.Control.spliceWaypoints(0, 1, e.latlng);
                     mymap.closePopup();
+                    update_state();
+
                 });
 
                 L.DomEvent.on(destBtn, 'click', function () {
                     Router.Control.spliceWaypoints(Router.Control.getWaypoints().length - 1, 1, e.latlng);
                     mymap.closePopup();
+                    update_state();
                 });
 
                 container.setAttribute('style', 'width: 66px; padding: 0');
@@ -972,6 +975,7 @@
                 })
                     .on('routeselected', function (event) {
                         Router.setRoute(event.route);
+
                     });
 
 
