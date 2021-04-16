@@ -404,7 +404,7 @@
                 noWrap: true,
                 continuousWorld: true,
                 bounds: L.latLngBounds(L.latLng(-256, 0), L.latLng(0, 256)),
-                autoPan: true,
+                autoPan: false,
                 maxBounds: L.latLngBounds(L.latLng(-384, -256), L.latLng(128, 512)),
 
             }).setView([-128, 128], 2);
@@ -447,8 +447,7 @@
 
     </script>
 
-    <script src="FoxholeRouter.js">
-    </script>
+    <script src="FoxholeRouter.js"></script>
 
     <script type="text/javascript">
 
@@ -780,15 +779,19 @@
 
                 L.DomEvent.on(startBtn, 'click', function () {
                     Router.Control.spliceWaypoints(0, 1, e.latlng);
+                    //waypoints = Router.Control.getWaypoints();
                     mymap.closePopup();
-                    update_state();
+                    //Router.Control.setWaypoints(waypoints);
+                    //                    update_state();
 
                 });
 
                 L.DomEvent.on(destBtn, 'click', function () {
                     Router.Control.spliceWaypoints(Router.Control.getWaypoints().length - 1, 1, e.latlng);
+                    //waypoints = Router.Control.getWaypoints();
                     mymap.closePopup();
-                    update_state();
+                    //Router.Control.setWaypoints(waypoints);
+                    //                  update_state();
                 });
 
                 container.setAttribute('style', 'width: 66px; padding: 0');
@@ -948,7 +951,7 @@
 
             mymap.on('overlayadd', function (event) {
                 if (no_update) return;
-                active_layers[event.name.replace(/<.*> */,'')] = true; update_state(); sequence_layers();
+                active_layers[event.name.replace(/<.*> */, '')] = true; update_state(); sequence_layers();
             });
             mymap.on('overlayremove', function (event) {
                 if (no_update) return;
@@ -958,6 +961,12 @@
             // load initial waypoints
             var points = startingWaypoints;
             var layers = 8192 - 1;
+
+            Router.Control.on('waypointschanged', function (event) {
+                waypoints = event.waypoints;
+                update_state();
+            });
+
             if (typeof (location.hash) != 'undefined' && location.hash != "" && location.hash != "#") {
                 var h = decodeURI(location.hash.substr(1));
                 var j = h.split(':');
@@ -966,23 +975,11 @@
                 if (j.length > 1)
                     layers = parseInt(j[1], 16);
 
-                Router.Control.on('waypointschanged', function (event) {
-                    waypoints = [];
-                    for (var i = 0; i < event.waypoints.length; i++)
-                        waypoints.push(event.waypoints[i]);
-                    update_state();
-
-                })
-                    .on('routeselected', function (event) {
-                        Router.setRoute(event.route);
-
-                    });
-
+                Router.Control.on('routeselected', function (event) {
+                    Router.setRoute(event.route);
+                });
 
                 h = j[0];
-
-
-
 
                 var l = h.split("|");
                 points = [];
