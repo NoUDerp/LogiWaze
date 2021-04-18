@@ -7,6 +7,37 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" crossorigin="" />
     <style type="text/css">
 
+        @font-face {
+            font-family: 'Celtic';
+            src: url('Celtic.ttf');
+        }
+
+        @font-face {
+            font-family: 'Roman';
+            src: url('Roman.ttf');
+        }
+
+        @font-face {
+            font-family: 'Italic';
+            src: url('Italic.otf');
+        }
+
+        .town-neutral {
+            text-transform: uppercase;
+            font-family: Italic;
+        }
+
+        .town-warden {
+            text-transform: uppercase;
+            font-family: Celtic;
+        }
+
+        .town-colonial {
+            text-transform: uppercase;
+            font-family: Roman;
+            letter-spacing: .15em;
+            
+        }
 
         .turn-right {
             fill: blue;
@@ -313,7 +344,7 @@
 
         .leaflet-control-youtube-interior {
             border: 2px solid rgba(0,0,0,0.2) !important;
-            box-shadow: 0 1px 7px rgba(0, 0, 0, 0.65);
+            box-shadow: 0 .1em 7px rgba(0, 0, 0, 0.65);
             cursor: auto;
             text-align: center;
             opacity: .85;
@@ -326,7 +357,7 @@
             font-size: 12px;
             width: 100%;
             height: 24px;
-            border: 1px solid #ccc;
+            border: .1em solid #ccc;
         }
 
         .leaflet-control-youtube-interior:hover {
@@ -335,7 +366,8 @@
 
         .town-label span {
             color: white;
-            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+            text-shadow: 0px 0px 4px #000,0px 0px 4px #000,0px 0px 4px #000,0px 0px 4px #000;
+            /*text-shadow: -1px -1px 1px #000, 1px -1px 1px #000, -1px 1px 1px #000, 1px 1px 1px #000;*/
             white-space: nowrap;
             position: relative;
             left: -100%;
@@ -343,7 +375,8 @@
 
         .minor-town-label span {
             color: #DDDDDD;
-            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+            text-shadow: 0px 0px 4px #000,0px 0px 4px #000,0px 0px 4px #000,0px 0px 4px #000;
+            /*text-shadow: -1px -1px 1px #000, 1px -1px 1px #000, -1px 1px 1px #000, 1px 1px 1px #000;*/
             white-space: nowrap;
             position: relative;
             left: -100%;
@@ -407,7 +440,7 @@
                 autoPan: false,
                 maxBounds: L.latLngBounds(L.latLng(-384, -256), L.latLng(128, 512)),
 
-            }).setView([-128, 128], 2);
+            });
 
         var pane = mymap.createPane('imagebg');
         mymap.getPane('imagebg').style.zIndex = 50;
@@ -454,6 +487,37 @@
         var shard = urlParams.get('shard2') != null ? "2" : urlParams.get('shard');
 
         var APIManager = API.Create();
+
+        var CurrentRoute = null;
+        var AutoZoom = true;
+        var IsUserZoom = true;
+        var IsUserZoomState;
+
+        mymap.on('dragend', function (e) { AutoZoom = false; });
+
+        /*mymap.on('zoomstart', function (e) {
+            IsUserZoomState = IsUserZoom;
+        });*/
+
+        mymap.on('zoomend', function (e) {
+            if (IsUserZoomState)
+                AutoZoom = false;
+            IsUserZoom = true;
+            IsUserZoomState = true;
+        });
+
+        function PauseAutoZoom() {
+            IsUserZoom = false;
+            IsUserZoomState = IsUserZoom;
+        }
+
+        function ResumeAutoZoom() {
+            IsUserZoom = true;
+        }
+
+        PauseAutoZoom();
+        mymap.setView([-128, 128], 2);
+        ResumeAutoZoom();
 
         APIManager.update(() => {
 
@@ -555,10 +619,7 @@
 
             L.control.youtube().addTo(mymap);
 
-            var startingWaypoints = [
-                //L.latLng(-67.7688, 152.5585),
-                //L.latLng(-187.4801, 97.6007)
-            ];
+            var startingWaypoints = [];
 
             Router.Borders.setStyle(
                 {
@@ -596,7 +657,7 @@
 
                     if (newRegion || this.first) {
                         var container2 = document.createElement("TR");
-                        container2.style.padding = "1px 2px";
+                        container2.style.padding = ".1em 2px";
                         var divider2 = document.createElement("TD");
                         divider2.setAttribute("colspan", "2");
                         divider2.innerText = this.API.mapRegionName(region);
@@ -610,7 +671,7 @@
 
                     if (border === 1) {
                         var container3 = document.createElement("TR");
-                        container3.style.padding = "1px 2px";
+                        container3.style.padding = ".1em 2px";
                         var divider3 = document.createElement("TD");
                         divider3.setAttribute("colspan", "2");
                         divider3.innerText = "You are approaching a border crossing, check your radio";
@@ -624,7 +685,7 @@
                     var container = document.createElement("TR");
                     container.classList.add("narrator-step-".concat((this.counter++).toString()));
                     container.classList.add("narrator-steps");
-                    container.style.padding = "1px 2px";
+                    container.style.padding = ".1em 2px";
                     var divider2 = document.createElement("TD");
 
                     if (turnicon != "" && turnicon != null && window.beta)
@@ -757,9 +818,10 @@
                             ]
                         });
                     },
-                    fitSelectedRoutes: 'smart',
+                    fitSelectedRoutes: false,//'smart',
                     itineraryBuilder: form,
                     summaryTemplate: Router.summaryTemplate,
+                    collapsible: true,
                     formatter: new custom_time_formatter(Router)
                 }
             ).addTo(mymap);
@@ -772,42 +834,96 @@
                 return btn;
             }
 
+            var prevent_double_click = false;
+
             mymap.on('click', function (e) {
-                var container = L.DomUtil.create('div'),
-                    startBtn = createButton('Start here', container, 'ray-start-arrow.svg'),
-                    destBtn = createButton('End here', container, 'ray-end.svg');
+                timer = setTimeout(function () {
+                    if (!prevent_double_click) {
+                        var container = L.DomUtil.create('div'),
+                            startBtn = createButton('Start here', container, 'ray-start-arrow.svg'),
+                            destBtn = createButton('End here', container, 'ray-end.svg');
 
-                L.DomEvent.on(startBtn, 'click', function () {
-                    Router.Control.spliceWaypoints(0, 1, e.latlng);
-                    //waypoints = Router.Control.getWaypoints();
-                    mymap.closePopup();
-                    //Router.Control.setWaypoints(waypoints);
-                    //                    update_state();
+                        L.DomEvent.on(startBtn, 'click', function () {
+                            Router.Control.spliceWaypoints(0, 1, e.latlng);
+                            mymap.closePopup();
+                        });
 
-                });
+                        L.DomEvent.on(destBtn, 'click', function () {
+                            Router.Control.spliceWaypoints(Router.Control.getWaypoints().length - 1, 1, e.latlng);
+                            mymap.closePopup();
+                        });
 
-                L.DomEvent.on(destBtn, 'click', function () {
-                    Router.Control.spliceWaypoints(Router.Control.getWaypoints().length - 1, 1, e.latlng);
-                    //waypoints = Router.Control.getWaypoints();
-                    mymap.closePopup();
-                    //Router.Control.setWaypoints(waypoints);
-                    //                  update_state();
-                });
+                        container.setAttribute('style', 'width: 66px; padding: 0');
 
-                container.setAttribute('style', 'width: 66px; padding: 0');
+                        L.popup()
+                            .setContent(container)
+                            .setLatLng(e.latlng)
+                            .openOn(mymap);
+                    }
+                    prevent_double_click = false;
+                }, 200);
+            });
 
-                L.popup()
-                    .setContent(container)
-                    .setLatLng(e.latlng)
-                    .openOn(mymap);
+            mymap.on("dblclick", function () {
+                clearTimeout(200);
+                prevent_double_click = true;
             });
 
 
-
             var waypoints = [];
-
             var active_layers = {};
             var no_update = false;
+
+            function SmartAutoZoom() {
+                minX = null; minY = null; maxX = null; maxY = null;
+                var count = 0;
+                for (var i = 0; i < waypoints.length; i++) {
+                    var u = waypoints[i].latLng;
+                    if (u != null) {
+                        count++;
+                        if (minX == null || u.lng < minX)
+                            minX = u.lng;
+                        if (minY == null || u.lat < minY)
+                            minY = u.lat;
+                        if (maxX == null || u.lng > maxX)
+                            maxX = u.lng;
+                        if (maxY == null || u.lat > maxY)
+                            maxY = u.lat;
+                    }
+                }
+
+                if (CurrentRoute != null)
+                    for (var i = 0; i < CurrentRoute.coordinates.length; i++) {
+                        var u = CurrentRoute.coordinates[i];
+                        if (u != null) {
+                            count++;
+                            if (minX == null || u.lng < minX)
+                                minX = u.lng;
+                            if (minY == null || u.lat < minY)
+                                minY = u.lat;
+                            if (maxX == null || u.lng > maxX)
+                                maxX = u.lng;
+                            if (maxY == null || u.lat > maxY)
+                                maxY = u.lat;
+                        }
+                    }
+
+                if (count > 1) {
+                    var rangeX = maxX - minX;
+                    var rangeY = maxY - minY;
+
+                    PauseAutoZoom();
+                    mymap.fitBounds([[minY - rangeY * .1, minX - rangeX * .1], [maxY + rangeY * .1, maxX + rangeX * .1]]);
+                    ResumeAutoZoom();
+                    AutoZoom = true;
+
+                }
+            }
+
+            window.onresize = function () {
+                if (AutoZoom)
+                    SmartAutoZoom();
+            };
 
             function sequence_layers() {
                 no_update = true;
@@ -962,11 +1078,6 @@
             var points = startingWaypoints;
             var layers = 8192 - 1;
 
-            Router.Control.on('waypointschanged', function (event) {
-                waypoints = event.waypoints;
-                update_state();
-            });
-
             if (typeof (location.hash) != 'undefined' && location.hash != "" && location.hash != "#") {
                 var h = decodeURI(location.hash.substr(1));
                 var j = h.split(':');
@@ -977,6 +1088,9 @@
 
                 Router.Control.on('routeselected', function (event) {
                     Router.setRoute(event.route);
+                    CurrentRoute = event.route;
+                    AutoZoom = true;
+                    SmartAutoZoom();
                 });
 
                 h = j[0];
@@ -1061,11 +1175,21 @@
                     }
 
             Router.Control.setWaypoints(points);
+            waypoints = [];
+            for (var i = 0; i < points.length; i++)
+                waypoints.push({ latLng: { lat: points[i][0], lng: points[i][1] } });
             update_state();
             sequence_layers();
             Router.ScaleTownHalls();
             Router.ScaleRoads();
 
+            Router.Control.on('waypointschanged', function (event) {
+                waypoints = event.waypoints;
+                update_state();
+                mymap.closePopup();
+                AutoZoom = true;
+                SmartAutoZoom();
+            });
 
             document.getElementById("map-holder").style.opacity = '1';
             document.getElementById("loader-holder").style.opacity = '0';

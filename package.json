@@ -17,6 +17,7 @@
     "json-loader": "^0.5",
     "leaflet": "^1.5",
     "leaflet-routing-machine": "^3.2.12",
+    "leaflet-sidebar-v2": "^3.2.3",
     "@turf/distance": "^6.0.1",
     "@turf/explode": "^5.1.0",
     "point-in-polygon": "*",

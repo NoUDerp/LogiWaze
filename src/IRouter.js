@@ -58,10 +58,10 @@
                         var ownership = API.ownership(p[0], p[1], region).ownership;
                         JSONRoads._layers[keys[i]]._latlngs[k].ownership = ownership;
 
-                        if (API.mapControl[feature.properties.region] != null)
+                        if (API.mapControl[feature.properties.region] != null && ownership != "OFFLINE" && region in API.mapControl)
                             all_features.push(p);
 
-                        if (ownership != "OFFLINE" && ownership != "") {
+                        if (ownership != "OFFLINE" && ownership != "" && region in API.mapControl) {
 
                             var fso = ownership === "COLONIALS" ? colonial_features : warden_features;
                             if (k > 0 && last_ownership != ownership && ownership != "NONE") {
@@ -276,13 +276,14 @@
 
                 var ks = Object.keys(towns);
                 for (var t = 0; t < ks.length; t++) {
-
                     var th = towns[ks[t]];
-                    if (th.major == 1)
-                        new L.Marker([th.y, th.x], { icon: new L.DivIcon({ className: 'town-label', html: '<span>'.concat(ks[t]).concat('</span>') }) }).addTo(TownHalls);
-                    else
-                        new L.Marker([th.y, th.x], { icon: new L.DivIcon({ className: 'minor-town-label', html: '<span>'.concat(ks[t]).concat('</span>') }) }).addTo(TownHalls);
+                    var ownership = API.ownership(th.x, th.y, th.region).ownership;
+                    var spanclass = ownership == "COLONIALS" ? "town-colonial" : (ownership == "WARDENS" ? "town-warden" : "town-neutral");
 
+                    if (th.major == 1)
+                        new L.Marker([th.y, th.x], { icon: new L.DivIcon({ className: 'town-label', html: '<span class=\"'.concat(spanclass).concat('\">').concat(ks[t]).concat('</span>') }) }).addTo(TownHalls);
+                    else
+                        new L.Marker([th.y, th.x], { icon: new L.DivIcon({ className: 'minor-town-label', html: '<span class=\"'.concat(spanclass).concat('\">').concat(ks[t]).concat('</span>') }) }).addTo(TownHalls);
                 }
 
                 function scale_th(zoom) {
@@ -298,16 +299,38 @@
                             x[i].style["margin-top"] = (-scale / 2).toFixed().toString().concat("px");
                         }
                     var y = document.getElementsByClassName('town-label');
-                    var visible = zoom > 2 ? 'block' : 'none';
+                    var visible = zoom >= 3 ? 'block' : 'none';
                     if (y != null)
                         for (var i = 0; i < y.length; i++)
                             y[i].style["display"] = visible;
 
                     var y = document.getElementsByClassName('minor-town-label');
-                    var visible = zoom > 3 ? 'block' : 'none';
+                    var visible = zoom >= 4.5 ? 'block' : 'none';
                     if (y != null)
                         for (var i = 0; i < y.length; i++)
                             y[i].style["display"] = visible;
+
+                    var y = document.getElementsByClassName('town-warden');
+                    if (y != null) {
+                        var scale = (Math.round(24.0 * Math.sqrt(zoom / 3)) / 2).toFixed().toString().concat('px');
+                        for (var i = 0; i < y.length; i++)
+                            y[i].style["font-size"] = scale;
+                    }
+
+                    var y = document.getElementsByClassName('town-colonial');
+                    if (y != null) {
+                        var scale = (Math.round(20.0 * Math.sqrt(zoom / 3)) / 2).toFixed().toString().concat('px');
+                        for (var i = 0; i < y.length; i++)
+                            y[i].style["font-size"] = scale;
+                    }
+
+                    var y = document.getElementsByClassName('town-neutral');
+                    if (y != null) {
+                        var scale = (Math.round(22.0 * Math.sqrt(zoom / 3)) / 2).toFixed().toString().concat('px');
+                        for (var i = 0; i < y.length; i++)
+                            y[i].style["font-size"] = scale;
+                    }
+
 
                 }
 
@@ -385,7 +408,7 @@
                     else if (e.layer == RoadsGroup)
                         ScaleRoadTypes(null);
                 });
-                mymap.on('zoomanim', (e) => { ScaleTownHalls(e.zoom); ScaleRoads(e.zoom); });
+                mymap.on('zoomend', (e) => { ScaleTownHalls(e.zoom); ScaleRoads(e.zoom); });
 
                 for (var key in JSONRoads._layers) {
                     var layer = JSONRoads._layers[key];
@@ -401,10 +424,11 @@
 
                         if (lat != null && lng != null && lat2 != null && lng2 != null) {
                             var control = layer._latlngs[k - 1].ownership;
-                            new L.polyline([[lat, lng], [lat2, lng2]], { color: tiercolor, weight: 10, opacity: 1.0, renderer: renderer, interactive: false, smoothFactor: 48 }).addTo(RoadsGroup).bringToFront();
+                            new L.polyline([[lat, lng], [lat2, lng2]], { color: tiercolor, weight: 10, opacity: 1.0, lineJoin: 'miter', renderer: renderer, interactive: false, smoothFactor: 48 }).addTo(RoadsGroup).bringToFront();
                         }
                     }
                 }
+
                 for (var key in JSONRoads._layers) {
                     var layer = JSONRoads._layers[key];
                     for (var k = 1; k < layer._latlngs.length; k++) {
@@ -417,19 +441,23 @@
 
                             var control = layer._latlngs[k - 1].ownership;
                             if (control == "COLONIALS")
-                                new L.polyline([[lat, lng], [lat2, lng2]], { color: '#516C4B', weight: 5, opacity: 1.0, renderer: renderer, interactive: false, smoothFactor: 48 }).addTo(ColonialRoadsGroup).bringToFront();
+                                new L.polyline([[lat, lng], [lat2, lng2]], { color: '#516C4B', weight: 5, opacity: 1.0, lineJoin: 'miter', renderer: renderer, interactive: false, smoothFactor: 48 }).addTo(ColonialRoadsGroup).bringToFront();
 
                             else if (control == "WARDENS")
-                                new L.polyline([[lat, lng], [lat2, lng2]], { color: '#235683', weight: 5, opacity: 1.0, renderer: renderer, interactive: false, smoothFactor: 48 }).addTo(WardenRoadsGroup).bringToFront();
+                                new L.polyline([[lat, lng], [lat2, lng2]], { color: '#235683', weight: 5, opacity: 1.0, lineJoin: 'miter', renderer: renderer, interactive: false, smoothFactor: 48 }).addTo(WardenRoadsGroup).bringToFront();
 
                             else if (control == "OFFLINE")
-                                new L.polyline([[lat, lng], [lat2, lng2]], { color: '#505050', weight: 5, opacity: 1.0, renderer: renderer, interactive: false, smoothFactor: 48 }).addTo(RoadsGroup).bringToFront();
+                                new L.polyline([[lat, lng], [lat2, lng2]], { color: '#505050', weight: 5, opacity: 1.0, lineJoin: 'miter', renderer: renderer, interactive: false, smoothFactor: 48 }).addTo(RoadsGroup).bringToFront();
 
-                            else if (control === "NONE")
-                                new L.polyline([[lat, lng], [lat2, lng2]], { color: '#CCCCCC', weight: 5, opacity: 1.0, renderer: renderer, interactive: false, smoothFactor: 48 }).addTo(NeutralRoadsGroup).bringToFront();
+                            else if (control === "NONE") {
+                                //new L.polyline([[lat, lng], [lat2, lng2]], { color: '#235683', weight: 5, opacity: 1.0, lineJoin: 'miter', lineCap: 'square', renderer: renderer, interactive: false, smoothFactor: 48, dashArray: [5, 15] }).addTo(NeutralRoadsGroup).bringToFront();
+                                //new L.polyline([[lat, lng], [lat2, lng2]], { color: '#516C4B', weight: 5, opacity: 1.0, lineJoin: 'miter', lineCap: 'square', renderer: renderer, interactive: false, smoothFactor: 48, dashArray: [5, 15], dashOffset: [5] }).addTo(NeutralRoadsGroup).bringToFront();
+                                new L.polyline([[lat, lng], [lat2, lng2]], { color: '#CCCC44', weight: 5, opacity: 1.0, lineJoin: 'miter', renderer: renderer, interactive: false, smoothFactor: 48 }).addTo(NeutralRoadsGroup).bringToFront();
+                            }
                         }
                     }
                 }
+
                 var highlighter = L.layerGroup().addTo(mymap);
                 var borderLayer = L.layerGroup().addTo(mymap);
                 var debug_markers = L.layerGroup();
