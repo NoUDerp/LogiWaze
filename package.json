@@ -1,9 +1,9 @@
 {
-  "name": "demo-map",
+  "name": "LogiWaze",
   "version": "1.0.0",
-  "description": "",
-  "repository": "",
-  "homepage": "",
+  "description": "Foxhole Map Router",
+  "repository": "https://github.com/NoUDerp/logiwaze",
+  "homepage": "https://www.logiwaze.com/",
   "main": "src/index.js",
   "directories": {},
   "scripts": {
