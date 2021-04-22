@@ -312,7 +312,7 @@
 
                     var y = document.getElementsByClassName('town-warden');
                     if (y != null) {
-                        var scale = (Math.round(24.0 * Math.sqrt(zoom / 3)) / 2).toFixed().toString().concat('px');
+                        var scale = (Math.round(22.0 * Math.sqrt(zoom / 3)) / 2).toFixed().toString().concat('px');
                         for (var i = 0; i < y.length; i++)
                             y[i].style["font-size"] = scale;
                     }
