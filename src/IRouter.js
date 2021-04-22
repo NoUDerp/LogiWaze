@@ -319,7 +319,7 @@
 
                     var y = document.getElementsByClassName('town-colonial');
                     if (y != null) {
-                        var scale = (Math.round(19.0 * Math.sqrt(zoom / 3)) / 2).toFixed().toString().concat('px');
+                        var scale = (Math.round(18.0 * Math.sqrt(zoom / 3)) / 2).toFixed().toString().concat('px');
                         for (var i = 0; i < y.length; i++)
                             y[i].style["font-size"] = scale;
                     }
