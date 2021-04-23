@@ -1,5 +1,6 @@
 ﻿define(['leaflet', 'json-loader!../Roads.geojson', 'json-loader!../hex.geojson', './geojson-path-finder/index.js', 'leaflet-routing-machine', '../towns.json'],
     function (L, Paths, HexBorders, PathFinder, routing_machine, towns) {
+
         return {
             FoxholeRouter: function (mymap, API, Narrator) {
                 var JSONRoads = L.geoJSON(Paths);
@@ -123,12 +124,15 @@
 
                 var renderer = L.canvas({ tolerance: .2 }).addTo(mymap);
 
-                var TownHalls = L.layerGroup({ pane: 'Markers' }).addTo(mymap).setZIndex(2);
-                var Resources = L.layerGroup({ pane: 'Markers' }).addTo(mymap).setZIndex(2);
-                var Components = L.layerGroup({ pane: 'Markers' }).addTo(mymap).setZIndex(2);
-                var Salvage = L.layerGroup({ pane: 'Markers' }).addTo(mymap).setZIndex(2);
-                var Fuel = L.layerGroup({ pane: 'Markers' }).addTo(mymap).setZIndex(2);
-                var Sulfur = L.layerGroup({ pane: 'Markers' }).addTo(mymap).setZIndex(2);
+                var TownHalls = L.layerGroup({ pane: 'Markers' }).addTo(mymap);
+                var Resources = L.layerGroup({ pane: 'Markers' }).addTo(mymap);
+                var Components = L.layerGroup({ pane: 'Markers' }).addTo(mymap);
+                var Salvage = L.layerGroup({ pane: 'Markers' }).addTo(mymap);
+                var Fuel = L.layerGroup({ pane: 'Markers' }).addTo(mymap);
+                var Sulfur = L.layerGroup({ pane: 'Markers' }).addTo(mymap);
+                var MinorRegionLabels = L.layerGroup({ pane: 'Markers' }).addTo(mymap);
+                var RegionLabels = L.layerGroup({ pane: 'Markers' }).addTo(mymap);
+                var HexNames = L.layerGroup({ pane: 'Markers' }).addTo(mymap);
 
 
                 var resolveIcon = function (ic) {
@@ -281,52 +285,59 @@
                     var spanclass = ownership == "COLONIALS" ? "town-colonial" : (ownership == "WARDENS" ? "town-warden" : "town-neutral");
 
                     if (th.major == 1)
-                        new L.Marker([th.y, th.x], { icon: new L.DivIcon({ className: 'town-label', html: '<span class=\"'.concat(spanclass).concat('\">').concat(ks[t]).concat('</span>') }) }).addTo(TownHalls);
+                        new L.Marker([th.y, th.x], { icon: new L.DivIcon({ className: 'town-label', iconSize: L.Point(0, 0), html: '<span class=\"'.concat(spanclass).concat('\">').concat(ks[t]).concat('</span>') }) }).addTo(RegionLabels);
                     else
-                        new L.Marker([th.y, th.x], { icon: new L.DivIcon({ className: 'minor-town-label', html: '<span class=\"'.concat(spanclass).concat('\">').concat(ks[t]).concat('</span>') }) }).addTo(TownHalls);
+                        new L.Marker([th.y, th.x], { icon: new L.DivIcon({ className: 'minor-town-label', iconSize: L.Point(0, 0), html: '<span class=\"'.concat(spanclass).concat('\">').concat(ks[t]).concat('</span>') }) }).addTo(MinorRegionLabels);
                 }
+
+                for (var i = 0; i < API.regions.length; i++)
+                    new L.Marker([API.regions[i].y, API.regions[i].x], { icon: new L.DivIcon({ className: 'region-name', iconSize: L.Point(0, 0), html: '<span>'.concat(API.regions[i].realName).concat('</span>') }) }).addTo(HexNames);
 
                 function scale_th(zoom) {
                     if (zoom == null)
                         zoom = mymap.getZoom();
-                    var scale = Math.round(32.0 * Math.sqrt(zoom / 6));
+                    var s = Math.round(32.0 * Math.sqrt(zoom / 6));
+                    var scale = s.toFixed().toString().concat('px');
+                    var scale2 = (-s / 2).toFixed().toString().concat("px");
                     var x = document.getElementsByClassName('town-hall-icon');
                     if (x != null)
                         for (var i = 0; i < x.length; i++) {
-                            x[i].style.width = scale.toFixed().toString().concat("px");
-                            x[i].style.height = scale.toFixed().toString().concat("px");
-                            x[i].style["margin-left"] = (-scale / 2).toFixed().toString().concat("px");
-                            x[i].style["margin-top"] = (-scale / 2).toFixed().toString().concat("px");
+                            x[i].style.width = x[i].style.height = scale;
+                            x[i].style["margin-left"] = x[i].style["margin-top"] = scale2;
                         }
-                    var y = document.getElementsByClassName('town-label');
-                    var visible = zoom >= 3 ? 'block' : 'none';
-                    if (y != null)
-                        for (var i = 0; i < y.length; i++)
-                            y[i].style["display"] = visible;
 
-                    var y = document.getElementsByClassName('minor-town-label');
-                    var visible = zoom >= 4.5 ? 'block' : 'none';
-                    if (y != null)
-                        for (var i = 0; i < y.length; i++)
-                            y[i].style["display"] = visible;
+                    if (zoom >= 3)
+                        RegionLabels.addTo(mymap);
+                    else
+                        RegionLabels.remove();
+
+                    if (zoom >= 4)
+                        MinorRegionLabels.addTo(mymap);
+                    else
+                        MinorRegionLabels.remove();
+
+                    if (zoom < 3)
+                        HexNames.addTo(mymap);
+                    else
+                        HexNames.remove();
 
                     var y = document.getElementsByClassName('town-warden');
                     if (y != null) {
-                        var scale = (Math.round(Math.pow(zoom / 6, .5) * 22.0) / 2.0).toFixed().toString().concat('px');// (Math.round(22.0 * Math.sqrt(zoom / 3)) / 2).toFixed().toString().concat('px');
+                        var scale = (Math.round(Math.pow(zoom / 6, .5) * 24.0) / 2.0).toFixed().toString().concat('px');// (Math.round(22.0 * Math.sqrt(zoom / 3)) / 2).toFixed().toString().concat('px');
                         for (var i = 0; i < y.length; i++)
                             y[i].style["font-size"] = scale;
                     }
 
                     var y = document.getElementsByClassName('town-colonial');
                     if (y != null) {
-                        var scale = (Math.round(Math.pow(zoom / 6, .5) * 18.0) / 2.0).toFixed().toString().concat('px');
+                        var scale = (Math.round(Math.pow(zoom / 6, .5) * 20.0) / 2.0).toFixed().toString().concat('px');
                         for (var i = 0; i < y.length; i++)
                             y[i].style["font-size"] = scale;
                     }
 
                     var y = document.getElementsByClassName('town-neutral');
                     if (y != null) {
-                        var scale = (Math.round(Math.pow(zoom / 6, .5) * 22.0) / 2.0).toFixed().toString().concat('px');
+                        var scale = (Math.round(Math.pow(zoom / 6, .5) * 24.0) / 2.0).toFixed().toString().concat('px');
                         for (var i = 0; i < y.length; i++)
                             y[i].style["font-size"] = scale;
                     }
@@ -496,6 +507,9 @@
                     summaryTemplate: '<table class="route-summary"><tr class="route-summary-header"><td><img src=\'{name}.webp\' /><span>{name}</span><span style=\'font-weight: bold; margin-left: 1em\' class=\'summary-routeinfo\'>{distance}</span>'
                         .concat(!window.beta ? "" : '<div class="audio-controls detailed-routeinfo"><button class="play-button" style="pointer-events: auto" onclick="window.narrateDirections()">'.concat(playbutton).concat('</button></div>')).concat('</td></tr>').concat(speed).concat('<tr><td class="no-click">{time}</td></tr></table>'),
                     TownHalls: TownHalls,
+                    MinorRegionLabels: MinorRegionLabels,
+                    RegionLabels: RegionLabels,
+                    HexNames: HexNames,
                     Resources: Resources,
                     Components: Components,
                     Fuel: Fuel,

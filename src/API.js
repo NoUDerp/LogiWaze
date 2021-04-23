@@ -8,7 +8,7 @@ define(['jquery', 'point-in-polygon'], function ($, pip) {
 
             var regionPolygon = [[halfwidth * .5, halfheight], [halfwidth, 0], [halfwidth * .5, -halfheight], [-halfwidth * .5, -halfheight], [-halfwidth, 0], [-halfwidth * .5, halfheight]];
             var ox = 128;
-            var oy = -127;
+            var oy = -128;
             var regions = [
                 { name: "GodcroftsHex", realName: "Godcrofts", y: .5 * height + oy, x: 2.25 * width + ox },
                 { name: "DeadLandsHex", realName: "Deadlands", y: oy, x: ox },
@@ -40,6 +40,7 @@ define(['jquery', 'point-in-polygon'], function ($, pip) {
                 regionNameMap[regions[i].name] = regions[i].realName;
 
             var API = {
+                regions: regions,
                 mapRegionName: function (x) {
                     return regionNameMap[x];
                 },
