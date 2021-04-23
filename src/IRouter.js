@@ -339,7 +339,7 @@
                         HexNames.addTo(mymap);
                         var y = document.getElementsByClassName('region-name');
                         if (y != null) {
-                            var scale = (Math.round(Math.pow(zoom / 6, .5) * 52.0) / 2.0).toFixed().toString().concat('px');// (Math.round(22.0 * Math.sqrt(zoom / 3)) / 2).toFixed().toString().concat('px');
+                            var scale = (Math.round(Math.pow(zoom / 6, .5) * 44.0) / 2.0).toFixed().toString().concat('px');// (Math.round(22.0 * Math.sqrt(zoom / 3)) / 2).toFixed().toString().concat('px');
                             for (var i = 0; i < y.length; i++)
                                 y[i].style["font-size"] = scale;
                         }
