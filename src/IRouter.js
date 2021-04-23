@@ -306,7 +306,7 @@
                             x[i].style["margin-left"] = x[i].style["margin-top"] = scale2;
                         }
 
-                    if (zoom >= 3)
+                    if (zoom >= 2.5)
                         RegionLabels.addTo(mymap);
                     else
                         RegionLabels.remove();
@@ -316,7 +316,7 @@
                     else
                         MinorRegionLabels.remove();
 
-                    if (zoom < 3)
+                    if (zoom < 2.5)
                         HexNames.addTo(mymap);
                     else
                         HexNames.remove();
