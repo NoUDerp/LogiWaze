@@ -306,41 +306,49 @@
                             x[i].style["margin-left"] = x[i].style["margin-top"] = scale2;
                         }
 
-                    if (zoom >= 2.5)
-                        RegionLabels.addTo(mymap);
-                    else
-                        RegionLabels.remove();
-
                     if (zoom >= 4)
                         MinorRegionLabels.addTo(mymap);
                     else
                         MinorRegionLabels.remove();
 
-                    if (zoom < 2.5)
+                    if (zoom >= 2.5) {
+                        RegionLabels.addTo(mymap);
+                        var y = document.getElementsByClassName('town-warden');
+                        if (y != null) {
+                            var scale = (Math.round(Math.pow(zoom / 6, .5) * 24.0) / 2.0).toFixed().toString().concat('px');// (Math.round(22.0 * Math.sqrt(zoom / 3)) / 2).toFixed().toString().concat('px');
+                            for (var i = 0; i < y.length; i++)
+                                y[i].style["font-size"] = scale;
+                        }
+                        var y = document.getElementsByClassName('town-colonial');
+                        if (y != null) {
+                            var scale = (Math.round(Math.pow(zoom / 6, .5) * 20.0) / 2.0).toFixed().toString().concat('px');
+                            for (var i = 0; i < y.length; i++)
+                                y[i].style["font-size"] = scale;
+                        }
+                        var y = document.getElementsByClassName('town-neutral');
+                        if (y != null) {
+                            var scale = (Math.round(Math.pow(zoom / 6, .5) * 24.0) / 2.0).toFixed().toString().concat('px');
+                            for (var i = 0; i < y.length; i++)
+                                y[i].style["font-size"] = scale;
+                        }
+                    }
+                    else
+                        RegionLabels.remove();
+
+                    if (zoom < 2.5) {
                         HexNames.addTo(mymap);
+                        var y = document.getElementsByClassName('region-name');
+                        if (y != null) {
+                            var scale = (Math.round(Math.pow(zoom / 6, .5) * 52.0) / 2.0).toFixed().toString().concat('px');// (Math.round(22.0 * Math.sqrt(zoom / 3)) / 2).toFixed().toString().concat('px');
+                            for (var i = 0; i < y.length; i++)
+                                y[i].style["font-size"] = scale;
+                        }
+                    }
                     else
                         HexNames.remove();
 
-                    var y = document.getElementsByClassName('town-warden');
-                    if (y != null) {
-                        var scale = (Math.round(Math.pow(zoom / 6, .5) * 24.0) / 2.0).toFixed().toString().concat('px');// (Math.round(22.0 * Math.sqrt(zoom / 3)) / 2).toFixed().toString().concat('px');
-                        for (var i = 0; i < y.length; i++)
-                            y[i].style["font-size"] = scale;
-                    }
 
-                    var y = document.getElementsByClassName('town-colonial');
-                    if (y != null) {
-                        var scale = (Math.round(Math.pow(zoom / 6, .5) * 20.0) / 2.0).toFixed().toString().concat('px');
-                        for (var i = 0; i < y.length; i++)
-                            y[i].style["font-size"] = scale;
-                    }
 
-                    var y = document.getElementsByClassName('town-neutral');
-                    if (y != null) {
-                        var scale = (Math.round(Math.pow(zoom / 6, .5) * 24.0) / 2.0).toFixed().toString().concat('px');
-                        for (var i = 0; i < y.length; i++)
-                            y[i].style["font-size"] = scale;
-                    }
 
 
                 }
