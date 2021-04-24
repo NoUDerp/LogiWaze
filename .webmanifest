@@ -1,0 +1,32 @@
+{
+  "short_name": "LogiWaze",
+  "name": "LogiWaze Foxhole Routes",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "type": "image/svg",
+      "sizes": "192x192"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#000",
+  "display": "standalone",
+  "scope": "/",
+  "theme_color": "#3367D6",
+  "shortcuts": [
+    {
+      "name": "LogiWaze",
+      "short_name": "LogiWaze",
+      "description": "LogiWaze Foxhole Routes",
+      "url": "/",
+      "icons": [{ "src": "/favicon.svg", "sizes": "192x192" }]
+  ],
+  "description": "LogiWaze Foxhole Routes",
+  "screenshots": [
+    {
+      "src": "/screenshot.png",
+      "type": "image/png",
+      "sizes": "540x720"
+    }
+  ]
+}
