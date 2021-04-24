@@ -1,11 +1,967 @@
 ﻿<html>
 <head>
     <link rel="icon" href="favicon.svg">
+    <!-- not time yet<link rel="manifest" href="manifest.json" crossorigin="" /> -->
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>LogiWaze</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin="" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" crossorigin="" />
+
+    <!-- leaflet -->
+    <style type="text/css">
+        .leaflet-pane, .leaflet-tile, .leaflet-marker-icon, .leaflet-marker-shadow, .leaflet-tile-container, .leaflet-pane > svg, .leaflet-pane > canvas, .leaflet-zoom-box, .leaflet-image-layer, .leaflet-layer {
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        .leaflet-container {
+            overflow: hidden;
+        }
+
+        .leaflet-tile, .leaflet-marker-icon, .leaflet-marker-shadow {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+
+            .leaflet-tile::selection {
+                background: transparent;
+            }
+
+        .leaflet-safari .leaflet-tile {
+            image-rendering: -webkit-optimize-contrast;
+        }
+
+        .leaflet-safari .leaflet-tile-container {
+            width: 1600px;
+            height: 1600px;
+            -webkit-transform-origin: 0 0;
+        }
+
+        .leaflet-marker-icon, .leaflet-marker-shadow {
+            display: block;
+        }
+
+        .leaflet-container .leaflet-overlay-pane svg, .leaflet-container .leaflet-marker-pane img, .leaflet-container .leaflet-shadow-pane img, .leaflet-container .leaflet-tile-pane img, .leaflet-container img.leaflet-image-layer, .leaflet-container .leaflet-tile {
+            max-width: none !important;
+            max-height: none !important;
+        }
+
+        .leaflet-container.leaflet-touch-zoom {
+            -ms-touch-action: pan-x pan-y;
+            touch-action: pan-x pan-y;
+        }
+
+        .leaflet-container.leaflet-touch-drag {
+            -ms-touch-action: pinch-zoom;
+            touch-action: none;
+            touch-action: pinch-zoom;
+        }
+
+            .leaflet-container.leaflet-touch-drag.leaflet-touch-zoom {
+                -ms-touch-action: none;
+                touch-action: none;
+            }
+
+        .leaflet-container {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+            .leaflet-container a {
+                -webkit-tap-highlight-color: rgba(51,181,229,0.4);
+            }
+
+        .leaflet-tile {
+            filter: inherit;
+            visibility: hidden;
+        }
+
+        .leaflet-tile-loaded {
+            visibility: inherit;
+        }
+
+        .leaflet-zoom-box {
+            width: 0;
+            height: 0;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            z-index: 800;
+        }
+
+        .leaflet-overlay-pane svg {
+            -moz-user-select: none;
+        }
+
+        .leaflet-pane {
+            z-index: 400;
+        }
+
+        .leaflet-tile-pane {
+            z-index: 200;
+        }
+
+        .leaflet-overlay-pane {
+            z-index: 400;
+        }
+
+        .leaflet-shadow-pane {
+            z-index: 500;
+        }
+
+        .leaflet-marker-pane {
+            z-index: 600;
+        }
+
+        .leaflet-tooltip-pane {
+            z-index: 650;
+        }
+
+        .leaflet-popup-pane {
+            z-index: 700;
+        }
+
+        .leaflet-map-pane canvas {
+            z-index: 100;
+        }
+
+        .leaflet-map-pane svg {
+            z-index: 200;
+        }
+
+        .leaflet-vml-shape {
+            width: 1px;
+            height: 1px;
+        }
+
+        .lvml {
+            behavior: url(#default#VML);
+            display: inline-block;
+            position: absolute;
+        }
+
+        .leaflet-control {
+            position: relative;
+            z-index: 800;
+            pointer-events: visiblePainted;
+            pointer-events: auto;
+        }
+
+        .leaflet-top, .leaflet-bottom {
+            position: absolute;
+            z-index: 1000;
+            pointer-events: none;
+        }
+
+        .leaflet-top {
+            top: 0;
+        }
+
+        .leaflet-right {
+            right: 0;
+        }
+
+        .leaflet-bottom {
+            bottom: 0;
+        }
+
+        .leaflet-left {
+            left: 0;
+        }
+
+        .leaflet-control {
+            float: left;
+            clear: both;
+        }
+
+        .leaflet-right .leaflet-control {
+            float: right;
+        }
+
+        .leaflet-top .leaflet-control {
+            margin-top: 10px;
+        }
+
+        .leaflet-bottom .leaflet-control {
+            margin-bottom: 10px;
+        }
+
+        .leaflet-left .leaflet-control {
+            margin-left: 10px;
+        }
+
+        .leaflet-right .leaflet-control {
+            margin-right: 10px;
+        }
+
+        .leaflet-fade-anim .leaflet-tile {
+            will-change: opacity;
+        }
+
+        .leaflet-fade-anim .leaflet-popup {
+            opacity: 0;
+            -webkit-transition: opacity .2s linear;
+            -moz-transition: opacity .2s linear;
+            transition: opacity .2s linear;
+        }
+
+        .leaflet-fade-anim .leaflet-map-pane .leaflet-popup {
+            opacity: 1;
+        }
+
+        .leaflet-zoom-animated {
+            -webkit-transform-origin: 0 0;
+            -ms-transform-origin: 0 0;
+            transform-origin: 0 0;
+        }
+
+        .leaflet-zoom-anim .leaflet-zoom-animated {
+            will-change: transform;
+            -webkit-transition: -webkit-transform .25s cubic-bezier(0,0,0.25,1);
+            -moz-transition: -moz-transform .25s cubic-bezier(0,0,0.25,1);
+            transition: transform .25s cubic-bezier(0,0,0.25,1);
+        }
+
+        .leaflet-zoom-anim .leaflet-tile, .leaflet-pan-anim .leaflet-tile {
+            -webkit-transition: none;
+            -moz-transition: none;
+            transition: none;
+        }
+
+        .leaflet-zoom-anim .leaflet-zoom-hide {
+            visibility: hidden;
+        }
+
+        .leaflet-interactive {
+            cursor: pointer;
+        }
+
+        .leaflet-grab {
+            cursor: -webkit-grab;
+            cursor: -moz-grab;
+            cursor: grab;
+        }
+
+        .leaflet-crosshair, .leaflet-crosshair .leaflet-interactive {
+            cursor: crosshair;
+        }
+
+        .leaflet-popup-pane, .leaflet-control {
+            cursor: auto;
+        }
+
+        .leaflet-dragging .leaflet-grab, .leaflet-dragging .leaflet-grab .leaflet-interactive, .leaflet-dragging .leaflet-marker-draggable {
+            cursor: move;
+            cursor: -webkit-grabbing;
+            cursor: -moz-grabbing;
+            cursor: grabbing;
+        }
+
+        .leaflet-marker-icon, .leaflet-marker-shadow, .leaflet-image-layer, .leaflet-pane > svg path, .leaflet-tile-container {
+            pointer-events: none;
+        }
+
+            .leaflet-marker-icon.leaflet-interactive, .leaflet-image-layer.leaflet-interactive, .leaflet-pane > svg path.leaflet-interactive, svg.leaflet-image-layer.leaflet-interactive path {
+                pointer-events: visiblePainted;
+                pointer-events: auto;
+            }
+
+        .leaflet-container {
+            background: #ddd;
+            outline: 0;
+        }
+
+            .leaflet-container a {
+                color: #0078A8;
+            }
+
+                .leaflet-container a.leaflet-active {
+                    outline: 2px solid orange;
+                }
+
+        .leaflet-zoom-box {
+            border: 2px dotted #38f;
+            background: rgba(255,255,255,0.5);
+        }
+
+        .leaflet-container {
+            font: 12px/1.5 "Helvetica Neue",Arial,Helvetica,sans-serif;
+        }
+
+        .leaflet-bar {
+            box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+            border-radius: 4px;
+        }
+
+            .leaflet-bar a, .leaflet-bar a:hover {
+                background-color: #fff;
+                border-bottom: 1px solid #ccc;
+                width: 26px;
+                height: 26px;
+                line-height: 26px;
+                display: block;
+                text-align: center;
+                text-decoration: none;
+                color: #000;
+            }
+
+            .leaflet-bar a, .leaflet-control-layers-toggle {
+                background-position: 50% 50%;
+                background-repeat: no-repeat;
+                display: block;
+            }
+
+                .leaflet-bar a:hover {
+                    background-color: #f4f4f4;
+                }
+
+                .leaflet-bar a:first-child {
+                    border-top-left-radius: 4px;
+                    border-top-right-radius: 4px;
+                }
+
+                .leaflet-bar a:last-child {
+                    border-bottom-left-radius: 4px;
+                    border-bottom-right-radius: 4px;
+                    border-bottom: none;
+                }
+
+                .leaflet-bar a.leaflet-disabled {
+                    cursor: default;
+                    background-color: #f4f4f4;
+                    color: #bbb;
+                }
+
+        .leaflet-touch .leaflet-bar a {
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+        }
+
+            .leaflet-touch .leaflet-bar a:first-child {
+                border-top-left-radius: 2px;
+                border-top-right-radius: 2px;
+            }
+
+            .leaflet-touch .leaflet-bar a:last-child {
+                border-bottom-left-radius: 2px;
+                border-bottom-right-radius: 2px;
+            }
+
+        .leaflet-control-zoom-in, .leaflet-control-zoom-out {
+            font: bold 18px 'Lucida Console',Monaco,monospace;
+            text-indent: 1px;
+        }
+
+        .leaflet-touch .leaflet-control-zoom-in, .leaflet-touch .leaflet-control-zoom-out {
+            font-size: 22px;
+        }
+
+        .leaflet-control-layers {
+            box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+            background: #fff;
+            border-radius: 5px;
+        }
+
+        .leaflet-control-layers-toggle {
+            background-image: url(layers.png);
+            width: 36px;
+            height: 36px;
+        }
+
+        .leaflet-retina .leaflet-control-layers-toggle {
+            background-image: url(layers-2x.png);
+            background-size: 26px 26px;
+        }
+
+        .leaflet-touch .leaflet-control-layers-toggle {
+            width: 44px;
+            height: 44px;
+        }
+
+        .leaflet-control-layers .leaflet-control-layers-list, .leaflet-control-layers-expanded .leaflet-control-layers-toggle {
+            display: none;
+        }
+
+        .leaflet-control-layers-expanded .leaflet-control-layers-list {
+            display: block;
+            position: relative;
+        }
+
+        .leaflet-control-layers-expanded {
+            padding: 6px 10px 6px 6px;
+            color: #333;
+            background: #fff;
+        }
+
+        .leaflet-control-layers-scrollbar {
+            overflow-y: scroll;
+            overflow-x: hidden;
+            padding-right: 5px;
+        }
+
+        .leaflet-control-layers-selector {
+            margin-top: 2px;
+            position: relative;
+            top: 1px;
+        }
+
+        .leaflet-control-layers label {
+            display: block;
+        }
+
+        .leaflet-control-layers-separator {
+            height: 0;
+            border-top: 1px solid #ddd;
+            margin: 5px -10px 5px -6px;
+        }
+
+        .leaflet-default-icon-path {
+            background-image: url(marker-icon.png);
+        }
+
+        .leaflet-container .leaflet-control-attribution {
+            background: #fff;
+            background: rgba(255,255,255,0.7);
+            margin: 0;
+        }
+
+        .leaflet-control-attribution, .leaflet-control-scale-line {
+            padding: 0 5px;
+            color: #333;
+        }
+
+            .leaflet-control-attribution a {
+                text-decoration: none;
+            }
+
+                .leaflet-control-attribution a:hover {
+                    text-decoration: underline;
+                }
+
+        .leaflet-container .leaflet-control-attribution, .leaflet-container .leaflet-control-scale {
+            font-size: 11px;
+        }
+
+        .leaflet-left .leaflet-control-scale {
+            margin-left: 5px;
+        }
+
+        .leaflet-bottom .leaflet-control-scale {
+            margin-bottom: 5px;
+        }
+
+        .leaflet-control-scale-line {
+            border: 2px solid #777;
+            border-top: none;
+            line-height: 1.1;
+            padding: 2px 5px 1px;
+            font-size: 11px;
+            white-space: nowrap;
+            overflow: hidden;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            background: #fff;
+            background: rgba(255,255,255,0.5);
+        }
+
+            .leaflet-control-scale-line:not(:first-child) {
+                border-top: 2px solid #777;
+                border-bottom: none;
+                margin-top: -2px;
+            }
+
+                .leaflet-control-scale-line:not(:first-child):not(:last-child) {
+                    border-bottom: 2px solid #777;
+                }
+
+        .leaflet-touch .leaflet-control-attribution, .leaflet-touch .leaflet-control-layers, .leaflet-touch .leaflet-bar {
+            box-shadow: none;
+        }
+
+        .leaflet-touch .leaflet-control-layers, .leaflet-touch .leaflet-bar {
+            border: 2px solid rgba(0,0,0,0.2);
+            background-clip: padding-box;
+        }
+
+        .leaflet-popup {
+            position: absolute;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .leaflet-popup-content-wrapper {
+            padding: 1px;
+            text-align: left;
+            border-radius: 12px;
+        }
+
+        .leaflet-popup-content {
+            margin: 13px 19px;
+            line-height: 1.4;
+        }
+
+            .leaflet-popup-content p {
+                margin: 18px 0;
+            }
+
+        .leaflet-popup-tip-container {
+            width: 40px;
+            height: 20px;
+            position: absolute;
+            left: 50%;
+            margin-left: -20px;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .leaflet-popup-tip {
+            width: 17px;
+            height: 17px;
+            padding: 1px;
+            margin: -10px auto 0;
+            -webkit-transform: rotate(45deg);
+            -moz-transform: rotate(45deg);
+            -ms-transform: rotate(45deg);
+            transform: rotate(45deg);
+        }
+
+        .leaflet-popup-content-wrapper, .leaflet-popup-tip {
+            background: #fff;
+            color: #333;
+            box-shadow: 0 3px 14px rgba(0,0,0,0.4);
+        }
+
+        .leaflet-container a.leaflet-popup-close-button {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 4px 4px 0 0;
+            border: none;
+            text-align: center;
+            width: 18px;
+            height: 14px;
+            font: 16px/14px Tahoma,Verdana,sans-serif;
+            color: #c3c3c3;
+            text-decoration: none;
+            font-weight: 700;
+            background: transparent;
+        }
+
+            .leaflet-container a.leaflet-popup-close-button:hover {
+                color: #999;
+            }
+
+        .leaflet-popup-scrolled {
+            overflow: auto;
+            border-bottom: 1px solid #ddd;
+            border-top: 1px solid #ddd;
+        }
+
+        .leaflet-oldie .leaflet-popup-content-wrapper {
+            zoom: 1;
+        }
+
+        .leaflet-oldie .leaflet-popup-tip {
+            width: 24px;
+            margin: 0 auto;
+            -ms-filter: "progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678,M12=0.70710678,M21=-0.70710678,M22=0.70710678)";
+            filter: progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678,M12=0.70710678,M21=-0.70710678,M22=0.70710678);
+        }
+
+        .leaflet-oldie .leaflet-popup-tip-container {
+            margin-top: -1px;
+        }
+
+        .leaflet-oldie .leaflet-control-zoom, .leaflet-oldie .leaflet-control-layers, .leaflet-oldie .leaflet-popup-content-wrapper, .leaflet-oldie .leaflet-popup-tip {
+            border: 1px solid #999;
+        }
+
+        .leaflet-div-icon {
+            background: #fff;
+            border: 1px solid #666;
+        }
+
+        .leaflet-tooltip {
+            position: absolute;
+            padding: 6px;
+            background-color: #fff;
+            border: 1px solid #fff;
+            border-radius: 3px;
+            color: #222;
+            white-space: nowrap;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            pointer-events: none;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+        }
+
+            .leaflet-tooltip.leaflet-clickable {
+                cursor: pointer;
+                pointer-events: auto;
+            }
+
+        .leaflet-tooltip-top:before, .leaflet-tooltip-bottom:before, .leaflet-tooltip-left:before, .leaflet-tooltip-right:before {
+            position: absolute;
+            pointer-events: none;
+            border: 6px solid transparent;
+            background: transparent;
+            content: "";
+        }
+
+        .leaflet-tooltip-bottom {
+            margin-top: 6px;
+        }
+
+        .leaflet-tooltip-top {
+            margin-top: -6px;
+        }
+
+            .leaflet-tooltip-bottom:before, .leaflet-tooltip-top:before {
+                left: 50%;
+                margin-left: -6px;
+            }
+
+            .leaflet-tooltip-top:before {
+                bottom: 0;
+                margin-bottom: -12px;
+                border-top-color: #fff;
+            }
+
+        .leaflet-tooltip-bottom:before {
+            top: 0;
+            margin-top: -12px;
+            margin-left: -6px;
+            border-bottom-color: #fff;
+        }
+
+        .leaflet-tooltip-left {
+            margin-left: -6px;
+        }
+
+        .leaflet-tooltip-right {
+            margin-left: 6px;
+        }
+
+            .leaflet-tooltip-left:before, .leaflet-tooltip-right:before {
+                top: 50%;
+                margin-top: -6px;
+            }
+
+        .leaflet-tooltip-left:before {
+            right: 0;
+            margin-right: -12px;
+            border-left-color: #fff;
+        }
+
+        .leaflet-tooltip-right:before {
+            left: 0;
+            margin-left: -12px;
+            border-right-color: #fff;
+        }
+    </style>
+
+    <!-- leaflet-routing-machine -->
+    <style type="text/css">
+        .leaflet-routing-container, .leaflet-routing-error {
+            width: 320px;
+            background-color: #fff;
+            padding-top: 4px;
+            transition: all .2s ease;
+            box-sizing: border-box;
+        }
+
+        .leaflet-control-container .leaflet-routing-container-hide {
+            width: 32px;
+            height: 32px;
+        }
+
+        .leaflet-routing-container h2 {
+            font-size: 14px;
+        }
+
+        .leaflet-routing-container h3 {
+            font-size: 12px;
+            font-weight: 400;
+        }
+
+        .leaflet-routing-collapsible .leaflet-routing-geocoders {
+            margin-top: 20px;
+        }
+
+        .leaflet-routing-alt, .leaflet-routing-geocoders, .leaflet-routing-error {
+            padding: 6px;
+            margin-top: 2px;
+            margin-bottom: 6px;
+            border-bottom: 1px solid #ccc;
+            max-height: 320px;
+            overflow-y: auto;
+            transition: all .2s ease;
+        }
+
+        .leaflet-control-container .leaflet-routing-container-hide .leaflet-routing-alt, .leaflet-control-container .leaflet-routing-container-hide .leaflet-routing-geocoders {
+            display: none;
+        }
+
+        .leaflet-bar .leaflet-routing-alt:last-child {
+            border-bottom: none;
+        }
+
+        .leaflet-routing-alt-minimized {
+            color: #888;
+            max-height: 64px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .leaflet-routing-alt table {
+            border-collapse: collapse;
+        }
+
+        .leaflet-routing-alt tr:hover {
+            background-color: #eee;
+            cursor: pointer;
+        }
+
+        .leaflet-routing-alt::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .leaflet-routing-alt::-webkit-scrollbar-track {
+            border-radius: 2px;
+            background-color: #eee;
+        }
+
+        .leaflet-routing-alt::-webkit-scrollbar-thumb {
+            border-radius: 2px;
+            background-color: #888;
+        }
+
+        .leaflet-routing-icon {
+            background-image: url(leaflet.routing.icons.png);
+            -webkit-background-size: 240px 20px;
+            background-size: 240px 20px;
+            background-repeat: no-repeat;
+            margin: 0;
+            content: '';
+            display: inline-block;
+            vertical-align: top;
+            width: 20px;
+            height: 20px;
+        }
+
+        .leaflet-routing-icon-continue {
+            background-position: 0 0;
+        }
+
+        .leaflet-routing-icon-sharp-right {
+            background-position: -20px 0;
+        }
+
+        .leaflet-routing-icon-turn-right {
+            background-position: -40px 0;
+        }
+
+        .leaflet-routing-icon-bear-right {
+            background-position: -60px 0;
+        }
+
+        .leaflet-routing-icon-u-turn {
+            background-position: -80px 0;
+        }
+
+        .leaflet-routing-icon-sharp-left {
+            background-position: -100px 0;
+        }
+
+        .leaflet-routing-icon-turn-left {
+            background-position: -120px 0;
+        }
+
+        .leaflet-routing-icon-bear-left {
+            background-position: -140px 0;
+        }
+
+        .leaflet-routing-icon-depart {
+            background-position: -160px 0;
+        }
+
+        .leaflet-routing-icon-enter-roundabout {
+            background-position: -180px 0;
+        }
+
+        .leaflet-routing-icon-arrive {
+            background-position: -200px 0;
+        }
+
+        .leaflet-routing-icon-via {
+            background-position: -220px 0;
+        }
+
+        .leaflet-routing-geocoders div {
+            padding: 4px 0;
+        }
+
+        .leaflet-routing-geocoders input {
+            width: 303px;
+            width: calc(100% - 4px);
+            line-height: 1.67;
+            border: 1px solid #ccc;
+        }
+
+        .leaflet-routing-geocoders button {
+            font: bold 18px 'Lucida Console',Monaco,monospace;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #fff;
+            margin: 0;
+            margin-right: 3px;
+            float: right;
+            cursor: pointer;
+            transition: background-color .2s ease;
+        }
+
+        .leaflet-routing-add-waypoint:after {
+            content: '+';
+        }
+
+        .leaflet-routing-reverse-waypoints:after {
+            font-weight: 400;
+            content: '\21c5';
+        }
+
+        .leaflet-routing-geocoders button:hover {
+            background-color: #eee;
+        }
+
+        .leaflet-routing-geocoders input, .leaflet-routing-remove-waypoint, .leaflet-routing-geocoder {
+            position: relative;
+        }
+
+        .leaflet-routing-geocoder-result {
+            font: 12px/1.5 "Helvetica Neue",Arial,Helvetica,sans-serif;
+            position: absolute;
+            max-height: 0;
+            overflow: hidden;
+            transition: all .5s ease;
+            z-index: 1000;
+        }
+
+            .leaflet-routing-geocoder-result table {
+                width: 100%;
+                border: 1px solid #ccc;
+                border-radius: 0 0 4px 4px;
+                background-color: #fff;
+                cursor: pointer;
+            }
+
+        .leaflet-routing-geocoder-result-open {
+            max-height: 800px;
+        }
+
+        .leaflet-routing-geocoder-selected, .leaflet-routing-geocoder-result tr:hover {
+            background-color: #eee;
+        }
+
+        .leaflet-routing-geocoder-no-results {
+            font-style: italic;
+            color: #888;
+        }
+
+        .leaflet-routing-remove-waypoint {
+            background-color: transparent;
+            display: inline-block;
+            vertical-align: middle;
+            cursor: pointer;
+        }
+
+            .leaflet-routing-remove-waypoint:after {
+                position: absolute;
+                display: block;
+                width: 15px;
+                height: 1px;
+                z-index: 1;
+                right: 1px;
+                top: 4px;
+                bottom: 0;
+                margin: auto;
+                padding: 2px;
+                font-size: 18px;
+                font-weight: 700;
+                content: "\00d7";
+                text-align: center;
+                cursor: pointer;
+                color: #ccc;
+                background: #fff;
+                padding-bottom: 16px;
+                margin-top: -16px;
+                padding-right: 4px;
+                line-height: 1;
+            }
+
+            .leaflet-routing-remove-waypoint:hover {
+                color: #000;
+            }
+
+        .leaflet-routing-instruction-distance {
+            width: 48px;
+        }
+
+        .leaflet-routing-collapse-btn {
+            position: absolute;
+            top: 0;
+            right: 6px;
+            font-size: 24px;
+            color: #ccc;
+            font-weight: 700;
+        }
+
+            .leaflet-routing-collapse-btn:after {
+                content: '\00d7';
+            }
+
+        .leaflet-routing-container-hide .leaflet-routing-collapse-btn {
+            position: relative;
+            left: 4px;
+            top: 4px;
+            display: block;
+            width: 26px;
+            height: 23px;
+            background-image: url(routing-icon.png);
+        }
+
+            .leaflet-routing-container-hide .leaflet-routing-collapse-btn:after {
+                content: none;
+            }
+
+        .leaflet-top .leaflet-routing-container.leaflet-routing-container-hide {
+            margin-top: 10px !important;
+        }
+
+        .leaflet-right .leaflet-routing-container.leaflet-routing-container-hide {
+            margin-right: 10px !important;
+        }
+
+        .leaflet-bottom .leaflet-routing-container.leaflet-routing-container-hide {
+            margin-bottom: 10px !important;
+        }
+
+        .leaflet-left .leaflet-routing-container.leaflet-routing-container-hide {
+            margin-left: 10px !important;
+        }
+
+        @media only screen and (max-width: 640px) {
+            .leaflet-routing-container {
+                margin: 0 !important;
+                padding: 0 !important;
+                width: 100%;
+                height: 100%;
+            }
+        }
+    </style>
+
     <style type="text/css">
 
         @font-face {
@@ -20,7 +976,7 @@
 
         @font-face {
             font-family: 'Italic';
-            src: url('Italic.otf');
+            src: url('Italic.ttf');
         }
 
         .town-neutral {
@@ -205,7 +1161,7 @@
             display: none;
         }
 
-        #map-holder {
+        #map-frame {
             opacity: 0;
             transition: opacity 3s;
         }
@@ -276,8 +1232,8 @@
         }
 
         .leaflet-zoom-anim .leaflet-zoom-animated {
-            transition: none;
-            /*transition-duration: .1s;*/
+            transition: ease-in-out;
+            transition-duration: .1s;
         }
 
         .leaflet-routing-container, .leaflet-control-layers {
@@ -424,21 +1380,193 @@
                     margin-bottom: 10px !important;
                 }
         }
+
+        #sidebar {
+            background-color: #424f60;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='50' viewBox='0 0 100 100'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%23888888' fill-opacity='0.4'%3E%3Cpath opacity='.5' d='M96 95h4v1h-4v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9zm-1 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9z'/%3E%3Cpath d='M6 5V0H5v5H0v1h5v94h1V6h94V5H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        .tab {
+            width: 48px;
+        }
+
+            .tab button {
+                display: block;
+                background-color: #777;
+                color: black;
+                border: none;
+                outline: none;
+                text-align: left;
+                cursor: pointer;
+                transition: 0.3s;
+                margin: 4px;
+                transform: rotate(-90deg);
+                height: 48px;
+                width: 48px;
+            }
+
+                .tab button span {
+                    width: 48px;
+                }
+
+                .tab button:hover {
+                    background-color: #ddd;
+                }
+
+                .tab button.active {
+                    background-color: #ccc;
+                }
+
+        .tabcontent {
+            float: left;
+            padding: 0px 12px;
+            width: 48px;
+            overflow-y: auto
+        }
+
+        #map-holder {
+            transition: width 2s linear;
+        }
+
+        .shiney-border:before {
+            border-style: solid;
+            border-color: #b3743d; /* fallback color */
+            border-image: linear-gradient(30deg, #b3743d 0%, #d0a987 50%, #b3743d 100%);
+            border-image-slice: 1;
+        }
+
+        .shiney-border {
+            position: relative; /* contain :before */
+            width: 60%; /* whatever */
+            height: 300px; /* whatever */
+            margin: 20px auto; /* whatever */
+            border-width: 6px;
+        }
+
+        .shiney-border:before {
+            content: " ";
+            position: absolute;
+            top: 5px;
+            bottom: 5px;
+            left: 5px;
+            right: 5px;
+            border-width: 3px;
+        }
     </style>
+
+    <script type="text/javascript">
+        function openSidebar() {
+            var sidebar = document.getElementById("collapsible-panel");
+            sidebar.style.display = sidebar.style.display != "none" ? "none" : "block";
+            mymap.invalidateSize();
+        }
+    </script>
 </head>
 
-<body style="background: black">
+<body style="background: #222; margin: 0px;">
+    <div id="font-loaders" style="visibility: hidden">
+        <span style="font-family: Italic"></span>
+        <span style="font-family: Roman"></span>
+        <span style="font-family: Celtic"></span>
+    </div>
+
     <div id="loader-holder">
         <div class="logo" style="font-size: 72px">LW</div>
         <div class="loader">
         </div>
     </div>
-    <div id="map-holder">
-        <div id="mapid" style="height: 100%; width: 100%; background: black;"></div>
+    <div id="map-frame" style="width: 100%; height: 100%; background: black; display: flex">
+        <div id="map-holder" style="width: 100%; display: inline-block; z-index: 100">
+            <div id="mapid" style="height: 100%; width: 100%; background: black;"></div>
+        </div>
+        <div id="sidebar"  style="height: 100%; max-width:35%; display: none; /*inline-flex;*/ z-index: 1000; box-shadow: -4px 0px 4px 4px rgba(0, 0, 0, .6);">
+            <div id="sidebarleft" style="        width: 56px;
+        background-color: #111;
+        position: absolute;
+        transform: translateX(-57px);
+        border-bottom-left-radius: 8px;
+        border-left: 1px solid #555;
+        border-bottom: 1px solid #555;
+        box-shadow: -4px 0px 4px 4px rgba(0, 0, 0, .6)">
+                <div style="margin: 8px" onclick="openSidebar()">
+                    <svg viewBox="0 0 100 80" width="40" height="40">
+                        <rect width="100" height="20" fill="#999" ry="10" rx="10"></rect>
+                        <rect y="30" width="100" height="20" fill="#999" ry="10" rx="10"></rect>
+                        <rect y="60" width="100" height="20" fill="#999" ry="10" rx="10"></rect>
+                    </svg>
+                </div>
+                <div class="tab">
+                    <button class="tablinks" onclick="openTab(event, 'Route')"><span>Route</span></button>
+                    <button class="tablinks" onclick="openTab(event, 'Share')"><span>Share</span></button>
+                    <button class="tablinks" onclick="openTab(event, 'Credits')"><span>Credits</span></button>
+                </div>
+
+            </div>
+            <div id="collapsible-panel" style="border-left: 1px solid #555; padding: 8px; overflow-y: auto">
+                <div>
+                    <input type="text" disabled="disabled" id="url-box" />
+                    <button>Copy</button>
+                </div>
+                <div id="map-panel" style="overflow-y: auto; ">
+                    <div id="Credits" class="tabcontent"></div>
+                    <div id="Share-Tools" class="tabcontent"></div>
+                    <div id="Itinerary" class="tabcontent">
+                        <table id="directions" style="width: 100%">
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js" integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og==" crossorigin=""></script>
+    <script type="text/javascript">
+        if (location.protocol !== 'https:' && (location.hostname.toLowerCase() == "www.logiwaze.com" || location.hostname.toLowerCase() == "logiwaze.com"))
+            location.replace(`https:${location.href.substring(location.protocol.length)}`);
+    </script>
+    <script src="FoxholeRouter.js"></script>
 
     <script type="text/javascript">
+        var build="45a984b06b73436bc557347d8e23c751dc150fcc";
+        if ("serviceWorker" in navigator) {
+
+            window.addEventListener("load", function () {
+                navigator.serviceWorker
+                    .register("ServiceWorker.js")
+                    .then(res => res.update())// console.log("service worker registered"))
+                    .catch(err => console.log("service worker not registered", err))
+            });
+
+            //window.indexedDB.open("logiwaze").onsuccess = function (e) {
+            //    //var db = e.target.result;
+            //    if (!e.target.result.objectStoreNames.contains("version")) {
+            //        e.target.result.createObjectStore("version", { keyPath: "id" });
+            //        e.target.result.createIndex("build", "build", { unique: true });
+            //    }
+            //    const query = e.target.result.transaction(['version'], 'readwrite');
+            //    const store = query.objectStore('version');
+            //    const cursor = store.openCursor();
+            //    cursor.onsuccess = (f) => {
+            //        const c = f.target.result;
+            //        if (c) {
+            //            var old_build = c.value;
+            //            if (old_build != build) {
+            //                alert('An update is available');
+            //                window.serviceWorker.update();
+            //            }
+            //        }
+            //        else
+            //            alert('need to store build here');
+            //    };
+            //};
+
+
+
+            //db.createObjectStore("version", { version: })
+            //objectStore.createIndex("name", "name", { unique: false });
+
+        }
+
+
 
         const urlParams = new URLSearchParams(window.location.search);
         const myParam = urlParams.get('beta');
@@ -447,7 +1575,7 @@
 
         var mymap = L.map('mapid',
             {
-                zoomSnap: .5,
+                zoomSnap: 1,
                 crs: L.CRS.Simple,
                 noWrap: true,
                 continuousWorld: true,
@@ -466,36 +1594,35 @@
                 crs: L.CRS.Simple,
                 maxNativeZoom: 5,
                 maxZoom: 8,
-                minZoom: 1,
+                minZoom: 0,
                 noWrap: true,
                 continuousWorld: true,
                 bounds: L.latLngBounds(L.latLng(-256, 0), L.latLng(0, 256)),
                 id: 'LogiWaze'
             }).addTo(mymap);
 
-        L.control.youtube = function (options) {
+        /*L.control.youtube = function (options) {
             return new L.Control.YouTube(options);
         };
 
-        L.control.youtube().addTo(mymap);
+        L.control.youtube().addTo(mymap);*/
 
-        function SetYouTubePlaylist() {
-            var list = document.getElementById("youtube-selector").value;
-            document.getElementById("youtube-player").src = "https://www.youtube.com/embed/videoseries?list=".concat(list);
-        }
+        //function SetYouTubePlaylist() {
+        //    var list = document.getElementById("youtube-selector").value;
+        //    document.getElementById("youtube-player").src = "https://www.youtube.com/embed/videoseries?list=".concat(list);
+        //}
 
-        function showJukebox() {
-            document.getElementsByClassName('youtube-player-contents')[0].style.display = "block";
-            document.getElementsByClassName('leaflet-control-youtube-toggle')[0].style.display = "none";
-        }
-        function hideJukebox() {
-            document.getElementsByClassName('youtube-player-contents')[0].style.display = "none";
-            document.getElementsByClassName('leaflet-control-youtube-toggle')[0].style.display = "block";
-        }
+        //function showJukebox() {
+        //    document.getElementsByClassName('youtube-player-contents')[0].style.display = "block";
+        //    document.getElementsByClassName('leaflet-control-youtube-toggle')[0].style.display = "none";
+        //}
+        //function hideJukebox() {
+        //    document.getElementsByClassName('youtube-player-contents')[0].style.display = "none";
+        //    document.getElementsByClassName('leaflet-control-youtube-toggle')[0].style.display = "block";
+        //}
 
     </script>
 
-    <script src="FoxholeRouter.js"></script>
 
     <script type="text/javascript">
 
@@ -531,6 +1658,7 @@
         }
 
         PauseAutoZoom();
+        //mymap.setView([-128, 128], 7);
         mymap.setView([-128, 128], 2);
         ResumeAutoZoom();
 
@@ -547,9 +1675,9 @@
                     '<img src="MapIcons/MapIconStaticBase3.webp" class="layer-icon">Town Halls': Router.TownHalls,
                     '<img src="MapIcons/fencing.webp" class="layer-icon">Borders': Router.Borders,
                     '<img src="MapIcons/road-route.webp" class="layer-icon">Road Quality': Router.RoadsCanvas,
-                    '<img src="Colonial Route.webp" class="layer-icon">Colonial Roads': Router.ColonialRoadsCanvas,
-                    '<img src="Warden Route.webp" class="layer-icon">Warden Roads': Router.WardenRoadsCanvas,
-                    '<img src="Shortest Route.webp" class="layer-icon">Uncontrolled Roads': Router.NeutralRoadsCanvas,
+                    '<img src="Colonial Route.webp" class="layer-icon">Colonial Roads': Router.ColonialRoads,
+                    '<img src="Warden Route.webp" class="layer-icon">Warden Roads': Router.WardenRoads,
+                    '<img src="Shortest Route.webp" class="layer-icon">Uncontrolled Roads': Router.NeutralRoads,
                     '<img src="MapIcons/MapIconManufacturing.webp" class="layer-icon">Refineries': Router.Refineries,
                     '<img src="MapIcons/MapIconFactory.webp" class="layer-icon">Factories': Router.Factories,
                     '<img src="MapIcons/MapIconStorageFacility.webp" class="layer-icon">Storage': Router.Storage,
@@ -557,6 +1685,8 @@
                     '<img src="MapIcons/MapIconComponents.webp" class="layer-icon">Components': Router.Components,
                     '<img src="MapIcons/MapIconFuel.webp" class="layer-icon">Fuel': Router.Fuel,
                     '<img src="MapIcons/MapIconSulfur.webp" class="layer-icon">Sulfur': Router.Sulfur,
+                    '<img src="MapIcons/Control.webp" class="layer-icon">Control': Router.MapControl,
+                    '<img src="MapIcons/Labels.webp" class="layer-icon">Labels': Router.Labels
                 },
                 {
                     position: 'topleft',
@@ -564,7 +1694,8 @@
                 }
             ).addTo(mymap);
 
-            let originalInitTile = L.GridLayer.prototype._initTile;
+            // seam fix
+            /*let originalInitTile = L.GridLayer.prototype._initTile;
             if (!originalInitTile.isPatched) {
                 L.GridLayer.include({
                     _initTile: function (tile) {
@@ -574,9 +1705,9 @@
                         tile.style.height = tileSize.y + 1 + 'px';
                     }
                 });
-            }
+            }*/
 
-            L.Control.YouTube = L.Control.extend({
+            /*L.Control.YouTube = L.Control.extend({
                 options: {
                     position: 'topleft',
                 },
@@ -632,162 +1763,111 @@
                 return new L.Control.YouTube(options);
             };
 
-            L.control.youtube().addTo(mymap);
+            L.control.youtube().addTo(mymap);*/
 
             var startingWaypoints = [];
 
-            Router.Borders.setStyle(
-                {
-                    color: "#303030",
-                    opacity: '0.8'
-                }
-            );
+            //class custom_formatter extends L.Routing.ItineraryBuilder {
+            //    constructor(API) {
+            //        super();
+            //        this.index = 0;
+            //        this.counter = 1;
+            //        this.first = true;
+            //        this.API = API;
+            //    }
 
-            class custom_formatter extends L.Routing.ItineraryBuilder {
-                constructor(API) {
-                    super();
-                    this.index = 0;
-                    this.counter = 1;
-                    this.first = true;
-                    this.API = API;
-                }
+            //    createStep(text, distance, steps) {
 
-                createStep(text, distance, steps) {
-
-                    var region;
-                    var border = 0;
-                    var newRegion = false;
-                    var turnicon = "";
-                    if (text.indexOf("|") >= 0) {
-                        var u = text.split("\|");
-                        region = u[0];
-                        text = u[1];
-                        border = parseInt(u[2]);
-                        newRegion = parseInt(u[3]) === 1;
-                        turnicon = u[4];
-                    }
-                    else
-                        region = "";
+            //        var region;
+            //        var border = 0;
+            //        var newRegion = false;
+            //        var turnicon = "";
+            //        if (text.indexOf("|") >= 0) {
+            //            var u = text.split("\|");
+            //            region = u[0];
+            //            text = u[1];
+            //            border = parseInt(u[2]);
+            //            newRegion = parseInt(u[3]) === 1;
+            //            turnicon = u[4];
+            //        }
+            //        else
+            //            region = "";
 
 
-                    if (newRegion || this.first) {
-                        var container2 = document.createElement("TR");
-                        container2.style.padding = ".1em 2px";
-                        var divider2 = document.createElement("TD");
-                        divider2.setAttribute("colspan", "2");
-                        divider2.innerText = this.API.mapRegionName(region);
-                        divider2.style["font-size"] = "normal";
-                        divider2.style.width = "100%";
-                        divider2.style["pointer-events"] = "none";
-                        container2.appendChild(divider2);
-                        this.block.appendChild(container2);
-                        this.first = false;
-                    }
+            //        if (newRegion || this.first) {
+            //            var container2 = document.createElement("TR");
+            //            container2.style.padding = ".1em 2px";
+            //            var divider2 = document.createElement("TD");
+            //            divider2.setAttribute("colspan", "2");
+            //            divider2.innerText = this.API.mapRegionName(region);
+            //            divider2.style["font-size"] = "normal";
+            //            divider2.style.width = "100%";
+            //            divider2.style["pointer-events"] = "none";
+            //            container2.appendChild(divider2);
+            //            this.block.appendChild(container2);
+            //            this.first = false;
+            //        }
 
-                    if (border === 1) {
-                        var container3 = document.createElement("TR");
-                        container3.style.padding = ".1em 2px";
-                        var divider3 = document.createElement("TD");
-                        divider3.setAttribute("colspan", "2");
-                        divider3.innerText = "You are approaching a border crossing, check your radio";
-                        divider3.style = "font-size: x-small; width: 100%";
-                        divider3.style["padding-left"] = "2em";
-                        container3.appendChild(divider3);
-                        this.block.appendChild(container3);
-                    }
+            //        if (border === 1) {
+            //            var container3 = document.createElement("TR");
+            //            container3.style.padding = ".1em 2px";
+            //            var divider3 = document.createElement("TD");
+            //            divider3.setAttribute("colspan", "2");
+            //            divider3.innerText = "You are approaching a border crossing, check your radio";
+            //            divider3.style = "font-size: x-small; width: 100%";
+            //            divider3.style["padding-left"] = "2em";
+            //            container3.appendChild(divider3);
+            //            this.block.appendChild(container3);
+            //        }
 
 
-                    var container = document.createElement("TR");
-                    container.classList.add("narrator-step-".concat((this.counter++).toString()));
-                    container.classList.add("narrator-steps");
-                    container.style.padding = ".1em 2px";
-                    var divider2 = document.createElement("TD");
+            //        var container = document.createElement("TR");
+            //        container.classList.add("narrator-step-".concat((this.counter++).toString()));
+            //        container.classList.add("narrator-steps");
+            //        container.style.padding = ".1em 2px";
+            //        var divider2 = document.createElement("TD");
 
-                    if (turnicon != "" && turnicon != null && window.beta)
-                        divider2.innerHTML = "<div class=\"".concat(turnicon.replace(' ', '-').toLowerCase()).concat('"></div>');
+            //        if (turnicon != "" && turnicon != null && window.beta)
+            //            divider2.innerHTML = "<div class=\"".concat(turnicon.replace(' ', '-').toLowerCase()).concat('"></div>');
 
-                    var divider1 = document.createElement("TD");
+            //        var divider1 = document.createElement("TD");
 
-                    if (border === 1)
-                        divider1.innerText = text.concat(" and cross the border");
-                    else
-                        divider1.innerText = text;
-                    divider1.style = "font-size: x-small; width: 100%";
-                    divider1.style["padding-left"] = "2em";
-                    container.appendChild(divider2);
-                    container.appendChild(divider1);
-                    container.index = this.index++;
-                    this.block.appendChild(container);
+            //        if (border === 1)
+            //            divider1.innerText = text.concat(" and cross the border");
+            //        else
+            //            divider1.innerText = text;
+            //        divider1.style = "font-size: x-small; width: 100%";
+            //        divider1.style["padding-left"] = "2em";
+            //        container.appendChild(divider2);
+            //        container.appendChild(divider1);
+            //        container.index = this.index++;
+            //        this.block.appendChild(container);
 
-                    return container;
-                }
+            //        return container;
+            //    }
 
-                createContainer(className) {
+            //    createContainer(className) {
 
-                    var table = document.createElement("TABLE");
-                    table.setAttribute("style", "width: 100%");
-                    if (className != null)
-                        table.setAttribute("class", className.concat(" ").concat("detailed-routeinfo"));
-                    else
-                        table.setAttribute("class", "detailed-routeinfo");
-                    this.container = table;
-                    return table;
-                }
+            //        var table = document.createElement("TABLE");
+            //        table.setAttribute("style", "width: 100%");
+            //        if (className != null)
+            //            table.setAttribute("class", className.concat(" ").concat("detailed-routeinfo"));
+            //        else
+            //            table.setAttribute("class", "detailed-routeinfo");
+            //        this.container = table;
+            //        return table;
+            //    }
 
-                createStepsContainer(container) {
+            //    createStepsContainer(container) {
 
-                    this.block = L.Routing.ItineraryBuilder.prototype.createStepsContainer(container);
-                    this.container.appendChild(this.block);
-                    return this.block;
-                }
-            }
+            //        this.block = L.Routing.ItineraryBuilder.prototype.createStepsContainer(container);
+            //        this.container.appendChild(this.block);
+            //        return this.block;
+            //    }
+            //}
 
-            class custom_time_formatter extends L.Routing.Formatter {
-                constructor(FHR) {
-                    super();
-                    this.FoxholeRouter = FHR;
-                }
 
-                formatTime(distance) {
-                    var time = distance * Router.truckSpeed;
-                    var t1 = L.Routing.Formatter.prototype.formatTime.call(this, time);
-                    var t2 = L.Routing.Formatter.prototype.formatTime.call(this, time / .75);
-                    var jeep_time = distance * Router.jeepSpeed;
-                    var t3 = L.Routing.Formatter.prototype.formatTime.call(this, jeep_time);
-                    var t4 = L.Routing.Formatter.prototype.formatTime.call(this, jeep_time / .75);
-                    var flatbed_time = distance * Router.flatbedSpeed;
-                    var t5 = L.Routing.Formatter.prototype.formatTime.call(this, flatbed_time);
-                    var t6 = L.Routing.Formatter.prototype.formatTime.call(this, flatbed_time / .75);
-                    a = "<div class=\'detailed-routeinfo\'><table class=\"vehicle-speed-panel\">";
-                    a = a.concat("<tr>");
-                    a = a.concat("<td style=\"text-align: right\"><img src=\'Truck.webp\' class='fast-truck' /></td>");
-                    a = a.concat("<td style=\"text-align: left\">").concat(t1).concat("</td>");
-                    a = a.concat("<td style=\"text-align: right\"><img src=\'Truck.webp\' class='slow-truck' /></td>");
-                    a = a.concat("<td style=\"text-align: left\">").concat(t2).concat("</td>");
-                    a = a.concat("</tr>");
-                    a = a.concat("<tr>");
-                    a = a.concat("<td style=\"text-align: right\"><img src=\'Jeep.webp\' class='fast-truck' /></td>");
-                    a = a.concat("<td style=\"text-align: left\">").concat(t3).concat("</td>");
-                    a = a.concat("<td style=\"text-align: right\"><img src=\'Jeep.webp\' class='slow-truck'  /></td>");
-                    a = a.concat("<td style=\"text-align: left\">").concat(t4).concat("</td>");
-                    a = a.concat("</tr>");
-                    a = a.concat("<tr>");
-                    a = a.concat("<td style=\"text-align: right\"><img src=\'Flatbed.webp\' class='fast-truck' /></td>");
-                    a = a.concat("<td style=\"text-align: left\">").concat(t5).concat("</td>");
-                    a = a.concat("<td style=\"text-align: right\"><img src=\'Flatbed.webp\' class='slow-truck' /></td>");
-                    a = a.concat("<td style=\"text-align: left\">").concat(t6).concat("</td>");
-                    a = a.concat("</tr>");
-                    a = a.concat("</table></div>");
-                    return a;
-                }
-
-                formatDistance(d, precision) {
-                    return L.Routing.Formatter.prototype.formatDistance.call(this, d, precision).replace(' ', '');
-                }
-
-            }
-
-            var form = new custom_formatter(APIManager);
+            //var form = Panel.Create(APIManager);
             window.playing = false;
             window.narrateDirections = function () {
                 if (!window.playing) {
@@ -808,7 +1888,8 @@
                 }
             };
 
-            Router.Control = L.Routing.control(
+            Router.Control = Panel.Create(APIManager, Router, Geocoder).addTo(mymap);
+            /*L.Routing.control(
                 {
                     showAlternatives: false,
                     routeWhileDragging: false,
@@ -824,22 +1905,22 @@
                         if (route.name == "Shortest Route")
                             return L.Routing.line(route, {
                                 addWaypoints: options.addWaypoints, styles: [
-                                    { color: 'black', opacity: 0.15, weight: 7 }, { color: 'white', opacity: 0.8, weight: 6 }, { color: '#9E3031', opacity: 1, weight: 2, dashArray: '5,5' }
+                                    { color: 'black', opacity: 0.15, weight: 7 }, { color: 'white', opacity: 0.8, weight: 6 }, { color: '#9E3031', opacity: 1, weight: 2, dashArray: '10,10' }
                                 ]
                             });
                         return L.Routing.line(route, {
                             addWaypoints: options.addWaypoints, styles: [
-                                { color: 'black', opacity: 0.15, weight: 7 }, { color: 'white', opacity: 0.8, weight: 6 }, { color: '#5E9339', opacity: 1, weight: 2, dashArray: '5,5' }
+                                { color: 'black', opacity: 0.15, weight: 7 }, { color: 'white', opacity: 0.8, weight: 6 }, { color: '#5E9339', opacity: 1, weight: 2, dashArray: '10,10' }
                             ]
                         });
                     },
-                    fitSelectedRoutes: false,//'smart',
+                    fitSelectedRoutes: false,
                     itineraryBuilder: form,
                     summaryTemplate: Router.summaryTemplate,
                     collapsible: true,
                     formatter: new custom_time_formatter(Router)
                 }
-            ).addTo(mymap);
+            ).addTo(mymap);*/
 
             function createButton(label, container, image) {
                 var btn = L.DomUtil.create('img', '', container);
@@ -940,83 +2021,6 @@
                     SmartAutoZoom();
             };
 
-            function sequence_layers() {
-                no_update = true;
-                var keys = Object.keys(active_layers);
-                for (var i = 0; i < keys.length; i++) {
-                    switch (keys[i].replace(/<.*> */, '')) {
-                        case "Town Halls":
-                            Router.TownHalls.remove();
-                            if (active_layers[keys[i]])
-                                Router.TownHalls.addTo(mymap);
-                            break;
-                        case "Borders":
-                            Router.Borders.remove();
-                            if (active_layers[keys[i]])
-                                Router.Borders.addTo(mymap);
-                            break;
-                        case "Warden Roads":
-                            Router.WardenRoadsCanvas.remove();
-                            if (active_layers[keys[i]])
-                                Router.WardenRoadsCanvas.addTo(mymap);
-                            break;
-                        case "Colonial Roads":
-                            Router.ColonialRoadsCanvas.remove();
-                            if (active_layers[keys[i]])
-                                Router.ColonialRoadsCanvas.addTo(mymap);
-                            break;
-                        case "Road Quality":
-                            Router.RoadsCanvas.remove();
-                            if (active_layers[keys[i]])
-                                Router.RoadsCanvas.addTo(mymap);
-                            break;
-                        case "Uncontrolled Roads":
-                            Router.NeutralRoadsCanvas.remove();
-                            if (active_layers[keys[i]])
-                                Router.NeutralRoadsCanvas.addTo(mymap);
-                            break;
-                        case "Refineries":
-                            Router.Refineries.remove();
-                            if (active_layers[keys[i]])
-                                Router.Refineries.addTo(mymap);
-                            break;
-                        case "Factories":
-                            Router.Factories.remove();
-                            if (active_layers[keys[i]])
-                                Router.Factories.addTo(mymap);
-                            break;
-                        case "Storage":
-                            Router.Storage.remove();
-                            if (active_layers[keys[i]])
-                                Router.Storage.addTo(mymap);
-                            break;
-                        case "Salvage":
-                            Router.Salvage.remove();
-                            if (active_layers[keys[i]])
-                                Router.Salvage.addTo(mymap);
-                            break;
-                        case "Components":
-                            Router.Components.remove();
-                            if (active_layers[keys[i]])
-                                Router.Components.addTo(mymap);
-                            break;
-                        case "Fuel":
-                            Router.Fuel.remove();
-                            if (active_layers[keys[i]])
-                                Router.Fuel.addTo(mymap);
-                            break;
-                        case "Sulfur":
-                            Router.Sulfur.remove();
-                            if (active_layers[keys[i]])
-                                Router.Sulfur.addTo(mymap);
-                            break;
-                    }
-                }
-                Router.ScaleTownHalls(null);
-                Router.ScaleRoads(null);
-                no_update = false;
-            }
-
             function update_state() {
                 var l = "";
                 for (var i = 0; i < waypoints.length; i++)
@@ -1074,24 +2078,128 @@
                             case "Sulfur":
                                 counter |= 4096;
                                 break;
+                            case "Control":
+                                counter |= 8192;
+                                break;
+                            case "Labels":
+                                counter |= 16384;
+                                break;
                         }
 
                 l = l.concat(':').concat(counter.toString(16).toUpperCase());
                 location.hash = l;
+                document.getElementById("url-box").value = location.href;
             }
 
             mymap.on('overlayadd', function (event) {
                 if (no_update) return;
-                active_layers[event.name.replace(/<.*> */, '')] = true; update_state(); sequence_layers();
+                switch (event.name.replace(/<.*> */, '')) {
+                    case "Control":
+                        Router.showControl();
+                        break;
+                    case "Town Halls":
+                        Router.showTownHalls();
+                        break;
+                    case "Refineries":
+                        Router.showRefineries();
+                        break;
+                    case "Factories":
+                        Router.showFactories();
+                        break;
+                    case "Fuel":
+                        Router.showFuel();
+                        break;
+                    case "Components":
+                        Router.showComponents();
+                        break;
+                    case "Storage":
+                        Router.showStorage();
+                        break;
+                    case "Sulfur":
+                        Router.showSulfur();
+                        break;
+                    case "Salvage":
+                        Router.showSalvage();
+                        break;
+                    case "Warden Roads":
+                        Router.showWarden();
+                        break;
+                    case "Colonial Roads":
+                        Router.showColonial();
+                        break;
+                    case "Uncontrolled Roads":
+                        Router.showNeutral();
+                        break;
+                    case "Road Quality":
+                        Router.showQuality();
+                        break;
+                    case "Borders":
+                        Router.showBorders();
+                        break;
+                    case "Labels":
+                        Router.showLabels();
+                        break;
+                }
+                active_layers[event.name.replace(/<.*> */, '')] = true;
+                update_state();
             });
+
             mymap.on('overlayremove', function (event) {
                 if (no_update) return;
-                active_layers[event.name.replace(/<.*> */, '')] = false; update_state();
+                switch (event.name.replace(/<.*> */, '')) {
+                    case "Control":
+                        Router.hideControl();
+                        break;
+                    case "Town Halls":
+                        Router.hideTownHalls();
+                        break;
+                    case "Refineries":
+                        Router.hideRefineries();
+                        break;
+                    case "Factories":
+                        Router.hideFactories();
+                        break;
+                    case "Fuel":
+                        Router.hideFuel();
+                        break;
+                    case "Components":
+                        Router.hideComponents();
+                        break;
+                    case "Storage":
+                        Router.hideStorage();
+                        break;
+                    case "Sulfur":
+                        Router.hideSulfur();
+                        break;
+                    case "Salvage":
+                        Router.hideSalvage();
+                        break;
+                    case "Warden Roads":
+                        Router.hideWarden();
+                        break;
+                    case "Colonial Roads":
+                        Router.hideColonial();
+                        break;
+                    case "Uncontrolled Roads":
+                        Router.hideNeutral();
+                        break;
+                    case "Road Quality":
+                        Router.hideQuality();
+                        break;
+                    case "Borders":
+                        Router.hideBorders();
+                        break;
+                    case "Labels":
+                        Router.hideLabels();
+                        break;
+                }
+                active_layers[event.name.replace(/<.*> */, '')] = false;
+                update_state();
             });
 
             // load initial waypoints
             var points = startingWaypoints;
-            var layers = 8192 - 1;
+            var layers = 16384 * 2 - 1;
 
             if (typeof (location.hash) != 'undefined' && location.hash != "" && location.hash != "#") {
                 var h = decodeURI(location.hash.substr(1));
@@ -1143,49 +2251,84 @@
             active_layers["Fuel"] = (layers & 2048) != 0;
             active_layers["Sulfur"] = (layers & 4096) != 0;
             active_layers["Town Halls"] = (layers & 1) != 0;
+            active_layers["Control"] = (layers & 8192) != 0;
+            active_layers["Labels"] = (layers & 16384) != 0;
 
             var keys = Object.keys(active_layers);
             for (var i = 0; i < keys.length; i++)
                 if (false == active_layers[keys[i]])
                     switch (keys[i].replace(/<.*> */, '')) {
+                        case "Control":
+                            Router.hideControl();
+                            Router.MapControl.remove();
+                            break;
                         case "Town Halls":
+                            Router.hideTownHalls();
                             Router.TownHalls.remove();
                             break;
                         case "Borders":
                             Router.Borders.remove();
+                            Router.hideBorders();
                             break;
                         case "Warden Roads":
-                            Router.WardenRoadsCanvas.remove();
+                            Router.WardenRoads.remove();
+                            Router.hideWarden();
                             break;
                         case "Colonial Roads":
-                            Router.ColonialRoadsCanvas.remove();
-                            break;
-                        case "Road Quality":
-                            Router.RoadsCanvas.remove();
+                            Router.ColonialRoads.remove();
+                            Router.hideColonial();
                             break;
                         case "Uncontrolled Roads":
-                            Router.NeutralRoadsCanvas.remove();
+                            Router.NeutralRoads.remove();
+                            Router.hideNeutral();
                             break;
                         case "Refineries":
+                            Router.hideRefineries();
                             Router.Refineries.remove();
                             break;
                         case "Factories":
+                            Router.hideFactories();
                             Router.Factories.remove();
                             break;
                         case "Storage":
                             Router.Storage.remove();
+                            Router.hideStorage();
                             break;
                         case "Salvage":
                             Router.Salvage.remove();
+                            Router.hideSalvage();
                             break;
                         case "Components":
                             Router.Components.remove();
+                            Router.hideComponents();
                             break;
                         case "Fuel":
                             Router.Fuel.remove();
+                            Router.hideFuel();
                             break;
                         case "Sulfur":
                             Router.Sulfur.remove();
+                            Router.hideSulfur();
+                            break;
+                        case "Warden Roads":
+                            Router.WardenRoads.remove();
+                            Router.hideWarden();
+                            break;
+                        case "Colonial Roads":
+                            Router.ColonialRoads.remove();
+                            Router.hideColonial();
+                            break;
+                        case "Uncontrolled Roads":
+                            Router.NeutralRoads.remove();
+                            Router.hideNeutral();
+                            break;
+                        case "Road Quality":
+                            Router.RoadsCanvas.remove();
+                            Router.hideQuality();
+                            break;
+                        case "Labels":
+                            Router.Labels.remove();
+                            Router.hideLabels();
                             break;
                     }
 
@@ -1194,9 +2337,6 @@
             for (var i = 0; i < points.length; i++)
                 waypoints.push({ latLng: { lat: points[i][0], lng: points[i][1] } });
             update_state();
-            sequence_layers();
-            Router.ScaleTownHalls();
-            Router.ScaleRoads();
 
             Router.Control.on('waypointschanged', function (event) {
                 waypoints = event.waypoints;
@@ -1206,7 +2346,7 @@
                 SmartAutoZoom();
             });
 
-            document.getElementById("map-holder").style.opacity = '1';
+            document.getElementById("map-frame").style.opacity = '1';
             document.getElementById("loader-holder").style.opacity = '0';
             setTimeout(() => { document.getElementById("loader-holder").style.display = 'none'; }, 1000);
         }, shard);

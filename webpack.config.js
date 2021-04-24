@@ -1,6 +1,6 @@
 module.exports = 
 {
-	"externals": {
+/*	"externals": {
 		"leaflet": "L"
-	}
+	}*/
 }

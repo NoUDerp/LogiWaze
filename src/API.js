@@ -1,4 +1,4 @@
-define(['jquery', 'point-in-polygon'], function ($, pip) {
+define(['jquery', 'point-in-polygon', '@sakitam-gis/kriging', '../towns.json'], function ($, pip, kriging, towns) {
     return {
         API: function () {
             var width = 256 / 5.5;
@@ -90,9 +90,7 @@ define(['jquery', 'point-in-polygon'], function ($, pip) {
                     if (u === null || typeof u === 'undefined')
                         return "OFFLINE";
 
-                    //return "WARDENS";
                     var distanceSquared = -1;
-                    var control = "";
                     var icon = -1;
                     var keys = Object.keys(u);
                     for (var i = 0; i < keys.length; i++) {
@@ -108,8 +106,12 @@ define(['jquery', 'point-in-polygon'], function ($, pip) {
                             }
                         }
                     }
-                    return { ownership: control, icon: icon };
+
+                    var c = kriging.predict(x, y, API.variogram);
+                    return { ownership: c < -.25 ? "WARDENS" : (c > .25 ? "COLONIALS" : "NONE"), icon: icon };
                 },
+
+                control: (x, y) => kriging.predict(x, y, API.variogram),
 
                 update: function (completionCallback, shard) {
 
@@ -127,6 +129,8 @@ define(['jquery', 'point-in-polygon'], function ($, pip) {
                         success: function (maps) {
                             // iterate here on the maps and collect status
                             var complete = maps.length;
+                            var p_x = [], p_y = [], p_t = [];
+
                             for (var i = 0; i < maps.length; i++) {
                                 const mapName = maps[i];
                                 $.ajax(
@@ -143,13 +147,20 @@ define(['jquery', 'point-in-polygon'], function ($, pip) {
                                                 var offset = API.remapXY(mapName);
                                                 for (var j = 0; j < mapData.mapItems.length; j++) {
                                                     var icon = mapData.mapItems[j].iconType;
-                                                    if ((icon >= 5 && icon <= 10) || (icon >= 45 && icon <= 47) || icon == 29 || icon == 17 || icon == 34 || icon == 51 || icon == 39 || icon == 52 || icon == 33 || icon == 18 || icon == 19) {
+                                                    if (icon == 35 || (icon >= 5 && icon <= 10) || (icon >= 45 && icon <= 47) || icon == 29 || icon == 17 || icon == 34 || icon == 51 || icon == 39 || icon == 52 || icon == 33 || icon == 18 || icon == 19) {
                                                         var x = mapData.mapItems[j].x;
                                                         var y = mapData.mapItems[j].y;
                                                         x = 256 + (((x * 46.54545454545455) + offset.y) - 23.27272727272727);
                                                         y = -256 + ((((1 - y) * 40.30954606705751) + offset.x) - 20.15477303352875);
                                                         var key = x.toFixed(3).toString().concat('|').concat(y.toFixed(3).toString());
-                                                        API.mapControl[mapName][key] = { x: x, y: y, control: mapData.mapItems[j].teamId, mapIcon: icon, town: ((icon >= 5 && icon <= 10) || (icon >= 45 && icon <= 47) || icon == 29) };
+                                                        var control = mapData.mapItems[j].teamId;
+                                                        API.mapControl[mapName][key] = { x: x, y: y, control: control, mapIcon: icon, town: ((icon >= 5 && icon <= 10) || (icon >= 45 && icon <= 47) || icon == 29) };
+
+                                                        if (control != "OFFLINE" && (icon == 35 || (icon >= 5 && icon <= 10) || (icon >= 45 && icon <= 47) || icon == 29)) {
+                                                            p_x.push(x);
+                                                            p_y.push(y);
+                                                            p_t.push(control == "WARDENS" ? -1 : (control == "COLONIALS" ? 1 : 0));
+                                                        }
                                                     }
                                                     else {
                                                         var x = mapData.mapItems[j].x;
@@ -160,10 +171,14 @@ define(['jquery', 'point-in-polygon'], function ($, pip) {
                                                         API.resources[mapName][key] = { x: x, y: y, control: mapData.mapItems[j].teamId, mapIcon: icon };
                                                     }
                                                 }
+
                                             }
 
-                                            if (--complete == 0)
+
+                                            if (--complete == 0) {
+                                                API.variogram = kriging.train(p_t, p_x, p_y, 'exponential', 0, 100);
                                                 completionCallback();
+                                            }
 
                                         },
                                         error: function (failure) { --complete; alert(JSON.stringify(failure)); }

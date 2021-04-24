@@ -1,8 +1,13 @@
-﻿define(['leaflet', 'json-loader!../Roads.geojson', 'json-loader!../hex.geojson', './geojson-path-finder/index.js', 'leaflet-routing-machine', '../towns.json'],
-    function (L, Paths, HexBorders, PathFinder, routing_machine, towns) {
+﻿define(['leaflet', 'json-loader!../Roads.geojson', './geojson-path-finder/index.js', 'leaflet-routing-machine', '../towns.json'],
+    function (L, Paths, PathFinder, routing_machine, towns) {
 
         return {
             FoxholeRouter: function (mymap, API, Narrator) {
+
+                function Recase(x) {
+                    return x.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
+                }
+
                 var JSONRoads = L.geoJSON(Paths);
                 var MainRoutes = { crs: Paths.crs, features: [], type: "FeatureCollection", filter: Paths.filter };
                 var WardenRoutes = { crs: Paths.crs, features: [], type: "FeatureCollection", filter: Paths.filter };
@@ -106,40 +111,30 @@
 
                 }
 
-                var RoadsPane = mymap.createPane('Roads');
-                var MarkersPane = mymap.createPane('Markers');
-                var QualityPane = mymap.createPane('Road Quality');
-
-                mymap.getPane('Road Quality').style.zIndex = 500;
-                mymap.getPane('Roads').style.zIndex = 600;
-                mymap.getPane('Markers').style.zIndex = 700;
-
-                var RoadsGroup = L.layerGroup({ pane: 'Road Quality' }).addTo(mymap).setZIndex(1);
-                var WardenRoadsGroup = L.layerGroup({ pane: 'Roads' }).addTo(mymap).setZIndex(2);
-                var ColonialRoadsGroup = L.layerGroup({ pane: 'Roads' }).addTo(mymap).setZIndex(2);
-                var NeutralRoadsGroup = L.layerGroup({ pane: 'Roads' }).addTo(mymap).setZIndex(2);
-                var Refineries = L.layerGroup({ pane: 'Markers' }).addTo(mymap).setZIndex(2);
-                var Factories = L.layerGroup({ pane: 'Markers' }).addTo(mymap).setZIndex(2);
-                var Storage = L.layerGroup({ pane: 'Markers' }).addTo(mymap).setZIndex(2);
+                var GridDepth = 6;
+                var RoadsGroup = VectorGrid.Create(GridDepth, [0, 256], .30, .17);
 
                 var renderer = L.canvas({ tolerance: .2 }).addTo(mymap);
+                var Icons = VectorIconGrid.Create(8, [0, 256], 0, 9);
 
-                var TownHalls = L.layerGroup({ pane: 'Markers' }).addTo(mymap);
-                var Resources = L.layerGroup({ pane: 'Markers' }).addTo(mymap);
-                var Components = L.layerGroup({ pane: 'Markers' }).addTo(mymap);
-                var Salvage = L.layerGroup({ pane: 'Markers' }).addTo(mymap);
-                var Fuel = L.layerGroup({ pane: 'Markers' }).addTo(mymap);
-                var Sulfur = L.layerGroup({ pane: 'Markers' }).addTo(mymap);
-                var MinorRegionLabels = L.layerGroup({ pane: 'Markers' }).addTo(mymap);
-                var RegionLabels = L.layerGroup({ pane: 'Markers' }).addTo(mymap);
-                var HexNames = L.layerGroup({ pane: 'Markers' }).addTo(mymap);
-
+                var RegionLabels = VectorTextGrid.Create(8, [0, 256]);
+                var Borders = VectorHexGrid.Create(8, [0, 256]);
+                var ControlLayer = VectorControlGrid.Create(8, [0, 256], API);
+                var regions = API.regions;
+                var w = 46.545454545 * .5;
+                var h = w * Math.sqrt(3) / 2;
+                for (var i = 0; i < regions.length; i++) {
+                    Borders.addHex(regions[i].x, regions[i].y, w, h);
+                    ControlLayer.addHex(regions[i].x, regions[i].y, w, h);
+                }
 
                 var resolveIcon = function (ic) {
                     if (ic.icon == null)
                         return null;
                     if (ic.icon == 5)
                         icon = 'MapIconStaticBase1';
+                    else if (ic.icon == 35)
+                        icon = "MapIconSafehouse";
                     else if (ic.icon == 6)
                         icon = 'MapIconStaticBase2';
                     else if (ic.icon == 7)
@@ -207,36 +202,7 @@
                         var th = region[keys2[k]];
                         var data = { ownership: th.control, icon: th.mapIcon };
                         var icon = resolveResource(data);
-                        if (icon != null) {
-                            var ResourceLayer = Resources;
-                            switch (data.icon) {
-                                case 21:
-                                case 40:
-                                    ResourceLayer = Components;
-                                    break;
-                                case 23:
-                                case 32:
-                                    ResourceLayer = Sulfur;
-                                    break;
-                                case 38:
-                                case 20:
-                                    ResourceLayer = Salvage;
-                                    break;
-                                case 41:
-                                    ResourceLayer = Fuel;
-                                    break;
-                            }
-
-                            L.marker([th.y, th.x], {
-                                clickable: false,
-                                zIndexOffset: -1001,
-                                icon: L.icon({
-                                    iconUrl: 'MapIcons/'.concat(icon),
-                                    iconSize: [24, 24],
-                                    className: "resource-icon"
-                                })
-                            }).addTo(ResourceLayer);
-                        }
+                        Icons.addIcon(icon, th.x, th.y, 0, 9);
                     }
                 }
 
@@ -246,258 +212,83 @@
                     var region = API.mapControl[keys[t]];
                     var keys2 = Object.keys(region);
                     for (var k = 0; k < keys2.length; k++) {
-
                         var th = region[keys2[k]];
                         var data = { ownership: th.control, icon: th.mapIcon };
-                        var TH = TownHalls;
-                        switch (th.mapIcon) {
-                            case 17:
-                                TH = Refineries;
-                                break;
-                            case 39:
-                            case 51:
-                            case 34:
-                                TH = Factories;
-                                break;
-                            case 33:
-                            case 52:
-                                TH = Storage;
-                                break;
-                        }
                         var icon = resolveIcon(data);
-                        if (icon != null)
-                            L.marker([th.y, th.x], {
-                                clickable: false,
-                                zIndexOffset: -1000,
-                                icon: L.icon({
-                                    iconUrl: 'MapIcons/'.concat(icon),
-                                    iconSize: [24, 24],
-                                    className: "town-hall-icon"
-                                })
-                            }).addTo(TH);
+                        Icons.addIcon(icon, th.x, th.y, 0, 9);
                     }
                 }
 
                 var ks = Object.keys(towns);
                 for (var t = 0; t < ks.length; t++) {
                     var th = towns[ks[t]];
-                    var ownership = API.ownership(th.x, th.y, th.region).ownership;
-                    var spanclass = ownership == "COLONIALS" ? "town-colonial" : (ownership == "WARDENS" ? "town-warden" : "town-neutral");
+                    if (th.major != 1) {
+                        var ownership = API.ownership(th.x, th.y, th.region).ownership;
+                        var control = ownership == "COLONIALS" ? 0 : (ownership == "WARDENS" ? 1 : 2);
+                        RegionLabels.addText(Recase(ks[t]), control, th.x, th.y, 5, 9, '#bbbbbb');
+                    }
+                }
 
-                    if (th.major == 1)
-                        new L.Marker([th.y, th.x], { icon: new L.DivIcon({ className: 'town-label', iconSize: L.Point(0, 0), html: '<span class=\"'.concat(spanclass).concat('\">').concat(ks[t]).concat('</span>') }) }).addTo(RegionLabels);
-                    else
-                        new L.Marker([th.y, th.x], { icon: new L.DivIcon({ className: 'minor-town-label', iconSize: L.Point(0, 0), html: '<span class=\"'.concat(spanclass).concat('\">').concat(ks[t]).concat('</span>') }) }).addTo(MinorRegionLabels);
+                for (var t = 0; t < ks.length; t++) {
+                    var th = towns[ks[t]];
+                    if (th.major == 1) {
+                        var ownership = API.ownership(th.x, th.y, th.region).ownership;
+                        var control = ownership == "COLONIALS" ? 0 : (ownership == "WARDENS" ? 1 : 2);
+                        RegionLabels.addText(Recase(ks[t]), control, th.x, th.y, 3, 9, '#fff');
+                    }
                 }
 
                 for (var i = 0; i < API.regions.length; i++)
-                    new L.Marker([API.regions[i].y, API.regions[i].x], { icon: new L.DivIcon({ className: 'region-name', iconSize: L.Point(0, 0), html: '<span>'.concat(API.regions[i].realName).concat('</span>') }) }).addTo(HexNames);
-
-                var warden_towns = document.getElementsByClassName('town-warden');
-                var colonial_towns = document.getElementsByClassName('town-colonial');
-                var neutral_towns = document.getElementsByClassName('town-neutral');
-                var town_hall_icons = document.getElementsByClassName('town-hall-icon');
-                var region_names = document.getElementsByClassName('region-name');
-
-                function scale_th(zoom) {
-                    if (zoom == null)
-                        zoom = mymap.getZoom();
-                    var s = Math.round(32.0 * Math.sqrt(zoom / 6));
-                    var scale = s.toFixed().toString().concat('px');
-                    var scale2 = (-s / 2).toFixed().toString().concat("px");
-                    var x = town_hall_icons;
-                    if (x != null)
-                        for (var i = 0; i < x.length; i++) {
-                            x[i].style.width = x[i].style.height = scale;
-                            x[i].style["margin-left"] = x[i].style["margin-top"] = scale2;
-                        }
-
-                    if (zoom >= 4)
-                        MinorRegionLabels.addTo(mymap);
-                    else
-                        MinorRegionLabels.remove();
-
-                    if (zoom >= 2.5) {
-                        HexNames.remove();
-                        RegionLabels.addTo(mymap);
-                        if (warden_towns != null) {
-                            var scale = (Math.round(Math.pow(zoom / 6, .5) * 26.0) / 2.0).toFixed().toString().concat('px');
-                            for (var i = 0; i < warden_towns.length; i++)
-                                warden_towns[i].style["font-size"] = scale;
-                        }
-                        if (colonial_towns != null) {
-                            var scale = (Math.round(Math.pow(zoom / 6, .5) * 20.0) / 2.0).toFixed().toString().concat('px');
-                            for (var i = 0; i < colonial_towns.length; i++)
-                                colonial_towns[i].style["font-size"] = scale;
-                        }
-                        if (neutral_towns != null) {
-                            var scale = (Math.round(Math.pow(zoom / 6, .5) * 24.0) / 2.0).toFixed().toString().concat('px');
-                            for (var i = 0; i < neutral_towns.length; i++)
-                                neutral_towns[i].style["font-size"] = scale;
-                        }
-                    }
-                    else {
-                        RegionLabels.remove();
-                        HexNames.addTo(mymap);
-
-                        if (region_names != null) {
-                            var scale = (Math.round(Math.pow(zoom / 6, .5) * 44.0) / 2.0).toFixed().toString().concat('px');
-                            for (var i = 0; i < region_names.length; i++)
-                                region_names[i].style["font-size"] = scale;
-                        }
-                    }
-                }
-
-                var resource_icons = document.getElementsByClassName('resource-icon');
-
-                function scale_r(zoom) {
-                    if (zoom == null)
-                        zoom = mymap.getZoom();
-                    var scale = Math.round(32.0 * Math.sqrt(zoom / 6));
-                    if (resource_icons != null)
-                        for (var i = 0; i < resource_icons.length; i++) {
-                            resource_icons[i].style.width = (scale * .65).toFixed().toString().concat("px");
-                            resource_icons[i].style.height = (scale * .65).toFixed().toString().concat("px");
-                            resource_icons[i].style["margin-left"] = (-scale / 2).toFixed().toString().concat("px");
-                            resource_icons[i].style["margin-top"] = (-scale / 2).toFixed().toString().concat("px");
-                        }
-
-                }
-
-                var ScaleNeutralRoads = function (zoom) {
-                    if (zoom == null)
-                        zoom = mymap.getZoom();
-                    scale = 8.0 * zoom / 6;
-                    NeutralRoadsGroup.eachLayer(function (layer) {
-                        layer.options.weight = scale;
-                    });
-                };
-
-                var ScaleWardenRoads = function (zoom) {
-                    if (zoom == null)
-                        zoom = mymap.getZoom();
-                    var scale = 8.0 * zoom / 6;
-                    WardenRoadsGroup.eachLayer(function (layer) {
-                        layer.options.weight = scale;
-                    });
-                };
-
-                var ScaleColonialRoads = function (zoom) {
-                    if (zoom == null)
-                        zoom = mymap.getZoom();
-                    var scale = 8.0 * zoom / 6;
-                    ColonialRoadsGroup.eachLayer(function (layer) {
-                        layer.options.weight = scale;
-                    });
-                };
-
-                var ScaleRoadTypes = function (zoom) {
-                    if (zoom == null)
-                        zoom = mymap.getZoom();
-                    var scale = 16.0 * zoom / 6;
-                    RoadsGroup.eachLayer(function (layer) {
-                        layer.options.weight = scale;
-                    });
-                };
-
-                var ScaleRoads = function (zoom) {
-                    ScaleRoadTypes(zoom);
-                    ScaleWardenRoads(zoom);
-                    ScaleNeutralRoads(zoom);
-                    ScaleColonialRoads(zoom);
-                };
-
-                var ScaleTownHalls = function (zoom) {
-                    scale_th(zoom);
-                    scale_r(zoom);
-                };
-
-                mymap.on('overlayadd', (e) => {
-                    if (e.layer == Resources) scale_r(null); else if (e.layer == TownHalls) scale_th(null);
-                    else if (e.layer == ColonialRoadsGroup)
-                        ScaleColonialRoads(null);
-                    else if (e.layer == WardenRoadsGroup)
-                        ScaleWardenRoads(null);
-                    else if (e.layer == NeutralRoadsGroup)
-                        ScaleNeutralRoads(null);
-                    else if (e.layer == RoadsGroup)
-                        ScaleRoadTypes(null);
-                });
-                mymap.on('zoomend', (e) => { ScaleTownHalls(e.zoom); ScaleRoads(e.zoom); });
+                    RegionLabels.addText(Recase(API.regions[i].realName), 4, API.regions[i].x, API.regions[i].y, 1, 3, '#ffffff', 2.5);
 
                 for (var key in JSONRoads._layers) {
                     var layer = JSONRoads._layers[key];
                     for (var k = 1; k < layer._latlngs.length; k++) {
                         var region = layer.feature.properties.region;
+                        var lat = layer._latlngs[k - 1].lat;
+                        var lng = layer._latlngs[k - 1].lng;
+                        var lat2 = layer._latlngs[k].lat;
+                        var lng2 = layer._latlngs[k].lng;
                         var tier = layer.feature.properties.tier;
-                        var lat = layer._latlngs[k - 1].lat;
-                        var lng = layer._latlngs[k - 1].lng;
-                        var lat2 = layer._latlngs[k].lat;
-                        var lng2 = layer._latlngs[k].lng;
-
-                        var tiercolor = tier == 3 ? '#5a9565' : (tier == 2 ? '#94954e' : '#957458');
-
                         if (lat != null && lng != null && lat2 != null && lng2 != null) {
                             var control = layer._latlngs[k - 1].ownership;
-                            new L.polyline([[lat, lng], [lat2, lng2]], { color: tiercolor, weight: 10, opacity: 1.0, lineJoin: 'miter', renderer: renderer, interactive: false, smoothFactor: 48 }).addTo(RoadsGroup).bringToFront();
+                            RoadsGroup.addRoad([[lat, lng], [lat2, lng2]], { control: control == "COLONIALS" ? 0 : (control == "WARDENS" ? 1 : (control == "OFFLINE" ? 2 : 3)), tier: tier });
                         }
                     }
                 }
 
-                for (var key in JSONRoads._layers) {
-                    var layer = JSONRoads._layers[key];
-                    for (var k = 1; k < layer._latlngs.length; k++) {
-                        var region = layer.feature.properties.region;
-                        var lat = layer._latlngs[k - 1].lat;
-                        var lng = layer._latlngs[k - 1].lng;
-                        var lat2 = layer._latlngs[k].lat;
-                        var lng2 = layer._latlngs[k].lng;
-                        if (lat != null && lng != null && lat2 != null && lng2 != null) {
-
-                            var control = layer._latlngs[k - 1].ownership;
-                            if (control == "COLONIALS")
-                                new L.polyline([[lat, lng], [lat2, lng2]], { color: '#516C4B', weight: 5, opacity: 1.0, lineJoin: 'miter', renderer: renderer, interactive: false, smoothFactor: 48 }).addTo(ColonialRoadsGroup).bringToFront();
-
-                            else if (control == "WARDENS")
-                                new L.polyline([[lat, lng], [lat2, lng2]], { color: '#235683', weight: 5, opacity: 1.0, lineJoin: 'miter', renderer: renderer, interactive: false, smoothFactor: 48 }).addTo(WardenRoadsGroup).bringToFront();
-
-                            else if (control == "OFFLINE")
-                                new L.polyline([[lat, lng], [lat2, lng2]], { color: '#505050', weight: 5, opacity: 1.0, lineJoin: 'miter', renderer: renderer, interactive: false, smoothFactor: 48 }).addTo(RoadsGroup).bringToFront();
-
-                            else if (control === "NONE")
-                                new L.polyline([[lat, lng], [lat2, lng2]], { color: '#CCCC44', weight: 5, opacity: 1.0, lineJoin: 'miter', renderer: renderer, interactive: false, smoothFactor: 48 }).addTo(NeutralRoadsGroup).bringToFront();
-                        }
-                    }
-                }
-
+                ControlLayer.addTo(mymap);
+                RoadsGroup.addTo(mymap);
+                Borders.addTo(mymap);
+                Icons.addTo(mymap);
+                RegionLabels.addTo(mymap);
 
                 var highlighter = L.layerGroup().addTo(mymap);
-                var borderLayer = L.layerGroup().addTo(mymap);
-                var debug_markers = L.layerGroup();
+                //var debug_markers = L.layerGroup();
                 if (beta) {
-                    var k = Object.keys(BorderCrossings);
-                    for (var i = 0; i < k.length; i++) {
-                        var b = k[i].split(/\|/);
-                        L.circleMarker([parseFloat(b[1]), parseFloat(b[0])], {
-                            color: '#FF0000',
-                            clickable: false,
-                            zIndexOffset: -1000,
-                            opacity: .5
-                        }).addTo(debug_markers);
-                    }
+                    //var k = Object.keys(BorderCrossings);
+                    //for (var i = 0; i < k.length; i++) {
+                    //    var b = k[i].split(/\|/);
+                    //    L.circleMarker([parseFloat(b[1]), parseFloat(b[0])], {
+                    //        color: '#FF0000',
+                    //        clickable: false,
+                    //        zIndexOffset: -1000,
+                    //        opacity: .5
+                    //    }).addTo(debug_markers);
+                    //}
 
-                    var k = Object.keys(Intersections);
-                    for (var i = 0; i < k.length; i++) {
-                        if (Intersections[k[i]] > 2) {
-                            var b = k[i].split(/\|/);
-                            L.circleMarker([parseFloat(b[1]), parseFloat(b[0])], {
-                                color: '#00FF00',
-                                clickable: false,
-                                zIndexOffset: -2000,
-                                opacity: .5
-                            }).addTo(debug_markers);
-                        }
-                    }
+                    //var k = Object.keys(Intersections);
+                    //for (var i = 0; i < k.length; i++) {
+                    //    if (Intersections[k[i]] > 2) {
+                    //        var b = k[i].split(/\|/);
+                    //        L.circleMarker([parseFloat(b[1]), parseFloat(b[0])], {
+                    //            color: '#00FF00',
+                    //            clickable: false,
+                    //            zIndexOffset: -2000,
+                    //            opacity: .5
+                    //        }).addTo(debug_markers);
+                    //    }
+                    //}
 
                 }
 
@@ -508,45 +299,55 @@
                 var FoxholeRouter = {
                     summaryTemplate: '<table class="route-summary"><tr class="route-summary-header"><td><img src=\'{name}.webp\' /><span>{name}</span><span style=\'font-weight: bold; margin-left: 1em\' class=\'summary-routeinfo\'>{distance}</span>'
                         .concat(!window.beta ? "" : '<div class="audio-controls detailed-routeinfo"><button class="play-button" style="pointer-events: auto" onclick="window.narrateDirections()">'.concat(playbutton).concat('</button></div>')).concat('</td></tr>').concat(speed).concat('<tr><td class="no-click">{time}</td></tr></table>'),
-                    TownHalls: TownHalls,
-                    MinorRegionLabels: MinorRegionLabels,
+                    TownHalls: L.layerGroup().addTo(mymap),
                     RegionLabels: RegionLabels,
-                    HexNames: HexNames,
-                    Resources: Resources,
-                    Components: Components,
-                    Fuel: Fuel,
-                    Salvage: Salvage,
-                    Sulfur: Sulfur,
+                    Components: L.layerGroup().addTo(mymap),
+                    Fuel: L.layerGroup().addTo(mymap),
+                    Salvage: L.layerGroup().addTo(mymap),
+                    Sulfur: L.layerGroup().addTo(mymap),
                     API: API,
-                    ScaleTownHalls: ScaleTownHalls,
-                    ScaleRoads: ScaleRoads,
-                    Borders: L.geoJSON(HexBorders).addTo(mymap),
                     Roads: JSONRoads,
-                    Factories: Factories,
-                    Refineries: Refineries,
-                    Storage: Storage,
-                    NeutralRoadsCanvas: NeutralRoadsGroup,
-                    RoadsCanvas: RoadsGroup,
-                    WardenRoadsCanvas: WardenRoadsGroup,
-                    ColonialRoadsCanvas: ColonialRoadsGroup,
+
+                    Icons: Icons,
+
+                    // virtual layers
+                    Borders: L.layerGroup().addTo(mymap),
+                    RoadsCanvas: L.layerGroup().addTo(mymap),
+                    MapControl: L.layerGroup().addTo(mymap),
+                    Labels: L.layerGroup().addTo(mymap),
+                    Factories: L.layerGroup().addTo(mymap),
+                    Refineries: L.layerGroup().addTo(mymap),
+                    Storage: L.layerGroup().addTo(mymap),
+                    WardenRoads: L.layerGroup().addTo(mymap),
+                    ColonialRoads: L.layerGroup().addTo(mymap),
+                    NeutralRoads: L.layerGroup().addTo(mymap),
+
                     renderer: renderer,
+
                     WardenNetworkLayer: L.layerGroup().addTo(mymap),
+
                     ColonialNetworkLayer: L.layerGroup().addTo(mymap),
+
                     NetworkLayer: L.layerGroup().addTo(mymap),
+
                     calculateAngle: function (v1, v2) {
                         angle = Math.atan2(v2[1] - v1[1], v2[0] - v1[0]);
                         if (angle < 0)
                             angle += Math.PI * 2;
                         return angle;
                     },
+
                     truckSpeed: 3600.0 / 45000.0, // 45 kmh
                     jeepSpeed: 3600.0 / 55000.0,
                     flatbedSpeed: 3600 / 25000.0,
+
                     pathFinder: new PathFinder(MainRoutes, {
                         compact: null,
                         weightFn: function (a, b, props) { var dx = a[0] - b[0]; var dy = a[1] - b[1]; return Math.sqrt(dx * dx + dy * dy); }
                     }),
+
                     setRoute: (route) => { FoxholeRouter.currentRoute = route; },
+
                     wardenPathFinder: WardenRoutes != null && WardenRoutes.features != null && WardenRoutes.features.length > 0 ? new PathFinder(WardenRoutes, {
                         compact: null,
                         weightFn: function (a, b, props) { var dx = a[0] - b[0]; var dy = a[1] - b[1]; return Math.sqrt(dx * dx + dy * dy); }
@@ -556,6 +357,174 @@
                         compact: null,
                         weightFn: function (a, b, props) { var dx = a[0] - b[0]; var dy = a[1] - b[1]; return Math.sqrt(dx * dx + dy * dy); }
                     }) : null,
+
+                    hideLabels: function () {
+                        RegionLabels.draw = false;
+                        RegionLabels.redraw();
+                    },
+
+                    showLabels: function () {
+                        RegionLabels.draw = true;
+                        RegionLabels.redraw();
+                    },
+
+                    hideTownHalls: function () {
+                        Icons.disableIcons(['MapIconSafehouse.webp', 'MapIconSafehouseWarden.webp', 'MapIconSafehouseColonial.webp', 'MapIconStaticBase1.webp', 'MapIconStaticBase2.webp', 'MapIconStaticBase3.webp', 'MapIconKeep.webp', 'MapIconRelicBase.webp',
+                            'MapIconStaticBase1Warden.webp', 'MapIconStaticBase2Warden.webp', 'MapIconStaticBase3Warden.webp', 'MapIconKeepWarden.webp', 'MapIconRelicBaseWarden.webp',
+                            'MapIconStaticBase1Colonial.webp', 'MapIconStaticBase2Colonial.webp', 'MapIconStaticBase3Colonial.webp', 'MapIconKeepColonial.webp', 'MapIconRelicBaseColonial.webp'
+                        ]);
+                        Icons.redraw();
+                    },
+
+                    showBorders: function () {
+                        Borders.draw = true;
+                        Borders.redraw();
+                    },
+
+                    hideBorders: function () {
+                        Borders.draw = false;
+                        Borders.redraw();
+                    },
+
+                    showTownHalls: function () {
+                        Icons.enableIcons(['MapIconSafehouse.webp', 'MapIconSafehouseWarden.webp', 'MapIconSafehouseColonial.webp', 'MapIconStaticBase1.webp', 'MapIconStaticBase2.webp', 'MapIconStaticBase3.webp', 'MapIconKeep.webp', 'MapIconRelicBase.webp',
+                            'MapIconStaticBase1Warden.webp', 'MapIconStaticBase2Warden.webp', 'MapIconStaticBase3Warden.webp', 'MapIconKeepWarden.webp', 'MapIconRelicBaseWarden.webp',
+                            'MapIconStaticBase1Colonial.webp', 'MapIconStaticBase2Colonial.webp', 'MapIconStaticBase3Colonial.webp', 'MapIconKeepColonial.webp', 'MapIconRelicBaseColonial.webp'
+                        ]);
+                        Icons.redraw();
+                    },
+
+                    hideControl: function () {
+                        ControlLayer.draw = false;
+                        ControlLayer.redraw();
+                    },
+
+                    showControl: function () {
+                        ControlLayer.draw = true;
+                        ControlLayer.redraw();
+                    },
+
+                    showQuality: function () {
+                        RoadsGroup.quality = true;
+                        RoadsGroup.redraw();
+                    },
+
+                    hideQuality: function () {
+                        RoadsGroup.quality = false;
+                        RoadsGroup.redraw();
+                    },
+
+                    hideColonial: function () {
+                        RoadsGroup.controls[0] = false;
+                        RoadsGroup.redraw();
+                    },
+
+                    showColonial: function () {
+                        RoadsGroup.controls[0] = true;
+                        RoadsGroup.redraw();
+                    },
+
+                    hideWarden: function () {
+                        RoadsGroup.controls[1] = false;
+                        RoadsGroup.redraw();
+                    },
+
+                    showWarden: function () {
+                        RoadsGroup.controls[1] = true;
+                        RoadsGroup.redraw();
+                    },
+
+                    hideNeutral: function () {
+                        RoadsGroup.controls[3] = false;
+                        RoadsGroup.redraw();
+                    },
+
+                    showNeutral: function () {
+                        RoadsGroup.controls[3] = true;
+                        RoadsGroup.redraw();
+                    },
+
+                    hideOffline: function () {
+                        RoadsGroup.controls[2] = false;
+                        RoadsGroup.redraw();
+                    },
+
+                    showOffline: function () {
+                        RoadsGroup.controls[2] = true;
+                        RoadsGroup.redraw();
+                    },
+
+                    hideSalvage: function () {
+                        Icons.disableIcons(['MapIconSalvage.webp', 'MapIconSalvageMine.webp', 'MapIconSalvageWarden.webp', 'MapIconSalvageMineWarden.webp', 'MapIconSalvageColonial.webp', 'MapIconSalvageMineColonial.webp']);
+                        Icons.redraw();
+                    },
+
+                    showSalvage: function () {
+                        Icons.enableIcons(['MapIconSalvage.webp', 'MapIconSalvageMine.webp', 'MapIconSalvageWarden.webp', 'MapIconSalvageMineWarden.webp', 'MapIconSalvageColonial.webp', 'MapIconSalvageMineColonial.webp']);
+                        Icons.redraw();
+                    },
+
+                    hideComponents: function () {
+                        Icons.disableIcons(['MapIconComponents.webp', 'MapIconComponentMine.webp', 'MapIconComponentsWarden.webp', 'MapIconComponentMineWarden.webp', 'MapIconComponentsColonial.webp', 'MapIconComponentMineColonial.webp']);
+                        Icons.redraw();
+                    },
+
+                    showComponents: function () {
+                        Icons.enableIcons(['MapIconComponents.webp', 'MapIconComponentMine.webp', 'MapIconComponentsWarden.webp', 'MapIconComponentMineWarden.webp', 'MapIconComponentsColonial.webp', 'MapIconComponentMineColonial.webp']);
+                        Icons.redraw();
+                    },
+
+                    hideStorage: function () {
+                        Icons.disableIcons(['MapIconStorageFacility.webp', 'MapIconSeaport.webp', 'MapIconStorageFacilityWarden.webp', 'MapIconSeaportWarden.webp', 'MapIconStorageFacilityColonial.webp', 'MapIconSeaportColonial.webp']);
+                        Icons.redraw();
+                    },
+
+                    showStorage: function () {
+                        Icons.enableIcons(['MapIconStorageFacility.webp', 'MapIconSeaport.webp', 'MapIconStorageFacilityWarden.webp', 'MapIconSeaportWarden.webp', 'MapIconStorageFacilityColonial.webp', 'MapIconSeaportColonial.webp']);
+                        Icons.redraw();
+                    },
+
+                    hideSulfur: function () {
+                        Icons.disableIcons(['MapIconSulfur.webp', 'MapIconSulfurMine.webp', 'MapIconSulfurWarden.webp', 'MapIconSulfurMineWarden.webp', 'MapIconSulfurColonial.webp', 'MapIconSulfurMineColonial.webp']);
+                        Icons.redraw();
+                    },
+
+                    showSulfur: function () {
+                        Icons.enableIcons(['MapIconSulfur.webp', 'MapIconSulfurMine.webp', 'MapIconSulfurWarden.webp', 'MapIconSulfurMineWarden.webp', 'MapIconSulfurColonial.webp', 'MapIconSulfurMineColonial.webp']);
+                        Icons.redraw();
+                    },
+
+                    hideRefineries: function () {
+                        Icons.disableIcons(['MapIconManufacturing.webp', 'MapIconManufacturingWarden.webp', 'MapIconManufacturingColonial.webp']);
+                        Icons.redraw();
+                    },
+
+                    showRefineries: function () {
+                        //
+                        Icons.enableIcons(['MapIconManufacturing.webp', 'MapIconManufacturingWarden.webp', 'MapIconManufacturingColonial.webp']);
+                        Icons.redraw();
+                    },
+
+                    showFuel: function () {
+                        Icons.enableIcons(['MapIconOilWell.webp', 'MapIconOilWellWarden.webp', 'MapIconOilWellColonial.webp']);
+                        Icons.redraw();
+                    },
+
+                    hideFuel: function () {
+                        Icons.disableIcons(['MapIconOilWell.webp', 'MapIconOilWellWarden.webp', 'MapIconOilWellColonial.webp']);
+                        Icons.redraw();
+                    },
+
+
+                    showFactories: function () {
+                        Icons.enableIcons(['MapIconFactory.webp', 'MapIconMassProductionFactory.webp', 'MapIconConstructionYard.webp', 'MapIconFactoryWarden.webp', 'MapIconMassProductionFactoryWarden.webp', 'MapIconConstructionYardWarden.webp', 'MapIconFactoryColonial.webp', 'MapIconMassProductionFactoryColonial.webp', 'MapIconConstructionYardColonial.webp']);
+                        Icons.redraw();
+                    },
+
+                    hideFactories: function () {
+                        Icons.disableIcons(['MapIconFactory.webp', 'MapIconMassProductionFactory.webp', 'MapIconConstructionYard.webp', 'MapIconFactoryWarden.webp', 'MapIconMassProductionFactoryWarden.webp', 'MapIconConstructionYardWarden.webp', 'MapIconFactoryColonial.webp', 'MapIconMassProductionFactoryColonial.webp', 'MapIconConstructionYardColonial.webp']);
+                        Icons.redraw();
+                    },
 
                     routeLine: function (route, options) {
                         return new Line(route, options);

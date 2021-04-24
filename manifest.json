@@ -1,0 +1,23 @@
+{
+  "name": "LogiWaze",
+  "short_name": "LogiWaze",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#000",
+  "theme_color": "#ccc",
+  "description": "Foxhole Logistic Routing",
+  "orientation": "any",
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "favicon.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    },
+    {
+      "src": "favicon192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    }
+  ]
+}
