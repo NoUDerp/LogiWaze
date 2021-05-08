@@ -29,9 +29,18 @@ define(['leaflet', 'intersects'],
                     };
                 }
 
-                function makeRenderCallback(u, icon, ctx, img, lx, ly, lw, lh, done, tile) {
+                function makeRenderCallback(u, icon, ctx, img, lx, ly, lw, lh, done, tile, glow, shadow) {
                     return function () {
-                        ctx.drawImage(img.image, lx, ly, lw, lh);
+                        if (glow) {
+                            ctx.filter = "brightness(0.5) sepia(1) hue-rotate(296deg) saturate(10000%) blur(".concat(shadow).concat("px)"); // blur(10px)
+                            ctx.drawImage(img.image, lx, ly, lw, lh);
+                            ctx.drawImage(img.image, lx, ly, lw, lh);
+                            ctx.drawImage(img.image, lx, ly, lw, lh);
+                            ctx.filter = "none";
+                        }
+                        else
+                            ctx.drawImage(img.image, lx, ly, lw, lh);
+                        //ctx.drawImage(img.image, lx, ly, lw, lh);
                         if (--tile.pendingLoad == 0) {
                             setTimeout(() => done(null, tile), 0);
                             delete img.callbacks;
@@ -52,36 +61,53 @@ define(['leaflet', 'intersects'],
                 ctx = tile.getContext('2d');
 
                 var zoom = Math.pow(2, coords.z);
+                var max = Math.pow(2, this.max_zoom);
 
                 tile.pendingLoad = 0;
+
+                const shadowSize = 20;
 
                 for (var j of this.sources) {
 
                     if (coords.z >= j.zoomMin && coords.z < j.zoomMax && j.icon != null && !(j.icon in this.disabledIcons)) {
 
                         var scale = raw_scale;
+                        let shadow = j.glow ? shadowSize * hd_ratio * scale * zoom / max : 0;
+
                         var label_w = j.size.width * zoom * scale * hd_ratio;
                         var label_h = j.size.height * zoom * scale * hd_ratio;
                         var label_x = j.x * zoom * hd_ratio - coords.x * tile.width - label_w * .5;
                         var label_y = j.y * zoom * hd_ratio - coords.y * tile.height - label_h * .5;
 
 
-                        if (intersects.boxBox(0, 0, tile.width, tile.height, label_x, label_y, label_w, label_h)) {
+                        if (intersects.boxBox(0, 0, tile.width, tile.height, label_x - 2.0 * shadow, label_y - 2.0 * shadow, label_w + 4.0 * shadow, label_h + 4.0 * shadow)) {
+                            //ctx.rect(label_x - shadow, label_y - shadow, label_w + 2.0 * shadow, label_h + 2.0 * shadow);
+                            //ctx.stroke();
+
                             var icon = j.icon;
                             var lx = label_x, ly = label_y, lw = label_w, lh = label_h;
                             if (icon in this.imageCache) {
                                 var img = this.imageCache[icon];
-                                if (img.image.complete)
-                                    ctx.drawImage(img.image, lx, ly, lw, lh);
+                                if (img.image.complete) {
+                                    if (j.glow) {
+                                        ctx.filter = "brightness(0.5) sepia(1) hue-rotate(296deg) saturate(10000%) blur(".concat(shadow).concat("px)"); // blur(10px)
+                                        ctx.drawImage(img.image, lx, ly, lw, lh);
+                                        ctx.drawImage(img.image, lx, ly, lw, lh);
+                                        ctx.drawImage(img.image, lx, ly, lw, lh);
+                                        ctx.filter = "none";
+                                    }
+                                    else
+                                        ctx.drawImage(img.image, lx, ly, lw, lh);
+                                }
                                 else {
-                                    img.callbacks.push(makeRenderCallback(this, icon, ctx, img, lx, ly, lw, lh, done, tile));
+                                    img.callbacks.push(makeRenderCallback(this, icon, ctx, img, lx, ly, lw, lh, done, tile, j.glow, shadow));
                                     tile.pendingLoad++;
                                 }
                             }
                             else {
                                 tile.pendingLoad++;
                                 var img = { image: new Image() };
-                                img.callbacks = [makeRenderCallback(this, icon, ctx, img, lx, ly, lw, lh, done, tile)];
+                                img.callbacks = [makeRenderCallback(this, icon, ctx, img, lx, ly, lw, lh, done, tile, j.glow, shadow)];
                                 this.imageCache[icon] = img;
                                 img.image.src = 'MapIcons/'.concat(j.icon);
                                 img.image.onload = makeOnLoadCallback(icon, this);
@@ -108,7 +134,7 @@ define(['leaflet', 'intersects'],
                 u.grid_y_height = size.y / u.grid_y_size;
                 u.Offset = Offset;
                 u.imageCache = {};
-                u.addIcon = (icon, x, y, zoomMin, zoomMax) => {
+                u.addIcon = (icon, x, y, glow, zoomMin, zoomMax) => {
                     u.sources.push(
                         {
                             size: {
@@ -119,6 +145,7 @@ define(['leaflet', 'intersects'],
                             y: -(y + Offset[1]) + 256,
                             icon: icon,
                             zoomMin: zoomMin,
+                            glow: glow,
                             zoomMax: zoomMax,
                             pendingLoad: 0
                         });

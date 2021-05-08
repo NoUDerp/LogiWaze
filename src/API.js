@@ -39,6 +39,50 @@ define(['jquery', 'point-in-polygon', '@sakitam-gis/kriging', '../towns.json'], 
             for (var i = 0; i < regions.length; i++)
                 regionNameMap[regions[i].name] = regions[i].realName;
 
+            function APIQuery(URL, success, error) {
+
+                // find the etag in the localstorage first
+                var existing_etag = window.localStorage.getItem('etag-'.concat(URL));
+                var existing = window.localStorage.getItem(URL);
+
+                let result = null;
+
+                $.ajax(
+                    {
+                        url: URL,
+                        type: 'GET',
+                        crossDomain: true,
+                        data: "json",
+                        dataType: "json",
+                        cache: false,
+                        beforeSend: function (xhr) {
+                            if (existing_etag != null && existing_etag != "null")
+                                xhr.setRequestHeader('If-None-Match', existing_etag);
+                        },
+                        ifModified: true,
+                        success: function (r) {
+                            result = r;
+                            success(result);
+                        },
+                        complete: function (xhr, status) {
+                            var eTag = xhr.getResponseHeader('ETag');
+                            if (eTag != null && status == "success") {
+                                window.localStorage.setItem('etag-'.concat(URL), eTag);
+                                window.localStorage.setItem(URL, JSON.stringify(result));
+                            }
+                            // store this result in the database
+                        },
+                        error: function (xhr, status, error_thrown) {
+                            if (status == "notmodified" && existing != null)
+                                success(JSON.parse(existing));
+                            else
+                                error(xhr, status, error_thrown);
+                        }
+                    }
+                );
+            }
+
+
             var API = {
                 regions: regions,
                 mapRegionName: function (x) {
@@ -119,14 +163,8 @@ define(['jquery', 'point-in-polygon', '@sakitam-gis/kriging', '../towns.json'], 
                         shard = 'war-service-live';
                     else
                         shard = 'war-service-live-'.concat(shard);
-
-                    $.ajax({
-                        url: "https://".concat(shard).concat(".foxholeservices.com/api/worldconquest/maps"),
-                        type: 'GET',
-                        crossDomain: true,
-                        data: "json",
-                        dataType: "json",
-                        success: function (maps) {
+                    APIQuery("https://".concat(shard).concat(".foxholeservices.com/api/worldconquest/maps"),
+                        function (maps) {
                             // iterate here on the maps and collect status
                             var complete = maps.length;
                             var p_x = [], p_y = [], p_t = [];
@@ -154,9 +192,9 @@ define(['jquery', 'point-in-polygon', '@sakitam-gis/kriging', '../towns.json'], 
                                                         y = -256 + ((((1 - y) * 40.30954606705751) + offset.x) - 20.15477303352875);
                                                         var key = x.toFixed(3).toString().concat('|').concat(y.toFixed(3).toString());
                                                         var control = mapData.mapItems[j].teamId;
-                                                        API.mapControl[mapName][key] = { x: x, y: y, control: control, mapIcon: icon, town: ((icon >= 5 && icon <= 10) || (icon >= 45 && icon <= 47) || icon == 29) };
+                                                        API.mapControl[mapName][key] = { x: x, y: y, control: control, mapIcon: icon, nuked: (mapData.mapItems[j].flags & 0x10) != 0, town: ((icon >= 5 && icon <= 10) || (icon >= 45 && icon <= 47) || icon == 29) };
 
-                                                        if (control != "OFFLINE" && (icon == 35 || (icon >= 5 && icon <= 10) || (icon >= 45 && icon <= 47) || icon == 29)) {
+                                                        if ((control != "OFFLINE" && (icon == 35 || (icon >= 5 && icon <= 10) || (icon >= 45 && icon <= 47) || icon == 29)) && (mapData.mapItems[j].flags & 0x10) == 0) {
                                                             p_x.push(x);
                                                             p_y.push(y);
                                                             p_t.push(control == "WARDENS" ? -1 : (control == "COLONIALS" ? 1 : 0));
@@ -168,29 +206,30 @@ define(['jquery', 'point-in-polygon', '@sakitam-gis/kriging', '../towns.json'], 
                                                         x = 256 + (((x * 46.54545454545455) + offset.y) - 23.27272727272727);
                                                         y = -256 + ((((1 - y) * 40.30954606705751) + offset.x) - 20.15477303352875);
                                                         var key = x.toFixed(3).toString().concat('|').concat(y.toFixed(3).toString());
-                                                        API.resources[mapName][key] = { x: x, y: y, control: mapData.mapItems[j].teamId, mapIcon: icon };
-                                                    }
+                                                        API.resources[mapName][key] = { x: x, y: y, control: mapData.mapItems[j].teamId, mapIcon: icon, nuked: (mapData.mapItems[j].flags & 0x10) != 0
+                            };
+                        }
                                                 }
 
-                                            }
+            }
 
 
-                                            if (--complete == 0) {
-                                                API.variogram = kriging.train(p_t, p_x, p_y, 'exponential', 0, 100);
-                                                completionCallback();
-                                            }
+            if (--complete == 0) {
+                API.variogram = kriging.train(p_t, p_x, p_y, 'exponential', 0, 100);
+                completionCallback();
+            }
 
-                                        },
-                                        error: function (failure) { --complete; alert(JSON.stringify(failure)); }
-                                    }
+        },
+        error: function (failure) { --complete; alert(JSON.stringify(failure)); }
+    }
                                 );
                             }
                         },
-                        error: function (e) { alert(JSON.stringify(e)); }
-                    });
+function (e) { alert(JSON.stringify(e)); }
+                    );
                 }
             };
-            return API;
+return API;
         }
     }
 });

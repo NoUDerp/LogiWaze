@@ -1,5 +1,5 @@
-﻿define(['leaflet', 'json-loader!../Roads.geojson', './geojson-path-finder/index.js', 'leaflet-routing-machine', '../towns.json'],
-    function (L, Paths, PathFinder, routing_machine, towns) {
+﻿define(['leaflet', 'json-loader!../Roads.geojson', './geojson-path-finder/index.js', 'leaflet-routing-machine', '../towns.json', 'dom-to-image'],
+    function (L, Paths, PathFinder, routing_machine, towns, domtoimage) {
 
         return {
             FoxholeRouter: function (mymap, API, Narrator) {
@@ -193,29 +193,50 @@
                 }
 
                 var rkeys = Object.keys(API.resources);
+                var keys = Object.keys(API.mapControl);
 
-                for (var t = 0; t < rkeys.length; t++) {
-                    var region = API.resources[rkeys[t]];
-                    var keys2 = Object.keys(region);
-                    for (var k = 0; k < keys2.length; k++) {
-
-                        var th = region[keys2[k]];
-                        var data = { ownership: th.control, icon: th.mapIcon };
-                        var icon = resolveResource(data);
-                        Icons.addIcon(icon, th.x, th.y, 0, 9);
+                for (var t of Object.keys(API.resources)) {
+                    var region = API.resources[t];
+                    for (var k of Object.keys(region)) {
+                        var th = region[k];
+                        if (th.nuked) {
+                            var data = { ownership: th.control, icon: th.mapIcon };
+                            var icon = resolveResource(data);
+                            Icons.addIcon(icon, th.x, th.y, th.nuked, 0, 9);
+                        }
                     }
                 }
 
-                var keys = Object.keys(API.mapControl);
+                for (var t of Object.keys(API.mapControl)) {
+                    var region = API.mapControl[t];
+                    for (var k of Object.keys(region)) {
+                        var th = region[k];
+                        if (th.nuked) {
+                            var data = { ownership: th.control, icon: th.mapIcon };
+                            var icon = resolveIcon(data);
+                            Icons.addIcon(icon, th.x, th.y, th.nuked, 0, 9);
+                        }
+                    }
+                }
 
-                for (var t = 0; t < keys.length; t++) {
-                    var region = API.mapControl[keys[t]];
-                    var keys2 = Object.keys(region);
-                    for (var k = 0; k < keys2.length; k++) {
-                        var th = region[keys2[k]];
+                for (var t of Object.keys(API.resources)) {
+                    var region = API.resources[t];
+                    for (var k of Object.keys(region)) {
+
+                        var th = region[k];
+                        var data = { ownership: th.control, icon: th.mapIcon };
+                        var icon = resolveResource(data);
+                        Icons.addIcon(icon, th.x, th.y, false, 0, 9);
+                    }
+                }
+
+                for (var t of Object.keys(API.mapControl)) {
+                    var region = API.mapControl[t];
+                    for (var k of Object.keys(region)) {
+                        var th = region[k];
                         var data = { ownership: th.control, icon: th.mapIcon };
                         var icon = resolveIcon(data);
-                        Icons.addIcon(icon, th.x, th.y, 0, 9);
+                        Icons.addIcon(icon, th.x, th.y, false, 0, 9);
                     }
                 }
 
@@ -240,6 +261,17 @@
 
                 for (var i = 0; i < API.regions.length; i++)
                     RegionLabels.addText(Recase(API.regions[i].realName), 4, API.regions[i].x, API.regions[i].y, 1, 3, '#ffffff', 2.5);
+
+
+                for (var credit of [
+                    { text: "Haydenwood", x: 139.079, y: -155.292 },
+                    { text: "Steely Phil Bridge", x: 18.18, y: -161.439 },
+                    { text: "Icanari Killing Fields", x: 134.071, y: -143.104 },
+                    { text: "Kastow Peak", x: 124.817, y: -122.72 },
+                    { text: "Dragon Zephyr Inn", x: 56.987, y: -130.357 }
+                ]
+                )
+                    RegionLabels.addText(Recase(credit.text), control, credit.x, credit.y, 7, 9, '#DAA520');
 
                 for (var key in JSONRoads._layers) {
                     var layer = JSONRoads._layers[key];
@@ -524,6 +556,13 @@
                     hideFactories: function () {
                         Icons.disableIcons(['MapIconFactory.webp', 'MapIconMassProductionFactory.webp', 'MapIconConstructionYard.webp', 'MapIconFactoryWarden.webp', 'MapIconMassProductionFactoryWarden.webp', 'MapIconConstructionYardWarden.webp', 'MapIconFactoryColonial.webp', 'MapIconMassProductionFactoryColonial.webp', 'MapIconConstructionYardColonial.webp']);
                         Icons.redraw();
+                    },
+
+                    screenshot: function () {
+                        domtoimage.toPng(document.getElementById("map-holder")).then(function (blob) {
+                            navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+                            window.saveAs(blob, 'map.png');
+                        });
                     },
 
                     routeLine: function (route, options) {

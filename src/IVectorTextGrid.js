@@ -117,7 +117,7 @@ define(['leaflet', 'intersects'],
                         {
                             size: {
                                 width: (size.actualBoundingBoxRight - size.actualBoundingBoxLeft) / u.grid_x_size,
-                                height: (size.fontBoundingBoxAscent + size.fontBoundingBoxDescent) / u.grid_y_size
+                                height: (size.actualBoundingBoxAscent + size.actualBoundingBoxDescent) / u.grid_y_size
                             },
                             text: text,
                             x: x + Offset[0],

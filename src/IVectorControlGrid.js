@@ -25,6 +25,8 @@ define(['leaflet', 'intersects'],
                 var tile = L.DomUtil.create('canvas', 'leaflet-tile');
                 var size = this.getTileSize();
 
+                //tile.globalCompositeOperation =
+
                 var hd_ratio = coords.z < 2 ? 8 : 16;
 
 
@@ -71,7 +73,7 @@ define(['leaflet', 'intersects'],
                                     d.data[i++] = Math.floor(255 * (v * (1.0 - colors[0].r) + colors[0].r));
                                     d.data[i++] = Math.floor(255 * (v * (.4 - colors[0].g) + colors[0].g));
                                     d.data[i++] = Math.floor(255 * (v * (.2666 - colors[0].b) + colors[0].b));
-                                    d.data[i++] = 128;
+                                    d.data[i++] = 255;
                                 }
                                 else if (v > 0) // fade from colonial
                                 {
@@ -79,7 +81,7 @@ define(['leaflet', 'intersects'],
                                     d.data[i++] = Math.floor(255 * (v * (1.0 - colors[1].r) + colors[1].r));
                                     d.data[i++] = Math.floor(255 * (v * (.4 - colors[1].g) + colors[1].g));
                                     d.data[i++] = Math.floor(255 * (v * (.2666 - colors[1].b) + colors[1].b));
-                                    d.data[i++] = 128;
+                                    d.data[i++] = 255;
                                 }
                             }
                     else
@@ -101,11 +103,11 @@ define(['leaflet', 'intersects'],
 
                     ctx.putImageData(d, 0, 0);
 
-                    ctx = tile.getContext('2d');
+                    var ctx2 = tile.getContext('2d');
 
-                    ctx.save();
-                    ctx.fillStyle = '#fff';
-                    ctx.lineWidth = 1;
+                    ctx2.save();
+                    ctx2.fillStyle = '#fff';
+                    ctx2.lineWidth = 1;
                     for (var j of u.sources) {
                         var label_w = j.size.width * zoom;
                         var label_h = j.size.height * zoom;
@@ -113,21 +115,24 @@ define(['leaflet', 'intersects'],
                         var label_y = j.y * zoom - coords.y * tile.height - label_h;
 
                         if (intersects.boxBox(0, 0, tile.width, tile.height, label_x, label_y, label_w, label_h))
-                            drawHex(tile, ctx, label_x + label_w * .5, label_y + label_h * .5, label_w * .5, label_h * .5);
+                            drawHex(tile, ctx2, label_x + label_w * .5, label_y + label_h * .5, label_w * .5, label_h * .5);
                     }
-                    ctx.restore();
+                    ctx2.restore();
 
-                    ctx.save();
-                    ctx.globalCompositeOperation = 'source-in';
+                    ctx2.globalCompositeOperation = 'source-in';
+                    ctx2.save();
+                    ctx2.imageSmoothingQuality = 'low';
+                    ctx2.drawImage(temp_canvas, 1, 1, temp_canvas.width - 2, temp_canvas.height - 2, 0, 0, tile.width, tile.height);
+                    ctx2.restore();
 
-                    ctx.imageSmoothingQuality = 'low';
-                    ctx.drawImage(temp_canvas, 1, 1, temp_canvas.width - 2, temp_canvas.height - 2, 0, 0, tile.width, tile.height);
-                    ctx.restore();
+                    ctx.clearRect(0, 0, temp_canvas.width, temp_canvas.height);
+                    delete ctx;
+                    delete temp_canvas;
+
                     done(null, tile);
                 }
                 setTimeout(() => draw(0, 0, 0), 0);
                 return tile;
-                //return draw();
             }
 
         });
@@ -136,7 +141,7 @@ define(['leaflet', 'intersects'],
             Create: (MaxZoom, Offset, API) => {
                 var u = new VectorControlGridPrototype();
                 var size = u.getTileSize();
-
+                u.setOpacity(.5);
                 u.sources = [];
                 u.max_zoom = MaxZoom;
                 u.offset = Offset;

@@ -1,7 +1,6 @@
-var build="153b47d0f9d409bf3e6d7a19ba14183515555e61";
+var build="822d08855b271147f99fbf0e7e52252b79e1029f";
 
 const assets = [
-    "routing-icon.png",
     "layers.png",
     "layers-2x.png",
     "Tiles/0_0_0.webp",
