@@ -96,6 +96,7 @@ define(['jquery', 'point-in-polygon', '@sakitam-gis/kriging', '../towns.json'], 
                         if (pip([x - region.x, - region.y + y], regionPolygon))
                             return region.name;
                     }
+                    return null;
                 },
                 mapControl: {},
                 resources: {},
@@ -194,7 +195,7 @@ define(['jquery', 'point-in-polygon', '@sakitam-gis/kriging', '../towns.json'], 
                                                         var control = mapData.mapItems[j].teamId;
                                                         API.mapControl[mapName][key] = { x: x, y: y, control: control, mapIcon: icon, nuked: (mapData.mapItems[j].flags & 0x10) != 0, town: ((icon >= 5 && icon <= 10) || (icon >= 45 && icon <= 47) || icon == 29) };
 
-                                                        if ((control != "OFFLINE" && (icon == 35 || (icon >= 5 && icon <= 10) || (icon >= 45 && icon <= 47) || icon == 29)) && (mapData.mapItems[j].flags & 0x10) == 0) {
+                                                        if ((mapData.mapItems[j].flags & 0x10) == 0 && (control != "OFFLINE" && (icon == 35 || (icon >= 5 && icon <= 10) || (icon >= 45 && icon <= 47) || icon == 29))) {
                                                             p_x.push(x);
                                                             p_y.push(y);
                                                             p_t.push(control == "WARDENS" ? -1 : (control == "COLONIALS" ? 1 : 0));
@@ -206,30 +207,31 @@ define(['jquery', 'point-in-polygon', '@sakitam-gis/kriging', '../towns.json'], 
                                                         x = 256 + (((x * 46.54545454545455) + offset.y) - 23.27272727272727);
                                                         y = -256 + ((((1 - y) * 40.30954606705751) + offset.x) - 20.15477303352875);
                                                         var key = x.toFixed(3).toString().concat('|').concat(y.toFixed(3).toString());
-                                                        API.resources[mapName][key] = { x: x, y: y, control: mapData.mapItems[j].teamId, mapIcon: icon, nuked: (mapData.mapItems[j].flags & 0x10) != 0
-                            };
-                        }
+                                                        API.resources[mapName][key] = {
+                                                            x: x, y: y, control: mapData.mapItems[j].teamId, mapIcon: icon, nuked: (mapData.mapItems[j].flags & 0x10) != 0
+                                                        };
+                                                    }
                                                 }
 
-            }
+                                            }
 
 
-            if (--complete == 0) {
-                API.variogram = kriging.train(p_t, p_x, p_y, 'exponential', 0, 100);
-                completionCallback();
-            }
+                                            if (--complete == 0) {
+                                                API.variogram = kriging.train(p_t, p_x, p_y, 'exponential', 0, 100);
+                                                completionCallback();
+                                            }
 
-        },
-        error: function (failure) { --complete; alert(JSON.stringify(failure)); }
-    }
+                                        },
+                                        error: function (failure) { --complete; alert(JSON.stringify(failure)); }
+                                    }
                                 );
                             }
                         },
-function (e) { alert(JSON.stringify(e)); }
+                        function (e) { alert(JSON.stringify(e)); }
                     );
                 }
             };
-return API;
+            return API;
         }
     }
 });

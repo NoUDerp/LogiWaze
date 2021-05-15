@@ -30,7 +30,8 @@
     "turf-point": "^2.0.1",
     "babel-core": "*",
     "babel-loader": "*",
-    "babel-preset-es2015": "*"
+    "babel-preset-es2015": "*",
+    "jquery-ui": "*"
   },
   "devDependencies": {
     "make": "*",

@@ -1,4 +1,4 @@
-var build="822d08855b271147f99fbf0e7e52252b79e1029f";
+var build="6900ece74a44e2456b3107ee977db48b76539d88";
 
 const assets = [
     "layers.png",
@@ -1369,7 +1369,7 @@ const assets = [
     "Tiles/5_9_8.webp",
     "Tiles/5_9_9.webp",
     "Background.webp",
-    "Celtic.ttf",
+    "Celtic.woff2",
     "Colonial Route.webp",
     "favicon.png",
     "favicon.svg",
@@ -1377,7 +1377,7 @@ const assets = [
     "FoxholeRouter.js",
     "HeavyTruck.png",
     "index.html",
-    "Italic.ttf",
+    "Italic.woff2",
     "Jeep.webp",
     "MapIcons/fencing.webp",
     "MapIcons/make_colonial.sh",
@@ -1506,7 +1506,7 @@ const assets = [
     "MapIcons/Labels.webp",
     "ray-end.svg",
     "ray-start-arrow.svg",
-    "Roman.ttf",
+    "Roman.woff2",
     //"ServiceWorker.js",
     "Shortest Route.webp",
     "Truck.webp",

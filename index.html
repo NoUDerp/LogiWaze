@@ -3,10 +3,17 @@
     <link rel="icon" href="favicon.svg">
     <!--<link rel="manifest" href="manifest.json" crossorigin="" />-->
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no, width=device-width, min-width: 750px" /> <!--  -->
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no, width=device-width" /> <!--  -->
     <title>LogiWaze</title>
 
     <style type="text/css">
+        body {
+            -webkit-user-select: none; /* Chrome all / Safari all */
+            -moz-user-select: none; /* Firefox all */
+            -ms-user-select: none; /* IE 10+ */
+            user-select: none; /* Likely future */
+        }
+
         .leaflet-routing-alternatives-container {
             flex-grow: 1;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='50' viewBox='0 0 100 100'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%23888888' fill-opacity='0.4'%3E%3Cpath opacity='.5' d='M96 95h4v1h-4v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9zm-1 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9z'/%3E%3Cpath d='M6 5V0H5v5H0v1h5v94h1V6h94V5H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
@@ -296,8 +303,10 @@
         }
 
             .leaflet-bar a, .leaflet-bar a:hover {
-                background-color: #fff;
-                border-bottom: 1px solid #ccc;
+                /*background-color: #fff;*/
+                /*border: 1px solid #555555FB;*/
+                /*border-collapse: collapse;*/
+                /*border-bottom: 1px solid #ccc;*/
                 width: 26px;
                 height: 26px;
                 line-height: 26px;
@@ -335,28 +344,28 @@
                 }
 
         .leaflet-touch .leaflet-bar a {
-            width: 30px;
-            height: 30px;
-            line-height: 30px;
+            width: 40px;
+            height: 40px;
+            line-height: 40px;
         }
 
             .leaflet-touch .leaflet-bar a:first-child {
-                border-top-left-radius: 2px;
-                border-top-right-radius: 2px;
+                border-top-left-radius: 4px;
+                border-top-right-radius: 4px;
             }
 
             .leaflet-touch .leaflet-bar a:last-child {
-                border-bottom-left-radius: 2px;
-                border-bottom-right-radius: 2px;
+                border-bottom-left-radius: 4px;
+                border-bottom-right-radius: 4px;
             }
 
         .leaflet-control-zoom-in, .leaflet-control-zoom-out {
-            font: bold 18px 'Lucida Console',Monaco,monospace;
+            /*font: bold 18px 'Lucida Console',Monaco,monospace;*/
             text-indent: 1px;
         }
 
         .leaflet-touch .leaflet-control-zoom-in, .leaflet-touch .leaflet-control-zoom-out {
-            font-size: 22px;
+            font-size: 30px;
         }
 
         .leaflet-control-layers {
@@ -762,8 +771,8 @@
         }
 
         .leaflet-routing-geocoders button {
-            width: 30px;
-            height: 30px;
+            width: 50px;
+            height: 50px;
         }
         /*        .leaflet-routing-icon {
                     background-image: url(leaflet.routing.icons.png);
@@ -856,11 +865,16 @@
 
         .leaflet-routing-add-waypoint:after {
             content: '+';
+            font-weight: 400;
+            font-size: 30px;
+            line-height: 40px
         }
 
         .leaflet-routing-reverse-waypoints:after {
             font-weight: 400;
             content: '\21c5';
+            font-size: 30px;
+            line-height: 40px
         }
 
         .leaflet-routing-geocoders button:hover {
@@ -961,8 +975,26 @@
             border-radius: 4px unset unset 4px !important;
         }
 
-        .leaflet-routing-container-hide .leaflet-routing-collapse-btn {
+        .leaflet-control-zoom {
+            background-color: #B0B0B0;
+            border: 1px solid #555555FB;
+            border-collapse: collapse;
+            box-shadow: 0 0 4px 4px rgba(0,0,0,.6) !important;
+            opacity: .85;
+            font-size: 24px;
+            font-weight: 700;
+            /*border-radius: 4px unset unset 4px !important;*/
         }
+
+            .leaflet-control-zoom a {
+                background-color: #B0B0B0 !important;
+                border-collapse: collapse;
+                font-size: 24px;
+                font-weight: 700;
+                color: #444;
+                text-shadow: 0px 0px 2px rgba(.3,.3,.3,.5);
+            }
+
 
         .leaflet-routing-collapse-btn::after {
             content: 'Tools';
@@ -975,12 +1007,13 @@
 
         .leaflet-routing-collapse-btn::before {
             content: '';
-            width: 40px;
-            height: 40px;
+            width: 1.5em;
+            height: 1.5em;
             display: inline-block;
             position: relative;
-            left: 5px;
-            top: 5px;
+            margin: .2em;
+            /*left: .5em;
+            top: .5em;*/
             background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiBpZD0iTGF5ZXJfMiIgZGF0YS1uYW1lPSJMYXllciAyIiB2aWV3Qm94PSIwIDAgNjQgNjQiPjxkZWZzPjxzdHlsZT4uY2xzLTF7ZmlsbDp1cmwoI2xpbmVhci1ncmFkaWVudCk7fS5jbHMtMntmaWxsOnVybCgjbGluZWFyLWdyYWRpZW50LTIpO30uY2xzLTN7ZmlsbDp1cmwoI2xpbmVhci1ncmFkaWVudC0zKTt9LmNscy00e29wYWNpdHk6MC40ODt9PC9zdHlsZT48bGluZWFyR3JhZGllbnQgaWQ9ImxpbmVhci1ncmFkaWVudCIgeDE9IjIuOTciIHkxPSIzMiIgeDI9IjYxIiB5Mj0iMzIiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNkN2Q4ZDIiLz48c3RvcCBvZmZzZXQ9IjAuMDciIHN0b3AtY29sb3I9IiNkMGQxY2IiLz48c3RvcCBvZmZzZXQ9IjAuNyIgc3RvcC1jb2xvcj0iIzk5OTg4ZCIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzg0ODI3NSIvPjwvbGluZWFyR3JhZGllbnQ+PGxpbmVhckdyYWRpZW50IGlkPSJsaW5lYXItZ3JhZGllbnQtMiIgeDE9IjM0LjE4IiB5MT0iMTciIHgyPSI1OS44MSIgeTI9IjE3IiB4bGluazpocmVmPSIjbGluZWFyLWdyYWRpZW50Ii8+PGxpbmVhckdyYWRpZW50IGlkPSJsaW5lYXItZ3JhZGllbnQtMyIgeDE9IjQuMTkiIHkxPSI0NyIgeDI9IjI5LjgyIiB5Mj0iNDciIHhsaW5rOmhyZWY9IiNsaW5lYXItZ3JhZGllbnQiLz48L2RlZnM+PHBhdGggY2xhc3M9ImNscy0xIiBkPSJNNTguMTcsNDQuNTVhOS41Nyw5LjU3LDAsMCwwLTkuNzUtMi4zNEwyMS43OSwxNS41OGMyLjM1LTYuNzktMy45NS0xMy45MS0xMS0xMi40YTEsMSwwLDAsMC0uNzkuODgsMSwxLDAsMCwwLC4yOC44MWw0LDRMMTMuMSwxMy4xLDguODMsMTQuMjRsLTQtNEExLjEsMS4xLDAsMCwwLDQuMDYsMTBhMSwxLDAsMCwwLS44OC43OWMtMS41NSw3LDUuNywxMy40MSwxMi40MiwxMUw0Mi4yMSw0OC40MmMtMi4zNiw2Ljc5LDQsMTMuOTEsMTEsMTIuNGExLDEsMCwwLDAsLjc5LS44OCwxLDEsMCwwLDAtLjI4LS44MWwtNC00TDUwLjksNTAuOWw0LjI3LTEuMTQsNCw0YTEuMjksMS4yOSwwLDAsMCwuNzEuM2gwYTEsMSwwLDAsMCwxLS44MUE5LjU5LDkuNTksMCwwLDAsNTguMTcsNDQuNTVaIi8+PHBhdGggY2xhc3M9ImNscy0yIiBkPSJNMzkuMjgsMjkuNTJhMSwxLDAsMCwwLDEuNDEsMGw3LjQ2LTcuNDVjOSwyLjU3LDE1LjU5LTguNTIsOS0xNS4yMXMtMTcuNzUsMC0xNS4xOSw5bC03LjQ3LDcuNDdhMSwxLDAsMCwwLDAsMS40MVpNNDUuODQsMTQuMWwxLTMuODhhMSwxLDAsMCwxLC43MS0uNzFsMy44OC0xYTEsMSwwLDAsMSwxLC4yNmwyLjg0LDIuODRhMSwxLDAsMCwxLC4yNiwxbC0xLDMuODhhMSwxLDAsMCwxLS43MS43MWwtMy44OCwxYTEuMDcsMS4wNywwLDAsMS0uMjUsMCwxLDEsMCwwLDEtLjcxLS4yOUw0Ni4xLDE1LjA2QTEsMSwwLDAsMSw0NS44NCwxNC4xWiIvPjxwYXRoIGNsYXNzPSJjbHMtMyIgZD0iTTI0LjcyLDM0LjQ4YTEsMSwwLDAsMC0xLjQxLDBMMTUuODQsNDJjLTktMi41Ni0xNS41Niw4LjUtOSwxNS4xOXMxNy43OSwwLDE1LjE5LTlsNy40Ny03LjQ3YTEsMSwwLDAsMCwwLTEuNDFabS03LjIzLDE1LjYtLjg2LDMuMjFhMSwxLDAsMCwxLS43MS43MWwtMy4yMS44NmExLDEsMCwwLDEtMS0uMjZMOS40LDUyLjI1YTEsMSwwLDAsMS0uMjYtMUwxMCw0OC4wOGExLDEsMCwwLDEsLjcxLS43MWwzLjIxLS44NmExLDEsMCwwLDEsMSwuMjZsMi4zNSwyLjM1QTEsMSwwLDAsMSwxNy40OSw1MC4wOFoiLz48ZyBjbGFzcz0iY2xzLTQiPjxwYXRoIGQ9Ik02MC43OCw1My4zMWMxLjY2LTcuMDUtNS41Ni0xMy40Ny0xMi4zNi0xMS4xTDIxLjc5LDE1LjU4YzIuMzUtNi43OS0zLjk1LTEzLjkxLTExLTEyLjRhMSwxLDAsMCwwLS43OS44OCwxLDEsMCwwLDAsLjI4LjgxbDQsNEwxMy4xLDEzLjEsOC44MywxNC4yNGwtNC00QTEuMSwxLjEsMCwwLDAsNC4wNiwxMGExLDEsMCwwLDAtLjg4Ljc5Yy0xLjU1LDcsNS43LDEzLjQxLDEyLjQyLDExTDQyLjIxLDQ4LjQyYy0yLjM2LDYuNzksNCwxMy45MSwxMSwxMi40YTEsMSwwLDAsMCwuNzktLjg4LDEsMSwwLDAsMC0uMjgtLjgxbC00LTRMNTAuOSw1MC45bDQuMjctMS4xNCw0LDRhMS4yOSwxLjI5LDAsMCwwLC43MS4zaDBBMSwxLDAsMCwwLDYwLjc4LDUzLjMxWm0tNS41Ny01LjYzLTUuMzgsMS40NGExLDEsMCwwLDAtLjcxLjcxbC0xLjQ0LDUuMzhhMSwxLDAsMCwwLC4yNiwxTDUwLjczLDU5YTcuNjgsNy42OCwwLDAsMS02LjQ2LTEwLjQ0Ljg5Ljg5LDAsMCwwLDAtLjU4Ljc4Ljc4LDAsMCwwLS4yNS0uNTFMMTYuNTcsMjBhLjg5Ljg5LDAsMCwwLS41My0uMjYuOS45LDAsMCwwLS41NiwwQTcuNjcsNy42NywwLDAsMSw1LDEzLjI3bDIuNzgsMi43OWExLDEsMCwwLDAsLjcxLjI5LDEuMTUsMS4xNSwwLDAsMCwuMjYsMGw1LjM4LTEuNDRhMSwxLDAsMCwwLC43MS0uNzFsMS40NC01LjM4YTEsMSwwLDAsMC0uMjYtMUwxMy4yNyw1YTcuNjgsNy42OCwwLDAsMSw2LjQ2LDEwLjQ0Ljg5Ljg5LDAsMCwwLDAsLjU4Ljc4Ljc4LDAsMCwwLC4yNS41MUw0Ny40Myw0NC4wNWEuODMuODMsMCwwLDAsLjUxLjI1Ljg5Ljg5LDAsMCwwLC41OCwwQTcuNjcsNy42NywwLDAsMSw1OSw1MC43M2wtMi43OC0yLjc5QTEsMSwwLDAsMCw1NS4yMSw0Ny42OFoiLz48cGF0aCBkPSJNMzUuMTgsMjVhMSwxLDAsMCwwLC43MS0uM2w3Ljg2LTcuODZoMEExLjA4LDEuMDgsMCwwLDAsNDQsMTUuNzhjLTIuNi03LjEsNi4zMy0xMi44NCwxMS43MS03LjVzLS40LDE0LjMxLTcuNSwxMS43MWExLjEsMS4xLDAsMCwwLTEuMDguMjVoMGwtNy44Niw3Ljg2YTEsMSwwLDAsMCwxLjQxLDEuNDFsNy40Ni03LjQ1YzksMi41NywxNS41OS04LjUyLDktMTUuMjFzLTE3Ljc1LDAtMTUuMTksOWwtNy40Nyw3LjQ3QTEsMSwwLDAsMCwzNS4xOCwyNVoiLz48cGF0aCBkPSJNMjguMTEsMzkuMjhsLTcuODYsNy44NmgwQTEuMDgsMS4wOCwwLDAsMCwyMCw0OC4yMmMyLjYsNy4xLTYuMzMsMTIuODQtMTEuNzEsNy41cy40LTE0LjMxLDcuNS0xMS43MWExLjA4LDEuMDgsMCwwLDAsMS4wNy0uMjVoMGw3Ljg2LTcuODZhMSwxLDAsMCwwLTEuNDEtMS40MUwxNS44NCw0MmMtOS0yLjU2LTE1LjU2LDguNS05LDE1LjE5czE3Ljc5LDAsMTUuMTktOWw3LjQ3LTcuNDdBMSwxLDAsMCwwLDI4LjExLDM5LjI4WiIvPjxwYXRoIGQ9Ik0xMy45Miw0Ni41MWwtMy4yMS44NmExLDEsMCwwLDAtLjcxLjcxbC0uODYsMy4yMWExLDEsMCwwLDAsLjI2LDFsMi4zNSwyLjM1YTEsMSwwLDAsMCwxLC4yNkwxNS45Miw1NGExLDEsMCwwLDAsLjcxLS43MWwuODYtMy4yMWExLDEsMCwwLDAtLjI2LTFsLTIuMzUtMi4zNUExLDEsMCwwLDAsMTMuOTIsNDYuNTFabS45Myw1LjcxLTIuMS41Ni0xLjUzLTEuNTMuNTYtMi4xLDIuMS0uNTYsMS41MywxLjUzWiIvPjxwYXRoIGQ9Ik00OS42NSwxOC4xOWExLjA3LDEuMDcsMCwwLDAsLjI1LDBsMy44OC0xYTEsMSwwLDAsMCwuNzEtLjcxbDEtMy44OGExLDEsMCwwLDAtLjI2LTFMNTIuNDMsOC43M2ExLDEsMCwwLDAtMS0uMjZsLTMuODgsMWExLDEsMCwwLDAtLjcxLjcxbC0xLDMuODhhMSwxLDAsMCwwLC4yNiwxbDIuODQsMi44NEExLDEsMCwwLDAsNDkuNjUsMTguMTlabS0xLTYuOSwyLjc3LS43NCwyLDItLjc0LDIuNzctMi43Ny43NC0yLTJaIi8+PC9nPjwvc3ZnPg==);
         }
 
@@ -1375,7 +1408,17 @@
             clear: none;
         }
 
-        @media only all and ( max-aspect-ratio: 3/4 ) {
+        @media only all and ( max-aspect-ratio: 3/4 ), only all and (max-width: 700px) {
+
+            .leaflet-top.leaflet-left {
+                left: unset;
+                right: 10px;
+            }
+
+            .leaflet-control-zoom.leaflet-bar.leaflet-control {
+                float: right;
+            }
+
             .leaflet-top.leaflet-right {
                 width: 100%;
                 height: unset;
@@ -1394,16 +1437,16 @@
                 border-top-right-radius: unset;
                 border-bottom-left-radius: unset;
                 border-bottom-right-radius: unset;
-                height: 115px;
+                height: 140px;
                 margin-bottom: 0px;
             }
 
             .leaflet-routing-collapse-btn {
-                width: 100px;
+                width: 5em;
                 left: unset;
                 right: 0;
-                top: -43px;
-                height: 40px;
+                top: -1.9em;
+                height: calc(1.9em - 2px);
                 border-bottom-left-radius: unset;
                 border-bottom-right-radius: unset;
                 clip-path: inset(-16px -16px 0px -16px);
@@ -1413,8 +1456,8 @@
 
                 .leaflet-routing-collapse-btn::after {
                     transform: unset;
-                    left: 3px;
-                    top: -10px;
+                    left: .3em;
+                    top: -.6em;
                 }
 
                 .leaflet-routing-collapse-btn::before {
@@ -1432,7 +1475,7 @@
             }*/
 
             .leaflet-routing-container.leaflet-routing-container-hide {
-                bottom: -115px;
+                bottom: -140px;
                 left: unset;
             }
         }
@@ -1443,8 +1486,9 @@
 
             .refresh-button div {
                 /* background image here*/
-                width: 16px;
-                height: 16px;
+                width: 25px;
+                height: 25px;
+                margin: auto;
                 background-position: center;
                 background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IiB2aWV3Qm94PSIwIDAgMTIyLjg4IDExOC42NiIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgMTIyLjg4IDExOC42NjsgZmlsbDogI2RkZCIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+PGc+PHBhdGggZD0iTTE2LjY4LDIyLjJjLTEuNzgsMi4yMS0zLjQzLDQuNTUtNS4wNiw3LjQ2QzUuNjMsNDAuMzEsMy4xLDUyLjM5LDQuMTMsNjQuMmMxLjAxLDExLjU0LDUuNDMsMjIuODMsMTMuMzcsMzIuMjcgYzIuODUsMy4zOSw1LjkxLDYuMzgsOS4xMyw4Ljk3YzExLjExLDguOTMsMjQuMjgsMTMuMzQsMzcuNDEsMTMuMjJjMTMuMTMtMC4xMywyNi4yMS00Ljc4LDM3LjE0LTEzLjk4IGMzLjE5LTIuNjgsNi4xOC01LjczLDguOTEtOS4xM2M2LjQtNy45NiwxMC41MS0xNy4yOSwxMi4wNy0yNy4xNGMxLjUzLTkuNjcsMC41OS0xOS44My0zLjA3LTI5LjY2IGMtMy40OS05LjM1LTguODItMTcuNjgtMTUuNzgtMjQuMjFDOTYuNyw4LjMzLDg4LjU5LDMuNzYsNzkuMiwxLjQ4Yy0yLjk0LTAuNzEtNS45NC0xLjE4LTguOTktMS4zN2MtMy4wNi0wLjItNi4xOS0wLjEzLTkuNCwwLjIyIGMtMi4wMSwwLjIyLTMuNDYsMi4wMy0zLjI0LDQuMDRjMC4yMiwyLjAxLDIuMDMsMy40Niw0LjA0LDMuMjRjMi43OC0wLjMxLDUuNDktMC4zNyw4LjE0LTAuMmMyLjY1LDAuMTcsNS4yMywwLjU3LDcuNzMsMS4xNyBjOC4xMSwxLjk2LDE1LjEsNS45MSwyMC44NCwxMS4yOWM2LjE0LDUuNzUsMTAuODUsMTMuMTIsMTMuOTQsMjEuNDNjMy4yMSw4LjYxLDQuMDQsMTcuNTEsMi43LDI1Ljk2IEMxMTMuNTksNzUuODUsMTEwLDg0LDEwNC40LDkwLjk2Yy0yLjQ3LDMuMDctNS4xMiw1Ljc4LTcuOTEsOC4xM2MtOS41OSw4LjA3LTIxLjAzLDEyLjE1LTMyLjUsMTIuMjYgYy0xMS40NywwLjExLTIzLTMuNzYtMzIuNzYtMTEuNjFjLTIuOS0yLjMzLTUuNjItNC45OC04LjEzLTcuOTdjLTYuOTItOC4yMi0xMC43Ny0xOC4wOS0xMS42Ni0yOC4yIGMtMC45MS0xMC4zNywxLjMyLTIwLjk5LDYuNTctMzAuMzNjMS41OS0yLjgyLDMuMjEtNS4wNyw1LjAxLTcuMjRsMC41MywxNC43YzAuMDcsMi4wMiwxLjc2LDMuNiwzLjc4LDMuNTIgYzIuMDItMC4wNywzLjYtMS43NiwzLjUyLTMuNzhsLTAuODUtMjMuNDJjLTAuMDctMi4wMi0xLjc2LTMuNi0zLjc4LTMuNTJjLTAuMTMsMC0wLjI1LDAuMDItMC4zNywwLjAzbDAsMGwtMjIuNywzLjE5IGMtMiwwLjI4LTMuNCwyLjEyLTMuMTIsNC4xM2MwLjI4LDIsMi4xMiwzLjQsNC4xMywzLjEyTDE2LjY4LDIyLjJMMTYuNjgsMjIuMnoiLz48L2c+PC9zdmc+);
                 background-repeat: no-repeat;
@@ -1456,8 +1500,9 @@
 
             .copy-paste-url-button div {
                 filter: brightness(0.5) sepia(1) hue-rotate(60deg) saturate(5);
-                width: 16px;
-                height: 16px;
+                width: 30px;
+                height: 30px;
+                margin: auto;
                 background-position: center;
                 background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IiB2aWV3Qm94PSIwIDAgMTEyLjU1IDEyMi44OCIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgMTEyLjU1IDEyMi44OCIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+PHN0eWxlIHR5cGU9InRleHQvY3NzIj4uc3Qwe2ZpbGwtcnVsZTpldmVub2RkO2NsaXAtcnVsZTpldmVub2RkOyBmaWxsOiAjZGRkO308L3N0eWxlPjxnPjxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik0xMDQuNDEsNi4xYzYuMjYsNS4xMyw2LjkzLDExLjgzLDcuNjIsMTMuNDZsMC4zNCwyLjVjMC45LDUuMzktMS42NSwxMi43NS01LjU4LDE3LjM4TDg5LjIsNTkuODQgYy02Ljc2LDcuODQtMTguMDQsMTAuNDQtMjcuNDgsNi4zN2wtMC4wMywwLjA0YzMuNDUsNS42MywzLjE1LDkuNjQsMy40NiwxMC41N2MwLjksNS40MS0xLjY1LDEyLjc0LTUuNTgsMTcuMzhMNDEuOTcsMTE0LjYgYy04LjUzLDkuODktMjMuNTgsMTEuMS0zMy41MywyLjYxYy01LjA0LTUuMDQtNy44NC05LjMxLTguMzctMTYuNDljLTAuNDctNi4yNCwxLjUzLTEyLjM3LDUuNTktMTcuMThsMTcuOTItMjAuNzkgYzUuMDEtNS4xNCw3LjUtNS44NiwxMy4zMy03LjQ3bDIuNS0wLjM0bDEwLjY2LDEuNTZjMC4yMiwwLjA4LDAuNDQsMC4xOCwwLjY1LDAuMjdsMC4wMy0wLjA0Yy01LjM1LTguNzEtNC41Ny0yMC4xMSwyLjE0LTI3Ljk3IEw3MC40OCw4LjM3YzQuMTEtNC43Nyw5Ljk5LTcuNzEsMTYuMTUtOC4xOWM1LjM3LTAuODksMTIuNzcsMS42NCwxNy4zOCw1LjU4TDEwNC40MSw2LjFMMTA0LjQxLDYuMXogTTc0LjIzLDUxLjcxbC0zLjY2LDQuMjQgbDAuNjQsMC4wMWwwLjAyLDBsMC42LTAuMDJsMC4wMSwwbDAuMTQtMC4wMWwwLjAyLDBjMi4xMS0wLjE2LDQuMTktMC44OCw1Ljk2LTIuMTRjMC4zNC0wLjI0LDAuNjgtMC41MSwxLjAyLTAuODJsMCwwbDAsMCBjMC4zLTAuMjcsMC42Mi0wLjU5LDAuOTMtMC45NWwwLDBsMC4xMi0wLjEzbDE3LjQ1LTIwLjI0YzEuNDctMS43LDIuMzYtMy43NSwyLjY4LTUuODZjMC4wNy0wLjQ0LDAuMTEtMC44NywwLjEzLTEuMjYgYzAuMDItMC40MSwwLjAxLTAuODUtMC4wMS0xLjI4bDAtMC4wNWwtMC4wMS0wLjExYy0wLjE2LTIuMTEtMC44OC00LjE5LTIuMTQtNS45NmMtMC4yNC0wLjM0LTAuNTEtMC42Ny0wLjc4LTAuOTdsLTAuMDMtMC4wNCBjLTAuMjktMC4zMi0wLjYxLTAuNjQtMC45NC0wLjk0bDAsMGwtMC4wNi0wLjA1bC0wLjA1LTAuMDVMOTYuMTYsMTVjLTEuNjktMS40My0zLjctMi4zLTUuNzgtMi42MWwtMC4wMywwIGMtMC40My0wLjA2LTAuODUtMC4xMS0xLjI0LTAuMTJjLTAuNDEtMC4wMi0wLjg0LTAuMDEtMS4yNywwLjAxbC0wLjA3LDBsLTAuMSwwLjAxYy0yLjExLDAuMTYtNC4xOSwwLjg4LTUuOTYsMi4xNCBjLTAuMzQsMC4yNC0wLjY4LDAuNTEtMC45OCwwLjc4bC0wLjAzLDAuMDNjLTAuMzMsMC4yOS0wLjY0LDAuNjEtMC45NCwwLjk1bDAsMGwtMC4xMiwwLjEzTDYyLjIsMzYuNTUgYy0xLjQ3LDEuNy0yLjM2LDMuNzUtMi42OCw1Ljg2aDBjLTAuMDYsMC40My0wLjExLDAuODYtMC4xMiwxLjI2Yy0wLjAyLDAuNDEtMC4wMSwwLjg1LDAuMDEsMS4yOGwwLjAxLDAuMTVsMCwwLjAxdjAuMDIgYzAuMDMsMC40NiwwLjA5LDAuOTEsMC4xOCwxLjM3bDMuNTgtNC4xNWwwLjEtMC4xMmwwLjEzLTAuMTRsMCwwbDAuMDItMC4wMmMxLjI5LTEuMzksMy4wMi0yLjE4LDQuNzktMi4zIGMxLjc4LTAuMTMsMy42MiwwLjM5LDUuMSwxLjZsMCwwbDAuMDIsMC4wMWwwLjA5LDAuMDhsMC4wMiwwLjAybDAuMDIsMC4wMmwwLjAxLDAuMDFsMC4wMiwwLjAxbDAuMDcsMC4wNmwwLDBsMCwwIGMyLjA2LDEuODMsMi44Miw0LjYsMi4yMSw3LjEzYy0wLjEyLDAuNS0wLjMsMS0wLjU0LDEuNDhjLTAuMjIsMC40Ni0wLjUxLDAuOS0wLjgzLDEuMzFsLTAuMDIsMC4wMmwtMC4wMywwLjA0bDAsMGwtMC4wMSwwLjAyIGwtMC4xLDAuMTJsMCwwTDc0LjIzLDUxLjcxTDc0LjIzLDUxLjcxeiBNNDAuMDYsODAuMjNMNDAuMDYsODAuMjNjMi4zMywyLjAxLDUuODgsMS43NSw3Ljg5LTAuNThsNS41OC02LjQ3IGMwLjY1LDEuNDUsMS4wNCwzLDEuMTYsNC41N2MwLjI1LDMuNDQtMC43OSw2Ljk3LTMuMTksOS43NWwtMTcuNDYsMjAuMjRjLTIuNCwyLjc5LTUuNzMsNC4zNC05LjE2LDQuNTkgYy0zLjM4LDAuMjUtNi44NC0wLjc1LTkuNTktMy4wNWwtMC4xNi0wLjE0Yy0yLjc4LTIuNC00LjM0LTUuNzMtNC41OS05LjE2Yy0wLjI1LTMuNCwwLjc2LTYuODksMy4xLTkuNjVsMC4wOS0wLjFsMTcuMjUtMjBsMCwwIGwwLDBsMC4yMS0wLjI0YzIuNC0yLjc4LDUuNzMtNC4zNCw5LjE2LTQuNTljMS41OC0wLjEyLDMuMTgsMC4wNCw0LjcxLDAuNDdsLTUuNTgsNi40N0MzNy40Nyw3NC42NywzNy43Myw3OC4yMiw0MC4wNiw4MC4yMyBMNDAuMDYsODAuMjN6Ii8+PC9nPjwvc3ZnPg==);
                 background-repeat: no-repeat;
@@ -1498,9 +1543,9 @@
     </div>
     <script type="text/javascript">
         if (location.protocol !== 'https:' && (location.hostname.toLowerCase() == "www.logiwaze.com" || location.hostname.toLowerCase() == "logiwaze.com"))
-            location.replace('https:${location.href.substring(location.protocol.length)}');
+            location.replace('https:'.concat(location.href.substring(location.protocol.length)));
 
-        var build="822d08855b271147f99fbf0e7e52252b79e1029f";
+        var build = "6900ece74a44e2456b3107ee977db48b76539d88";
         if ("serviceWorker" in navigator) {
 
             window.addEventListener("load", function () {
@@ -1606,6 +1651,8 @@
 
     <script type="text/javascript">
 
+
+
         var shard = urlParams.get('shard2') != null ? "2" : urlParams.get('shard');
 
         var APIManager = API.Create();
@@ -1642,26 +1689,32 @@
         }
 
         function portraitPanel(element) {
-            return window.innerWidth / window.innerHeight <= 3 / 4;
+            return (window.innerWidth / window.innerHeight <= 3 / 4) || window.innerWidth < 700;
         }
 
         function getPanelWidth(element) {
             if (element == null)
                 element = document.getElementsByClassName("leaflet-routing-alternatives-container")[0];
+
             if (portraitPanel(element))
                 return 0;
-            return element.getBoundingClientRect().width;
+
+            return element.offsetWidth;
         }
 
         function getPanelHeight(element) {
             if (element == null)
-                element = document.getElementsByClassName("leaflet-routing-alternatives-container")[0];
+                element = document.getElementsByClassName("leaflet-routing-container")[0];
+
             if (!portraitPanel(element))
                 return 0;
-            return element.getBoundingClientRect().height;
+
+            return element.offsetHeight;
         }
 
-        APIManager.update(function()  {
+
+
+        APIManager.update(function () {
 
             var VoiceNarrator = Narrator.Create();
             var Router = FoxholeRouter.Create(mymap, APIManager, VoiceNarrator);
@@ -1990,10 +2043,12 @@
 
                         container.setAttribute('style', 'width: 66px; padding: 0');
 
-                        L.popup()
-                            .setContent(container)
-                            .setLatLng(e.latlng)
-                            .openOn(mymap);
+                        if (APIManager.calculateRegion(e.latlng.lng, e.latlng.lat) != null) {
+                            L.popup()
+                                .setContent(container)
+                                .setLatLng(e.latlng)
+                                .openOn(mymap);
+                        }
                     }
                     prevent_double_click = false;
                 }, 200);
@@ -2062,6 +2117,9 @@
             };
 
             var collapse_button = document.getElementsByClassName("leaflet-routing-collapse-btn")[0];
+
+            //document.getElementsByClassName("leaflet-routing-container")[0].classList.add("leaflet-routing-container-hide");
+
             collapse_button.addEventListener("click", function () {
                 if (AutoZoom)
                     setTimeout(function () {
@@ -2070,14 +2128,14 @@
                 else {
                     var element = document.getElementsByClassName("leaflet-routing-container")[0];
                     var has_hide = element.classList.contains("leaflet-routing-container-hide");
-                    if ((has_hide && !portraitPanel()) || (!has_hide && portraitPanel())) { //open panel
+                    if (has_hide) { //open panel
                         PauseAutoZoom();
-                        mymap.panBy([!portraitPanel() ? -getPanelWidth() * .5 : 0, portraitPanel() ? 115 * .5 : 0], { duration: .5, animate: true, noMoveStart: true });
+                        mymap.panBy([-getPanelWidth() * .5, -getPanelHeight() * .5], { duration: .5, animate: true, noMoveStart: true });
                         ResumeAutoZoom();
                     }
                     else { //close panel
                         PauseAutoZoom();
-                        mymap.panBy([portraitPanel() ? 0 : (320 * .5), portraitPanel() ? -115 * .5 : 0], { duration: .5, animate: true, noMoveStart: true });
+                        mymap.panBy([getPanelWidth() * .5, getPanelHeight() * .5], { duration: .5, animate: true, noMoveStart: true });
                         ResumeAutoZoom();
                     }
                 }
@@ -2275,6 +2333,10 @@
                 update_state();
             });
 
+
+
+
+
             // load initial waypoints
             var points = startingWaypoints;
             var layers = 16384 * 2 - 1;
@@ -2441,7 +2503,44 @@
 
             document.getElementById("map-frame").style.opacity = '1';
             document.getElementById("loader-holder").style.opacity = '0';
-            setTimeout(function() { document.getElementById("loader-holder").style.display = 'none'; }, 1000);
+            setTimeout(function () { document.getElementById("loader-holder").style.display = 'none'; }, 1000);
+
+            //function makeResizeable(p) {
+            //var p = document.getElementsByClassName('leaflet-router-container')[0];
+            //    p.addEventListener('click', function init() {
+            //        p.removeEventListener('click', init, false);
+            //        p.className = p.className + ' resizable';
+            //        var resizer = document.createElement('div');
+            //        resizer.className = 'resizer';
+            //        p.appendChild(resizer);
+            //        resizer.addEventListener('mousedown', initDrag, false);
+            //    }, false);
+
+            //    var startX, startY, startWidth, startHeight;
+
+            //    function initDrag(e) {
+            //        startX = e.clientX;
+            //        startY = e.clientY;
+            //        startWidth = parseInt(document.defaultView.getComputedStyle(p).width, 10);
+            //        startHeight = parseInt(document.defaultView.getComputedStyle(p).height, 10);
+            //        document.documentElement.addEventListener('mousemove', doDrag, false);
+            //        document.documentElement.addEventListener('mouseup', stopDrag, false);
+            //    }
+
+            //    function doDrag(e) {
+            //        p.style.width = (startWidth + e.clientX - startX) + 'px';
+            //        p.style.height = (startHeight + e.clientY - startY) + 'px';
+            //    }
+
+            //    function stopDrag(e) {
+            //        document.documentElement.removeEventListener('mousemove', doDrag, false);
+            //        document.documentElement.removeEventListener('mouseup', stopDrag, false);
+            //    }
+            //}
+
+            //for (var e of document.getElementsByClassName('leaflet-routing-container'))
+            //    makeResizeable(e);
+
         }, shard);
 
 

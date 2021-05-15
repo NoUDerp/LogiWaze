@@ -4,7 +4,7 @@ define(['leaflet', 'intersects'],
         function controlToFont(control, ctx) {
             switch (control) {
                 case 0:
-                    ctx.font = '48px Roman';
+                    ctx.font = '54px Roman';
                     break;
                 case 1:
                     ctx.font = '60px Celtic';

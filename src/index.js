@@ -1,6 +1,8 @@
 'use strict';
 
 global.L = require('leaflet');
+global.$ = require('jquery');
+require('jquery-ui');
 
 global.VectorHexGrid = {
     Create: (MaxZoom, Offset) => require('./IVectorHexGrid.js').Create(MaxZoom, Offset)

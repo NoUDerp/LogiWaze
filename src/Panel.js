@@ -1,4 +1,4 @@
-define(['leaflet', './Itinerary.js'], function (L, Itinerary) {
+define(['leaflet', './Itinerary.js', 'jquery'], function (L, Itinerary, $) {
 
     class custom_time_formatter extends L.Routing.Formatter {
         constructor(FHR) {
@@ -490,6 +490,7 @@ define(['leaflet', './Itinerary.js'], function (L, Itinerary) {
     return {
         Panel: (API, Router, Geocoder) => new prototype({
             showAlternatives: false,
+            show: false,
             routeWhileDragging: false,
             router: Router,
             autoRoute: true,

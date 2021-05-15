@@ -1,5 +1,5 @@
-﻿define(['leaflet', 'json-loader!../Roads.geojson', './geojson-path-finder/index.js', 'leaflet-routing-machine', '../towns.json', 'dom-to-image'],
-    function (L, Paths, PathFinder, routing_machine, towns, domtoimage) {
+﻿define(['leaflet', 'json-loader!../Roads.geojson', './geojson-path-finder/index.js', 'leaflet-routing-machine', '../towns.json', 'jquery'],
+    function (L, Paths, PathFinder, routing_machine, towns) {
 
         return {
             FoxholeRouter: function (mymap, API, Narrator) {
@@ -559,10 +559,10 @@
                     },
 
                     screenshot: function () {
-                        domtoimage.toPng(document.getElementById("map-holder")).then(function (blob) {
-                            navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
-                            window.saveAs(blob, 'map.png');
-                        });
+                        //domtoimage.toPng(document.getElementById("map-holder")).then(function (blob) {
+                        //    navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+                        //    window.saveAs(blob, 'map.png');
+                        //});
                     },
 
                     routeLine: function (route, options) {

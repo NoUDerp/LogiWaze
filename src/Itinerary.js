@@ -47,6 +47,10 @@ define(['leaflet', 'leaflet-routing-machine'], function (L, R) {
                 (!this.options.show ? 'leaflet-routing-container-hide ' : '') +
                 (collapsible ? 'leaflet-routing-collapsible ' : '') +
                 this.options.containerClassName);
+
+            
+
+
             this._altContainer = this.createAlternativesContainer();
             this._container.appendChild(this._altContainer);
             L.DomEvent.disableClickPropagation(this._container);
