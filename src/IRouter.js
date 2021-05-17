@@ -61,7 +61,7 @@
                             BorderCrossings[hash] = 1;
 
                         var region = Paths.features[i].properties.region;
-                        var ownership = API.ownership(p[0], p[1], region).ownership;
+                        var ownership = !(region in API.mapControl) ? "OFFLINE" : API.ownership(p[0], p[1], region).ownership;
                         JSONRoads._layers[keys[i]]._latlngs[k].ownership = ownership;
 
                         if (API.mapControl[feature.properties.region] != null && ownership != "OFFLINE" && region in API.mapControl)
@@ -112,21 +112,16 @@
                 }
 
                 var GridDepth = 6;
-                var RoadsGroup = VectorGrid.Create(GridDepth, [0, 256], .30, .17);
 
                 var renderer = L.canvas({ tolerance: .2 }).addTo(mymap);
-                var Icons = VectorIconGrid.Create(8, [0, 256], 0, 9);
 
                 var RegionLabels = VectorTextGrid.Create(8, [0, 256]);
-                var Borders = VectorHexGrid.Create(8, [0, 256]);
-                var ControlLayer = VectorControlGrid.Create(8, [0, 256], API);
+                var ControlLayer = VectorControlGrid.Create(8, [0, 256], API, .30, .17, GridDepth);
                 var regions = API.regions;
                 var w = 46.545454545 * .5;
                 var h = w * Math.sqrt(3) / 2;
-                for (var i = 0; i < regions.length; i++) {
-                    Borders.addHex(regions[i].x, regions[i].y, w, h);
-                    ControlLayer.addHex(regions[i].x, regions[i].y, w, h);
-                }
+                for (var i = 0; i < regions.length; i++)
+                    ControlLayer.addHex(regions[i].x, regions[i].y, w, h, !(regions[i].name in API.mapControl));
 
                 var resolveIcon = function (ic) {
                     if (ic.icon == null)
@@ -202,7 +197,7 @@
                         if (th.nuked) {
                             var data = { ownership: th.control, icon: th.mapIcon };
                             var icon = resolveResource(data);
-                            Icons.addIcon(icon, th.x, th.y, th.nuked, 0, 9);
+                            ControlLayer.addIcon(icon, th.x, th.y, th.nuked, 0, 9);
                         }
                     }
                 }
@@ -214,7 +209,7 @@
                         if (th.nuked) {
                             var data = { ownership: th.control, icon: th.mapIcon };
                             var icon = resolveIcon(data);
-                            Icons.addIcon(icon, th.x, th.y, th.nuked, 0, 9);
+                            ControlLayer.addIcon(icon, th.x, th.y, th.nuked, 0, 9);
                         }
                     }
                 }
@@ -226,7 +221,7 @@
                         var th = region[k];
                         var data = { ownership: th.control, icon: th.mapIcon };
                         var icon = resolveResource(data);
-                        Icons.addIcon(icon, th.x, th.y, false, 0, 9);
+                        ControlLayer.addIcon(icon, th.x, th.y, false, 0, 9);
                     }
                 }
 
@@ -236,7 +231,7 @@
                         var th = region[k];
                         var data = { ownership: th.control, icon: th.mapIcon };
                         var icon = resolveIcon(data);
-                        Icons.addIcon(icon, th.x, th.y, false, 0, 9);
+                        ControlLayer.addIcon(icon, th.x, th.y, false, 0, 9);
                     }
                 }
 
@@ -283,16 +278,15 @@
                         var lng2 = layer._latlngs[k].lng;
                         var tier = layer.feature.properties.tier;
                         if (lat != null && lng != null && lat2 != null && lng2 != null) {
-                            var control = layer._latlngs[k - 1].ownership;
-                            RoadsGroup.addRoad([[lat, lng], [lat2, lng2]], { control: control == "COLONIALS" ? 0 : (control == "WARDENS" ? 1 : (control == "OFFLINE" ? 2 : 3)), tier: tier });
+                            let control = layer._latlngs[k - 1].ownership;
+                            ControlLayer.addRoad([[lat, lng], [lat2, lng2]], { control: control == "COLONIALS" ? 0 : (control == "WARDENS" ? 1 : (control == "OFFLINE" ? 2 : 3)), tier: tier });
                         }
                     }
                 }
 
                 ControlLayer.addTo(mymap);
-                RoadsGroup.addTo(mymap);
-                Borders.addTo(mymap);
-                Icons.addTo(mymap);
+                //Borders.addTo(mymap);
+                //Icons.addTo(mymap);
                 RegionLabels.addTo(mymap);
 
                 var highlighter = L.layerGroup().addTo(mymap);
@@ -340,7 +334,7 @@
                     API: API,
                     Roads: JSONRoads,
 
-                    Icons: Icons,
+                    //Icons: Icons,
 
                     // virtual layers
                     Borders: L.layerGroup().addTo(mymap),
@@ -401,29 +395,29 @@
                     },
 
                     hideTownHalls: function () {
-                        Icons.disableIcons(['MapIconSafehouse.webp', 'MapIconSafehouseWarden.webp', 'MapIconSafehouseColonial.webp', 'MapIconStaticBase1.webp', 'MapIconStaticBase2.webp', 'MapIconStaticBase3.webp', 'MapIconKeep.webp', 'MapIconRelicBase.webp',
+                        ControlLayer.disableIcons(['MapIconSafehouse.webp', 'MapIconSafehouseWarden.webp', 'MapIconSafehouseColonial.webp', 'MapIconStaticBase1.webp', 'MapIconStaticBase2.webp', 'MapIconStaticBase3.webp', 'MapIconKeep.webp', 'MapIconRelicBase.webp',
                             'MapIconStaticBase1Warden.webp', 'MapIconStaticBase2Warden.webp', 'MapIconStaticBase3Warden.webp', 'MapIconKeepWarden.webp', 'MapIconRelicBaseWarden.webp',
                             'MapIconStaticBase1Colonial.webp', 'MapIconStaticBase2Colonial.webp', 'MapIconStaticBase3Colonial.webp', 'MapIconKeepColonial.webp', 'MapIconRelicBaseColonial.webp'
                         ]);
-                        Icons.redraw();
+                        ControlLayer.redraw();
                     },
 
                     showBorders: function () {
-                        Borders.draw = true;
-                        Borders.redraw();
+                        ControlLayer.drawHexes = true;
+                        ControlLayer.redraw();
                     },
 
                     hideBorders: function () {
-                        Borders.draw = false;
-                        Borders.redraw();
+                        ControlLayer.drawHexes = false;
+                        ControlLayer.redraw();
                     },
 
                     showTownHalls: function () {
-                        Icons.enableIcons(['MapIconSafehouse.webp', 'MapIconSafehouseWarden.webp', 'MapIconSafehouseColonial.webp', 'MapIconStaticBase1.webp', 'MapIconStaticBase2.webp', 'MapIconStaticBase3.webp', 'MapIconKeep.webp', 'MapIconRelicBase.webp',
+                        ControlLayer.enableIcons(['MapIconSafehouse.webp', 'MapIconSafehouseWarden.webp', 'MapIconSafehouseColonial.webp', 'MapIconStaticBase1.webp', 'MapIconStaticBase2.webp', 'MapIconStaticBase3.webp', 'MapIconKeep.webp', 'MapIconRelicBase.webp',
                             'MapIconStaticBase1Warden.webp', 'MapIconStaticBase2Warden.webp', 'MapIconStaticBase3Warden.webp', 'MapIconKeepWarden.webp', 'MapIconRelicBaseWarden.webp',
                             'MapIconStaticBase1Colonial.webp', 'MapIconStaticBase2Colonial.webp', 'MapIconStaticBase3Colonial.webp', 'MapIconKeepColonial.webp', 'MapIconRelicBaseColonial.webp'
                         ]);
-                        Icons.redraw();
+                        ControlLayer.redraw();
                     },
 
                     hideControl: function () {
@@ -437,132 +431,194 @@
                     },
 
                     showQuality: function () {
-                        RoadsGroup.quality = true;
-                        RoadsGroup.redraw();
+                        ControlLayer.quality = true;
+                        ControlLayer.redraw();
                     },
 
                     hideQuality: function () {
-                        RoadsGroup.quality = false;
-                        RoadsGroup.redraw();
+                        ControlLayer.quality = false;
+                        ControlLayer.redraw();
                     },
 
                     hideColonial: function () {
-                        RoadsGroup.controls[0] = false;
-                        RoadsGroup.redraw();
+                        ControlLayer.controls[0] = false;
+                        ControlLayer.redraw();
                     },
 
                     showColonial: function () {
-                        RoadsGroup.controls[0] = true;
-                        RoadsGroup.redraw();
+                        ControlLayer.controls[0] = true;
+                        ControlLayer.redraw();
                     },
 
                     hideWarden: function () {
-                        RoadsGroup.controls[1] = false;
-                        RoadsGroup.redraw();
+                        ControlLayer.controls[1] = false;
+                        ControlLayer.redraw();
                     },
 
                     showWarden: function () {
-                        RoadsGroup.controls[1] = true;
-                        RoadsGroup.redraw();
+                        ControlLayer.controls[1] = true;
+                        ControlLayer.redraw();
                     },
 
                     hideNeutral: function () {
-                        RoadsGroup.controls[3] = false;
-                        RoadsGroup.redraw();
+                        ControlLayer.controls[3] = false;
+                        ControlLayer.controls[2] = false;
+                        ControlLayer.redraw();
                     },
 
                     showNeutral: function () {
-                        RoadsGroup.controls[3] = true;
-                        RoadsGroup.redraw();
+                        ControlLayer.controls[2] = true;
+                        ControlLayer.controls[3] = true;
+                        ControlLayer.redraw();
                     },
 
                     hideOffline: function () {
-                        RoadsGroup.controls[2] = false;
-                        RoadsGroup.redraw();
+                        ControlLayer.controls[2] = false;
+                        ControlLayer.redraw();
                     },
 
                     showOffline: function () {
-                        RoadsGroup.controls[2] = true;
-                        RoadsGroup.redraw();
+                        ControlLayer.controls[2] = true;
+                        ControlLayer.redraw();
                     },
 
                     hideSalvage: function () {
-                        Icons.disableIcons(['MapIconSalvage.webp', 'MapIconSalvageMine.webp', 'MapIconSalvageWarden.webp', 'MapIconSalvageMineWarden.webp', 'MapIconSalvageColonial.webp', 'MapIconSalvageMineColonial.webp']);
-                        Icons.redraw();
+                        ControlLayer.disableIcons(['MapIconSalvage.webp', 'MapIconSalvageMine.webp', 'MapIconSalvageWarden.webp', 'MapIconSalvageMineWarden.webp', 'MapIconSalvageColonial.webp', 'MapIconSalvageMineColonial.webp']);
+                        ControlLayer.redraw();
                     },
 
                     showSalvage: function () {
-                        Icons.enableIcons(['MapIconSalvage.webp', 'MapIconSalvageMine.webp', 'MapIconSalvageWarden.webp', 'MapIconSalvageMineWarden.webp', 'MapIconSalvageColonial.webp', 'MapIconSalvageMineColonial.webp']);
-                        Icons.redraw();
+                        ControlLayer.enableIcons(['MapIconSalvage.webp', 'MapIconSalvageMine.webp', 'MapIconSalvageWarden.webp', 'MapIconSalvageMineWarden.webp', 'MapIconSalvageColonial.webp', 'MapIconSalvageMineColonial.webp']);
+                        ControlLayer.redraw();
                     },
 
                     hideComponents: function () {
-                        Icons.disableIcons(['MapIconComponents.webp', 'MapIconComponentMine.webp', 'MapIconComponentsWarden.webp', 'MapIconComponentMineWarden.webp', 'MapIconComponentsColonial.webp', 'MapIconComponentMineColonial.webp']);
-                        Icons.redraw();
+                        ControlLayer.disableIcons(['MapIconComponents.webp', 'MapIconComponentMine.webp', 'MapIconComponentsWarden.webp', 'MapIconComponentMineWarden.webp', 'MapIconComponentsColonial.webp', 'MapIconComponentMineColonial.webp']);
+                        ControlLayer.redraw();
                     },
 
                     showComponents: function () {
-                        Icons.enableIcons(['MapIconComponents.webp', 'MapIconComponentMine.webp', 'MapIconComponentsWarden.webp', 'MapIconComponentMineWarden.webp', 'MapIconComponentsColonial.webp', 'MapIconComponentMineColonial.webp']);
-                        Icons.redraw();
+                        ControlLayer.enableIcons(['MapIconComponents.webp', 'MapIconComponentMine.webp', 'MapIconComponentsWarden.webp', 'MapIconComponentMineWarden.webp', 'MapIconComponentsColonial.webp', 'MapIconComponentMineColonial.webp']);
+                        ControlLayer.redraw();
                     },
 
                     hideStorage: function () {
-                        Icons.disableIcons(['MapIconStorageFacility.webp', 'MapIconSeaport.webp', 'MapIconStorageFacilityWarden.webp', 'MapIconSeaportWarden.webp', 'MapIconStorageFacilityColonial.webp', 'MapIconSeaportColonial.webp']);
-                        Icons.redraw();
+                        ControlLayer.disableIcons(['MapIconStorageFacility.webp', 'MapIconSeaport.webp', 'MapIconStorageFacilityWarden.webp', 'MapIconSeaportWarden.webp', 'MapIconStorageFacilityColonial.webp', 'MapIconSeaportColonial.webp']);
+                        ControlLayer.redraw();
                     },
 
                     showStorage: function () {
-                        Icons.enableIcons(['MapIconStorageFacility.webp', 'MapIconSeaport.webp', 'MapIconStorageFacilityWarden.webp', 'MapIconSeaportWarden.webp', 'MapIconStorageFacilityColonial.webp', 'MapIconSeaportColonial.webp']);
-                        Icons.redraw();
+                        ControlLayer.enableIcons(['MapIconStorageFacility.webp', 'MapIconSeaport.webp', 'MapIconStorageFacilityWarden.webp', 'MapIconSeaportWarden.webp', 'MapIconStorageFacilityColonial.webp', 'MapIconSeaportColonial.webp']);
+                        ControlLayer.redraw();
                     },
 
                     hideSulfur: function () {
-                        Icons.disableIcons(['MapIconSulfur.webp', 'MapIconSulfurMine.webp', 'MapIconSulfurWarden.webp', 'MapIconSulfurMineWarden.webp', 'MapIconSulfurColonial.webp', 'MapIconSulfurMineColonial.webp']);
-                        Icons.redraw();
+                        ControlLayer.disableIcons(['MapIconSulfur.webp', 'MapIconSulfurMine.webp', 'MapIconSulfurWarden.webp', 'MapIconSulfurMineWarden.webp', 'MapIconSulfurColonial.webp', 'MapIconSulfurMineColonial.webp']);
+                        ControlLayer.redraw();
                     },
 
                     showSulfur: function () {
-                        Icons.enableIcons(['MapIconSulfur.webp', 'MapIconSulfurMine.webp', 'MapIconSulfurWarden.webp', 'MapIconSulfurMineWarden.webp', 'MapIconSulfurColonial.webp', 'MapIconSulfurMineColonial.webp']);
-                        Icons.redraw();
+                        ControlLayer.enableIcons(['MapIconSulfur.webp', 'MapIconSulfurMine.webp', 'MapIconSulfurWarden.webp', 'MapIconSulfurMineWarden.webp', 'MapIconSulfurColonial.webp', 'MapIconSulfurMineColonial.webp']);
+                        ControlLayer.redraw();
                     },
 
                     hideRefineries: function () {
-                        Icons.disableIcons(['MapIconManufacturing.webp', 'MapIconManufacturingWarden.webp', 'MapIconManufacturingColonial.webp']);
-                        Icons.redraw();
+                        ControlLayer.disableIcons(['MapIconManufacturing.webp', 'MapIconManufacturingWarden.webp', 'MapIconManufacturingColonial.webp']);
+                        ControlLayer.redraw();
                     },
 
                     showRefineries: function () {
                         //
-                        Icons.enableIcons(['MapIconManufacturing.webp', 'MapIconManufacturingWarden.webp', 'MapIconManufacturingColonial.webp']);
-                        Icons.redraw();
+                        ControlLayer.enableIcons(['MapIconManufacturing.webp', 'MapIconManufacturingWarden.webp', 'MapIconManufacturingColonial.webp']);
+                        ControlLayer.redraw();
                     },
 
                     showFuel: function () {
-                        Icons.enableIcons(['MapIconOilWell.webp', 'MapIconOilWellWarden.webp', 'MapIconOilWellColonial.webp']);
-                        Icons.redraw();
+                        ControlLayer.enableIcons(['MapIconOilWell.webp', 'MapIconOilWellWarden.webp', 'MapIconOilWellColonial.webp']);
+                        ControlLayer.redraw();
                     },
 
                     hideFuel: function () {
-                        Icons.disableIcons(['MapIconOilWell.webp', 'MapIconOilWellWarden.webp', 'MapIconOilWellColonial.webp']);
-                        Icons.redraw();
+                        ControlLayer.disableIcons(['MapIconOilWell.webp', 'MapIconOilWellWarden.webp', 'MapIconOilWellColonial.webp']);
+                        ControlLayer.redraw();
                     },
 
 
                     showFactories: function () {
-                        Icons.enableIcons(['MapIconFactory.webp', 'MapIconMassProductionFactory.webp', 'MapIconConstructionYard.webp', 'MapIconFactoryWarden.webp', 'MapIconMassProductionFactoryWarden.webp', 'MapIconConstructionYardWarden.webp', 'MapIconFactoryColonial.webp', 'MapIconMassProductionFactoryColonial.webp', 'MapIconConstructionYardColonial.webp']);
-                        Icons.redraw();
+                        ControlLayer.enableIcons(['MapIconFactory.webp', 'MapIconMassProductionFactory.webp', 'MapIconConstructionYard.webp', 'MapIconFactoryWarden.webp', 'MapIconMassProductionFactoryWarden.webp', 'MapIconConstructionYardWarden.webp', 'MapIconFactoryColonial.webp', 'MapIconMassProductionFactoryColonial.webp', 'MapIconConstructionYardColonial.webp']);
+                        ControlLayer.redraw();
                     },
 
                     hideFactories: function () {
-                        Icons.disableIcons(['MapIconFactory.webp', 'MapIconMassProductionFactory.webp', 'MapIconConstructionYard.webp', 'MapIconFactoryWarden.webp', 'MapIconMassProductionFactoryWarden.webp', 'MapIconConstructionYardWarden.webp', 'MapIconFactoryColonial.webp', 'MapIconMassProductionFactoryColonial.webp', 'MapIconConstructionYardColonial.webp']);
-                        Icons.redraw();
+                        ControlLayer.disableIcons(['MapIconFactory.webp', 'MapIconMassProductionFactory.webp', 'MapIconConstructionYard.webp', 'MapIconFactoryWarden.webp', 'MapIconMassProductionFactoryWarden.webp', 'MapIconConstructionYardWarden.webp', 'MapIconFactoryColonial.webp', 'MapIconMassProductionFactoryColonial.webp', 'MapIconConstructionYardColonial.webp']);
+                        ControlLayer.redraw();
                     },
 
                     screenshot: function () {
-                        //domtoimage.toPng(document.getElementById("map-holder")).then(function (blob) {
-                        //    navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
-                        //    window.saveAs(blob, 'map.png');
-                        //});
+                        let c = document.createElement("canvas");
+                        c.width = 2 * (window.innerWidth - getPanelWidth());
+                        c.height = 2 * (window.innerHeight - getPanelHeight());
+                        c.setAttribute("crossorigin", "Anonymous");
+                        c.crossorigin = "Anonymous";
+                        this.render_view(c);
+                        c.toBlob((blob) => {
+                            require('file-saver').saveAs(blob, 'screenshot.png');
+                            delete c;
+                        });
+                    },
+
+                    render_view: function (c) {
+                        let ctx = c.getContext("2d");
+                        ctx.imageSmoothingQuality = 'high';
+                        ctx.save();
+                        ctx.scale(2, 2);
+                        for (let e of document.getElementsByClassName("leaflet-tile")) {
+                            if (e.localName == "canvas" && !e.classList.contains('logiwaze-text') && e.classList.contains('leaflet-tile-loaded')) {
+                                var offset = e.style.transform.match(/translate3d\(([^\)]+)\)/i)[1].replace(/px/ig, '').split(',');
+                                let x = parseFloat(offset[0]); // these can be extracted from a private member in the e object, this is more work but seems more stable
+                                let y = parseFloat(offset[1]);
+                                let tt = e.parentElement.style.transform;
+                                let parent_translate = /translate3d\(.*\)/i.test(tt) ? tt.match(/translate3d\(([^\(]+)\)/i)[1].replace(/px/ig, '').split(',') : "0,0";
+                                let parent_scale = /scale\(.*\)/i.test(tt) ? parseFloat(tt.match(/scale\(([^\(]+)\)/i)[1]) : 1;
+                                let camera = e.parentElement.parentElement.parentElement.parentElement.style.transform.match(/translate3d\(([^\)]+)\)/i)[1].split(',');
+                                let cx = parseFloat(camera[0].replace(/px/ig, ''));
+                                let cy = parseFloat(camera[1].replace(/px/ig, ''));
+                                ctx.drawImage(e,
+                                    parent_scale * x + parseFloat(parent_translate[0]) + cx,
+                                    parent_scale * y + parseFloat(parent_translate[1]) + cy,
+                                    e.width * parent_scale, e.height * parent_scale);
+                            }
+                        }
+
+                        for (let e of document.getElementsByClassName("leaflet-tile")) {
+                            if (e.localName == "canvas" && e.classList.contains('logiwaze-text') && e.classList.contains('leaflet-tile-loaded')) { // 
+                                console.log(e);
+                                var offset = e.style.transform.match(/translate3d\(([^\)]+)\)/i)[1].replace(/px/ig, '').split(',');
+                                let x = parseFloat(offset[0]); // these can be extracted from a private member in the e object, this is more work but seems more stable
+                                let y = parseFloat(offset[1]);
+                                let sx = parseFloat(e.style.width.replace(/px/ig, ''));
+                                let sy = parseFloat(e.style.height.replace(/px/ig, ''));
+                                let rx =  sx / e.width;
+                                let ry =  sy / e.height;
+
+                                let tt = e.parentElement.style.transform;
+                                let parent_translate = /translate3d\(.*\)/i.test(tt) ? tt.match(/translate3d\(([^\(]+)\)/i)[1].replace(/px/ig, '').split(',') : "0,0";
+                                let parent_scale = /scale\(.*\)/i.test(tt) ? parseFloat(tt.match(/scale\(([^\(]+)\)/i)[1]) : 1;
+
+                                let camera = e.parentElement.parentElement.parentElement.parentElement.style.transform.match(/translate3d\(([^\)]+)\)/i)[1].split(',');
+                                let cx = parseFloat(camera[0].replace(/px/ig, ''));
+                                let cy = parseFloat(camera[1].replace(/px/ig, ''));
+
+                                ctx.drawImage(e,
+                                    parent_scale * x + parseFloat(parent_translate[0]) + cx,
+                                    parent_scale * y + parseFloat(parent_translate[1]) + cy,
+                                    e.width * parent_scale * rx, e.height * parent_scale * ry);
+                            }
+                        }
+                        ctx.restore();
+
+
+                        delete ctx;
                     },
 
                     routeLine: function (route, options) {

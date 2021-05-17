@@ -81,9 +81,6 @@ define(['leaflet', 'intersects'],
 
 
                         if (intersects.boxBox(0, 0, tile.width, tile.height, label_x - 2.0 * shadow, label_y - 2.0 * shadow, label_w + 4.0 * shadow, label_h + 4.0 * shadow)) {
-                            //ctx.rect(label_x - shadow, label_y - shadow, label_w + 2.0 * shadow, label_h + 2.0 * shadow);
-                            //ctx.stroke();
-
                             var icon = j.icon;
                             var lx = label_x, ly = label_y, lw = label_w, lh = label_h;
                             if (icon in this.imageCache) {

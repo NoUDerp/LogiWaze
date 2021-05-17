@@ -31,7 +31,10 @@ define(['leaflet', 'intersects'],
                 var hd_ratio = 2;
                 var size = this.getTileSize();
                 var tile = null;
-                tile = L.DomUtil.create('canvas', 'leaflet-tile');
+                tile = L.DomUtil.create('canvas', 'leaflet-tile logiwaze-text');
+                tile.crossorigin = "Anonymous";
+                tile.setAttribute("crossorigin", "Anonymous");
+
                 tile.width = size.x * hd_ratio;
                 tile.height = size.y * hd_ratio;
 

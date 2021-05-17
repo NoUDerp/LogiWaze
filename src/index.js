@@ -4,20 +4,10 @@ global.L = require('leaflet');
 global.$ = require('jquery');
 require('jquery-ui');
 
-global.VectorHexGrid = {
-    Create: (MaxZoom, Offset) => require('./IVectorHexGrid.js').Create(MaxZoom, Offset)
-};
 
-global.VectorGrid = {
-    Create: (MaxZoom, Offset, RoadWidth, ControlWidth) => require('./IVectorGrid.js').Create(MaxZoom, Offset, RoadWidth, ControlWidth)
-};
-
-global.VectorIconGrid = {
-    Create: (MaxZoom, Offset) => require('./IVectorIconGrid.js').Create(MaxZoom, Offset)
-};
 
 global.VectorControlGrid = {
-    Create: (MaxZoom, Offset, API) => require('./IVectorControlGrid.js').Create(MaxZoom, Offset, API)
+    Create: (MaxZoom, Offset, API, RoadWidth, ControlWidth, GridDepth) => require('./IVectorControlGrid.js').Create(MaxZoom, Offset, API, RoadWidth, ControlWidth, GridDepth)
 };
 
 global.VectorTextGrid = {
@@ -29,7 +19,7 @@ global.FoxholeRouter = {
 };
 
 global.API = {
-    Create: () => require('./API.js').API()
+    Create: () => require('./API.js').API
 };
 
 global.FoxholeGeocoder = {

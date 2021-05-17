@@ -208,7 +208,6 @@
         }
 
         .leaflet-fade-anim .leaflet-tile {
-            /*will-change: opacity;*/
         }
 
         .leaflet-fade-anim .leaflet-popup {
@@ -229,7 +228,6 @@
         }
 
         .leaflet-zoom-anim .leaflet-zoom-animated {
-            /*will-change: transform;*/
             -webkit-transition: -webkit-transform .25s cubic-bezier(0,0,0.25,1);
             -moz-transition: -moz-transform .25s cubic-bezier(0,0,0.25,1);
             transition: transform .25s cubic-bezier(0,0,0.25,1);
@@ -303,10 +301,6 @@
         }
 
             .leaflet-bar a, .leaflet-bar a:hover {
-                /*background-color: #fff;*/
-                /*border: 1px solid #555555FB;*/
-                /*border-collapse: collapse;*/
-                /*border-bottom: 1px solid #ccc;*/
                 width: 26px;
                 height: 26px;
                 line-height: 26px;
@@ -360,7 +354,6 @@
             }
 
         .leaflet-control-zoom-in, .leaflet-control-zoom-out {
-            /*font: bold 18px 'Lucida Console',Monaco,monospace;*/
             text-indent: 1px;
         }
 
@@ -711,7 +704,6 @@
             margin-top: 2px;
             /*border-bottom: 1px solid #ccc;*/
             transition: all .2s ease;
-            overflow-y: auto;
         }
 
         .leaflet-routing-container {
@@ -774,20 +766,8 @@
             width: 50px;
             height: 50px;
         }
-        /*        .leaflet-routing-icon {
-                    background-image: url(leaflet.routing.icons.png);
-                    -webkit-background-size: 240px 20px;
-                    background-size: 240px 20px;
-                    background-repeat: no-repeat;
-                    margin: 0;
-                    content: '';
-                    display: inline-block;
-                    vertical-align: top;
-                    width: 20px;
-                    height: 20px;
-                }
 
-        */ .leaflet-routing-icon-continue {
+        .leaflet-routing-icon-continue {
             background-position: 0 0;
         }
 
@@ -1410,6 +1390,10 @@
 
         @media only all and ( max-aspect-ratio: 3/4 ), only all and (max-width: 700px) {
 
+            .leaflet-routing-alt {
+                overflow-y: auto;
+            }
+
             .leaflet-top.leaflet-left {
                 left: unset;
                 right: 10px;
@@ -1545,7 +1529,7 @@
         if (location.protocol !== 'https:' && (location.hostname.toLowerCase() == "www.logiwaze.com" || location.hostname.toLowerCase() == "logiwaze.com"))
             location.replace('https:'.concat(location.href.substring(location.protocol.length)));
 
-        var build = "6900ece74a44e2456b3107ee977db48b76539d88";
+        var build="464fc910a4e0045a49a3006354a690f47ddccc25";
         if ("serviceWorker" in navigator) {
 
             window.addEventListener("load", function () {
@@ -1614,17 +1598,17 @@
         mymap.getPane('imagebg').style.zIndex = 50;
         L.imageOverlay("Background.webp", [[-256 - 64 - 32, -256 - 7], [128 - 32, 512 + 7]], { pane: 'imagebg' }).addTo(mymap);
 
-        var DrawnMap = L.tileLayer('Tiles/{z}_{x}_{y}.webp',
-            {
-                crs: L.CRS.Simple,
-                maxNativeZoom: 5,
-                maxZoom: 8,
-                minZoom: 0,
-                noWrap: true,
-                continuousWorld: true,
-                bounds: L.latLngBounds(L.latLng(-256, 0), L.latLng(0, 256)),
-                id: 'LogiWaze'
-            }).addTo(mymap);
+        //var DrawnMap = L.tileLayer('Tiles/{z}_{x}_{y}.webp',
+        //    {
+        //        crs: L.CRS.Simple,
+        //        maxNativeZoom: 5,
+        //        maxZoom: 8,
+        //        minZoom: 0,
+        //        noWrap: true,
+        //        continuousWorld: true,
+        //        bounds: L.latLngBounds(L.latLng(-256, 0), L.latLng(0, 256)),
+        //        id: 'LogiWaze'
+        //    }).addTo(mymap);
 
         /*L.control.youtube = function (options) {
             return new L.Control.YouTube(options);
@@ -1694,7 +1678,7 @@
 
         function getPanelWidth(element) {
             if (element == null)
-                element = document.getElementsByClassName("leaflet-routing-alternatives-container")[0];
+                element = document.getElementsByClassName("leaflet-routing-container")[0];
 
             if (portraitPanel(element))
                 return 0;
@@ -1707,6 +1691,32 @@
                 element = document.getElementsByClassName("leaflet-routing-container")[0];
 
             if (!portraitPanel(element))
+                return 0;
+
+            return element.offsetHeight;
+        }
+
+        function getPanelVisibleWidth(element) {
+            if (element == null)
+                element = document.getElementsByClassName("leaflet-routing-container")[0];
+
+            if (portraitPanel(element))
+                return 0;
+
+            if (element.classList.contains("leaflet-routing-container-hide"))
+                return 0;
+
+            return element.offsetWidth;
+        }
+
+        function getPanelVisibleHeight(element) {
+            if (element == null)
+                element = document.getElementsByClassName("leaflet-routing-container")[0];
+
+            if (!portraitPanel(element))
+                return 0;
+
+            if (element.classList.contains("leaflet-routing-container-hide"))
                 return 0;
 
             return element.offsetHeight;
@@ -1978,7 +1988,7 @@
 
 
             PauseAutoZoom();
-            mymap.fitBounds([[-256, 0], [0, 256]], { paddingBottomRight: [getPanelWidth(), getPanelHeight()] });
+            mymap.fitBounds([[-256, 0], [0, 256]], { paddingBottomRight: [getPanelVisibleWidth(), getPanelVisibleHeight()] });
             ResumeAutoZoom();
 
             /*L.Routing.control(
@@ -2356,7 +2366,7 @@
                     PauseAutoZoom();
 
                     var zoom = mymap.getZoom();
-                    var s = mymap.unproject([getPanelWidth(), getPanelHeight()], zoom);
+                    var s = mymap.unproject([getPanelVisibleWidth(), getPanelVisibleHeight()], zoom);
                     var xoffset = isNaN(s.lng) ? 0 : s.lng;
                     var yoffset = isNaN(s.lat) ? 0 : s.lat;
 
