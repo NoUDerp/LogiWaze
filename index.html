@@ -1529,7 +1529,7 @@
         if (location.protocol !== 'https:' && (location.hostname.toLowerCase() == "www.logiwaze.com" || location.hostname.toLowerCase() == "logiwaze.com"))
             location.replace('https:'.concat(location.href.substring(location.protocol.length)));
 
-        var build="7cd4eaaa3ad06c5582d1897c7b87c5f68c7cba71";
+        var build="d5777cea3949c7d340a1e862789d5266dcd0ce6f";
         if ("serviceWorker" in navigator) {
 
             window.addEventListener("load", function () {
@@ -1981,9 +1981,9 @@
                 ss.alt = "Screenshot";
                 //r.after(ss);
 
-                ss.onclick = function () {
-                    Router.screenshot();
-                }
+                ss.onclick = () => Router.screenshot();
+
+                
             }
 
 

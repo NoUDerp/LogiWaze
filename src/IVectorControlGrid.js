@@ -340,7 +340,7 @@ define(['leaflet', 'intersects'],
                         }
                     case 8:
                         {
-                            c.done(null, c.tile);
+                            setTimeout(() => c.done(null, c.tile), 0);
                             break;
                         }
                 }
@@ -509,7 +509,7 @@ define(['leaflet', 'intersects'],
                     let size = this.getTileSize();
                     t.width = size.x;
                     t.height = size.y;
-                    done(null, t);
+                    setTimeout(() => done(null, t), 0);
                     return t;
                 }
                 return this.renderer({ t: this, coords: coords, done: done }, 1);
@@ -634,6 +634,20 @@ define(['leaflet', 'intersects'],
                         });
                 };
 
+                const loaded_events = [];
+                const unloaded_events = [];
+                u.when = function (event_name, event_action) {
+                    switch (event_name) {
+                        case 'loaded':
+                            loaded_events.push(event_action);
+                            break;
+                        case 'unloaded':
+                            unloaded_events.push(event_action);
+                            break;
+                    }
+                };
+                u.on('loading', () => { for (let i of unloaded_events) i(); });
+                u.on('load', () => { for (let i of loaded_events) i(); });
                 return u;
             }
         }

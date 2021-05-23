@@ -263,8 +263,7 @@
                     { text: "Steely Phil Bridge", x: 18.18, y: -161.439 },
                     { text: "Icanari Killing Fields", x: 134.071, y: -143.104 },
                     { text: "Kastow Peak", x: 124.817, y: -122.72 },
-                    { text: "Dragon Zephyr Inn", x: 56.987, y: -130.357 }
-                ]
+                    { text: "Dragon Zephyr Inn", x: 56.987, y: -130.357 }]
                 )
                     RegionLabels.addText(Recase(credit.text), control, credit.x, credit.y, 7, 9, '#DAA520');
 
@@ -285,11 +284,106 @@
                 }
 
                 ControlLayer.addTo(mymap);
-                //Borders.addTo(mymap);
-                //Icons.addTo(mymap);
                 RegionLabels.addTo(mymap);
 
                 var highlighter = L.layerGroup().addTo(mymap);
+
+
+                var copy_paste_canvas = document.createElement("canvas");
+                copy_paste_canvas.id = "copy-paste";
+                copy_paste_canvas.style.opacity = '0';
+                copy_paste_canvas.style.position = "absolute";
+                copy_paste_canvas.style.left = '0';
+                copy_paste_canvas.style.top = '0';
+                copy_paste_canvas.width = window.innerWidth * 2;
+                copy_paste_canvas.height = window.innerHeight * 2;
+                copy_paste_canvas.style.width = copy_paste_canvas.width / 2;
+                copy_paste_canvas.style.height = copy_paste_canvas.height / 2;
+
+                for (let i of document.getElementsByClassName("leaflet-zoom-animated")) {
+                    if (i.localName == "canvas") {
+                        i.after(copy_paste_canvas);
+                        break;
+                    }
+                }
+
+                mymap.whenReady(function () {
+                    for (let i of document.getElementsByClassName("leaflet-zoom-animated")) {
+                        if (i.localName == "canvas") {
+                            i.after(copy_paste_canvas);
+                            break;
+                        }
+                    }
+                }, null);
+
+                function update_copy_paste_on_tile_load() {
+                    for (let i of document.getElementsByClassName("leaflet-zoom-animated"))
+                        if (i.localName == "canvas") {
+                            copy_paste_canvas.style.transform = i.style.transform;
+                            copy_paste_canvas.style.width = i.style.width;
+                            copy_paste_canvas.style.height = i.style.height;
+                        }
+
+                    copy_paste_canvas.width = window.innerWidth * 2;
+                    copy_paste_canvas.height = window.innerHeight * 2;
+                    FoxholeRouter.update_copy_paste(copy_paste_canvas, 2);
+                }
+
+                ControlLayer.loaded = false;
+                RegionLabels.loaded = false;
+                ControlLayer.when('unloaded', () => ControlLayer.loaded = false);
+                RegionLabels.when('unloaded', () => RegionLabels.loaded = false);
+                ControlLayer.when('loaded', function () {
+                    ControlLayer.loaded = true;
+                    if (ControlLayer.loaded && RegionLabels.loaded)
+                        update_copy_paste_on_tile_load();
+                });
+                RegionLabels.when('loaded', function () {
+                    RegionLabels.loaded = true;
+                    if (ControlLayer.loaded && RegionLabels.loaded)
+                        update_copy_paste_on_tile_load();
+                });
+
+
+                mymap.on('resize', function (e) {
+                    if (ControlLayer.loaded && RegionLabels.loaded) {
+                        for (let i of document.getElementsByClassName("leaflet-zoom-animated"))
+                            if (i.localName == "canvas") {
+                                copy_paste_canvas.style.transform = i.style.transform;
+                                copy_paste_canvas.style.width = i.style.width;
+                                copy_paste_canvas.style.height = i.style.height;
+                            }
+                        copy_paste_canvas.width = e.newSize.x * 2;
+                        copy_paste_canvas.height = e.newSize.y * 2;
+                        FoxholeRouter.update_copy_paste(copy_paste_canvas, 2);
+                    }
+                });
+
+                mymap.on('dragend', function (e) {
+                    if (ControlLayer.loaded && RegionLabels.loaded) {
+                        for (let i of document.getElementsByClassName("leaflet-zoom-animated"))
+                            if (i.localName == "canvas") {
+                                copy_paste_canvas.style.transform = i.style.transform;
+                                copy_paste_canvas.style.width = i.style.width;
+                                copy_paste_canvas.style.height = i.style.height;
+                            }
+                        FoxholeRouter.update_copy_paste(copy_paste_canvas, 2);
+                    }
+                });
+
+                mymap.on('zoomend', function (e) {
+                    if (ControlLayer.loaded && RegionLabels.loaded) {
+                        for (let i of document.getElementsByClassName("leaflet-zoom-animated"))
+                            if (i.localName == "canvas") {
+                                copy_paste_canvas.style.transform = i.style.transform;
+                                copy_paste_canvas.style.width = i.style.width;
+                                copy_paste_canvas.style.height = i.style.height;
+                            }
+                        FoxholeRouter.update_copy_paste(copy_paste_canvas, 2);
+                    }
+                });
+
+
                 //var debug_markers = L.layerGroup();
                 if (beta) {
                     //var k = Object.keys(BorderCrossings);
@@ -567,11 +661,18 @@
                         });
                     },
 
-                    render_view: function (c) {
+                    update_copy_paste: function (copy_paste_canvas, scale) {
+                        this.render_view(copy_paste_canvas, scale);
+                    },
+
+                    render_view: function (c, scale) {
+                        if (scale == null)
+                            scale = 2;
                         let ctx = c.getContext("2d");
                         ctx.imageSmoothingQuality = 'high';
                         ctx.save();
-                        ctx.scale(2, 2);
+                        ctx.scale(scale, scale);
+                        ctx.clearRect(0, 0, c.width, c.height);
                         for (let e of document.getElementsByClassName("leaflet-tile")) {
                             if (e.localName == "canvas" && !e.classList.contains('logiwaze-text') && e.classList.contains('leaflet-tile-loaded')) {
                                 var offset = e.style.transform.match(/translate3d\(([^\)]+)\)/i)[1].replace(/px/ig, '').split(',');
@@ -598,8 +699,8 @@
                                 let y = parseFloat(offset[1]);
                                 let sx = parseFloat(e.style.width.replace(/px/ig, ''));
                                 let sy = parseFloat(e.style.height.replace(/px/ig, ''));
-                                let rx =  sx / e.width;
-                                let ry =  sy / e.height;
+                                let rx = sx / e.width;
+                                let ry = sy / e.height;
 
                                 let tt = e.parentElement.style.transform;
                                 let parent_translate = /translate3d\(.*\)/i.test(tt) ? tt.match(/translate3d\(([^\(]+)\)/i)[1].replace(/px/ig, '').split(',') : "0,0";

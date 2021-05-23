@@ -132,6 +132,20 @@ define(['leaflet', 'intersects'],
                             scale: scale == null ? 1 : scale
                         });
                 };
+                const loaded_events = [];
+                const unloaded_events = [];
+                u.when = function (event_name, event_action) {
+                    switch (event_name) {
+                        case 'loaded':
+                            loaded_events.push(event_action);
+                            break;
+                        case 'unloaded':
+                            unloaded_events.push(event_action);
+                            break;
+                    }
+                };
+                u.on('loading', () => { for (let i of unloaded_events) i(); });
+                u.on('load', () => { for (let i of loaded_events) i(); });
                 return u;
             }
         }
