@@ -277,6 +277,7 @@ define(['leaflet', 'intersects'],
                         {
                             c.hd_ratio = c.coords.z < 2 ? 8 : 16;
                             if (!c.t.draw) {
+                                c.phase_3_complete = true;
                                 c.t.yield(c, 4);
                                 return;
                             }
@@ -305,7 +306,9 @@ define(['leaflet', 'intersects'],
                                 overlay_ctx.imageSmoothingQuality = 'low';
                                 overlay_ctx.drawImage(c.temp_canvas, 1, 1, c.temp_canvas.width - 2, c.temp_canvas.height - 2, 0, 0, c.tile.width, c.tile.height);
                                 overlay_ctx.restore();
+                                overlay_ctx.save();
                                 c.t.drawInvalidRegions(overlay, overlay_ctx, c.coords, c.t);
+                                overlay_ctx.restore();
                                 c.ctx.save();
                                 c.ctx.globalCompositeOperation = 'source-atop';
                                 c.ctx.globalAlpha = .5;
