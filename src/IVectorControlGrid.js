@@ -519,7 +519,7 @@ define(['leaflet', 'intersects'],
 
         return {
             Create: (MaxZoom, Offset, API, RoadWidth, ControlWidth, GridDepth) => {
-                var u = new VectorControlGridPrototype({ updateWhenZooming: false, noWrap: true });
+                var u = new VectorControlGridPrototype({ updateWhenZooming: false, noWrap: true, maxZoom: MaxZoom, minZoom: 0 });
 
                 var size = u.getTileSize();
 
