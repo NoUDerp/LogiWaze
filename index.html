@@ -2238,7 +2238,7 @@
                 var bounds = mymap.getBounds();
                 var zoom = mymap.getZoom();
                 var W = bounds.getWest(), E = bounds.getEast(), N = bounds.getNorth(), S = bounds.getSouth();
-                var s = mymap.unproject([getPanelWidth(), getPanelHeight()], zoom);
+                var s = { lng: 0, lat: 0 };// mymap.unproject([getPanelWidth(), getPanelHeight()], zoom);
                 var xoffset = isNaN(s.lng) ? 0 : s.lng;
                 var yoffset = isNaN(s.lat) ? 0 : s.lat;
 
