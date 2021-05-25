@@ -693,7 +693,6 @@
 
                         for (let e of document.getElementsByClassName("leaflet-tile")) {
                             if (e.localName == "canvas" && e.classList.contains('logiwaze-text') && e.classList.contains('leaflet-tile-loaded')) { // 
-                                console.log(e);
                                 var offset = e.style.transform.match(/translate3d\(([^\)]+)\)/i)[1].replace(/px/ig, '').split(',');
                                 let x = parseFloat(offset[0]); // these can be extracted from a private member in the e object, this is more work but seems more stable
                                 let y = parseFloat(offset[1]);

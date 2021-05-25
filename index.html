@@ -1529,7 +1529,7 @@
         if (location.protocol !== 'https:' && (location.hostname.toLowerCase() == "www.logiwaze.com" || location.hostname.toLowerCase() == "logiwaze.com"))
             location.replace('https:'.concat(location.href.substring(location.protocol.length)));
 
-        var build="ae8ce0bd71a5d55e861ced4b2e5262147fb97ecc";
+        var build = "ae8ce0bd71a5d55e861ced4b2e5262147fb97ecc";
         if ("serviceWorker" in navigator) {
 
             window.addEventListener("load", function () {
@@ -1983,7 +1983,7 @@
 
                 ss.onclick = () => Router.screenshot();
 
-                
+
             }
 
 
@@ -2032,41 +2032,48 @@
                 return btn;
             }
 
-            var prevent_double_click = false;
+            var mm = { prevent_double_click: false };
 
             mymap.on('click', function (e) {
-                timer = setTimeout(function () {
-                    if (!prevent_double_click) {
-                        var container = L.DomUtil.create('div'),
-                            startBtn = createButton('Start here', container, 'ray-start-arrow.svg'),
-                            destBtn = createButton('End here', container, 'ray-end.svg');
+                mm.timer = setTimeout(function () {
+                    if (!mm.prevent_double_click) {
 
-                        L.DomEvent.on(startBtn, 'click', function () {
-                            Router.Control.spliceWaypoints(0, 1, e.latlng);
-                            mymap.closePopup();
-                        });
+                        let u = document.getElementsByClassName('leaflet-control-layers')[0];
+                        if (u.classList.contains('leaflet-control-layers-expanded')) {
+                            u.classList.remove('leaflet-control-layers-expanded');
+                        }
+                        else {
+                            var container = L.DomUtil.create('div'),
+                                startBtn = createButton('Start here', container, 'ray-start-arrow.svg'),
+                                destBtn = createButton('End here', container, 'ray-end.svg');
 
-                        L.DomEvent.on(destBtn, 'click', function () {
-                            Router.Control.spliceWaypoints(Router.Control.getWaypoints().length - 1, 1, e.latlng);
-                            mymap.closePopup();
-                        });
+                            L.DomEvent.on(startBtn, 'click', function () {
+                                Router.Control.spliceWaypoints(0, 1, e.latlng);
+                                mymap.closePopup();
+                            });
 
-                        container.setAttribute('style', 'width: 66px; padding: 0');
+                            L.DomEvent.on(destBtn, 'click', function () {
+                                Router.Control.spliceWaypoints(Router.Control.getWaypoints().length - 1, 1, e.latlng);
+                                mymap.closePopup();
+                            });
 
-                        if (APIManager.calculateRegion(e.latlng.lng, e.latlng.lat) != null) {
-                            L.popup()
-                                .setContent(container)
-                                .setLatLng(e.latlng)
-                                .openOn(mymap);
+                            container.setAttribute('style', 'width: 66px; padding: 0');
+
+                            if (APIManager.calculateRegion(e.latlng.lng, e.latlng.lat) != null) {
+                                L.popup()
+                                    .setContent(container)
+                                    .setLatLng(e.latlng)
+                                    .openOn(mymap);
+                            }
                         }
                     }
-                    prevent_double_click = false;
-                }, 200);
+                    mm.prevent_double_click = false;
+                }, 400);
             });
 
             mymap.on("dblclick", function () {
-                clearTimeout(200);
-                prevent_double_click = true;
+                clearTimeout(mm.timer);
+                mm.prevent_double_click = true;
             });
 
 
