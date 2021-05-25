@@ -363,8 +363,11 @@
 
         .leaflet-control-layers {
             box-shadow: 0 1px 5px rgba(0,0,0,0.4);
-            background: #fff;
-            border-radius: 5px;
+            background-color: #B0B0B0;
+            border-radius: 4px;
+            border: 1px solid #555555FB;
+            border-collapse: collapse;
+            box-shadow: 0 0 4px 4px rgba(0,0,0,.6) !important;
         }
 
         .leaflet-control-layers-toggle {
@@ -394,8 +397,15 @@
 
         .leaflet-control-layers-expanded {
             padding: 6px 10px 6px 6px;
-            color: #333;
-            background: #fff;
+            color: #FFF;
+            text-shadow: 0 0 4px #000,0 0 3px #000,0 0 2px #000,0 0 1px #000;
+            font-weight: bold;
+            box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+            background-color: #B0B0B0;
+            border-radius: 4px;
+            border: 1px solid #555555FB;
+            border-collapse: collapse;
+            box-shadow: 0 0 4px 4px rgba(0,0,0,.6) !important;
         }
 
         .leaflet-control-layers-scrollbar {
@@ -1529,7 +1539,7 @@
         if (location.protocol !== 'https:' && (location.hostname.toLowerCase() == "www.logiwaze.com" || location.hostname.toLowerCase() == "logiwaze.com"))
             location.replace('https:'.concat(location.href.substring(location.protocol.length)));
 
-        var build="b61177d5bbe7a08bd7aa271103a36b1c2c1d517f";
+        var build = "b61177d5bbe7a08bd7aa271103a36b1c2c1d517f";
         if ("serviceWorker" in navigator) {
 
             window.addEventListener("load", function () {
