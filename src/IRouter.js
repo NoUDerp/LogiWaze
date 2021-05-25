@@ -324,9 +324,9 @@
                             copy_paste_canvas.style.height = i.style.height;
                         }
 
-                    copy_paste_canvas.width = window.innerWidth * 2;
-                    copy_paste_canvas.height = window.innerHeight * 2;
-                    FoxholeRouter.update_copy_paste(copy_paste_canvas, 2);
+                    copy_paste_canvas.width = window.innerWidth * 1;
+                    copy_paste_canvas.height = window.innerHeight * 1;
+                    FoxholeRouter.update_copy_paste(copy_paste_canvas, 1);
                 }
 
                 ControlLayer.loaded = false;
@@ -353,9 +353,9 @@
                                 copy_paste_canvas.style.width = i.style.width;
                                 copy_paste_canvas.style.height = i.style.height;
                             }
-                        copy_paste_canvas.width = e.newSize.x * 2;
-                        copy_paste_canvas.height = e.newSize.y * 2;
-                        FoxholeRouter.update_copy_paste(copy_paste_canvas, 2);
+                        copy_paste_canvas.width = e.newSize.x * 1;
+                        copy_paste_canvas.height = e.newSize.y * 1;
+                        FoxholeRouter.update_copy_paste(copy_paste_canvas, 1);
                     }
                 });
 
@@ -367,7 +367,7 @@
                                 copy_paste_canvas.style.width = i.style.width;
                                 copy_paste_canvas.style.height = i.style.height;
                             }
-                        FoxholeRouter.update_copy_paste(copy_paste_canvas, 2);
+                        FoxholeRouter.update_copy_paste(copy_paste_canvas, 1);
                     }
                 });
 
@@ -379,7 +379,7 @@
                                 copy_paste_canvas.style.width = i.style.width;
                                 copy_paste_canvas.style.height = i.style.height;
                             }
-                        FoxholeRouter.update_copy_paste(copy_paste_canvas, 2);
+                        FoxholeRouter.update_copy_paste(copy_paste_canvas, 1);
                     }
                 });
 
@@ -656,9 +656,9 @@
                         c.crossorigin = "Anonymous";
                         this.render_view(c);
                         c.toBlob((blob) => {
-                            require('file-saver').saveAs(blob, 'screenshot.png');
+                            require('file-saver').saveAs(blob, new Date().toUTCString().concat('.webp'));
                             delete c;
-                        });
+                        }, "image/webp", .9);
                     },
 
                     update_copy_paste: function (copy_paste_canvas, scale) {
