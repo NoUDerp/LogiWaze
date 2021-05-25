@@ -5,16 +5,22 @@ counter=0
 width=2384	
 height=2384
 renderers=8
+rate=12
+c=0
 
 for f in $(ls -1 "$1" | grep -A99999999 "$2" | grep -B99999999 "$3" | grep ".json.brotli"); do
-	if [ "$renderers" -eq "0" ]; then
-		wait
-		renderers=8
+	d=$((c % rate))
+	if [ "$d" -eq "0" ]; then
+		if [ "$renderers" -eq "0" ]; then
+			wait
+			renderers=8
+		fi
+		renderers=$((renderers - 1))
+		echo "./render.js -i \"$1$f\" -w \"$width\" -h \"$height\" -o \"$1$(printf "%04d" $counter).png\""
+	#	./render.js -i "$1$f" -w "$width" -h "$height" -o "$1$(printf "%04d" $counter).png" &
+		counter=$((counter + 1))
 	fi
-	renderers=$((renderers - 1))
-	echo "./render.js -i \"$1$f\" -w \"$width\" -h \"$height\" -o \"$1$(printf "%04d" $counter).png\""
-	./render.js -i "$1$f" -w "$width" -h "$height" -o "$1$(printf "%04d" $counter).png" &
-	counter=$((counter + 1))
+	c=$((c + 1))
 done
 
 wait

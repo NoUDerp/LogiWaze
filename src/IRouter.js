@@ -324,6 +324,7 @@
                             newSize: { x: window.innerWidth, y: window.innerHeight }
                         };
 
+
                     if (ControlLayer.loaded && RegionLabels.loaded) {
                         //for (let i of document.getElementsByClassName("leaflet-zoom-animated"))
                         //    if (i.localName == "canvas") {
@@ -374,7 +375,7 @@
 
                 mymap.on('dragend', (e) => resizer());
 
-                mymap.on('zoomend', (e) => resizer());
+                mymap.on('moveend', (e) => resizer());
 
                 //var debug_markers = L.layerGroup();
                 if (beta) {
