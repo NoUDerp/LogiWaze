@@ -316,36 +316,7 @@
                     }
                 }, null);
 
-                function update_copy_paste_on_tile_load() {
-                    for (let i of document.getElementsByClassName("leaflet-zoom-animated"))
-                        if (i.localName == "canvas") {
-                            copy_paste_canvas.style.transform = i.style.transform;
-                            copy_paste_canvas.style.width = i.style.width;
-                            copy_paste_canvas.style.height = i.style.height;
-                        }
-
-                    copy_paste_canvas.width = window.innerWidth * 1;
-                    copy_paste_canvas.height = window.innerHeight * 1;
-                    FoxholeRouter.update_copy_paste(copy_paste_canvas, 1);
-                }
-
-                ControlLayer.loaded = false;
-                RegionLabels.loaded = false;
-                ControlLayer.when('unloaded', () => ControlLayer.loaded = false);
-                RegionLabels.when('unloaded', () => RegionLabels.loaded = false);
-                ControlLayer.when('loaded', function () {
-                    ControlLayer.loaded = true;
-                    if (ControlLayer.loaded && RegionLabels.loaded)
-                        update_copy_paste_on_tile_load();
-                });
-                RegionLabels.when('loaded', function () {
-                    RegionLabels.loaded = true;
-                    if (ControlLayer.loaded && RegionLabels.loaded)
-                        update_copy_paste_on_tile_load();
-                });
-
-
-                mymap.on('resize', function (e) {
+                function resizer() {
                     if (ControlLayer.loaded && RegionLabels.loaded) {
                         for (let i of document.getElementsByClassName("leaflet-zoom-animated"))
                             if (i.localName == "canvas") {
@@ -357,33 +328,28 @@
                         copy_paste_canvas.height = e.newSize.y * 1;
                         FoxholeRouter.update_copy_paste(copy_paste_canvas, 1);
                     }
+                }
+
+                ControlLayer.loaded = false;
+                RegionLabels.loaded = false;
+                ControlLayer.when('unloaded', () => ControlLayer.loaded = false);
+                RegionLabels.when('unloaded', () => RegionLabels.loaded = false);
+
+                ControlLayer.when('loaded', function () {
+                    ControlLayer.loaded = true;
+                    resizer();
+                });
+                RegionLabels.when('loaded', function () {
+                    RegionLabels.loaded = true;
+                    resizer();
                 });
 
-                mymap.on('dragend', function (e) {
-                    if (ControlLayer.loaded && RegionLabels.loaded) {
-                        for (let i of document.getElementsByClassName("leaflet-zoom-animated"))
-                            if (i.localName == "canvas") {
-                                copy_paste_canvas.style.transform = i.style.transform;
-                                copy_paste_canvas.style.width = i.style.width;
-                                copy_paste_canvas.style.height = i.style.height;
-                            }
-                        FoxholeRouter.update_copy_paste(copy_paste_canvas, 1);
-                    }
-                });
+                mymap.on('resize', (e) => resizer());
 
-                mymap.on('zoomend', function (e) {
-                    if (ControlLayer.loaded && RegionLabels.loaded) {
-                        for (let i of document.getElementsByClassName("leaflet-zoom-animated"))
-                            if (i.localName == "canvas") {
-                                copy_paste_canvas.style.transform = i.style.transform;
-                                copy_paste_canvas.style.width = i.style.width;
-                                copy_paste_canvas.style.height = i.style.height;
-                            }
-                        FoxholeRouter.update_copy_paste(copy_paste_canvas, 1);
-                    }
-                });
+                mymap.on('dragend', (e) => resizer());
 
-
+                mymap.on('zoomend', (e) => resizer());
+                
                 //var debug_markers = L.layerGroup();
                 if (beta) {
                     //var k = Object.keys(BorderCrossings);
