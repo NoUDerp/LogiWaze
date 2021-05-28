@@ -295,10 +295,12 @@
                 copy_paste_canvas.style.position = "absolute";
                 copy_paste_canvas.style.left = '0';
                 copy_paste_canvas.style.top = '0';
-                copy_paste_canvas.width = window.innerWidth * 2;
-                copy_paste_canvas.height = window.innerHeight * 2;
-                copy_paste_canvas.style.width = copy_paste_canvas.width / 2;
-                copy_paste_canvas.style.height = copy_paste_canvas.height / 2;
+                //copy_paste_canvas.width = window.innerWidth * 2;
+                //copy_paste_canvas.height = window.innerHeight * 2;
+                //copy_paste_canvas.style.width = copy_paste_canvas.width / 2;
+                //copy_paste_canvas.style.height = copy_paste_canvas.height / 2;
+
+                resizer();
 
                 for (let i of document.getElementsByClassName("leaflet-zoom-animated")) {
                     if (i.localName == "canvas") {
@@ -316,16 +318,40 @@
                     }
                 }, null);
 
-                function resizer() {
+                function resizer(e) {
+                    if (e == null)
+                        e = {
+                            newSize: { x: window.innerWidth, y: window.innerHeight }
+                        };
+
                     if (ControlLayer.loaded && RegionLabels.loaded) {
-                        for (let i of document.getElementsByClassName("leaflet-zoom-animated"))
-                            if (i.localName == "canvas") {
-                                copy_paste_canvas.style.transform = i.style.transform;
-                                copy_paste_canvas.style.width = i.style.width;
-                                copy_paste_canvas.style.height = i.style.height;
+                        //for (let i of document.getElementsByClassName("leaflet-zoom-animated"))
+                        //    if (i.localName == "canvas") {
+                        //        copy_paste_canvas.style.transform = i.style.transform;
+                        //        copy_paste_canvas.style.width = i.style.width;
+                        //        copy_paste_canvas.style.height = i.style.height;
+                        //        copy_paste_canvas.width = i.width;// e.newSize.x * 1;
+                        //        copy_paste_canvas.height = i.height;//e.newSize.y * 1;
+                        //    }
+                        var parent_parent_transform = copy_paste_canvas.parentElement.parentElement.style.transform;
+                        let styles = [];
+                        while(parent_parent_transform!="")
+                        {
+                            if (/^\s*scale\(.*\)/i.test(parent_parent_transform)) {
+                                styles.unshift(copy_paste_canvas.style.transform.concat(' scale('.concat(1.0 / parseFloat(parent_parent_transform.match(/scale\(([^\(]+)\)/i)[1]))));
+                                parent_parent_transform = parent_parent_transform.replace(/^\s*scale\(.*\)/i, '');
                             }
-                        copy_paste_canvas.width = e.newSize.x * 1;
-                        copy_paste_canvas.height = e.newSize.y * 1;
+                            else if (/^\s*translate3d\(.*\)/i.test(parent_parent_transform)) {
+                                let j = parent_parent_transform.match(/translate3d\(([^,]+)px\s*,\s*([^,]+)px\s*,\s*([^p]+)px\)/i);
+                                styles.unshift('translate3d('.concat(-parseFloat(j[1])).concat('px,').concat(-parseFloat(j[2])).concat('px,').concat(-parseFloat(j[3])).concat('px)'));
+                                parent_parent_transform = parent_parent_transform.replace(/translate3d\(([^\(]+)\)/i, '');
+                            }
+                            else
+                                break;
+                        }
+                        copy_paste_canvas.style.transform = styles.join(' ');
+                        copy_paste_canvas.style.width = copy_paste_canvas.width = e.newSize.x;
+                        copy_paste_canvas.style.height = copy_paste_canvas.height = e.newSize.y;
                         FoxholeRouter.update_copy_paste(copy_paste_canvas, 1);
                     }
                 }
@@ -349,7 +375,7 @@
                 mymap.on('dragend', (e) => resizer());
 
                 mymap.on('zoomend', (e) => resizer());
-                
+
                 //var debug_markers = L.layerGroup();
                 if (beta) {
                     //var k = Object.keys(BorderCrossings);
