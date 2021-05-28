@@ -43,7 +43,7 @@ for (var i = 0; i < regions.length; i++)
 function APIQuery(URL, success, error) {
     superagent.get(URL).then(res => {
         success(res.body);
-    }).catch(error => { console.log(error); alert("War API cannot be contacted right now"); });
+    }).catch(error => { console.log(error); alert("War API cannot be contacted right now: ".concat(error)); });
 }
 
 

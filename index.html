@@ -1539,7 +1539,7 @@
         if (location.protocol !== 'https:' && (location.hostname.toLowerCase() == "www.logiwaze.com" || location.hostname.toLowerCase() == "logiwaze.com"))
             location.replace('https:'.concat(location.href.substring(location.protocol.length)));
 
-        var build="aa92c9ef8da3fd3ededf59f329315b7b78dd7c9b";
+        var build="b9dc59bebe39b8877701a23f996b988188ae101c";
         if ("serviceWorker" in navigator) {
 
             window.addEventListener("load", function () {
@@ -1658,7 +1658,7 @@
 
         var update_state = null;
 
-        mymap.on('dragend', function (e) { AutoZoom = false; if (update_state != null) update_state(); });
+        mymap.on('moveend', function (e) { AutoZoom = false; if (update_state != null) update_state(); });
 
         /*mymap.on('zoomstart', function (e) {
             IsUserZoomState = IsUserZoom;
@@ -1758,7 +1758,8 @@
                     '<img src="MapIcons/MapIconFuel.webp" class="layer-icon">Fuel': Router.Fuel,
                     '<img src="MapIcons/MapIconSulfur.webp" class="layer-icon">Sulfur': Router.Sulfur,
                     '<img src="MapIcons/Control.webp" class="layer-icon">Control': Router.MapControl,
-                    '<img src="MapIcons/Labels.webp" class="layer-icon">Labels': Router.Labels
+                    '<img src="MapIcons/Labels.webp" class="layer-icon">Labels': Router.Labels,
+                    '<img src="font.svg" class="layer-icon">Basic Font': Router.BoringFont
                 },
                 {
                     position: 'topleft',
@@ -2231,6 +2232,9 @@
                             case "Labels":
                                 counter |= 16384;
                                 break;
+                            case "Basic Font":
+                                counter |= 32768;
+                                break;
                         }
 
                 l = l.concat(':').concat(counter.toString(16).toUpperCase());
@@ -2302,6 +2306,9 @@
                     case "Labels":
                         Router.showLabels();
                         break;
+                    case "Basic Font":
+                        Router.showBoringFont();
+                        break;
                 }
                 active_layers[event.name.replace(/<.*> */, '')] = true;
                 update_state();
@@ -2354,6 +2361,9 @@
                         break;
                     case "Labels":
                         Router.hideLabels();
+                        break;
+                    case "Basic Font":
+                        Router.hideBoringFont();
                         break;
                 }
                 active_layers[event.name.replace(/<.*> */, '')] = false;
@@ -2435,6 +2445,7 @@
             active_layers["Town Halls"] = (layers & 1) != 0;
             active_layers["Control"] = (layers & 8192) != 0;
             active_layers["Labels"] = (layers & 16384) != 0;
+            active_layers["Basic Font"] = (layers & 32768) != 0;
 
             var keys = Object.keys(active_layers);
             for (var i = 0; i < keys.length; i++)
@@ -2511,6 +2522,10 @@
                         case "Labels":
                             Router.Labels.remove();
                             Router.hideLabels();
+                            break;
+                        case "Basic Font":
+                            Router.BoringFont.remove();
+                            Router.hideBoringFont();
                             break;
                     }
 

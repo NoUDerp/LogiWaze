@@ -241,7 +241,7 @@
                     if (th.major != 1) {
                         var ownership = API.ownership(th.x, th.y, th.region).ownership;
                         var control = ownership == "COLONIALS" ? 0 : (ownership == "WARDENS" ? 1 : 2);
-                        RegionLabels.addText(Recase(ks[t]), control, th.x, th.y, 5, 9, '#bbbbbb');
+                        RegionLabels.addText(Recase(ks[t]), ks[t], control, th.x, th.y, 5, 9, '#bbbbbb');
                     }
                 }
 
@@ -250,12 +250,12 @@
                     if (th.major == 1) {
                         var ownership = API.ownership(th.x, th.y, th.region).ownership;
                         var control = ownership == "COLONIALS" ? 0 : (ownership == "WARDENS" ? 1 : 2);
-                        RegionLabels.addText(Recase(ks[t]), control, th.x, th.y, 3, 9, '#fff');
+                        RegionLabels.addText(Recase(ks[t]), ks[t], control, th.x, th.y, 3, 9, '#fff');
                     }
                 }
 
                 for (var i = 0; i < API.regions.length; i++)
-                    RegionLabels.addText(Recase(API.regions[i].realName), 4, API.regions[i].x, API.regions[i].y, 1, 3, '#ffffff', 2.5);
+                    RegionLabels.addText(Recase(API.regions[i].realName), API.regions[i].realName, 4, API.regions[i].x, API.regions[i].y, 1, 3, '#ffffff', 2.5);
 
 
                 for (var credit of [
@@ -265,7 +265,7 @@
                     { text: "Kastow Peak", x: 124.817, y: -122.72 },
                     { text: "Dragon Zephyr Inn", x: 56.987, y: -130.357 }]
                 )
-                    RegionLabels.addText(Recase(credit.text), control, credit.x, credit.y, 7, 9, '#DAA520');
+                    RegionLabels.addText(Recase(credit.text), credit.text, control, credit.x, credit.y, 7, 9, '#DAA520');
 
                 for (var key in JSONRoads._layers) {
                     var layer = JSONRoads._layers[key];
@@ -373,7 +373,7 @@
 
                 mymap.on('resize', (e) => resizer());
 
-                mymap.on('dragend', (e) => resizer());
+                //mymap.on('dragend', (e) => resizer());
 
                 mymap.on('moveend', (e) => resizer());
 
@@ -424,6 +424,7 @@
                     //Icons: Icons,
 
                     // virtual layers
+                    BoringFont: L.layerGroup().addTo(mymap),
                     Borders: L.layerGroup().addTo(mymap),
                     RoadsCanvas: L.layerGroup().addTo(mymap),
                     MapControl: L.layerGroup().addTo(mymap),
@@ -470,6 +471,18 @@
                         compact: null,
                         weightFn: function (a, b, props) { var dx = a[0] - b[0]; var dy = a[1] - b[1]; return Math.sqrt(dx * dx + dy * dy); }
                     }) : null,
+
+                    showBoringFont: function () {
+                        RegionLabels.boring = true;
+                        RegionLabels.recalculateSizes();
+                        RegionLabels.redraw();
+                    },
+
+                    hideBoringFont: function () {
+                        RegionLabels.boring = false;
+                        RegionLabels.recalculateSizes();
+                        RegionLabels.redraw();
+                    },
 
                     hideLabels: function () {
                         RegionLabels.draw = false;

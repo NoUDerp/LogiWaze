@@ -1,10 +1,11 @@
 <<<<<<< Updated upstream
-var build="aa92c9ef8da3fd3ededf59f329315b7b78dd7c9b";
+var build="b9dc59bebe39b8877701a23f996b988188ae101c";
 =======
-var build="aa92c9ef8da3fd3ededf59f329315b7b78dd7c9b";
+var build="b9dc59bebe39b8877701a23f996b988188ae101c";
 >>>>>>> Stashed changes
 
 const assets = [
+    "font.svg",
     "layers.png",
     "layers-2x.png",
     "Tiles/0_0_0.webp",
