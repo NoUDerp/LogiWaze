@@ -1539,12 +1539,12 @@
         if (location.protocol !== 'https:' && (location.hostname.toLowerCase() == "www.logiwaze.com" || location.hostname.toLowerCase() == "logiwaze.com"))
             location.replace('https:'.concat(location.href.substring(location.protocol.length)));
 
-        var build="cece853d1280a42135eaf4b440360ccb1a16fc8e";
+        var build="76dfc15ee57bdac0d0aa161be7c4d2b4344b29e0";
         if ("serviceWorker" in navigator) {
 
             window.addEventListener("load", function () {
                 navigator.serviceWorker
-                    .register("ServiceWorker.js")
+                    .register("ServiceWorker.js?bd24bcebc1edc24f5b3963e6cbf4ef3f")
                     .then(function (res) { return res.update(); })// console.log("service worker registered"))
                     .catch(function (err) { console.log("service worker not registered", err); })
             });
