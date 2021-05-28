@@ -259,11 +259,11 @@
 
 
                 for (var credit of [
-                    { text: "Haydenwood", x: 139.079, y: -155.292 },
+                    { text: "Hayden Grove", x: 139.079, y: -155.292 },
                     { text: "Steely Phil Bridge", x: 18.18, y: -161.439 },
                     { text: "Icanari Killing Fields", x: 134.071, y: -143.104 },
                     { text: "Kastow Peak", x: 124.817, y: -122.72 },
-                    { text: "Dragon Zephyr Inn", x: 56.987, y: -130.357 }]
+                    { text: "DragonZephyr Col", x: 119.176, y:-83.464 }]
                 )
                     RegionLabels.addText(Recase(credit.text), credit.text, control, credit.x, credit.y, 7, 9, '#DAA520');
 
