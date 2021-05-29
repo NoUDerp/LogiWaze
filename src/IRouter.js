@@ -351,8 +351,8 @@
                                 break;
                         }
                         copy_paste_canvas.style.transform = styles.join(' ');
-                        copy_paste_canvas.style.width = copy_paste_canvas.width = e.newSize.x;
-                        copy_paste_canvas.style.height = copy_paste_canvas.height = e.newSize.y;
+                        copy_paste_canvas.style.width = copy_paste_canvas.width = e.newSize.x - getPanelVisibleWidth();
+                        copy_paste_canvas.style.height = copy_paste_canvas.height = e.newSize.y - getPanelVisibleHeight();
                         FoxholeRouter.update_copy_paste(copy_paste_canvas, 1);
                     }
                 }
