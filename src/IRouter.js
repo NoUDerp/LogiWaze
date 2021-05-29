@@ -255,7 +255,7 @@
                 }
 
                 for (var i = 0; i < API.regions.length; i++)
-                    RegionLabels.addText(Recase(API.regions[i].realName), API.regions[i].realName, 4, API.regions[i].x, API.regions[i].y, 1, 3, '#ffffff', 2.5);
+                    RegionLabels.addText(Recase(API.regions[i].realName), API.regions[i].realName, 4, API.regions[i].x, API.regions[i].y, 0, 3, '#ffffff', 2.5);
 
 
                 for (var credit of [
@@ -263,7 +263,8 @@
                     { text: "Steely Phil Bridge", x: 18.18, y: -161.439 },
                     { text: "Icanari Killing Fields", x: 134.071, y: -143.104 },
                     { text: "Kastow Peak", x: 124.817, y: -122.72 },
-                    { text: "DragonZephyr Col", x: 119.176, y:-83.464 }]
+                    { text: "DragonZephyr Col", x: 119.176, y: -83.464 },
+                    { text: "Skaj Sound", x: 49.826, y: -102.048 }]
                 )
                     RegionLabels.addText(Recase(credit.text), credit.text, control, credit.x, credit.y, 7, 9, '#DAA520');
 
@@ -288,17 +289,12 @@
 
                 var highlighter = L.layerGroup().addTo(mymap);
 
-
                 var copy_paste_canvas = document.createElement("canvas");
                 copy_paste_canvas.id = "copy-paste";
                 copy_paste_canvas.style.opacity = '0';
                 copy_paste_canvas.style.position = "absolute";
                 copy_paste_canvas.style.left = '0';
                 copy_paste_canvas.style.top = '0';
-                //copy_paste_canvas.width = window.innerWidth * 2;
-                //copy_paste_canvas.height = window.innerHeight * 2;
-                //copy_paste_canvas.style.width = copy_paste_canvas.width / 2;
-                //copy_paste_canvas.style.height = copy_paste_canvas.height / 2;
 
                 resizer();
 
@@ -326,18 +322,9 @@
 
 
                     if (ControlLayer.loaded && RegionLabels.loaded) {
-                        //for (let i of document.getElementsByClassName("leaflet-zoom-animated"))
-                        //    if (i.localName == "canvas") {
-                        //        copy_paste_canvas.style.transform = i.style.transform;
-                        //        copy_paste_canvas.style.width = i.style.width;
-                        //        copy_paste_canvas.style.height = i.style.height;
-                        //        copy_paste_canvas.width = i.width;// e.newSize.x * 1;
-                        //        copy_paste_canvas.height = i.height;//e.newSize.y * 1;
-                        //    }
                         var parent_parent_transform = copy_paste_canvas.parentElement.parentElement.style.transform;
                         let styles = [];
-                        while(parent_parent_transform!="")
-                        {
+                        while (parent_parent_transform != "") {
                             if (/^\s*scale\(.*\)/i.test(parent_parent_transform)) {
                                 styles.unshift(copy_paste_canvas.style.transform.concat(' scale('.concat(1.0 / parseFloat(parent_parent_transform.match(/scale\(([^\(]+)\)/i)[1]))));
                                 parent_parent_transform = parent_parent_transform.replace(/^\s*scale\(.*\)/i, '');
@@ -376,6 +363,7 @@
                 //mymap.on('dragend', (e) => resizer());
 
                 mymap.on('moveend', (e) => resizer());
+
 
                 //var debug_markers = L.layerGroup();
                 if (beta) {
@@ -663,7 +651,6 @@
                         this.render_view(c);
                         c.toBlob((blob) => {
                             require('file-saver').saveAs(blob, new Date().toUTCString().concat('.webp'));
-                            delete c;
                         }, "image/webp", .9);
                     },
 
@@ -724,11 +711,85 @@
                         ctx.restore();
 
 
-                        delete ctx;
+                        this.drawRouteLine(ctx);
                     },
 
                     routeLine: function (route, options) {
                         return new Line(route, options);
+                    },
+
+                    marker: null,
+                    marker_shadow: null,
+
+                    drawRouteLine: function (ctx) {
+                        let cam = mymap.getPixelBounds();
+                        let cx = cam.min.x;
+                        let cy = cam.min.y;
+
+
+
+                        if (this.Control.routeSelected != null) {
+                            for (let style of [
+                                { color: 'black', opacity: 0.15, weight: 9 },
+                                { color: 'white', opacity: 0.8, weight: 6 },
+                                { color: this.Control.routeSelected.name == "Shortest Route" ? "#9E3031" : "#5E9339", opacity: 1, weight: 2 }]) {
+
+                                ctx.save();
+                                ctx.beginPath();
+
+                                if (style.color == "#9E3031" || style.color == "#5E9339")
+                                    ctx.setLineDash([10, 10]);
+
+                                ctx.lineCap = 'round';
+                                ctx.strokeStyle = style.color;
+                                ctx.lineWidth = style.weight;
+                                ctx.opacity = style.opacity;
+                                let first = true;
+                                for (let s of this.Control.routeSelected.coordinates) {
+                                    let u = mymap.project(s);
+                                    if (first)
+                                        ctx.moveTo(u.x - cx, u.y - cy);
+                                    else
+                                        ctx.lineTo(u.x - cx, u.y - cy);
+                                    first = false;
+                                }
+                                ctx.stroke();
+                                ctx.restore();
+                            }
+
+                            let u = this.Control.routeSelected.waypoints;
+                            let marker_loaded = false;
+                            let marker_shadow_loaded = false;
+
+                            function drawMarkers(ctx) {
+                                for (let m of u) {
+                                    let p = mymap.project([m.latLng.lat, m.latLng.lng]);
+                                    ctx.drawImage(marker_shadow, p.x - cx - marker.width / 2, p.y - cy - marker.height);
+                                }
+                                for (let m of u) {
+                                    let p = mymap.project([m.latLng.lat, m.latLng.lng]);
+                                    ctx.drawImage(marker, p.x - cx - marker.width / 2, p.y - cy - marker.height);
+                                }
+                            }
+
+                            let marker = this.marker, marker_shadow = this.marker_shadow;
+                            if (marker == null) {
+                                this.marker = marker = new Image();
+                                marker.src = "marker-icon.png";
+                                marker.onload = function () {
+                                    marker_loaded = true; if (marker_shadow_loaded && marker_loaded) drawMarkers(ctx);
+                                }
+                                this.marker_shadow = marker_shadow = new Image();
+                                marker_shadow.src = "marker-shadow.png";
+                                marker_shadow.onload = function () {
+                                    marker_shadow_loaded = true; if (marker_shadow_loaded && marker_loaded) drawMarkers(ctx);
+                                }
+                                // set up the cache on this
+                            }
+                            else
+                                setTimeout(() => drawMarkers(ctx), 0);
+
+                        }
                     },
 
                     narrate: function () {
@@ -897,12 +958,24 @@
 
 
                             var distance = (opath.weight / 256.0) * 12012.0; //map scale 
+
+                            calcDistance = (x, y) => Math.sqrt(Math.pow(y[0] - x[0], 2) + Math.pow(y[1] - x[1], 2));
+
+                            let sums = [0, 0, 0];
+                            for (let i = 0; i < opath.path.length - 1; i++)
+                                sums[(opath.path[i][3] - 1) % 3] += calcDistance(opath.path[i], opath.path[i + 1]);
+
+                            let sumSum = sums[0] + sums[1] + sums[2];
+
                             return {
                                 name: name,
                                 summary:
                                 {
                                     totalTime: distance,
-                                    totalDistance: distance
+                                    totalDistance: {
+                                        distance: distance,
+                                        breakdown: [sums[0] / sumSum, sums[1] / sumSum, sums[2] / sumSum]
+                                    }
                                 },
                                 inputWaypoints: wp,
                                 waypoints: wp,
@@ -934,6 +1007,7 @@
                         }
                     }
                 };
+
                 return FoxholeRouter;
             }
         };

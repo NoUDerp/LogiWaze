@@ -1,7 +1,7 @@
 ﻿<html>
 <head>
     <link rel="icon" href="favicon.svg">
-    <!--<link rel="manifest" href="manifest.json" crossorigin="" />-->
+    <link rel="manifest" href="manifest.json" crossorigin="" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no, width=device-width" /> <!--  -->
     <title>LogiWaze</title>
@@ -12,6 +12,49 @@
             -moz-user-select: none; /* Firefox all */
             -ms-user-select: none; /* IE 10+ */
             user-select: none; /* Likely future */
+        }
+
+
+        .leaflet-routing-alt-minimized table tr td span.summary-routeinfo div
+        {
+            display: none;
+        }
+
+        /*.route-summary-header td {
+            background-color: rgba(51, 51, 51, .3);
+            border-radius: 4px;
+        }*/
+
+        .roadtier {
+            line-height: 16px;
+            font-size: 10px;
+            background: #ccc;
+            border-radius: 3px;
+            height: 16px;
+            margin: 3px 0;
+            padding: 1px;
+            box-sizing: border-box;
+            border: 1px solid #333;
+        }
+
+            .roadtier div {
+                box-sizing: border-box;
+                display: inline-block;
+                height: 100%;
+                border-radius: 3px;
+                /*text-align: right;*/
+                text-indent: 2px;
+            }
+
+        .roadtier div span {
+            position: relative;
+            top: -1px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .detailed-routeinfo {
+            margin-top: 4px;
         }
 
         .leaflet-routing-alternatives-container {
@@ -395,8 +438,12 @@
             position: relative;
         }
 
+        .leaflet-control-layers-overlays {
+            line-height: 200%;
+        }
+
         .leaflet-control-layers-expanded {
-            padding: 6px 10px 6px 6px;
+            padding: 14px 20px;
             color: #FFF;
             text-shadow: 0 0 4px #000,0 0 3px #000,0 0 2px #000,0 0 1px #000;
             font-weight: bold;
@@ -864,7 +911,7 @@
             font-weight: 400;
             content: '\21c5';
             font-size: 30px;
-            line-height: 40px
+            line-height: 50px
         }
 
         .leaflet-routing-geocoders button:hover {
@@ -1474,7 +1521,7 @@
             }
         }
 
-        .copy-paste-url-button, .refresh-button {
+        .copy-paste-url-button, .refresh-button, .screenshot-button {
             float: left !important;
         }
 
@@ -1539,19 +1586,19 @@
         if (location.protocol !== 'https:' && (location.hostname.toLowerCase() == "www.logiwaze.com" || location.hostname.toLowerCase() == "logiwaze.com"))
             location.replace('https:'.concat(location.href.substring(location.protocol.length)));
 
-        var build="a6fd4fa9b904e739c70f11fa76ba27d2dd46fac0";
+        var build="169d07a18bef779269b3cf2d8c748d179c7889ac";
         if ("serviceWorker" in navigator) {
 
             window.addEventListener("load", function () {
                 navigator.serviceWorker
-                    .register("ServiceWorker.js?203599a5f27db7fa22d333061281ba70")
+                    .register("ServiceWorker.js?4916d8121a3ed1f75b58058dec4f0dbb")
                     .then(function (res) { return res.update(); })// console.log("service worker registered"))
                     .catch(function (err) { console.log("service worker not registered", err); })
             });
         }
 
     </script>
-    <script src="FoxholeRouter.js?f2ca314fdde8406640d4f7bec17e4f5b"></script>
+    <script src="FoxholeRouter.js?60acea78132d1624ff8b09150197484e"></script>
     <script type="text/javascript">
 
         //window.indexedDB.open("logiwaze").onsuccess = function (e) {
@@ -1986,11 +2033,15 @@
                     location.reload();
                 };
 
-                var ss = document.createElement("button");
+                let ss = document.createElement("button");
                 ss.className = "screenshot-button";
-                ss.appendChild(document.createElement("div"));
+                let download_icon = document.createElement("img");
+                download_icon.src = "download-file.svg";
+                download_icon.style.width = "20px";
+                download_icon.style.height = "20px";
+                ss.appendChild(download_icon);
                 ss.alt = "Screenshot";
-                //r.after(ss);
+                b.after(ss);
 
                 ss.onclick = () => Router.screenshot();
 
@@ -2131,7 +2182,7 @@
                     var rangeY = maxY - minY;
                     var buffer = .05;
                     PauseAutoZoom();
-                    mymap.fitBounds([[minY - rangeY * buffer, minX - rangeX * buffer], [minY + (1.0 + buffer * 2.0) * rangeY, minX + (1.0 + buffer * 2.0) * rangeX]], { paddingBottomRight: [getPanelWidth(), getPanelHeight()] });
+                    mymap.fitBounds([[minY - rangeY * buffer, minX - rangeX * buffer], [minY + (1.0 + buffer * 2.0) * rangeY, minX + (1.0 + buffer * 2.0) * rangeX]], { paddingBottomRight: [getPanelVisibleWidth(), getPanelVisibleHeight()] });
                     ResumeAutoZoom();
                     AutoZoom = true;
                 }

@@ -1,10 +1,5 @@
-<<<<<<< Updated upstream
-var build="a6fd4fa9b904e739c70f11fa76ba27d2dd46fac0";
-=======
-var build="a6fd4fa9b904e739c70f11fa76ba27d2dd46fac0";
->>>>>>> Stashed changes
-
 const assets = [
+    "download-file.svg",
     "font.svg",
     "layers.png",
     "layers-2x.png",

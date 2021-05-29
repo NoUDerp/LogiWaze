@@ -40,7 +40,19 @@ define(['leaflet', './Itinerary.js', 'jquery'], function (L, Itinerary, $) {
         }
 
         formatDistance(d, precision) {
-            return L.Routing.Formatter.prototype.formatDistance.call(this, d, precision).replace(' ', '');
+            if (typeof d === 'object') {
+                let a = L.Routing.Formatter.prototype.formatDistance.call(this, d.distance, precision).replace(' ', '');
+                if (d.breakdown[2] > 0)
+                    a = a.concat('<div class="roadtier" style="width: 100%"><div style="background-color: #5a9565; width: ').concat(d.breakdown[2] * 100.0).concat('%"><span>Gravel/Paved (').concat(Math.round(d.breakdown[2] * 100.0)).concat('%)</span></div></div>');
+                if (d.breakdown[1] > 0)
+                    a = a.concat('<div class="roadtier" style="width: 100%"><div style="background-color: #94954e; width: ').concat(d.breakdown[1] * 100.0).concat('%"><span>Dirt (').concat(Math.round(d.breakdown[1] * 100.0)).concat('%)</span></div></div>');
+                if (d.breakdown[0] > 0)
+                    a = a.concat('<div class="roadtier" style="width: 100%"><div style="background-color: #957458; width: ').concat(d.breakdown[0] * 100.0).concat('%"><span>Mud (').concat(Math.round(d.breakdown[0] * 100.0)).concat('%)</span></div></div>');
+                return a;
+            }
+            else
+                return L.Routing.Formatter.prototype.formatDistance.call(this, d, precision).replace(' ', '')
+
         }
 
     }
@@ -136,6 +148,8 @@ define(['leaflet', './Itinerary.js', 'jquery'], function (L, Itinerary, $) {
             }
             return Itinerary.prototype.onRemove.call(this, map);
         },
+
+        selectedRoute: null,
 
         getWaypoints: function () {
             return this._plan.getWaypoints();
@@ -488,37 +502,42 @@ define(['leaflet', './Itinerary.js', 'jquery'], function (L, Itinerary, $) {
 
 
     return {
-        Panel: (API, Router, Geocoder) => new prototype({
-            showAlternatives: false,
-            show: false,
-            routeWhileDragging: false,
-            router: Router,
-            autoRoute: true,
-            geocoder: Geocoder,
-            plan: new L.Routing.Plan([], {
-                maxGeocoderTolerance: 100000000,
+        Panel: (API, Router, Geocoder) => {
+            let pp = new prototype({
+                showAlternatives: false,
+                show: false,
+                routeWhileDragging: false,
+                router: Router,
+                autoRoute: true,
                 geocoder: Geocoder,
-                reverseWaypoints: true
-            }),
-            routeLine: function (route, options) {
-                if (route.name == "Shortest Route")
+                plan: new L.Routing.Plan([], {
+                    maxGeocoderTolerance: 100000000,
+                    geocoder: Geocoder,
+                    reverseWaypoints: true
+                }),
+                routeLine: function (route, options) {
+                    if (route.name == "Shortest Route")
+                        return L.Routing.line(route, {
+                            addWaypoints: options.addWaypoints, styles: [
+                                { color: 'black', opacity: 0.15, weight: 7 }, { color: 'white', opacity: 0.8, weight: 6 }, { color: '#9E3031', opacity: 1, weight: 2, dashArray: '10,10' }
+                            ]
+                        });
                     return L.Routing.line(route, {
                         addWaypoints: options.addWaypoints, styles: [
-                            { color: 'black', opacity: 0.15, weight: 7 }, { color: 'white', opacity: 0.8, weight: 6 }, { color: '#9E3031', opacity: 1, weight: 2, dashArray: '10,10' }
+                            { color: 'black', opacity: 0.15, weight: 7 }, { color: 'white', opacity: 0.8, weight: 6 }, { color: '#5E9339', opacity: 1, weight: 2, dashArray: '10,10' }
                         ]
                     });
-                return L.Routing.line(route, {
-                    addWaypoints: options.addWaypoints, styles: [
-                        { color: 'black', opacity: 0.15, weight: 7 }, { color: 'white', opacity: 0.8, weight: 6 }, { color: '#5E9339', opacity: 1, weight: 2, dashArray: '10,10' }
-                    ]
-                });
-            },
-            fitSelectedRoutes: false,
-            itineraryBuilder: new PanelFormatter(API),
-            summaryTemplate: Router.summaryTemplate,
-            collapsible: true,
-            formatter: new custom_time_formatter(Router)
-        })
+                },
+                fitSelectedRoutes: false,
+                itineraryBuilder: new PanelFormatter(API),
+                summaryTemplate: Router.summaryTemplate,
+                collapsible: true,
+                formatter: new custom_time_formatter(Router)
+            });
+            pp.on('routeselected', (e) => pp.routeSelected = e.route);
+
+            return pp;
+        }
     };
 });
 

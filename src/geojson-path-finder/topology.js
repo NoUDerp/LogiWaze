@@ -45,7 +45,7 @@ function topology(geojson, options) {
         var i = keyFn(rc);
         cs[i] = f.geometry.coordinates;
         cs[i][2] = f.properties.region;
-	cs[i][3] = f.properties.tier;
+	    cs[i][3] = f.properties.tier;
 
             if (i % 1000 === 0 && options.progress) {
                 options.progress('topo:vertices', i, fs.length);
