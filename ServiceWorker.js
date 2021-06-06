@@ -1,4 +1,5 @@
 const assets = [
+    "copy.svg",
     "download-file.svg",
     "font.svg",
     "layers.png",

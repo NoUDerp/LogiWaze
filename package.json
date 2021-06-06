@@ -33,7 +33,9 @@
     "tinyqueue": "^2.0.0",
     "turf-point": "^2.0.1",
     "yargs": "*",
-    "zlib": "^1.0.5"
+    "zlib": "^1.0.5",
+    "file-saver": "*",
+    "superagent": "*"
   },
   "devDependencies": {
     "make": "*",

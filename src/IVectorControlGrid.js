@@ -11,7 +11,7 @@ define(['leaflet', 'intersects'],
             disabledIcons: {},
             zoomScale: function (zoom) { return .65 * (1 + this.max_zoom - zoom); },
             shadowSize: 20,
-
+            pixelScale: window.devicePixelRatio,
             drawHex: (tile, ctx, x, y, w, h, scale) => {
                 ctx.lineWidth = scale;
                 ctx.beginPath();
@@ -55,13 +55,13 @@ define(['leaflet', 'intersects'],
                 c.ctx.save();
                 c.ctx.strokeStyle = '#303030';
                 c.ctx.opacity = .8;
-
+                c.ctx.scale(c.t.pixelScale, c.t.pixelScale);
                 for (var j of c.t.hex_sources) {
 
                     var label_w = j.size.width * zoom + shadow * 2;
                     var label_h = j.size.height * zoom + shadow * 2;
-                    var label_x = j.x * zoom - coords.x * tile.width - label_w - shadow;
-                    var label_y = j.y * zoom - coords.y * tile.height - label_h - shadow;
+                    var label_x = j.x * zoom - coords.x * tile.width / c.t.pixelScale - label_w - shadow;
+                    var label_y = j.y * zoom - coords.y * tile.height / c.t.pixelScale - label_h - shadow;
 
                     if (intersects.boxBox(0, 0, tile.width, tile.height, label_x, label_y, label_w, label_h))
                         c.t.drawHex(c.tile, c.ctx, label_x + label_w * .5, label_y + label_h * .5, label_w * .5, label_h * .5, lineWidth);
@@ -76,12 +76,13 @@ define(['leaflet', 'intersects'],
                 ctx.save();
                 ctx.fillStyle = '#FFFFFFFF';
                 ctx.strokeStyle = '#FFFFFFFF';
+                ctx.scale(t.pixelScale, t.pixelScale);
                 for (var j of t.hex_sources) {
                     if (!j.offline) {
                         var label_w = j.size.width * zoom + shadow * 2;
                         var label_h = j.size.height * zoom + shadow * 2;
-                        var label_x = j.x * zoom - coords.x * tile.width - label_w - shadow;
-                        var label_y = j.y * zoom - coords.y * tile.height - label_h - shadow;
+                        var label_x = j.x * zoom - coords.x * tile.width / t.pixelScale - label_w - shadow;
+                        var label_y = j.y * zoom - coords.y * tile.height / t.pixelScale - label_h - shadow;
                         if (intersects.boxBox(0, 0, tile.width, tile.height, label_x, label_y, label_w, label_h))
                             t.fillHex(tile, ctx, label_x + label_w * .5, label_y + label_h * .5, label_w * .5, label_h * .5, lineWidth);
                     }
@@ -100,8 +101,8 @@ define(['leaflet', 'intersects'],
                     if (j.offline) {
                         var label_w = j.size.width * zoom + shadow * 2;
                         var label_h = j.size.height * zoom + shadow * 2;
-                        var label_x = j.x * zoom - coords.x * tile.width - label_w - shadow;
-                        var label_y = j.y * zoom - coords.y * tile.height - label_h - shadow;
+                        var label_x = j.x * zoom - coords.x * tile.width / c.t.pixelScale - label_w - shadow;
+                        var label_y = j.y * zoom - coords.y * tile.height / c.t.pixelScale - label_h - shadow;
                         if (intersects.boxBox(0, 0, tile.width, tile.height, label_x, label_y, label_w, label_h))
                             t.fillHex(tile, ctx, label_x + label_w * .5, label_y + label_h * .5, label_w * .5, label_h * .5, lineWidth);
                     }
@@ -146,6 +147,7 @@ define(['leaflet', 'intersects'],
                     }
                 }
             },
+
             drawIcons: function (c) {
 
                 function makeOnLoadCallback(icon, u) {
@@ -191,11 +193,11 @@ define(['leaflet', 'intersects'],
 
                         var label_w = j.size.width * zoom * scale;
                         var label_h = j.size.height * zoom * scale;
-                        var label_x = j.x * zoom - c.coords.x * c.tile.width - label_w * .5;
-                        var label_y = j.y * zoom - c.coords.y * c.tile.height - label_h * .5;
+                        var label_x = j.x * zoom - c.coords.x * c.tile.width / c.t.pixelScale - label_w * .5;
+                        var label_y = j.y * zoom - c.coords.y * c.tile.height / c.t.pixelScale - label_h * .5;
 
 
-                        if (intersects.boxBox(0, 0, c.tile.width, c.tile.height, label_x - 2.0 * shadow, label_y - 2.0 * shadow, label_w + 4.0 * shadow, label_h + 4.0 * shadow)) {
+                        if (intersects.boxBox(0, 0, c.tile.width / c.t.pixelScale, c.tile.height / c.t.pixelScale, label_x - 2.0 * shadow, label_y - 2.0 * shadow, label_w + 4.0 * shadow, label_h + 4.0 * shadow)) {
                             var icon = j.icon;
                             var lx = label_x, ly = label_y, lw = label_w, lh = label_h;
                             if (icon in c.t.imageCache) {
@@ -232,64 +234,63 @@ define(['leaflet', 'intersects'],
                     c.t.yield(c, 8);
             },
 
+            pixelScale: window.devicePixelRatio,
+
             renderer: function (c, phase) {
                 switch (phase) {
                     case 1:
                         {
                             c.tile = L.DomUtil.create('canvas', 'leaflet-tile');
-                            c.tile.crossorigin = "Anonymous";
-                            c.tile.setAttribute("crossorigin", "Anonymous");
+                            //c.tile.crossorigin = "Anonymous";
+                            //c.tile.setAttribute("crossorigin", "Anonymous");
                             let size = c.t.getTileSize();
-                            c.tile.width = size.x;
-                            c.tile.height = size.y;
+                            c.tile.width = size.x * c.t.pixelScale;
+                            c.tile.height = size.y * c.t.pixelScale;
+                            c.tile.style.width = c.tile.width.toString().concat('px');
+                            c.tile.style.height = c.tile.height.toString().concat('px');
                             c.ctx = c.tile.getContext('2d');
                             c.t.loadIcons(c);
                             c.img = new Image();
                             var scale = Math.pow(2, Math.max(0, c.coords.z - c.t.max_native_zoom));
                             c.img.src = 'Tiles/'.concat(Math.min(c.coords.z, c.t.max_native_zoom)).concat('_').concat(Math.floor(c.coords.x / scale)).concat('_').concat(Math.floor(c.coords.y / scale)).concat('.webp');
-                            c.img.onload = () => c.t.yield(c, 2);
                             c.phase_2_complete = false;
                             c.phase_3_complete = false;
+                            c.img.onload = () => c.t.yield(c, 2);
                             c.t.yield(c, 3);
                             return c.tile;
                         }
                     case 2:
                         {
                             var scale = Math.pow(2, Math.max(0, c.coords.z - c.t.max_native_zoom));
-                            if (scale == 1)
-                                c.ctx.drawImage(c.img, 0, 0);
-                            else {
-                                var ox = c.coords.x % scale;
-                                var oy = c.coords.y % scale;
-                                var bx = c.img.width / scale;
-                                var by = c.img.height / scale;
-                                c.ctx.drawImage(c.img, bx * ox, by * oy, bx, by, 0, 0, c.tile.width, c.tile.height);
-                            }
-
+                            var ox = c.coords.x % scale;
+                            var oy = c.coords.y % scale;
+                            var bx = (c.img.width / scale);
+                            var by = (c.img.height / scale);
+                            c.ctx.drawImage(c.img, bx * ox, by * oy, bx, by, 0, 0, c.tile.width, c.tile.height);
                             delete c.img;
                             c.phase_2_complete = true;
                             if (c.phase_3_complete)
                                 c.t.yield(c, 4);
-                            //c.done(null, c.tile);
                             break;
                         }
                     case 3:
                         {
-                            c.hd_ratio = c.coords.z < 2 ? 8 : 16;
+                            c.hd_ratio = (c.coords.z < 2 ? 8 : 16);
                             if (!c.t.draw) {
                                 c.phase_3_complete = true;
+                                if(c.phase_2_complete)
                                 c.t.yield(c, 4);
                                 return;
                             }
-                            let size = c.t.getTileSize();
                             c.temp_canvas = L.DomUtil.create('canvas', '');
-                            c.temp_canvas.width = 2 + size.x / c.hd_ratio;
-                            c.temp_canvas.height = 2 + size.y / c.hd_ratio;
+                            c.temp_canvas.width = 2 + c.tile.width / c.t.pixelScale / c.hd_ratio;
+                            c.temp_canvas.height = 2 + c.tile.height / c.t.pixelScale / c.hd_ratio;
                             c.temp_ctx = c.temp_canvas.getContext('2d', { alpha: false });
                             c.x = 0;
                             c.y = 0;
                             c.i = 0;
                             c.d = c.temp_ctx.getImageData(0, 0, c.temp_canvas.width, c.temp_canvas.height);
+
                             c.t.calculateControl(c);
                             break;
                         }
@@ -299,22 +300,31 @@ define(['leaflet', 'intersects'],
                                 let overlay = document.createElement("canvas");
                                 overlay.width = c.tile.width;
                                 overlay.height = c.tile.height;
+
                                 let overlay_ctx = overlay.getContext('2d');
+
+                                overlay_ctx.save();
                                 c.t.drawValidRegions(overlay, overlay_ctx, c.coords, c.t);
+                                overlay_ctx.restore();
+
                                 overlay_ctx.save();
                                 overlay_ctx.globalCompositeOperation = 'source-atop';
                                 overlay_ctx.imageSmoothingQuality = 'low';
                                 overlay_ctx.drawImage(c.temp_canvas, 1, 1, c.temp_canvas.width - 2, c.temp_canvas.height - 2, 0, 0, c.tile.width, c.tile.height);
                                 overlay_ctx.restore();
+
                                 overlay_ctx.save();
                                 c.t.drawInvalidRegions(overlay, overlay_ctx, c.coords, c.t);
                                 overlay_ctx.restore();
+
                                 c.ctx.save();
                                 c.ctx.globalCompositeOperation = 'source-atop';
                                 c.ctx.globalAlpha = .5;
                                 c.ctx.drawImage(overlay, 0, 0);
                                 c.ctx.restore();
-                                c.temp_ctx.clearRect(0, 0, c.temp_canvas.width, c.temp_canvas.height);
+
+                                //c.temp_ctx.clearRect(0, 0, c.temp_canvas.width, c.temp_canvas.height);
+
                                 delete overlay_ctx;
                                 delete overlay;
                                 delete c.temp_canvas;
@@ -324,22 +334,28 @@ define(['leaflet', 'intersects'],
                         }
                     case 5:
                         {
+                            c.ctx.save();
+                            c.ctx.scale(c.t.pixelScale, c.t.pixelScale);
                             c.t.drawRoads(c);
                             break;
                         }
                     case 6:
                         {
+                            c.ctx.restore();
                             c.t.drawBorders(c);
                             c.t.yield(c, 7);
                             break;
                         }
                     case 7:
                         {
+                            c.ctx.save();
+                            c.ctx.scale(c.t.pixelScale, c.t.pixelScale);
                             c.t.drawIcons(c);
                             break;
                         }
                     case 8:
                         {
+                            c.ctx.restore();
                             setTimeout(() => c.done(null, c.tile), 0);
                             break;
                         }
@@ -355,7 +371,7 @@ define(['leaflet', 'intersects'],
                 ctx.lineCap = 'round';
 
                 var scale = Math.pow(2, c.t.grid_depth - coords.z);
-                var start_x = Math.floor(coords.x * scale);;
+                var start_x = Math.floor(coords.x * scale);
                 var start_y = Math.floor(coords.y * scale);
 
                 var end_x = Math.ceil((coords.x + 1) * scale);
@@ -370,6 +386,7 @@ define(['leaflet', 'intersects'],
                 var grid_y_size = c.t.grid_y_size;
                 var controls = c.t.controls;
                 var quality = c.t.quality;
+                let pixelScale = c.t.pixelScale;
                 function draw(i, start_x, start_y, end_x, end_y, x, y, step) {
                     var startTime = Date.now();
                     if (step == 1) {
@@ -385,8 +402,8 @@ define(['leaflet', 'intersects'],
                                             var j = sources[x][y][i];
                                             ctx.strokeStyle = tiers[j.options.tier];
                                             ctx.beginPath();
-                                            var coordsx = coords.x * tile.width;
-                                            var coordsy = coords.y * tile.height;
+                                            var coordsx = coords.x * tile.width / pixelScale;
+                                            var coordsy = coords.y * tile.height / pixelScale;
                                             var x1 = (j.points[0][1] + offset[0]) * depth_inverse - coordsx;
                                             var y1 = (j.points[0][0] + offset[1]) * depth_inverse - coordsy;
                                             var x2 = (j.points[1][1] + offset[0]) * depth_inverse - coordsx;
@@ -426,8 +443,8 @@ define(['leaflet', 'intersects'],
                                         if (controls[j.options.control]) {
                                             ctx.strokeStyle = colors[j.options.control];
                                             ctx.beginPath();
-                                            var coordsx = coords.x * tile.width;
-                                            var coordsy = coords.y * tile.height;
+                                            var coordsx = coords.x * tile.width / pixelScale;
+                                            var coordsy = coords.y * tile.height / pixelScale;
                                             var x1 = (j.points[0][1] + offset[0]) * depth_inverse - coordsx;
                                             var y1 = (j.points[0][0] + offset[1]) * depth_inverse - coordsy;
                                             var x2 = (j.points[1][1] + offset[0]) * depth_inverse - coordsx;
@@ -495,8 +512,9 @@ define(['leaflet', 'intersects'],
                 delete c.d;
 
                 c.phase_3_complete = true;
-                if (c.phase_2_complete)
+                if (c.phase_2_complete) {
                     c.t.yield(c, 4);
+                }
             },
 
             yield: (c, phase) =>
@@ -507,8 +525,8 @@ define(['leaflet', 'intersects'],
                 if (coords.x < 0 || coords.x >= scale || coords.y < 0 || coords.y >= scale || coords.z < 0) {
                     let t = L.DomUtil.create('canvas', 'leaflet-tile');
                     let size = this.getTileSize();
-                    t.width = size.x;
-                    t.height = size.y;
+                    t.width = this.pixelScale * size.x;
+                    t.height = this.pixelScale * size.y;
                     setTimeout(() => done(null, t), 0);
                     return t;
                 }
@@ -531,9 +549,9 @@ define(['leaflet', 'intersects'],
                 u.offset = Offset;
                 var max = Math.pow(2, GridDepth);
                 u.grid_x_size = max;
-                u.grid_x_width = size.x / u.grid_x_size;
+                u.grid_x_width = (size.x / u.grid_x_size);
                 u.grid_y_size = max;
-                u.grid_y_height = size.y / u.grid_y_size;
+                u.grid_y_height = (size.y / u.grid_y_size);
 
                 var max_road_width = Math.max(RoadWidth, ControlWidth);
 
@@ -598,9 +616,9 @@ define(['leaflet', 'intersects'],
 
                 u.icon_sources = [];
                 u.icon_grid_x_size = Math.pow(2, MaxZoom);
-                u.icon_grid_x_width = size.x / u.grid_x_size;
+                u.icon_grid_x_width = u.pixelScale * size.x / u.grid_x_size;
                 u.icon_grid_y_size = Math.pow(2, MaxZoom);
-                u.icon_grid_y_height = size.y / u.grid_y_size;
+                u.icon_grid_y_height = u.pixelScale * size.y / u.grid_y_size;
                 u.imageCache = {};
                 u.addIcon = (icon, x, y, glow, zoomMin, zoomMax) => {
                     u.icon_sources.push(

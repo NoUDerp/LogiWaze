@@ -130,60 +130,66 @@ exports.API = {
             shard = 'war-service-live';
         else
             shard = 'war-service-live-'.concat(shard);
-        APIQuery("https://".concat(shard).concat(".foxholeservices.com/api/worldconquest/maps"),
-            function (maps) {
-                // iterate here on the maps and collect status
-                var complete = maps.length;
-                var p_x = [], p_y = [], p_t = [];
 
-                for (var i = 0; i < maps.length; i++) {
-                    const mapName = maps[i];
-                    APIQuery("https://".concat(shard).concat(".foxholeservices.com/api/worldconquest/maps/").concat(maps[i]).concat("/dynamic/public"),
-                        function (mapData) {
-                            if (mapData.mapItems.length > 0) {
-                                exports.API.mapControl[mapName] = {};
-                                exports.API.resources[mapName] = {};
-                                var offset = exports.API.remapXY(mapName);
-                                for (var j = 0; j < mapData.mapItems.length; j++) {
-                                    var icon = mapData.mapItems[j].iconType;
-                                    if (icon == 35 || (icon >= 5 && icon <= 10) || (icon >= 45 && icon <= 47) || icon == 29 || icon == 17 || icon == 34 || icon == 51 || icon == 39 || icon == 52 || icon == 33 || icon == 18 || icon == 19) {
-                                        var x = mapData.mapItems[j].x;
-                                        var y = mapData.mapItems[j].y;
-                                        x = 256 + (((x * 46.54545454545455) + offset.y) - 23.27272727272727);
-                                        y = -256 + ((((1 - y) * 40.30954606705751) + offset.x) - 20.15477303352875);
-                                        var key = x.toFixed(3).toString().concat('|').concat(y.toFixed(3).toString());
-                                        var control = mapData.mapItems[j].teamId;
-                                        exports.API.mapControl[mapName][key] = { x: x, y: y, control: control, mapIcon: icon, nuked: (mapData.mapItems[j].flags & 0x10) != 0, town: ((icon >= 5 && icon <= 10) || (icon >= 45 && icon <= 47) || icon == 29) };
-                                        if ((mapData.mapItems[j].flags & 0x10) == 0 && (control != "OFFLINE" && (icon == 35 || (icon >= 5 && icon <= 10) || (icon >= 45 && icon <= 47) || icon == 29))) {
-                                            p_x.push(x);
-                                            p_y.push(y);
-                                            p_t.push(control == "WARDENS" ? -1 : (control == "COLONIALS" ? 1 : 0));
+        APIQuery("https://".concat(shard).concat(".foxholeservices.com/api/worldconquest/war"),
+            function (war) {
+                exports.API.war = war;
+                //alert(war);
+            APIQuery("https://".concat(shard).concat(".foxholeservices.com/api/worldconquest/maps"),
+                function (maps) {
+                    // iterate here on the maps and collect status
+                    var complete = maps.length;
+                    var p_x = [], p_y = [], p_t = [];
+
+                    for (var i = 0; i < maps.length; i++) {
+                        const mapName = maps[i];
+                        APIQuery("https://".concat(shard).concat(".foxholeservices.com/api/worldconquest/maps/").concat(maps[i]).concat("/dynamic/public"),
+                            function (mapData) {
+                                if (mapData.mapItems.length > 0) {
+                                    exports.API.mapControl[mapName] = {};
+                                    exports.API.resources[mapName] = {};
+                                    var offset = exports.API.remapXY(mapName);
+                                    for (var j = 0; j < mapData.mapItems.length; j++) {
+                                        var icon = mapData.mapItems[j].iconType;
+                                        if (icon == 35 || (icon >= 5 && icon <= 10) || (icon >= 45 && icon <= 47) || icon == 29 || icon == 17 || icon == 34 || icon == 51 || icon == 39 || icon == 52 || icon == 33 || icon == 18 || icon == 19) {
+                                            var x = mapData.mapItems[j].x;
+                                            var y = mapData.mapItems[j].y;
+                                            x = 256 + (((x * 46.54545454545455) + offset.y) - 23.27272727272727);
+                                            y = -256 + ((((1 - y) * 40.30954606705751) + offset.x) - 20.15477303352875);
+                                            var key = x.toFixed(3).toString().concat('|').concat(y.toFixed(3).toString());
+                                            var control = mapData.mapItems[j].teamId;
+                                            exports.API.mapControl[mapName][key] = { x: x, y: y, control: control, mapIcon: icon, nuked: (mapData.mapItems[j].flags & 0x10) != 0, town: ((icon >= 5 && icon <= 10) || (icon >= 45 && icon <= 47) || icon == 29) };
+                                            if ((mapData.mapItems[j].flags & 0x10) == 0 && (control != "OFFLINE" && (icon == 35 || (icon >= 5 && icon <= 10) || (icon >= 45 && icon <= 47) || icon == 29))) {
+                                                p_x.push(x);
+                                                p_y.push(y);
+                                                p_t.push(control == "WARDENS" ? -1 : (control == "COLONIALS" ? 1 : 0));
+                                            }
+                                        }
+                                        else {
+                                            var x = mapData.mapItems[j].x;
+                                            var y = mapData.mapItems[j].y;
+                                            x = 256 + (((x * 46.54545454545455) + offset.y) - 23.27272727272727);
+                                            y = -256 + ((((1 - y) * 40.30954606705751) + offset.x) - 20.15477303352875);
+                                            var key = x.toFixed(3).toString().concat('|').concat(y.toFixed(3).toString());
+                                            exports.API.resources[mapName][key] = {
+                                                x: x, y: y, control: mapData.mapItems[j].teamId, mapIcon: icon, nuked: (mapData.mapItems[j].flags & 0x10) != 0
+                                            };
                                         }
                                     }
-                                    else {
-                                        var x = mapData.mapItems[j].x;
-                                        var y = mapData.mapItems[j].y;
-                                        x = 256 + (((x * 46.54545454545455) + offset.y) - 23.27272727272727);
-                                        y = -256 + ((((1 - y) * 40.30954606705751) + offset.x) - 20.15477303352875);
-                                        var key = x.toFixed(3).toString().concat('|').concat(y.toFixed(3).toString());
-                                        exports.API.resources[mapName][key] = {
-                                            x: x, y: y, control: mapData.mapItems[j].teamId, mapIcon: icon, nuked: (mapData.mapItems[j].flags & 0x10) != 0
-                                        };
-                                    }
+
                                 }
 
-                            }
 
+                                if (--complete == 0) {
+                                    exports.API.variogram = kriging.train(p_t, p_x, p_y, 'exponential', 0, 100);
+                                    completionCallback();
+                                }
 
-                            if (--complete == 0) {
-                                exports.API.variogram = kriging.train(p_t, p_x, p_y, 'exponential', 0, 100);
-                                completionCallback();
-                            }
+                            });
 
-                        });
-
-                }
-            });
+                    }
+                });
+        });
     }
 };
 

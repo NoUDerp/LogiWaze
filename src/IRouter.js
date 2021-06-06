@@ -338,9 +338,15 @@
                                 break;
                         }
                         copy_paste_canvas.style.transform = styles.join(' ');
-                        copy_paste_canvas.style.width = copy_paste_canvas.width = e.newSize.x - getPanelVisibleWidth();
-                        copy_paste_canvas.style.height = copy_paste_canvas.height = e.newSize.y - getPanelVisibleHeight();
-                        FoxholeRouter.update_copy_paste(copy_paste_canvas, 1);
+
+                        var scale = window.devicePixelRatio;
+
+                        copy_paste_canvas.width = (e.newSize.x - getPanelVisibleWidth()) * scale;
+                        copy_paste_canvas.height = (e.newSize.y - getPanelVisibleHeight()) * scale;
+
+                        copy_paste_canvas.style.width = (e.newSize.x - getPanelVisibleWidth()).toString().concat('px');
+                        copy_paste_canvas.style.height = (e.newSize.y - getPanelVisibleHeight()).toString().concat('px');
+                        FoxholeRouter.update_copy_paste(copy_paste_canvas, scale);
                     }
                 }
 
@@ -654,18 +660,43 @@
                         }, "image/webp", .9);
                     },
 
+                    copy: function () {
+                        let c = document.createElement("canvas");
+                        c.width = window.devicePixelRatio * (window.innerWidth - getPanelWidth());
+                        c.height = window.devicePixelRatio * (window.innerHeight - getPanelHeight());
+                        c.setAttribute("crossorigin", "Anonymous");
+                        c.crossorigin = "Anonymous";
+                        this.render_view(c, window.devicePixelRatio);
+                        c.toBlob((blob) => {
+                            try {
+                                navigator.clipboard.write([
+                                    new ClipboardItem({
+                                        'image/png': blob
+                                    })
+                                ]);
+                            }
+                            catch (error) {
+                                console.log(error);
+                            }
+                        }, "image/png", .9);
+                    },
+
                     update_copy_paste: function (copy_paste_canvas, scale) {
                         this.render_view(copy_paste_canvas, scale);
                     },
 
+
                     render_view: function (c, scale) {
                         if (scale == null)
-                            scale = 2;
+                            scale = window.devicePixelRatio;// 2;
+
+                        //var pixelRatio = 2;//window.devicePixelRatio;
                         let ctx = c.getContext("2d");
                         ctx.imageSmoothingQuality = 'high';
                         ctx.save();
                         ctx.scale(scale, scale);
-                        ctx.clearRect(0, 0, c.width, c.height);
+                        ctx.fillStyle = '#FF000000';
+                        ctx.fillRect(0, 0, c.width, c.height);
                         for (let e of document.getElementsByClassName("leaflet-tile")) {
                             if (e.localName == "canvas" && !e.classList.contains('logiwaze-text') && e.classList.contains('leaflet-tile-loaded')) {
                                 var offset = e.style.transform.match(/translate3d\(([^\)]+)\)/i)[1].replace(/px/ig, '').split(',');
@@ -678,9 +709,11 @@
                                 let cx = parseFloat(camera[0].replace(/px/ig, ''));
                                 let cy = parseFloat(camera[1].replace(/px/ig, ''));
                                 ctx.drawImage(e,
-                                    parent_scale * x + parseFloat(parent_translate[0]) + cx,
-                                    parent_scale * y + parseFloat(parent_translate[1]) + cy,
-                                    e.width * parent_scale, e.height * parent_scale);
+                                    (parent_scale * x + parseFloat(parent_translate[0]) + cx),
+                                    (parent_scale * y + parseFloat(parent_translate[1]) + cy),
+                                    e.width * parent_scale / scale,
+                                    e.height * parent_scale / scale
+                                );
                             }
                         }
 
@@ -729,6 +762,8 @@
 
 
                         if (this.Control.routeSelected != null) {
+                            ctx.save();
+                            ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
                             for (let style of [
                                 { color: 'black', opacity: 0.15, weight: 9 },
                                 { color: 'white', opacity: 0.8, weight: 6 },
@@ -770,6 +805,7 @@
                                     let p = mymap.project([m.latLng.lat, m.latLng.lng]);
                                     ctx.drawImage(marker, p.x - cx - marker.width / 2, p.y - cy - marker.height);
                                 }
+                                ctx.restore();
                             }
 
                             let marker = this.marker, marker_shadow = this.marker_shadow;

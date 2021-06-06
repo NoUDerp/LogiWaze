@@ -724,7 +724,7 @@
         }
 
         .leaflet-routing-container, .leaflet-routing-error {
-            width: 320px;
+            width: 332px;
             position: relative;
             left: 0;
             background-color: #fff;
@@ -735,7 +735,7 @@
 
 
         .leaflet-control-container .leaflet-routing-container-hide {
-            left: 320px;
+            left: 332px;
         }
 
         .leaflet-routing-container h2 {
@@ -1521,7 +1521,7 @@
             }
         }
 
-        .copy-paste-url-button, .refresh-button, .screenshot-button {
+        .copy-paste-url-button, .refresh-button, .screenshot-button, .copy-button {
             float: left !important;
         }
 
@@ -1586,19 +1586,19 @@
         if (location.protocol !== 'https:' && (location.hostname.toLowerCase() == "www.logiwaze.com" || location.hostname.toLowerCase() == "logiwaze.com"))
             location.replace('https:'.concat(location.href.substring(location.protocol.length)));
 
-        var build="169d07a18bef779269b3cf2d8c748d179c7889ac";
+        var build="6ea92f5bff250955aa488771e688837175c3b05d";
         if ("serviceWorker" in navigator) {
 
             window.addEventListener("load", function () {
                 navigator.serviceWorker
-                    .register("ServiceWorker.js?4916d8121a3ed1f75b58058dec4f0dbb")
+                    .register("ServiceWorker.js?ecec3fc121950e06ae442bfe72987c71")
                     .then(function (res) { return res.update(); })// console.log("service worker registered"))
                     .catch(function (err) { console.log("service worker not registered", err); })
             });
         }
 
     </script>
-    <script src="FoxholeRouter.js?60acea78132d1624ff8b09150197484e"></script>
+    <script src="FoxholeRouter.js?ce3731e89651be29071b9136dbc2b594"></script>
     <script type="text/javascript">
 
         //window.indexedDB.open("logiwaze").onsuccess = function (e) {
@@ -2043,8 +2043,19 @@
                 ss.alt = "Screenshot";
                 b.after(ss);
 
-                ss.onclick = () => Router.screenshot();
 
+                let tt = document.createElement("button");
+                tt.className = "copy-button";
+                download_icon = document.createElement("img");
+                download_icon.src = "copy.svg";
+                download_icon.style.width = "20px";
+                download_icon.style.height = "20px";
+                tt.appendChild(download_icon);
+                tt.alt = "Copy Image";
+                b.after(tt);
+
+                ss.onclick = () => Router.screenshot();
+                tt.onclick = () => Router.copy();
 
             }
 

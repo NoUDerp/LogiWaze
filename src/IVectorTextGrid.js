@@ -41,7 +41,7 @@ define(['leaflet', 'intersects'],
             shadowSize: 20,
             draw: true,
             boring: true,
-            
+            pixelScale: window.devicePixelRatio,
             recalculateSizes: function () {
                 var canvas = L.DomUtil.create('canvas', 'leaflet-tile');
                 ctx = canvas.getContext('2d');
@@ -59,7 +59,7 @@ define(['leaflet', 'intersects'],
 
                 var raw_scale = this.zoomScale(coords.z);
 
-                var hd_ratio = 2;
+                var hd_ratio = this.pixelScale;
                 var size = this.getTileSize();
                 var tile = null;
                 tile = L.DomUtil.create('canvas', 'leaflet-tile logiwaze-text');
@@ -98,7 +98,6 @@ define(['leaflet', 'intersects'],
                             let label_y = j.y * zoom * hd_ratio - coords.y * tile.height - label_h * .25 - shadow;
 
                             if (intersects.boxBox(0, 0, tile.width, tile.height, label_x, label_y, label_w, label_h)) {
-                                //ctx.stroke();
                                 ctx.setTransform(text_scale, 0, 0, text_scale, label_x + label_w * .5, label_y + label_h * .5);
                                 controlToFont(j.control, ctx, boring);
                                 ctx.shadowColor = "rgba(0, 0, 0, 1)";

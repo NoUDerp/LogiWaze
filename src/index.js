@@ -2,7 +2,7 @@
 
 global.L = require('leaflet');
 global.$ = require('jquery');
-require('jquery-ui');
+//require('jquery-ui');
 
 
 
