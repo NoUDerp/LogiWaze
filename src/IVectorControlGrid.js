@@ -101,8 +101,8 @@ define(['leaflet', 'intersects'],
                     if (j.offline) {
                         var label_w = j.size.width * zoom + shadow * 2;
                         var label_h = j.size.height * zoom + shadow * 2;
-                        var label_x = j.x * zoom - coords.x * tile.width / c.t.pixelScale - label_w - shadow;
-                        var label_y = j.y * zoom - coords.y * tile.height / c.t.pixelScale - label_h - shadow;
+                        var label_x = j.x * zoom - coords.x * tile.width / t.pixelScale - label_w - shadow;// / t.pixelScale
+                        var label_y = j.y * zoom - coords.y * tile.height / t.pixelScale - label_h - shadow;
                         if (intersects.boxBox(0, 0, tile.width, tile.height, label_x, label_y, label_w, label_h))
                             t.fillHex(tile, ctx, label_x + label_w * .5, label_y + label_h * .5, label_w * .5, label_h * .5, lineWidth);
                     }
@@ -314,6 +314,7 @@ define(['leaflet', 'intersects'],
                                 overlay_ctx.restore();
 
                                 overlay_ctx.save();
+                                overlay_ctx.scale(c.t.pixelScale, c.t.pixelScale);
                                 c.t.drawInvalidRegions(overlay, overlay_ctx, c.coords, c.t);
                                 overlay_ctx.restore();
 
