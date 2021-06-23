@@ -339,7 +339,7 @@
                         }
                         copy_paste_canvas.style.transform = styles.join(' ');
 
-                        var scale = window.devicePixelRatio;
+                        var scale = 1; // temporarily disabled: window.devicePixelRatio;
 
                         copy_paste_canvas.width = (e.newSize.x - getPanelVisibleWidth()) * scale;
                         copy_paste_canvas.height = (e.newSize.y - getPanelVisibleHeight()) * scale;
@@ -662,11 +662,12 @@
 
                     copy: function () {
                         let c = document.createElement("canvas");
-                        c.width = window.devicePixelRatio * (window.innerWidth - getPanelWidth());
-                        c.height = window.devicePixelRatio * (window.innerHeight - getPanelHeight());
+                        var pixelScale = 1; // temporarily disabled: window.devicePixelRatio;
+                        c.width = pixelScale * (window.innerWidth - getPanelWidth());
+                        c.height = pixelScale * (window.innerHeight - getPanelHeight());
                         c.setAttribute("crossorigin", "Anonymous");
                         c.crossorigin = "Anonymous";
-                        this.render_view(c, window.devicePixelRatio);
+                        this.render_view(c, pixelScale);
                         c.toBlob((blob) => {
                             try {
                                 navigator.clipboard.write([
@@ -688,7 +689,7 @@
 
                     render_view: function (c, scale) {
                         if (scale == null)
-                            scale = window.devicePixelRatio;// 2;
+                            scale = 2; // temporarily disabled: window.devicePixelRatio;// 2;
 
                         //var pixelRatio = 2;//window.devicePixelRatio;
                         let ctx = c.getContext("2d");
@@ -763,7 +764,8 @@
 
                         if (this.Control.routeSelected != null) {
                             ctx.save();
-                            ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+                            var pixelScale = 2; // temporarily disabled: window.devicePixelRatio;
+                            ctx.scale(pixelScale, pixelScale);
                             for (let style of [
                                 { color: 'black', opacity: 0.15, weight: 9 },
                                 { color: 'white', opacity: 0.8, weight: 6 },

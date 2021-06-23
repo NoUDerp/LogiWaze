@@ -11,7 +11,7 @@ define(['leaflet', 'intersects'],
             disabledIcons: {},
             zoomScale: function (zoom) { return .65 * (1 + this.max_zoom - zoom); },
             shadowSize: 20,
-            pixelScale: window.devicePixelRatio,
+            pixelScale: 1, // temporarily disabled: window.devicePixelRatio,
             drawHex: (tile, ctx, x, y, w, h, scale) => {
                 ctx.lineWidth = scale;
                 ctx.beginPath();
@@ -234,7 +234,7 @@ define(['leaflet', 'intersects'],
                     c.t.yield(c, 8);
             },
 
-            pixelScale: window.devicePixelRatio,
+            pixelScale: 1, // This is too intense for now: window.devicePixelRatio,
 
             renderer: function (c, phase) {
                 switch (phase) {
