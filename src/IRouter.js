@@ -651,7 +651,7 @@
 
                     screenshot: function () {
                         let c = document.createElement("canvas");
-                        var pixelScale = 1; // temporarily disabled: window.devicePixelRatio;
+                        var pixelScale = 2; // temporarily disabled: window.devicePixelRatio;
                         c.width = pixelScale * (window.innerWidth - getPanelWidth());
                         c.height = pixelScale * (window.innerHeight - getPanelHeight());
                         c.setAttribute("crossorigin", "Anonymous");
