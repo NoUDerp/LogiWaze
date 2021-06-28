@@ -1228,6 +1228,13 @@
             filter: brightness(90%) sepia(25%) saturate(90);
         }
 
+        .vehicle-speed-panel .slowest-truck {
+            height: 28px;
+            margin: 0 4px;
+            vertical-align: middle;
+            /*filter: brightness(90%) sepia(25%) saturate(90);*/
+        }
+
         .route-summary {
             border: 0;
             width: 100%;
@@ -1586,7 +1593,7 @@
         if (location.protocol !== 'https:' && (location.hostname.toLowerCase() == "www.logiwaze.com" || location.hostname.toLowerCase() == "logiwaze.com"))
             location.replace('https:'.concat(location.href.substring(location.protocol.length)));
 
-        var build="26c245ea965cb619083cae8861c970319f1e97e9";
+        var build="1409b313980c6e8fd4d05e95e7883be9959099c2";
         if ("serviceWorker" in navigator) {
 
             window.addEventListener("load", function () {
@@ -1598,7 +1605,7 @@
         }
 
     </script>
-    <script src="FoxholeRouter.js?16623b6c3ff8b80a6f7ab616f15a8eb1"></script>
+    <script src="FoxholeRouter.js?b0d202531243afd15c1626b42aea271f"></script>
     <script type="text/javascript">
 
         //window.indexedDB.open("logiwaze").onsuccess = function (e) {

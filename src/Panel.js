@@ -9,13 +9,15 @@ define(['leaflet', './Itinerary.js', 'jquery'], function (L, Itinerary, $) {
         formatTime(distance) {
             var time = distance * this.FoxholeRouter.truckSpeed;
             var t1 = L.Routing.Formatter.prototype.formatTime.call(this, time);
-            var t2 = L.Routing.Formatter.prototype.formatTime.call(this, time / .75);
+            var t2 = L.Routing.Formatter.prototype.formatTime.call(this, time);
             var jeep_time = distance * this.FoxholeRouter.jeepSpeed;
             var t3 = L.Routing.Formatter.prototype.formatTime.call(this, jeep_time);
-            var t4 = L.Routing.Formatter.prototype.formatTime.call(this, jeep_time / .75);
+            var t4 = L.Routing.Formatter.prototype.formatTime.call(this, jeep_time);
             var flatbed_time = distance * this.FoxholeRouter.flatbedSpeed;
             var t5 = L.Routing.Formatter.prototype.formatTime.call(this, flatbed_time);
-            var t6 = L.Routing.Formatter.prototype.formatTime.call(this, flatbed_time / .75);
+            var t6 = L.Routing.Formatter.prototype.formatTime.call(this, flatbed_time);
+            var htd_time = distance * this.FoxholeRouter.htdSpeed;
+            var t7 = L.Routing.Formatter.prototype.formatTime.call(this, htd_time);
             var a = "<div class=\'detailed-routeinfo\'><table class=\"vehicle-speed-panel\">";
             a = a.concat("<tr>");
             a = a.concat("<td style=\"text-align: right\"><img src=\'Truck.webp\' class='fast-truck' /></td>");
@@ -34,6 +36,10 @@ define(['leaflet', './Itinerary.js', 'jquery'], function (L, Itinerary, $) {
             a = a.concat("<td style=\"text-align: left\">").concat(t6).concat("</td>");
             //a = a.concat("<td style=\"text-align: right\"><img src=\'Flatbed.webp\' class='slow-truck' /></td>");
             //a = a.concat("<td style=\"text-align: left\">").concat(t6).concat("</td>");
+
+            a = a.concat("<td style=\"text-align: right\"><img src=\'HTD.webp\' class='slowest-truck' /></td>");
+            a = a.concat("<td style=\"text-align: left\">").concat(t7).concat("</td>");
+
             a = a.concat("</tr>");
             a = a.concat("</table></div>");
             return a;

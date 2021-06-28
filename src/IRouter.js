@@ -445,9 +445,10 @@
                         return angle;
                     },
 
-                    truckSpeed: 3600.0 / 45000.0, // 45 kmh
-                    jeepSpeed: 3600.0 / 55000.0,
-                    flatbedSpeed: 3600 / 25000.0,
+                    truckSpeed: 3600.0 / 50000.0 * .75, // 45 kmh (75% of 60kmh)
+                    jeepSpeed: 3600.0 / 55000.0 * .75,
+                    flatbedSpeed: 3600 / 25000.0 * .75,
+                    htdSpeed: 3600 / 14500 * .90,
 
                     pathFinder: new PathFinder(MainRoutes, {
                         compact: null,
