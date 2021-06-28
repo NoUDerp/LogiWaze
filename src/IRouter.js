@@ -651,11 +651,12 @@
 
                     screenshot: function () {
                         let c = document.createElement("canvas");
+                        var pixelScale = 1; // temporarily disabled: window.devicePixelRatio;
                         c.width = 2 * (window.innerWidth - getPanelWidth());
                         c.height = 2 * (window.innerHeight - getPanelHeight());
                         c.setAttribute("crossorigin", "Anonymous");
                         c.crossorigin = "Anonymous";
-                        this.render_view(c);
+                        this.render_view(c, pixelScale);
                         c.toBlob((blob) => {
                             require('file-saver').saveAs(blob, new Date().toUTCString().concat('.webp'));
                         }, "image/webp", .9);
