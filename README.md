@@ -7,7 +7,7 @@ LogiWaze is a leaflet-based [Foxhole](https://www.foxholegame.com/) logistics ro
 
 Alternatively you can experience LogiWaze by opening the index.html from a downloaded/cloned repository
 
-The original prototyping for this idea was done by Hayden and is available to see here: [https://foxholestats.com/router/](https://foxholestats.com/router/)
+The original prototyping for this idea was done by Hayden of: [https://foxholestats.com/](https://foxholestats.com/)
 
 ## Discussion (via FoxholeStats.com discord)
 [https://discord.gg/dnegnws](https://discord.gg/dnegnws)
