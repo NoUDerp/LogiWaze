@@ -539,12 +539,6 @@
     "x": 158.09961939636366,
     "y": -91.79656388467347
   },
-  "Saltmarch": {
-    "region": "MarbanHollow",
-    "major": 0,
-    "x": 173.92575210909092,
-    "y": -114.57066815164899
-  },
   "Sanctum": {
     "region": "MarbanHollow",
     "major": 1,
@@ -556,6 +550,12 @@
     "major": 0,
     "x": 173.22894803636365,
     "y": -99.37107344657883
+  },
+  "The Claim": {
+    "region": "MarbanHollow",
+    "major": 0,
+    "x": 173.92575210909092,
+    "y": -114.57066815164899
   },
   "The Clutch": {
     "region": "MarbanHollow",
@@ -1025,126 +1025,6 @@
     "x": 84.95088963636363,
     "y": -172.89239545195852
   },
-  "Blackroad": {
-    "region": "LinnMercyHex",
-    "major": 0,
-    "x": 91.46957077090909,
-    "y": -94.33142041790481
-  },
-  "Fort Duncan": {
-    "region": "LinnMercyHex",
-    "major": 1,
-    "x": 104.10992544727273,
-    "y": -118.57008456951186
-  },
-  "Gallant Gough Boulevard": {
-    "region": "LinnMercyHex",
-    "major": 0,
-    "x": 74.38926520000001,
-    "y": -105.0324278599634
-  },
-  "Hardline": {
-    "region": "LinnMercyHex",
-    "major": 1,
-    "x": 86.57057417454544,
-    "y": -111.42446575609176
-  },
-  "Lathair": {
-    "region": "LinnMercyHex",
-    "major": 1,
-    "x": 103.60534665454546,
-    "y": -100.2633349230642
-  },
-  "Merciful Strait": {
-    "region": "LinnMercyHex",
-    "major": 0,
-    "x": 109.00611349090909,
-    "y": -114.91159218394304
-  },
-  "Mudhole": {
-    "region": "LinnMercyHex",
-    "major": 0,
-    "x": 96.34975276363636,
-    "y": -99.87958885069676
-  },
-  "Nathair": {
-    "region": "LinnMercyHex",
-    "major": 0,
-    "x": 97.45960585454546,
-    "y": -104.35712122851109
-  },
-  "Outwich Ranch": {
-    "region": "LinnMercyHex",
-    "major": 1,
-    "x": 108.77731465454545,
-    "y": -107.31365189219528
-  },
-  "Rotdust": {
-    "region": "LinnMercyHex",
-    "major": 1,
-    "x": 97.07911538181818,
-    "y": -93.80899217396185
-  },
-  "Solas Burn": {
-    "region": "LinnMercyHex",
-    "major": 0,
-    "x": 103.84077961454545,
-    "y": -96.77673614717096
-  },
-  "The Crimson Gardens": {
-    "region": "LinnMercyHex",
-    "major": 1,
-    "x": 80.50435302545455,
-    "y": -113.02142839121251
-  },
-  "The Drone": {
-    "region": "LinnMercyHex",
-    "major": 0,
-    "x": 78.82828611636364,
-    "y": -96.66411208165053
-  },
-  "The First Coin": {
-    "region": "LinnMercyHex",
-    "major": 1,
-    "x": 88.82776666909092,
-    "y": -116.65088258598556
-  },
-  "The Great Scale": {
-    "region": "LinnMercyHex",
-    "major": 0,
-    "x": 88.95451320000001,
-    "y": -99.41439290645073
-  },
-  "The Last Grove": {
-    "region": "LinnMercyHex",
-    "major": 1,
-    "x": 87.63057708363635,
-    "y": -123.34785413620199
-  },
-  "The Long Whine": {
-    "region": "LinnMercyHex",
-    "major": 1,
-    "x": 86.47377638545456,
-    "y": -96.1540104968949
-  },
-  "The Prairie Bazaar": {
-    "region": "LinnMercyHex",
-    "major": 1,
-    "x": 98.4121353090909,
-    "y": -117.53567712215747
-  },
-  "The River Mercy": {
-    "region": "FarranacCoastHex",
-    "major": 0,
-    "x": 61.70720251636362,
-    "y": -134.13308937219358
-  },
-  "Ulster Falls": {
-    "region": "LinnMercyHex",
-    "major": 1,
-    "x": 91.42037362181819,
-    "y": -105.838921909091
-  },
   "Abandoned Ward": {
     "region": "DeadLandsHex",
     "major": 1,
@@ -1390,6 +1270,126 @@
     "major": 0,
     "x": 135.8132242618182,
     "y": -129.09594803133498
+  },
+  "Blackroad": {
+    "region": "LinnMercyHex",
+    "major": 0,
+    "x": 91.46957077090909,
+    "y": -94.33142041790481
+  },
+  "Fort Duncan": {
+    "region": "LinnMercyHex",
+    "major": 1,
+    "x": 104.10992544727273,
+    "y": -118.57008456951186
+  },
+  "Gallant Gough Boulevard": {
+    "region": "LinnMercyHex",
+    "major": 0,
+    "x": 74.38926520000001,
+    "y": -105.0324278599634
+  },
+  "Hardline": {
+    "region": "LinnMercyHex",
+    "major": 1,
+    "x": 86.57057417454544,
+    "y": -111.42446575609176
+  },
+  "Lathair": {
+    "region": "LinnMercyHex",
+    "major": 1,
+    "x": 103.60534665454546,
+    "y": -100.2633349230642
+  },
+  "Merciful Strait": {
+    "region": "LinnMercyHex",
+    "major": 0,
+    "x": 109.00611349090909,
+    "y": -114.91159218394304
+  },
+  "Mudhole": {
+    "region": "LinnMercyHex",
+    "major": 0,
+    "x": 96.34975276363636,
+    "y": -99.87958885069676
+  },
+  "Nathair": {
+    "region": "LinnMercyHex",
+    "major": 0,
+    "x": 97.45960585454546,
+    "y": -104.35712122851109
+  },
+  "Outwich Ranch": {
+    "region": "LinnMercyHex",
+    "major": 1,
+    "x": 108.77731465454545,
+    "y": -107.31365189219528
+  },
+  "Rotdust": {
+    "region": "LinnMercyHex",
+    "major": 1,
+    "x": 97.07911538181818,
+    "y": -93.80899217396185
+  },
+  "Solas Burn": {
+    "region": "LinnMercyHex",
+    "major": 0,
+    "x": 103.84077961454545,
+    "y": -96.77673614717096
+  },
+  "The Crimson Gardens": {
+    "region": "LinnMercyHex",
+    "major": 1,
+    "x": 80.50435302545455,
+    "y": -113.02142839121251
+  },
+  "The Drone": {
+    "region": "LinnMercyHex",
+    "major": 0,
+    "x": 78.82828611636364,
+    "y": -96.66411208165053
+  },
+  "The First Coin": {
+    "region": "LinnMercyHex",
+    "major": 1,
+    "x": 88.82776666909092,
+    "y": -116.65088258598556
+  },
+  "The Great Scale": {
+    "region": "LinnMercyHex",
+    "major": 0,
+    "x": 88.95451320000001,
+    "y": -99.41439290645073
+  },
+  "The Last Grove": {
+    "region": "LinnMercyHex",
+    "major": 1,
+    "x": 87.63057708363635,
+    "y": -123.34785413620199
+  },
+  "The Long Whine": {
+    "region": "LinnMercyHex",
+    "major": 1,
+    "x": 86.47377638545456,
+    "y": -96.1540104968949
+  },
+  "The Prairie Bazaar": {
+    "region": "LinnMercyHex",
+    "major": 1,
+    "x": 98.4121353090909,
+    "y": -117.53567712215747
+  },
+  "The River Mercy": {
+    "region": "FarranacCoastHex",
+    "major": 0,
+    "x": 61.70720251636362,
+    "y": -134.13308937219358
+  },
+  "Ulster Falls": {
+    "region": "LinnMercyHex",
+    "major": 1,
+    "x": 91.42037362181819,
+    "y": -105.838921909091
   },
   "Balor's Crown": {
     "region": "EndlessShoreHex",
@@ -2479,15 +2479,15 @@
   },
   "Kofteri Channel": {
     "region": "OarbreakerHex",
-    "major": 1,
-    "x": 25.436636800000002,
-    "y": -124.01691601277761
+    "major": 0,
+    "x": 21.326673163636343,
+    "y": -121.35169961685182
   },
   "Lion's Head": {
     "region": "OarbreakerHex",
-    "major": 0,
-    "x": 14.648943418181801,
-    "y": -123.65485970095793
+    "major": 1,
+    "x": 15.283625599999993,
+    "y": -123.84256311769647
   },
   "Martius": {
     "region": "OarbreakerHex",
@@ -2510,8 +2510,8 @@
   "Oasis": {
     "region": "OarbreakerHex",
     "major": 0,
-    "x": 29.150449745454523,
-    "y": -125.29112898063957
+    "x": 26.31462836363636,
+    "y": -124.64298372751813
   },
   "Obitum": {
     "region": "OarbreakerHex",
