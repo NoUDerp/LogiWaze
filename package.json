@@ -19,7 +19,7 @@
     "babel-core": "*",
     "babel-loader": "*",
     "babel-preset-es2015": "*",
-    "file-saver": "^2.0.5",
+    "file-saver": "*",
     "intersects": "*",
     "jquery": "*",
     "jquery-ui": "*",
@@ -27,15 +27,13 @@
     "leaflet": "^1.5",
     "leaflet-routing-machine": "^3.2.12",
     "point-in-polygon": "*",
-    "superagent": "^6.1.0",
+    "superagent": "*",
     "tap": "^12.0.0",
     "tap-spec": "^5.0.0",
     "tinyqueue": "^2.0.0",
     "turf-point": "^2.0.1",
     "yargs": "*",
-    "zlib": "^1.0.5",
-    "file-saver": "*",
-    "superagent": "*"
+    "zlib": "^1.0.5"
   },
   "devDependencies": {
     "make": "*",
