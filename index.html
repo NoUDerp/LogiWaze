@@ -2062,13 +2062,18 @@
                 download_icon.style.height = "20px";
                 tt.appendChild(download_icon);
                 tt.alt = "Copy Image";
+                tt.title = "Copy Image";
                 b.after(tt);
 
                 ss.onclick = () => Router.screenshot();
                 tt.onclick = () => Router.copy();
-
+                
+                x.title = "Reverse Waypoints";
             }
 
+            for (let y of document.getElementsByClassName("leaflet-routing-add-waypoint")) {
+                y.title = "Add Waypoint";
+            }
 
             PauseAutoZoom();
             mymap.fitBounds([[-256, 0], [0, 256]], { paddingBottomRight: [getPanelVisibleWidth(), getPanelVisibleHeight()] });
