@@ -2023,6 +2023,7 @@
                 var b = document.createElement("button");
                 b.className = "copy-paste-url-button";
                 b.alt = "Copy URL";
+                b.title = "Copy URL";
                 b.appendChild(document.createElement("div"));
                 x.after(b);
                 b.onclick = function () {
@@ -2034,6 +2035,7 @@
                 r.className = "refresh-button";
                 r.appendChild(document.createElement("div"));
                 r.alt = "Refresh";
+                r.title = "Refresh";
                 b.after(r);
 
                 r.onclick = function () {
@@ -2048,6 +2050,7 @@
                 download_icon.style.height = "20px";
                 ss.appendChild(download_icon);
                 ss.alt = "Screenshot";
+                ss.title = "Save Screenshot";
                 b.after(ss);
 
 
