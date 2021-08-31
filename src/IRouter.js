@@ -121,7 +121,7 @@
                 var w = 46.545454545 * .5;
                 var h = w * Math.sqrt(3) / 2;
                 for (var i = 0; i < regions.length; i++)
-                    ControlLayer.addHex(regions[i].x, regions[i].y, w, h, !(regions[i].name in API.mapControl));
+                    ControlLayer.addHex(256 - regions[i].x, regions[i].y, w, h, !(regions[i].name in API.mapControl));
 
                 var resolveIcon = function (ic) {
                     if (ic.icon == null)
