@@ -115,24 +115,24 @@
 
                 var renderer = L.canvas({ tolerance: .2 }).addTo(mymap);
 
-                var RegionLabels = VectorTextGrid.Create(8, [0, 256]);
-                var ControlLayer = VectorControlGrid.Create(8, [0, 256], API, .30, .17, GridDepth);
+                var RegionLabels = VectorTextGrid.Create(8, [128, 128]);
+                var ControlLayer = VectorControlGrid.Create(5, 8, [128, 128], API, .30, .17, GridDepth);
                 var regions = API.regions;
-                var w = 46.545454545 * .5;
-                var h = w * Math.sqrt(3) / 2;
-                for (var i = 0; i < regions.length; i++)
-                    ControlLayer.addHex(256 - regions[i].x, regions[i].y, w, h, !(regions[i].name in API.mapControl));
+                var h = 256 / 7;
+                var w = h * 2 / Math.sqrt(3);
+
+                regions.forEach(region => ControlLayer.addHex(region.x, region.y, w, h, !(region.name in API.mapControl)));
 
                 var resolveIcon = function (ic) {
                     if (ic.icon == null)
                         return null;
-                    if (ic.icon == 5)
+                    if (ic.icon == 56)
                         icon = 'MapIconStaticBase1';
                     else if (ic.icon == 35)
                         icon = "MapIconSafehouse";
-                    else if (ic.icon == 6)
+                    else if (ic.icon == 57)
                         icon = 'MapIconStaticBase2';
-                    else if (ic.icon == 7)
+                    else if (ic.icon == 58)
                         icon = 'MapIconStaticBase3';
                     else if (ic.icon == 27)
                         icon = 'MapIconKeep'
@@ -239,7 +239,7 @@
                 for (var t = 0; t < ks.length; t++) {
                     var th = towns[ks[t]];
                     if (th.major != 1) {
-                        var ownership = API.ownership(th.x, th.y, th.region).ownership;
+                        var ownership = API.ownership(th.x + 128, th.y - 128, th.region).ownership;
                         var control = ownership == "COLONIALS" ? 0 : (ownership == "WARDENS" ? 1 : 2);
                         RegionLabels.addText(Recase(ks[t]), ks[t], control, th.x, th.y, 5, 9, '#bbbbbb');
                     }
@@ -248,7 +248,7 @@
                 for (var t = 0; t < ks.length; t++) {
                     var th = towns[ks[t]];
                     if (th.major == 1) {
-                        var ownership = API.ownership(th.x, th.y, th.region).ownership;
+                        var ownership = API.ownership(th.x + 128, th.y - 128, th.region).ownership;
                         var control = ownership == "COLONIALS" ? 0 : (ownership == "WARDENS" ? 1 : 2);
                         RegionLabels.addText(Recase(ks[t]), ks[t], control, th.x, th.y, 3, 9, '#fff');
                     }
@@ -258,7 +258,7 @@
                     RegionLabels.addText(Recase(API.regions[i].realName), API.regions[i].realName, 4, API.regions[i].x, API.regions[i].y, 0, 3, '#ffffff', 2.5);
 
 
-                for (var credit of [
+                for (var credit of [ // wow these are all wrong now
                     { text: "Hayden Grove", x: 139.079, y: -155.292 },
                     { text: "Steely Phil Bridge", x: 18.18, y: -161.439 },
                     { text: "Icanari Killing Fields", x: 134.071, y: -143.104 },
@@ -370,35 +370,6 @@
 
                 mymap.on('moveend', (e) => resizer());
 
-
-                //var debug_markers = L.layerGroup();
-                if (beta) {
-                    //var k = Object.keys(BorderCrossings);
-                    //for (var i = 0; i < k.length; i++) {
-                    //    var b = k[i].split(/\|/);
-                    //    L.circleMarker([parseFloat(b[1]), parseFloat(b[0])], {
-                    //        color: '#FF0000',
-                    //        clickable: false,
-                    //        zIndexOffset: -1000,
-                    //        opacity: .5
-                    //    }).addTo(debug_markers);
-                    //}
-
-                    //var k = Object.keys(Intersections);
-                    //for (var i = 0; i < k.length; i++) {
-                    //    if (Intersections[k[i]] > 2) {
-                    //        var b = k[i].split(/\|/);
-                    //        L.circleMarker([parseFloat(b[1]), parseFloat(b[0])], {
-                    //            color: '#00FF00',
-                    //            clickable: false,
-                    //            zIndexOffset: -2000,
-                    //            opacity: .5
-                    //        }).addTo(debug_markers);
-                    //    }
-                    //}
-
-                }
-
                 var playbutton = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/" x="0px" y="0px" width="32px" height="32px" viewBox="20 20 173.7 173.7" enable-background="new 0 0 213.7 213.7" xml:space="preserve"><polygon class="triangle" id="XMLID_18_" fill="none" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" points="73.5,62.5 148.5,105.8 73.5,149.1 "/></svg>'
 
                 var speed = beta ? '<tr class="detailed-routeinfo"><td colspan="2"><span class="slow"></span><span class="slidecontainer"><input type="range" min="d /1" max="100" value="50" class="slider" oninput="updateSlider(this)"></span><span class="fast"></span></td></tr>' : '';
@@ -414,8 +385,6 @@
                     Sulfur: L.layerGroup().addTo(mymap),
                     API: API,
                     Roads: JSONRoads,
-
-                    //Icons: Icons,
 
                     // virtual layers
                     BoringFont: L.layerGroup().addTo(mymap),

@@ -2,15 +2,29 @@ const pip = require('point-in-polygon');
 const kriging = require('@sakitam-gis/kriging');
 const superagent = require('superagent');
 
-var width = 256 / 5.5;
-var height = width * Math.sqrt(3) / 2;
+var height = 256 / 7;
+var width = height * 2 / Math.sqrt(3);
 var halfwidth = width * .5;
 var halfheight = height * .5;
 
 let regionPolygon = [[halfwidth * .5, halfheight], [halfwidth, 0], [halfwidth * .5, -halfheight], [-halfwidth * .5, -halfheight], [-halfwidth, 0], [-halfwidth * .5, halfheight]];
-let ox = 128;
-let oy = -128;
+let ox = 0;
+let oy = 0;
 let regions = [
+    { name: "NevishLineHex", realName: "Nevish Line", y: oy + 1.5 * height, x: ox - 2.25 * width },
+    { name: "AcrithiaHex", realName: "Acrithia", y: oy - 2.5 * height, x: ox + .75 * width },
+    { name: "RedRiverHex", realName: "Red River", y: oy - 2.5 * height, x: ox - .75 * width },
+    { name: "CallumsCapeHex", realName: "Callum's Cape", y: oy + 2 * height, x: ox - 1.5 * width },
+    { name: "SpeakingWoodsHex", realName: "Speaking Woods", y: oy + 2.5 * height, x: ox - .75 * width },
+    { name: "BasinSionnachHex", realName: "Basin Sionnach", y: oy + 3 * height, x: ox },
+    { name: "HowlCountyHex", realName: "Howl County", y: oy + 2.5 * height, x: ox + .75 * width },
+    { name: "ClansheadValleyHex", realName: "Clanshead Valley", y: oy + 2 * height, x: ox + 1.5 * width },
+    { name: "MorgensCrossingHex", realName: "Morgen's Crossing", y: oy + 1.5 * height, x: ox + 2.25 * width },
+    { name: "TheFingersHex", realName: "The Fingers", y: oy - 1.5 * height, x: ox + 2.25 * width },
+    { name: "TerminusHex", realName: "Terminus", y: oy - 2 * height, x: ox + 1.5 * width },
+    { name: "KalokaiHex", realName: "Kalokai", y: oy - 3 * height, x: ox },
+    { name: "AshFieldsHex", realName: "Ash Fields", y: oy - 2 * height, x: ox - 1.5 * width },
+    { name: "OriginHex", realName: "Origin", y: oy - 1.5 * height, x: ox - 2.25 * width },
     { name: "GodcroftsHex", realName: "Godcrofts", y: .5 * height + oy, x: 2.25 * width + ox },
     { name: "DeadLandsHex", realName: "Deadlands", y: oy, x: ox },
     { name: "ReachingTrailHex", realName: "Reaching Trail", y: oy + 2 * height, x: ox },
@@ -57,7 +71,7 @@ exports.API = {
             var region = regions[i];
 
 
-            if (pip([x - region.x, - region.y + y], regionPolygon))
+            if (pip([x - region.x - 128, - region.y + y + 128], regionPolygon))
                 return region.name;
         }
         return null;
@@ -65,38 +79,55 @@ exports.API = {
     mapControl: {},
     resources: {},
     remapXY: function (f) {
-        if (f === "GodcroftsHex") return { x: 148.15477, y: -23.27272 };
-        if (f === "DeadLandsHex") return { x: 128, y: -128 };
-        if (f === "ReachingTrailHex") return { x: 208.6191, y: -128 };
-        if (f === "CallahansPassageHex") return { x: 168.30954, y: -128 };
-        if (f === "MarbanHollowHex") return { x: 148.15477, y: -93.09091 };
-        if (f === "MarbanHollow") return { x: 148.15477, y: -93.09091 };
-        if (f === "UmbralWildwoodHex") return { x: 87.69045, y: -128 };
-        if (f === "MoorsHex") return { x: 188.46432, y: -162.90909 };
-        if (f === "MooringCountyHex") return { x: 188.46432, y: -162.90909 };
-        if (f === "HeartlandsHex") return { x: 67.535675, y: -162.90909 };
-        if (f === "LochMorHex") return { x: 107.84523, y: -162.90909 };
-        if (f === "LinnOfMercyHex") return { x: 148.15477, y: -162.90909 };
-        if (f === "LinnMercyHex") return { x: 148.15477, y: -162.90909 };
-        if (f === "StonecradleHex") return { x: 168.30954, y: -197.81818 };
-        if (f === "FarranacCoastHex") return { x: 128, y: -197.81818 };
-        if (f === "WestgateHex") return { x: 87.69045, y: -197.81818 };
-        if (f === "FishermansRowHex") return { x: 107.84523, y: -232.72728 };
-        if (f === "OarbreakerHex") return { x: 148.15477, y: -232.72728 };
-        if (f === "GreatMarchHex") return { x: 47.380905, y: -128 };
-        if (f === "TempestIslandHex") return { x: 107.84523, y: -23.27272 };
-        if (f === "EndlessShoreHex") return { x: 128, y: -58.181816 };
-        if (f === "AllodsBightHex") return { x: 87.69045, y: -58.181816 };
-        if (f === "WeatheredExpanseHex") return { x: 168.30954, y: -58.181816 };
-        if (f === "DrownedValeHex") return { x: 107.84523, y: -93.09091 };
-        if (f === "ShackledChasmHex") return { x: 67.535675, y: -93.09091 };
-        if (f === "ViperPitHex") return { x: 188.46432, y: -93.09091 };
+        var k = 256 / 7;
+        var w = k * 2 / Math.sqrt(3);
+        if (f == "DeadLandsHex") return { x: 0, y: 0 };
+        if (f == "CallahansPassageHex") return { x: 0, y: k };
+        if (f == "MarbanHollow") return { x: 0.75 * w, y: 0.5 * k };
+        if (f == "UmbralWildwoodHex") return { x: 0, y: -k };
+        if (f == "MooringCountyHex") return { x: -0.75 * w, y: 1.5 * k };
+        if (f == "HeartlandsHex") return { x: -0.75 * w, y: - 1.5 * k };
+        if (f == "LochMorHex") return { x: -0.75 * w, y: -0.5 * k };
+        if (f == "LinnMercyHex") return { x: -0.75 * w, y: 0.5 * k };
+        if (f == "ReachingTrailHex") return { x: 0, y: 2 * k };
+        if (f == "StonecradleHex") return { x: -1.5 * w, y: k };
+        if (f == "FarranacCoastHex") return { x: -1.5 * w, y: 0 };
+        if (f == "WestgateHex") return { x: -1.5 * w, y: -k };
+        if (f == "FishermansRowHex") return { x: -2.25 * w, y: -0.5 * k };
+        if (f == "OarbreakerHex") return { x: -2.25 * w, y: 0.5 * k };
+        if (f == "GreatMarchHex") return { x: 0, y: -2 * k };
+        if (f == "TempestIslandHex") return { x: 2.25 * w, y: -0.5 * k };
+        if (f == "GodcroftsHex") return { x: 2.25 * w, y: 0.5 * k };
+        if (f == "EndlessShoreHex") return { x: 1.5 * w, y: 0 };
+        if (f == "AllodsBightHex") return { x: 1.5 * w, y: -k };
+        if (f == "WeatheredExpanseHex") return { x: 1.5 * w, y: k };
+        if (f == "DrownedValeHex") return { x: 0.75 * w, y: -0.5 * k };
+        if (f == "ShackledChasmHex") return { x: 0.75 * w, y: -1.5 * k };
+        if (f == "ViperPitHex") return { x: 0.75 * w, y: 1.5 * k };
+        if (f == "NevishLineHex") return { x: -2.25 * w, y: 1.5 * k };
+        if (f == "AcrithiaHex") return { x: 0.75 * w, y: -2.5 * k };
+        if (f == "RedRiverHex") return { x: -0.75 * w, y: -2.5 * k };
+        if (f == "CallumsCapeHex") return { x: -1.5 * w, y: 2 * k };
+        if (f == "SpeakingWoodsHex") return { x: -0.75 * w, y: 2.5 * k };
+        if (f == "BasinSionnachHex") return { x: 0, y: 3 * k };
+        if (f == "HowlCountyHex") return { x: 0.75 * w, y: 2.5 * k };
+        if (f == "ClansheadValleyHex") return { x: 1.5 * w, y: 2 * k };
+        if (f == "MorgensCrossingHex") return { x: 2.25 * w, y: 1.5 * k };
+        if (f == "TheFingersHex") return { x: 2.25 * w, y: -1.5 * k };
+        if (f == "TerminusHex") return { x: 1.5 * w, y: -2 * k };
+        if (f == "KalokaiHex") return { x: 0, y: -3 * k };
+        if (f == "AshFieldsHex") return { x: -1.5 * w, y: -2 * k };
+        if (f == "OriginHex") return { x: -2.25 * w, y: -1.5 * k };
+
         return { x: 0, y: 0 };
     },
 
     ownership: function (x, y, region) {
         if (!(region in exports.API.mapControl))
             return "OFFLINE";
+
+            x -= 128;
+            y += 128;
 
         var u = exports.API.mapControl[region];
         var distanceSquared = -1;
@@ -121,8 +152,12 @@ exports.API = {
     },
 
     control: (x, y) => {
-        return kriging.predict(x, y, exports.API.variogram)
+        return kriging.predict(x - 128, y + 128, exports.API.variogram)
     },
+
+    townHallIcons : [35, 5, 6, 7, 8, 9, 10, 45, 46, 47, 29, 17, 34, 51, 39, 52, 33, 18, 19, 56, 57, 58],
+
+    krigingControlPointIcons: [35, 5, 6, 7, 8, 9, 10, 45, 46, 47, 29, 56, 57, 58],
 
     update: function (completionCallback, shard) {
 
@@ -135,61 +170,64 @@ exports.API = {
             function (war) {
                 exports.API.war = war;
                 //alert(war);
-            APIQuery("https://".concat(shard).concat(".foxholeservices.com/api/worldconquest/maps"),
-                function (maps) {
-                    // iterate here on the maps and collect status
-                    var complete = maps.length;
-                    var p_x = [], p_y = [], p_t = [];
+                APIQuery("https://".concat(shard).concat(".foxholeservices.com/api/worldconquest/maps"),
+                    function (maps) {
+                        // iterate here on the maps and collect status
+                        var complete = maps.length;
+                        var p_x = [], p_y = [], p_t = [];
 
-                    for (var i = 0; i < maps.length; i++) {
-                        const mapName = maps[i];
-                        APIQuery("https://".concat(shard).concat(".foxholeservices.com/api/worldconquest/maps/").concat(maps[i]).concat("/dynamic/public"),
-                            function (mapData) {
-                                if (mapData.mapItems.length > 0) {
-                                    exports.API.mapControl[mapName] = {};
-                                    exports.API.resources[mapName] = {};
-                                    var offset = exports.API.remapXY(mapName);
-                                    for (var j = 0; j < mapData.mapItems.length; j++) {
-                                        var icon = mapData.mapItems[j].iconType;
-                                        if (icon == 35 || (icon >= 5 && icon <= 10) || (icon >= 45 && icon <= 47) || icon == 29 || icon == 17 || icon == 34 || icon == 51 || icon == 39 || icon == 52 || icon == 33 || icon == 18 || icon == 19) {
-                                            var x = mapData.mapItems[j].x;
-                                            var y = mapData.mapItems[j].y;
-                                            x = 256 + (((x * 46.54545454545455) + offset.y) - 23.27272727272727);
-                                            y = -256 + ((((1 - y) * 40.30954606705751) + offset.x) - 20.15477303352875);
-                                            var key = x.toFixed(3).toString().concat('|').concat(y.toFixed(3).toString());
-                                            var control = mapData.mapItems[j].teamId;
-                                            exports.API.mapControl[mapName][key] = { x: x, y: y, control: control, mapIcon: icon, nuked: (mapData.mapItems[j].flags & 0x10) != 0, town: ((icon >= 5 && icon <= 10) || (icon >= 45 && icon <= 47) || icon == 29) };
-                                            if ((mapData.mapItems[j].flags & 0x10) == 0 && (control != "OFFLINE" && (icon == 35 || (icon >= 5 && icon <= 10) || (icon >= 45 && icon <= 47) || icon == 29))) {
-                                                p_x.push(x);
-                                                p_y.push(y);
-                                                p_t.push(control == "WARDENS" ? -1 : (control == "COLONIALS" ? 1 : 0));
+                        var yf = 256 / 7;
+                        var xf = yf * 2 / Math.sqrt(3);
+
+                        for (var i = 0; i < maps.length; i++) {
+                            const mapName = maps[i];
+                            APIQuery("https://".concat(shard).concat(".foxholeservices.com/api/worldconquest/maps/").concat(maps[i]).concat("/dynamic/public"),
+                                function (mapData) {
+                                    if (mapData.mapItems.length > 0) {
+                                        exports.API.mapControl[mapName] = {};
+                                        exports.API.resources[mapName] = {};
+                                        var offset = exports.API.remapXY(mapName);
+                                        for (var j = 0; j < mapData.mapItems.length; j++) {
+                                            var icon = mapData.mapItems[j].iconType;
+                                            if (exports.API.townHallIcons.includes(icon)) {
+                                                var x = mapData.mapItems[j].x;
+                                                var y = mapData.mapItems[j].y;
+                                                x = (((x * xf) + offset.x) - xf * .5);
+                                                y = ((((1 - y) * yf) + offset.y) - yf * .5);
+                                                var key = x.toFixed(3).toString().concat('|').concat(y.toFixed(3).toString());
+                                                var control = mapData.mapItems[j].teamId;
+                                                exports.API.mapControl[mapName][key] = { x: x, y: y, control: control, mapIcon: icon, nuked: (mapData.mapItems[j].flags & 0x10) != 0, town:                                                 exports.API.krigingControlPointIcons.includes(icon)                                                                                                };
+                                                if ((mapData.mapItems[j].flags & 0x10) == 0 && control != "OFFLINE" && exports.API.krigingControlPointIcons.includes(icon)) {
+                                                    p_x.push(x);
+                                                    p_y.push(y);
+                                                    p_t.push(control == "WARDENS" ? -1 : (control == "COLONIALS" ? 1 : 0));
+                                                }
+                                            }
+                                            else {
+                                                var x = mapData.mapItems[j].x;
+                                                var y = mapData.mapItems[j].y;
+                                                x = (((x * xf) + offset.x) - xf * .5);
+                                                y = ((((1 - y) * yf) + offset.y) - yf * .5);
+                                                var key = x.toFixed(3).toString().concat('|').concat(y.toFixed(3).toString());
+                                                exports.API.resources[mapName][key] = {
+                                                    x: x, y: y, control: mapData.mapItems[j].teamId, mapIcon: icon, nuked: (mapData.mapItems[j].flags & 0x10) != 0
+                                                };
                                             }
                                         }
-                                        else {
-                                            var x = mapData.mapItems[j].x;
-                                            var y = mapData.mapItems[j].y;
-                                            x = 256 + (((x * 46.54545454545455) + offset.y) - 23.27272727272727);
-                                            y = -256 + ((((1 - y) * 40.30954606705751) + offset.x) - 20.15477303352875);
-                                            var key = x.toFixed(3).toString().concat('|').concat(y.toFixed(3).toString());
-                                            exports.API.resources[mapName][key] = {
-                                                x: x, y: y, control: mapData.mapItems[j].teamId, mapIcon: icon, nuked: (mapData.mapItems[j].flags & 0x10) != 0
-                                            };
-                                        }
+
                                     }
 
-                                }
 
+                                    if (--complete == 0) {
+                                        exports.API.variogram = kriging.train(p_t, p_x, p_y, 'exponential', 0, 100);
+                                        completionCallback();
+                                    }
 
-                                if (--complete == 0) {
-                                    exports.API.variogram = kriging.train(p_t, p_x, p_y, 'exponential', 0, 100);
-                                    completionCallback();
-                                }
+                                });
 
-                            });
-
-                    }
-                });
-        });
+                        }
+                    });
+            });
     }
 };
 

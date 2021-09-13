@@ -1,40 +1,63 @@
 #!/bin/bash
+branch="dev"
+#"live"
+k=$(echo "256 / 7" | bc)
+w=$(echo "scale=20; $k * 2 / sqrt(3)" | bc)
+k2=$(echo "$k / 2" | bc)
+w2=$(echo "$w / 2" | bc)
 download()
 {
         (
         echo "["
         first=0
 
-	for f in $(wget -qO - "https://war-service-live.foxholeservices.com/api/worldconquest/maps/"  | jq -r '.[]|.'); do
+	for f in $(wget -qO - "https://war-service-$branch.foxholeservices.com/api/worldconquest/maps/"  | jq -r '.[]|.'); do
                 if [ "$first" = "1" ]; then echo ","; fi
                 first=1
-                if [ "$f" = "GodcroftsHex" ]; then offsetx="148.15477"; offsety="-23.27272"; fi
-                if [ "$f" = "DeadLandsHex" ]; then offsetx="128"; offsety="-128"; fi
-                if [ "$f" = "ReachingTrailHex" ]; then offsetx="208.6191"; offsety="-128"; fi
-                if [ "$f" = "CallahansPassageHex" ]; then offsetx="168.30954"; offsety="-128"; fi
-                if [ "$f" = "MarbanHollowHex" ]; then offsetx="148.15477"; offsety="-93.09091"; fi
-                if [ "$f" = "MarbanHollow" ]; then offsetx="148.15477"; offsety="-93.09091"; fi
-                if [ "$f" = "UmbralWildwoodHex" ]; then offsetx="87.69045"; offsety="-128"; fi
-                if [ "$f" = "MoorsHex" ]; then offsetx="188.46432"; offsety="-162.90909"; fi
-                if [ "$f" = "MooringCountyHex" ]; then offsetx="188.46432"; offsety="-162.90909"; fi
-                if [ "$f" = "HeartlandsHex" ]; then offsetx="67.535675"; offsety="-162.90909"; fi
-                if [ "$f" = "LochMorHex" ]; then offsetx="107.84523"; offsety="-162.90909"; fi
-                if [ "$f" = "LinnOfMercyHex" ]; then offsetx="148.15477"; offsety="-162.90909"; fi
-                if [ "$f" = "LinnMercyHex" ]; then offsetx="148.15477"; offsety="-162.90909"; fi
-                if [ "$f" = "StonecradleHex" ]; then offsetx="168.30954"; offsety="-197.81818"; fi
-                if [ "$f" = "FarranacCoastHex" ]; then offsetx="128"; offsety="-197.81818"; fi
-                if [ "$f" = "WestgateHex" ]; then offsetx="87.69045"; offsety="-197.81818"; fi
-                if [ "$f" = "FishermansRowHex" ]; then offsetx="107.84523"; offsety="-232.72728"; fi
-                if [ "$f" = "OarbreakerHex" ]; then offsetx="148.15477"; offsety="-232.72728"; fi
-                if [ "$f" = "GreatMarchHex" ]; then offsetx="47.380905"; offsety="-128"; fi
-                if [ "$f" = "TempestIslandHex" ]; then offsetx="107.84523"; offsety="-23.27272"; fi
-                if [ "$f" = "EndlessShoreHex" ]; then offsetx="128"; offsety="-58.181816"; fi
-                if [ "$f" = "AllodsBightHex" ]; then offsetx="87.69045"; offsety="-58.181816"; fi
-                if [ "$f" = "WeatheredExpanseHex" ]; then offsetx="168.30954"; offsety="-58.181816"; fi
-                if [ "$f" = "DrownedValeHex" ]; then offsetx="107.84523"; offsety="-93.09091"; fi
-                if [ "$f" = "ShackledChasmHex" ]; then offsetx="67.535675"; offsety="-93.09091"; fi
-                if [ "$f" = "ViperPitHex" ]; then offsetx="188.46432"; offsety="-93.09091"; fi
-		wget -qO - "https://war-service-live.foxholeservices.com/api/worldconquest/maps/$f/static" | jq "[.mapTextItems[] | if .mapMarkerType==\"Major\" then {\"key\":.text, \"value\": {region: \"$f\", major: 1, x:(256+(((.x*46.54545454545455)+$offsety)-23.27272727272727)), y:(-256+((((1-.y)*40.30954606705751)+$offsetx)-20.15477303352875))}} else  {\"key\":.text, \"value\": {region: \"$f\", major: 0, x:(256+(((.x*46.54545454545455)+$offsety)-23.27272727272727)), y:(-256+((((1-.y)*40.30954606705751)+$offsetx)-20.15477303352875))}} end]"
+
+	if [ "$f" = "DeadLandsHex" ]; then offsetx="0"; offsety="0"; fi
+	if [ "$f" = "CallahansPassageHex" ]; then offsetx=$(echo "0" | bc); offsety=$( echo "$k" | bc); fi	
+	if [ "$f" = "MarbanHollow" ]; then offsetx=$(echo "0.75 * $w" | bc); offsety=$( echo "0.5 * $k" | bc); fi
+	if [ "$f" = "UmbralWildwoodHex" ]; then offsetx=$(echo "0" | bc); offsety=$( echo "-$k" | bc); fi
+	if [ "$f" = "MooringCountyHex" ]; then offsetx=$(echo "-0.75 * $w" | bc); offsety=$( echo " 1.5 * $k" | bc); fi
+	if [ "$f" = "HeartlandsHex" ]; then offsetx=$(echo "-0.75 * $w" | bc); offsety=$( echo "-1.5 * $k" | bc); fi
+	if [ "$f" = "LochMorHex" ]; then offsetx=$(echo "-0.75 * $w" | bc); offsety=$( echo "-0.5 * $k" | bc); fi
+	if [ "$f" = "LinnMercyHex" ]; then offsetx=$(echo "-0.75 * $w" | bc); offsety=$( echo "0.5 * $k" | bc); fi
+	if [ "$f" = "ReachingTrailHex" ]; then offsetx=$(echo "0" | bc); offsety=$( echo "2 * $k" | bc); fi
+	if [ "$f" = "StonecradleHex" ]; then offsetx=$(echo "-1.5 * $w" | bc); offsety=$( echo "$k" | bc); fi
+	if [ "$f" = "FarranacCoastHex" ]; then offsetx=$(echo "-1.5 * $w" | bc); offsety=$( echo "0" | bc); fi
+	if [ "$f" = "WestgateHex" ]; then offsetx=$(echo "-1.5 * $w" | bc); offsety=$( echo "-$k" | bc); fi
+	if [ "$f" = "FishermansRowHex" ]; then offsetx=$(echo "-2.25 * $w" | bc); offsety=$( echo "-0.5 * $k" | bc); fi	
+	if [ "$f" = "OarbreakerHex" ]; then offsetx=$(echo "-2.25 * $w" | bc); offsety=$( echo "0.5 * $k" | bc); fi
+	if [ "$f" = "GreatMarchHex" ]; then offsetx=$(echo "0" | bc); offsety=$( echo "-2 * $k" | bc); fi
+	if [ "$f" = "TempestIslandHex" ]; then offsetx=$(echo "2.25 * $w" | bc); offsety=$( echo "-0.5 * $k" | bc); fi
+	if [ "$f" = "GodcroftsHex" ]; then offsetx=$(echo "2.25 * $w" | bc); offsety=$( echo "0.5 * $k" | bc); fi
+	if [ "$f" = "EndlessShoreHex" ]; then offsetx=$(echo "1.5 * $w" | bc); offsety=$( echo "0" | bc); fi
+	if [ "$f" = "AllodsBightHex" ]; then offsetx=$(echo " 1.5 * $w" | bc); offsety=$( echo "-$k" | bc); fi
+	if [ "$f" = "WeatheredExpanseHex" ]; then offsetx=$(echo "1.5 * $w" | bc); offsety=$( echo "$k" | bc); fi
+	if [ "$f" = "DrownedValeHex" ]; then offsetx=$(echo "0.75 * $w" | bc); offsety=$( echo "-0.5 * $k" | bc); fi
+	if [ "$f" = "ShackledChasmHex" ]; then offsetx=$(echo "0.75 * $w" | bc); offsety=$( echo "-1.5 * $k" | bc); fi
+	if [ "$f" = "ViperPitHex" ]; then offsetx=$(echo "0.75 * $w" | bc); offsety=$( echo " 1.5 * $k" | bc); fi
+	if [ "$f" = "NevishLineHex" ]; then offsetx=$(echo "-2.25 * $w" | bc); offsety=$( echo "1.5 * $k" | bc); fi
+	if [ "$f" = "AcrithiaHex" ]; then offsetx=$(echo "0.75 * $w" | bc); offsety=$( echo "-2.5 * $k" | bc); fi
+	if [ "$f" = "RedRiverHex" ]; then offsetx=$(echo "-0.75 * $w" | bc); offsety=$( echo "-2.5 * $k" | bc); fi
+	if [ "$f" = "CallumsCapeHex" ]; then offsetx=$(echo "-1.5 * $w" | bc); offsety=$( echo "2 * $k" | bc); fi
+	if [ "$f" = "SpeakingWoodsHex" ]; then offsetx=$(echo "-0.75 * $w" | bc); offsety=$( echo "2.5 * $k" | bc); fi
+	if [ "$f" = "BasinSionnachHex" ]; then offsetx=$(echo "0" | bc); offsety=$( echo " 3 * $k" | bc); fi
+	if [ "$f" = "HowlCountyHex" ]; then offsetx=$(echo "0.75 * $w" | bc); offsety=$( echo "2.5 * $k" | bc); fi
+	if [ "$f" = "ClansheadValleyHex" ]; then offsetx=$(echo "1.5 * $w" | bc); offsety=$( echo "2 * $k" | bc); fi
+	if [ "$f" = "MorgensCrossingHex" ]; then offsetx=$(echo " 2.25 * $w" | bc); offsety=$( echo "1.5 * $k" | bc); fi
+	if [ "$f" = "TheFingersHex" ]; then offsetx=$(echo "2.25 * $w" | bc); offsety=$( echo "-1.5 * $k" | bc); fi	
+	if [ "$f" = "TerminusHex" ]; then offsetx=$(echo "1.5 * $w" | bc); offsety=$( echo "-2 * $k" | bc); fi
+	if [ "$f" = "KalokaiHex" ]; then offsetx=$(echo "0" | bc); offsety=$( echo "-3 * $k" | bc); fi
+	if [ "$f" = "AshFieldsHex" ]; then offsetx=$(echo "-1.5 * $w" | bc); offsety=$( echo "-2 * $k" | bc); fi
+	if [ "$f" = "OriginHex" ]; then offsetx=$(echo "-2.25 * $w" | bc); offsety=$( echo "-1.5 * $k" | bc); fi
+
+#		offsetx=$(echo "$offsetx + 128" | bc)
+#		offsety=$(echo "$offsety - 128" | bc)
+
+		wget -qO - "https://war-service-$branch.foxholeservices.com/api/worldconquest/maps/$f/static" | jq "[.mapTextItems[] | if .mapMarkerType==\"Major\" then {\"key\":.text, \"value\": {region: \"$f\", major: 1, x:((((.x*$w)+$offsetx)-$w2)), y:(((((1-.y)*$k)+$offsety)-$k2))}} else  {\"key\":.text, \"value\": {region: \"$f\", major: 0, x:((((.x*$w)+$offsetx)-$w2)), y:(((((1-.y)*$k)+$offsety)-$k2))}} end]"
+		
         done
         echo "]"
         ) |     jq '.|flatten|from_entries'

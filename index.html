@@ -1586,14 +1586,14 @@
     </div>
     <div id="map-frame" style="width: 100%; height: 100%; background: black; display: flex">
         <div id="map-holder" style="width: 100%; display: inline-block; z-index: 100">
-            <div id="mapid" style="height: 100%; width: 100%; background: black;"></div>
+            <div id="mapid" style="height: 100%; width: 100%; background: #444444;"></div>
         </div>
     </div>
     <script type="text/javascript">
         if (location.protocol !== 'https:' && (location.hostname.toLowerCase() == "www.logiwaze.com" || location.hostname.toLowerCase() == "logiwaze.com"))
             location.replace('https:'.concat(location.href.substring(location.protocol.length)));
 
-        var build="0ac7bb5180dfa97a2cb25cab12c67b9a3af11ebb";
+        var build="2ac236239ee3b489e534d5704423a28968336f48";
         if ("serviceWorker" in navigator) {
 
             window.addEventListener("load", function () {
@@ -1605,7 +1605,7 @@
         }
 
     </script>
-    <script src="FoxholeRouter.js?912370cc2d39cfb0475281cef460c56c"></script>
+    <script src="FoxholeRouter.js?5bcdd251ef5d1c7a604004893fa7d2e0"></script>
     <script type="text/javascript">
 
         //window.indexedDB.open("logiwaze").onsuccess = function (e) {
@@ -1657,10 +1657,11 @@
                 maxBounds: L.latLngBounds(L.latLng(-384, -256), L.latLng(128, 512)),
 
             });
+        L.imageOverlay("Background.webp", [[-200 - 128, -345 + 128], [200 - 128, 335 + 128]], { pane: 'imagebg', opacity: 0.4 }).addTo(mymap);
+
 
         var pane = mymap.createPane('imagebg');
         mymap.getPane('imagebg').style.zIndex = 50;
-        L.imageOverlay("Background.webp", [[-256 - 64 - 32, -256 - 7], [128 - 32, 512 + 7]], { pane: 'imagebg' }).addTo(mymap);
 
         //var DrawnMap = L.tileLayer('Tiles/{z}_{x}_{y}.webp',
         //    {
@@ -1791,6 +1792,8 @@
         APIManager.update(function () {
 
             var VoiceNarrator = Narrator.Create();
+
+
             var Router = FoxholeRouter.Create(mymap, APIManager, VoiceNarrator);
 
             var Geocoder = FoxholeGeocoder.Create(APIManager);
@@ -1818,6 +1821,7 @@
                 {
                     position: 'topleft',
                     autoZIndex: false
+                    //, opacity: .75
                 }
             ).addTo(mymap);
 

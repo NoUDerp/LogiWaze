@@ -537,7 +537,7 @@ define(['leaflet', 'intersects'],
         });
 
         return {
-            Create: (MaxZoom, Offset, API, RoadWidth, ControlWidth, GridDepth) => {
+            Create: (MaxNativeZoom, MaxZoom, Offset, API, RoadWidth, ControlWidth, GridDepth) => {
                 var u = new VectorControlGridPrototype({ updateWhenZooming: false, noWrap: true, maxZoom: MaxZoom, minZoom: 0 });
 
                 var size = u.getTileSize();
@@ -577,7 +577,7 @@ define(['leaflet', 'intersects'],
 
                 u.addRoad = (points, options) => {
 
-                    var c = [[-points[0][0] - 256, points[0][1]], [-points[1][0] - 256, points[1][1]]]
+                    var c = [[-points[0][0] - Offset[1], points[0][1] - Offset[0]], [-points[1][0] - Offset[1], points[1][1] - Offset[0]]]
                     var p = [[c[0][0], c[0][1]], [c[1][0], c[1][1]]];
 
                     var x1 = c[0][1] + Offset[0];
@@ -610,7 +610,7 @@ define(['leaflet', 'intersects'],
 
                 };
 
-                u.max_native_zoom = 5;
+                u.max_native_zoom = MaxNativeZoom;
                 u.offset = Offset;
                 u.Offset = Offset;
                 u.API = API;
@@ -644,11 +644,11 @@ define(['leaflet', 'intersects'],
                     u.hex_sources.push(
                         {
                             size: {
-                                width: width * 2,
-                                height: height * 2
+                                width: width,
+                                height: height
                             },
-                            x: x + Offset[0] + width,
-                            y: y + Offset[1] + height,
+                            x: x + Offset[0] + width * .5,
+                            y: y + Offset[1] + height * .5,
                             offline: offline
                         });
                 };
