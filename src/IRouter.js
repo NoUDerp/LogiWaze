@@ -117,6 +117,7 @@
 
                 var RegionLabels = VectorTextGrid.Create(8, [128, 128]);
                 var ControlLayer = VectorControlGrid.Create(5, 8, [128, 128], API, .30, .17, GridDepth);
+
                 var regions = API.regions;
                 var h = 256 / 7;
                 var w = h * 2 / Math.sqrt(3);
@@ -384,6 +385,7 @@
                     Fuel: L.layerGroup().addTo(mymap),
                     Salvage: L.layerGroup().addTo(mymap),
                     Sulfur: L.layerGroup().addTo(mymap),
+                    VectorControlGrid: ControlLayer,
                     API: API,
                     Roads: JSONRoads,
 

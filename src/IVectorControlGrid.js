@@ -235,7 +235,7 @@ define(['leaflet', 'intersects'],
             },
 
             pixelScale: 1, // This is too intense for now: window.devicePixelRatio,
-
+            build: "",
             renderer: function (c, phase) {
                 switch (phase) {
                     case 1:
@@ -252,7 +252,7 @@ define(['leaflet', 'intersects'],
                             c.t.loadIcons(c);
                             c.img = new Image();
                             var scale = Math.pow(2, Math.max(0, c.coords.z - c.t.max_native_zoom));
-                            c.img.src = 'Tiles/'.concat(Math.min(c.coords.z, c.t.max_native_zoom)).concat('_').concat(Math.floor(c.coords.x / scale)).concat('_').concat(Math.floor(c.coords.y / scale)).concat('.webp');
+                            c.img.src = 'Tiles/'.concat(Math.min(c.coords.z, c.t.max_native_zoom)).concat('_').concat(Math.floor(c.coords.x / scale)).concat('_').concat(Math.floor(c.coords.y / scale)).concat('.webp').concat(c.t.build);
                             c.phase_2_complete = false;
                             c.phase_3_complete = false;
                             c.img.onload = () => c.t.yield(c, 2);

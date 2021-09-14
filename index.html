@@ -1593,7 +1593,7 @@
         if (location.protocol !== 'https:' && (location.hostname.toLowerCase() == "www.logiwaze.com" || location.hostname.toLowerCase() == "logiwaze.com"))
             location.replace('https:'.concat(location.href.substring(location.protocol.length)));
 
-        var build="ec99f3c4d64a05333b329b9745d9b3aa2603d625";
+        var build="f441f06ca79550858b726fdd923b8dfe37fe89bf";
         if ("serviceWorker" in navigator) {
 
             window.addEventListener("load", function () {
@@ -1605,7 +1605,7 @@
         }
 
     </script>
-    <script src="FoxholeRouter.js?963ab828cc4b03ea695fcb1597b2b5c9"></script>
+    <script src="FoxholeRouter.js?7b8d10025d9a121caf51b76e74318325"></script>
     <script type="text/javascript">
 
         //window.indexedDB.open("logiwaze").onsuccess = function (e) {
@@ -1695,13 +1695,7 @@
         //    document.getElementsByClassName('leaflet-control-youtube-toggle')[0].style.display = "block";
         //}
 
-    </script>
-
-
-    <script type="text/javascript">
-
-
-
+    
         var shard = urlParams.get('shard2') != null ? "2" : urlParams.get('shard');
 
         var APIManager = API.Create();
@@ -1797,6 +1791,8 @@
             var Router = FoxholeRouter.Create(mymap, APIManager, VoiceNarrator);
 
             var Geocoder = FoxholeGeocoder.Create(APIManager);
+
+            Router.VectorControlGrid.build = "?".concat(build);
 
             L.control.layers(
                 {},
