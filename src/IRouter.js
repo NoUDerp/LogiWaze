@@ -126,13 +126,14 @@
                 var resolveIcon = function (ic) {
                     if (ic.icon == null)
                         return null;
-                    if (ic.icon == 56)
+
+                    if (ic.icon == 56 || ic.icon == 5)
                         icon = 'MapIconStaticBase1';
                     else if (ic.icon == 35)
                         icon = "MapIconSafehouse";
-                    else if (ic.icon == 57)
+                    else if (ic.icon == 57 || ic.icon == 6)
                         icon = 'MapIconStaticBase2';
-                    else if (ic.icon == 58)
+                    else if (ic.icon == 58 || ic.icon == 7)
                         icon = 'MapIconStaticBase3';
                     else if (ic.icon == 27)
                         icon = 'MapIconKeep'
@@ -259,12 +260,12 @@
 
 
                 for (var credit of [ // wow these are all wrong now
-                    { text: "Hayden Grove", x: 139.079, y: -155.292 },
-                    { text: "Steely Phil Bridge", x: 18.18, y: -161.439 },
-                    { text: "Icanari Killing Fields", x: 134.071, y: -143.104 },
-                    { text: "Kastow Peak", x: 124.817, y: -122.72 },
-                    { text: "DragonZephyr Col", x: 119.176, y: -83.464 },
-                    { text: "Skaj Sound", x: 49.826, y: -102.048 }]
+                    { text: "Hayden Grove", x: (139.079-128) * 0.90726470872655477280009094078879, y: (-155.292 + 128) * 0.90726470872655477280009094078879 },
+                    { text: "Steely Phil Bridge", x: (18.18-128) * 0.90726470872655477280009094078879, y: (-161.439 + 128) * 0.90726470872655477280009094078879 },
+                    { text: "Icanari Killing Fields", x: (134.071 - 128) * 0.90726470872655477280009094078879, y: (-143.104 + 128) * 0.90726470872655477280009094078879 },
+                    { text: "Kastow Peak", x: (124.817 -128)* 0.90726470872655477280009094078879, y: (-122.72 + 128) * 0.90726470872655477280009094078879},
+                    { text: "DragonZephyr Col", x: (119.176-128) * 0.90726470872655477280009094078879, y: (-83.464 + 128) *0.90726470872655477280009094078879},
+                    { text: "Skaj Sound", x: (49.826-128)*0.90726470872655477280009094078879, y:(-102.048+128)*0.90726470872655477280009094078879}]
                 )
                     RegionLabels.addText(Recase(credit.text), credit.text, control, credit.x, credit.y, 7, 9, '#DAA520');
 
