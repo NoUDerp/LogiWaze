@@ -65,7 +65,7 @@ define(['leaflet', '../towns.json'], function (L, towns) {
                     var townkey = Object.keys(towns).find(key => key.toLowerCase() === query);
                     if (townkey != null) {
                         var town = towns[townkey];
-                        return { x: town.x, y: town.y };
+                        return { x: town.x + 128, y: town.y - 128 };
                     }
                     else
                         return null;
@@ -73,20 +73,21 @@ define(['leaflet', '../towns.json'], function (L, towns) {
 
                 /* The geocoding reverse lookup - nearest point */
                 reverseExact: function (location) {
+                    location = { lng: location.lng - 128, lat: location.lat + 128 };
                     var region = API.calculateRegion(location.lng, location.lat);
                     var townlist = Object.keys(towns);
                     if (townlist.length === 0)
                         return null;
 
-                    var index = -1;
                     for (var i = 0; i < townlist.length; i++)
-                        if (towns[townlist[i]].region === region) 
-                            if (location.lat === towns[townlist[i]].y && location.lng === towns[townlist[i]].x)
+                        if (towns[townlist[i]].region === region)
+                            if (Math.abs(location.lat - towns[townlist[i]].y < .001) && Math.abs(location.lng - towns[townlist[i]].x < .001))
                                 return townlist[i];
                     return null;
                 },
                 /* The geocoding reverse lookup - nearest point */
                 reverse: function (location, scale, callback, context) {
+                    location = { lng: location.lng - 128, lat: location.lat + 128 };
                     var region = API.calculateRegion(location.lng, location.lat);
                     let call = callback.bind(context);
                     var townlist = Object.keys(towns);
@@ -109,7 +110,7 @@ define(['leaflet', '../towns.json'], function (L, towns) {
                         return call([], []);
 
                     var town = towns[townlist[index]];
-                    var value = { center: L.latLng(town.y, town.x), name: townlist[index], bbox: L.latLngBounds(L.latLng(town.y, town.x), L.latLng(town.y, town.x)) }
+                    var value = { center: L.latLng(town.y - 128, town.x + 128), name: townlist[index], bbox: L.latLngBounds(L.latLng(town.y - 128, town.x + 128), L.latLng(town.y, town.x)) }
                     return call([value], []);
                 },
 
@@ -132,7 +133,7 @@ define(['leaflet', '../towns.json'], function (L, towns) {
                     var output = [];
                     for (var i = 0; i < 5 && i < results.length; i++) {
                         var town = towns[results[i].name];
-                        output.push({ center: L.latLng(town.y, town.x), name: results[i].name, bbox: L.latLngBounds(L.latLng(town.y, town.x), L.latLng(town.y, town.x)) });
+                        output.push({ center: L.latLng(town.y - 128, town.x + 128), name: results[i].name, bbox: L.latLngBounds(L.latLng(town.y - 128, town.x + 128), L.latLng(town.y - 128, town.x + 128)) });
                     }
                     return call(output, []);
                 }

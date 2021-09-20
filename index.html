@@ -1593,7 +1593,7 @@
         if (location.protocol !== 'https:' && (location.hostname.toLowerCase() == "www.logiwaze.com" || location.hostname.toLowerCase() == "logiwaze.com"))
             location.replace('https:'.concat(location.href.substring(location.protocol.length)));
 
-        var build="cb001a2bab3b055de96cbe8586b6857743256f38";
+        var build="147858480269b9c7d6a7305f0fde6b1b0ae6f2e2";
         if ("serviceWorker" in navigator) {
 
             window.addEventListener("load", function () {
@@ -1605,7 +1605,7 @@
         }
 
     </script>
-    <script src="FoxholeRouter.js?3df1da48a7110b3794b1f95bf6d6dfae"></script>
+    <script src="FoxholeRouter.js?5471d0419ba4624b252b89b56f634c26"></script>
     <script type="text/javascript">
 
         //window.indexedDB.open("logiwaze").onsuccess = function (e) {
@@ -1663,22 +1663,9 @@
         var pane = mymap.createPane('imagebg');
         mymap.getPane('imagebg').style.zIndex = 50;
 
-        //var DrawnMap = L.tileLayer('Tiles/{z}_{x}_{y}.webp',
-        //    {
-        //        crs: L.CRS.Simple,
-        //        maxNativeZoom: 5,
-        //        maxZoom: 8,
-        //        minZoom: 0,
-        //        noWrap: true,
-        //        continuousWorld: true,
-        //        bounds: L.latLngBounds(L.latLng(-256, 0), L.latLng(0, 256)),
-        //        id: 'LogiWaze'
-        //    }).addTo(mymap);
-
         /*L.control.youtube = function (options) {
             return new L.Control.YouTube(options);
         };
-
         L.control.youtube().addTo(mymap);*/
 
         //function SetYouTubePlaylist() {
@@ -1708,10 +1695,6 @@
         var update_state = null;
 
         mymap.on('moveend', function (e) { AutoZoom = false; if (update_state != null) update_state(); });
-
-        /*mymap.on('zoomstart', function (e) {
-            IsUserZoomState = IsUserZoom;
-        });*/
 
         mymap.on('zoomend', function (e) {
             if (IsUserZoomState)
