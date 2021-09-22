@@ -3,8 +3,8 @@ define(['leaflet', '../towns.json'], function (L, towns) {
 
         FoxholeGeocoder: function (API) {
             var l = Object.keys(towns);
-            for (var i = 0; i < l.length; i++)
-                towns[l[i]].region = API.calculateRegion(towns[l[i]].x, towns[l[i]].y);
+            //for (var i = 0; i < l.length; i++)
+              //  towns[l[i]].region = API.calculateRegion(towns[l[i]].x, towns[l[i]].y);
 
             var FoxholeGeocoder = {
                 API: API,
@@ -73,22 +73,22 @@ define(['leaflet', '../towns.json'], function (L, towns) {
 
                 /* The geocoding reverse lookup - nearest point */
                 reverseExact: function (location) {
-                    location = { lng: location.lng - 128, lat: location.lat + 128 };
                     var region = API.calculateRegion(location.lng, location.lat);
+                    location = { lng: location.lng - 128, lat: location.lat + 128 };
                     var townlist = Object.keys(towns);
                     if (townlist.length === 0)
                         return null;
 
                     for (var i = 0; i < townlist.length; i++)
                         if (towns[townlist[i]].region === region)
-                            if (Math.abs(location.lat - towns[townlist[i]].y < .001) && Math.abs(location.lng - towns[townlist[i]].x < .001))
+                            if (location.lat == towns[townlist[i]].y && location.lng == towns[townlist[i]].x)
                                 return townlist[i];
                     return null;
                 },
                 /* The geocoding reverse lookup - nearest point */
                 reverse: function (location, scale, callback, context) {
-                    location = { lng: location.lng - 128, lat: location.lat + 128 };
                     var region = API.calculateRegion(location.lng, location.lat);
+                    location = { lng: location.lng - 128, lat: location.lat + 128 };
                     let call = callback.bind(context);
                     var townlist = Object.keys(towns);
                     if (townlist.length === 0)
