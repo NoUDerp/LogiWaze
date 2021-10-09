@@ -4,7 +4,7 @@ define(['leaflet', '../towns.json'], function (L, towns) {
         FoxholeGeocoder: function (API) {
             var l = Object.keys(towns);
             //for (var i = 0; i < l.length; i++)
-              //  towns[l[i]].region = API.calculateRegion(towns[l[i]].x, towns[l[i]].y);
+            //  towns[l[i]].region = API.calculateRegion(towns[l[i]].x, towns[l[i]].y);
 
             var FoxholeGeocoder = {
                 API: API,
@@ -61,14 +61,21 @@ define(['leaflet', '../towns.json'], function (L, towns) {
                 },
 
                 lookup: function (q) {
-                    var query = q.toLowerCase();
+                    var query = "major-".concat(q.toLowerCase());
                     var townkey = Object.keys(towns).find(key => key.toLowerCase() === query);
                     if (townkey != null) {
                         var town = towns[townkey];
                         return { x: town.x + 128, y: town.y - 128 };
                     }
-                    else
-                        return null;
+
+                    query = "minor-".concat(q.replace(/ \(area\)$/i, '').toLowerCase());
+                    townkey = Object.keys(towns).find(key => key.toLowerCase() === query);
+                    if (townkey != null) {
+                        var town = towns[townkey];
+                        return { x: town.x + 128, y: town.y - 128 };
+                    }
+
+                    return null;
                 },
 
                 /* The geocoding reverse lookup - nearest point */
@@ -82,7 +89,7 @@ define(['leaflet', '../towns.json'], function (L, towns) {
                     for (var i = 0; i < townlist.length; i++)
                         if (towns[townlist[i]].region === region)
                             if (location.lat == towns[townlist[i]].y && location.lng == towns[townlist[i]].x)
-                                return townlist[i];
+                                return towns[townlist[i]].name.concat(towns[townlist[i]].major == 0 ? ' (area)' : '');
                     return null;
                 },
                 /* The geocoding reverse lookup - nearest point */
@@ -110,7 +117,7 @@ define(['leaflet', '../towns.json'], function (L, towns) {
                         return call([], []);
 
                     var town = towns[townlist[index]];
-                    var value = { center: L.latLng(town.y - 128, town.x + 128), name: townlist[index], bbox: L.latLngBounds(L.latLng(town.y - 128, town.x + 128), L.latLng(town.y, town.x)) }
+                    var value = { center: L.latLng(town.y - 128, town.x + 128), name: town.name.concat(town.major == 0 ? ' (area)' : ''), bbox: L.latLngBounds(L.latLng(town.y - 128, town.x + 128), L.latLng(town.y, town.x)) }
                     return call([value], []);
                 },
 
@@ -123,16 +130,16 @@ define(['leaflet', '../towns.json'], function (L, towns) {
                         return call([], []);
                     var results = [];
                     for (var i = 0; i < townlist.length; i++) {
-                        var townname = townlist[i].toLowerCase();
-                        if (townname.indexOf(query) >= 0) {
+                        var townname = towns[townlist[i]].name.toLowerCase();
+                          if (townname.indexOf(query) >= 0) {
                             var d = FoxholeGeocoder.levinshtein(query, townname);
-                            results.push({ name: townlist[i], distance: d });
+                              results.push({ key: townlist[i], name: towns[townlist[i]].name.concat(towns[townlist[i]].major == 0 ? " (area)" : ""), distance: d });
                         }
                     }
                     results.sort(x => x.distance);
                     var output = [];
                     for (var i = 0; i < 5 && i < results.length; i++) {
-                        var town = towns[results[i].name];
+                        var town = towns[results[i].key];
                         output.push({ center: L.latLng(town.y - 128, town.x + 128), name: results[i].name, bbox: L.latLngBounds(L.latLng(town.y - 128, town.x + 128), L.latLng(town.y - 128, town.x + 128)) });
                     }
                     return call(output, []);

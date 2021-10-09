@@ -1,4571 +1,5368 @@
 {
-  "Captain's Dread": {
+  "minor-Captain's Dread": {
+    "name": "Captain's Dread",
     "region": "TheFingersHex",
     "major": 0,
     "x": 109.46100692896857,
     "y": -51.7955184
   },
-  "Cavitatis": {
+  "minor-Cavitatis": {
+    "name": "Cavitatis",
     "region": "TheFingersHex",
     "major": 0,
     "x": 91.62301971462908,
     "y": -58.031737199999995
   },
-  "Cementum": {
+  "minor-Cementum": {
+    "name": "Cementum",
     "region": "TheFingersHex",
     "major": 0,
     "x": 83.55311981393338,
     "y": -48.0196548
   },
-  "Fort Barley": {
+  "major-Fort Barley": {
+    "name": "Fort Barley",
     "region": "TheFingersHex",
     "major": 1,
     "x": 100.85025074628255,
     "y": -50.04704736
   },
-  "Headsman's Villa": {
+  "major-Headsman's Villa": {
+    "name": "Headsman's Villa",
     "region": "TheFingersHex",
     "major": 1,
     "x": 81.35771590119406,
     "y": -51.976917
   },
-  "Mount Talio": {
+  "minor-Mount Talio": {
+    "name": "Mount Talio",
     "region": "TheFingersHex",
     "major": 0,
     "x": 90.86158302106514,
     "y": -51.4684764
   },
-  "Plankhouse": {
+  "major-Plankhouse": {
+    "name": "Plankhouse",
     "region": "TheFingersHex",
     "major": 1,
     "x": 87.79180300262387,
     "y": -58.3355664
   },
-  "Second Man": {
+  "major-Second Man": {
+    "name": "Second Man",
     "region": "TheFingersHex",
     "major": 1,
     "x": 104.13128636900576,
     "y": -41.26859388
   },
-  "Tears of Tethys": {
+  "minor-Tears of Tethys": {
+    "name": "Tears of Tethys",
     "region": "TheFingersHex",
     "major": 0,
     "x": 98.03141080309811,
     "y": -55.1657916
   },
-  "The Old Captain": {
+  "major-The Old Captain": {
+    "name": "The Old Captain",
     "region": "TheFingersHex",
     "major": 1,
     "x": 108.10848586563546,
     "y": -56.4294924
   },
-  "The Routed": {
+  "major-The Routed": {
+    "name": "The Routed",
     "region": "TheFingersHex",
     "major": 1,
     "x": 94.15942715764533,
     "y": -42.58090404
   },
-  "The Tusk": {
+  "major-The Tusk": {
+    "name": "The Tusk",
     "region": "TheFingersHex",
     "major": 1,
     "x": 85.63914721232787,
     "y": -42.41227859999999
   },
-  "The Wary Nymphae": {
+  "minor-The Wary Nymphae": {
+    "name": "The Wary Nymphae",
     "region": "TheFingersHex",
     "major": 0,
     "x": 103.10177684641684,
     "y": -65.055645
   },
-  "Titancall": {
+  "major-Titancall": {
+    "name": "Titancall",
     "region": "TheFingersHex",
     "major": 1,
     "x": 97.48821334267225,
     "y": -66.80040120000001
   },
-  "Camp Senti": {
+  "major-Camp Senti": {
+    "name": "Camp Senti",
     "region": "GreatMarchHex",
     "major": 1,
     "x": -4.429955817605206,
     "y": -67.03866
   },
-  "Dalton Meadow": {
+  "minor-Dalton Meadow": {
+    "name": "Dalton Meadow",
     "region": "GreatMarchHex",
     "major": 0,
     "x": -15.871849781337513,
     "y": -77.0414292
   },
-  "Dendró Field": {
+  "major-Dendró Field": {
+    "name": "Dendró Field",
     "region": "GreatMarchHex",
     "major": 1,
     "x": 12.059844755906106,
     "y": -70.6149342
   },
-  "Eristown": {
+  "minor-Eristown": {
+    "name": "Eristown",
     "region": "GreatMarchHex",
     "major": 0,
     "x": 12.471539653586895,
     "y": -85.4204904
   },
-  "Fateless Grove": {
+  "minor-Fateless Grove": {
+    "name": "Fateless Grove",
     "region": "GreatMarchHex",
     "major": 0,
     "x": -1.14619574824372,
     "y": -57.266933256
   },
-  "Fengari": {
+  "minor-Fengari": {
+    "name": "Fengari",
     "region": "GreatMarchHex",
     "major": 0,
     "x": 5.353297194345572,
     "y": -80.972073
   },
-  "Halting Valley": {
+  "minor-Halting Valley": {
+    "name": "Halting Valley",
     "region": "GreatMarchHex",
     "major": 0,
     "x": 12.778211996960906,
     "y": -66.4662672
   },
-  "Jack Field": {
+  "minor-Jack Field": {
+    "name": "Jack Field",
     "region": "GreatMarchHex",
     "major": 0,
     "x": -2.6830625816920453,
     "y": -87.9459858
   },
-  "Jackboot Creek": {
+  "minor-Jackboot Creek": {
+    "name": "Jackboot Creek",
     "region": "GreatMarchHex",
     "major": 0,
     "x": -9.628862201095874,
     "y": -77.16447108
   },
-  "Legacy Pasture": {
+  "minor-Legacy Pasture": {
+    "name": "Legacy Pasture",
     "region": "GreatMarchHex",
     "major": 0,
     "x": 12.251952746356473,
     "y": -82.0103904
   },
-  "Leto": {
+  "major-Leto": {
+    "name": "Leto",
     "region": "GreatMarchHex",
     "major": 1,
     "x": -9.774611782399631,
     "y": -72.1470528
   },
-  "Lionsfort": {
+  "major-Lionsfort": {
+    "name": "Lionsfort",
     "region": "GreatMarchHex",
     "major": 1,
     "x": 8.919058691070259,
     "y": -58.39778448
   },
-  "Milowood": {
+  "minor-Milowood": {
+    "name": "Milowood",
     "region": "GreatMarchHex",
     "major": 0,
     "x": 12.172659460385972,
     "y": -79.0915536
   },
-  "Mors Range": {
+  "minor-Mors Range": {
+    "name": "Mors Range",
     "region": "GreatMarchHex",
     "major": 0,
     "x": 9.04690898220047,
     "y": -80.02557936
   },
-  "Myrmidon's Stay": {
+  "major-Myrmidon's Stay": {
+    "name": "Myrmidon's Stay",
     "region": "GreatMarchHex",
     "major": 1,
     "x": 5.186054248160531,
     "y": -62.27047548
   },
-  "Remnant Acreage": {
+  "minor-Remnant Acreage": {
+    "name": "Remnant Acreage",
     "region": "GreatMarchHex",
     "major": 0,
     "x": 1.7568293466480505,
     "y": -72.56405988
   },
-  "Remnant Villa": {
+  "major-Remnant Villa": {
+    "name": "Remnant Villa",
     "region": "GreatMarchHex",
     "major": 1,
     "x": 2.909079471920794,
     "y": -69.82095852
   },
-  "Schala Estate": {
+  "minor-Schala Estate": {
+    "name": "Schala Estate",
     "region": "GreatMarchHex",
     "major": 0,
     "x": -6.054343316924056,
     "y": -76.891644
   },
-  "Scrabbling Motte": {
+  "minor-Scrabbling Motte": {
+    "name": "Scrabbling Motte",
     "region": "GreatMarchHex",
     "major": 0,
     "x": -11.858268072520604,
     "y": -60.41183832
   },
-  "Serpent Charm": {
+  "minor-Serpent Charm": {
+    "name": "Serpent Charm",
     "region": "GreatMarchHex",
     "major": 0,
     "x": -8.320511758893337,
     "y": -84.102408
   },
-  "Sitaria": {
+  "major-Sitaria": {
+    "name": "Sitaria",
     "region": "GreatMarchHex",
     "major": 1,
     "x": 2.345700155485126,
     "y": -76.2442092
   },
-  "The Black Wing": {
+  "minor-The Black Wing": {
+    "name": "The Black Wing",
     "region": "GreatMarchHex",
     "major": 0,
     "x": 0.25227551450166175,
     "y": -80.4725136
   },
-  "The Great March": {
+  "minor-The Great March": {
+    "name": "The Great March",
     "region": "DeadLandsHex",
     "major": 0,
     "x": -5.1878084130740625,
     "y": -13.732199999999999
   },
-  "The Midmarch": {
+  "minor-The Midmarch": {
+    "name": "The Midmarch",
     "region": "GreatMarchHex",
     "major": 0,
     "x": -7.861490720638729,
     "y": -54.92283192
   },
-  "The River Senti": {
+  "minor-The River Senti": {
+    "name": "The River Senti",
     "region": "GreatMarchHex",
     "major": 0,
     "x": -7.297437982849079,
     "y": -67.62414887999999
   },
-  "The Spice Road": {
+  "minor-The Spice Road": {
+    "name": "The Spice Road",
     "region": "GreatMarchHex",
     "major": 0,
     "x": -4.411032261866099,
     "y": -69.7606128
   },
-  "The Swan": {
+  "major-The Swan": {
+    "name": "The Swan",
     "region": "GreatMarchHex",
     "major": 1,
     "x": -2.9650901976634536,
     "y": -85.444686
   },
-  "The White Wing": {
+  "minor-The White Wing": {
+    "name": "The White Wing",
     "region": "GreatMarchHex",
     "major": 0,
     "x": 3.017184383844718,
     "y": -84.18237228
   },
-  "Violet Fields": {
+  "minor-Violet Fields": {
+    "name": "Violet Fields",
     "region": "GreatMarchHex",
     "major": 0,
     "x": -14.417379376086526,
     "y": -65.82905352
   },
-  "Violethome": {
+  "major-Violethome": {
+    "name": "Violethome",
     "region": "GreatMarchHex",
     "major": 1,
     "x": -6.988720433881488,
     "y": -60.92329068
   },
-  "Zealous Approach": {
+  "minor-Zealous Approach": {
+    "name": "Zealous Approach",
     "region": "GreatMarchHex",
     "major": 0,
     "x": -1.9523659101686448,
     "y": -75.95400599999999
   },
-  "Alchimio Estate": {
+  "major-Alchimio Estate": {
+    "name": "Alchimio Estate",
     "region": "TempestIslandHex",
     "major": 1,
     "x": 86.33138944607789,
     "y": -3.434085000000003
   },
-  "Cirris Valve": {
+  "minor-Cirris Valve": {
+    "name": "Cirris Valve",
     "region": "TempestIslandHex",
     "major": 0,
     "x": 103.17189164874787,
     "y": -17.46143712
   },
-  "Eros Lagoon": {
+  "minor-Eros Lagoon": {
+    "name": "Eros Lagoon",
     "region": "TempestIslandHex",
     "major": 0,
     "x": 84.85083186151175,
     "y": -29.506806
   },
-  "Isle of Psyche": {
+  "major-Isle of Psyche": {
+    "name": "Isle of Psyche",
     "region": "TempestIslandHex",
     "major": 1,
     "x": 84.13769319687077,
     "y": -25.5818232
   },
-  "Liar's Haven": {
+  "major-Liar's Haven": {
+    "name": "Liar's Haven",
     "region": "TempestIslandHex",
     "major": 1,
     "x": 101.57463180630529,
     "y": -23.7456756
   },
-  "Lost Airchal": {
+  "major-Lost Airchal": {
+    "name": "Lost Airchal",
     "region": "TempestIslandHex",
     "major": 1,
     "x": 98.69139324414701,
     "y": -3.586875120000002
   },
-  "Plana Fada": {
+  "minor-Plana Fada": {
+    "name": "Plana Fada",
     "region": "TempestIslandHex",
     "major": 0,
     "x": 98.5682751929512,
     "y": -6.633730439999997
   },
-  "Reef": {
+  "major-Reef": {
+    "name": "Reef",
     "region": "TempestIslandHex",
     "major": 1,
     "x": 103.25340057411142,
     "y": -11.273553
   },
-  "Sclera": {
+  "minor-Sclera": {
+    "name": "Sclera",
     "region": "TempestIslandHex",
     "major": 0,
     "x": 95.73589116670784,
     "y": -20.9484396
   },
-  "Stratos Valve": {
+  "minor-Stratos Valve": {
+    "name": "Stratos Valve",
     "region": "TempestIslandHex",
     "major": 0,
     "x": 94.54090788391076,
     "y": -17.74845828
   },
-  "Surge Field": {
+  "minor-Surge Field": {
+    "name": "Surge Field",
     "region": "TempestIslandHex",
     "major": 0,
     "x": 98.91245585866547,
     "y": -20.928148200000003
   },
-  "Surge Gate": {
+  "major-Surge Gate": {
+    "name": "Surge Gate",
     "region": "TempestIslandHex",
     "major": 1,
     "x": 90.20612289539278,
     "y": -15.79406328
   },
-  "The Gale": {
+  "major-The Gale": {
+    "name": "The Gale",
     "region": "TempestIslandHex",
     "major": 1,
     "x": 93.76272045770477,
     "y": -28.6312104
   },
-  "The Iris": {
+  "major-The Iris": {
+    "name": "The Iris",
     "region": "TempestIslandHex",
     "major": 1,
     "x": 99.58069353099137,
     "y": -17.299439279999998
   },
-  "The Outwood": {
+  "minor-The Outwood": {
+    "name": "The Outwood",
     "region": "TempestIslandHex",
     "major": 0,
     "x": 99.01977511234308,
     "y": -14.295746880000003
   },
-  "The Rush": {
+  "major-The Rush": {
+    "name": "The Rush",
     "region": "TempestIslandHex",
     "major": 1,
     "x": 95.26936688435484,
     "y": -13.49607096
   },
-  "Bleating Plateau": {
+  "minor-Bleating Plateau": {
+    "name": "Bleating Plateau",
     "region": "MarbanHollow",
     "major": 0,
     "x": 22.415286017571717,
     "y": 14.730541199999998
   },
-  "Bubble Basin": {
+  "minor-Bubble Basin": {
+    "name": "Bubble Basin",
     "region": "MarbanHollow",
     "major": 0,
     "x": 27.121052178923705,
     "y": 20.702623680000002
   },
-  "Checkpoint Bua": {
+  "major-Checkpoint Bua": {
+    "name": "Checkpoint Bua",
     "region": "MarbanHollow",
     "major": 1,
     "x": 37.671854638148496,
     "y": 20.9522052
   },
-  "Deepfleet Valley": {
+  "minor-Deepfleet Valley": {
+    "name": "Deepfleet Valley",
     "region": "MarbanHollow",
     "major": 0,
     "x": 35.99921733020117,
     "y": 12.28431132
   },
-  "Gaping Maw": {
+  "minor-Gaping Maw": {
+    "name": "Gaping Maw",
     "region": "MarbanHollow",
     "major": 0,
     "x": 34.57106107220316,
     "y": 31.66787628
   },
-  "Lockheed": {
+  "major-Lockheed": {
+    "name": "Lockheed",
     "region": "MarbanHollow",
     "major": 1,
     "x": 37.812820017993616,
     "y": 3.644276399999999
   },
-  "Lockheed Breakers": {
+  "minor-Lockheed Breakers": {
+    "name": "Lockheed Breakers",
     "region": "MarbanHollow",
     "major": 0,
     "x": 34.155583791250834,
     "y": 5.614230240000001
   },
-  "Lughbone Dam": {
+  "minor-Lughbone Dam": {
+    "name": "Lughbone Dam",
     "region": "MarbanHollow",
     "major": 0,
     "x": 36.37868610624852,
     "y": 21.046770719999998
   },
-  "Maiden's Veil": {
+  "major-Maiden's Veil": {
+    "name": "Maiden's Veil",
     "region": "MarbanHollow",
     "major": 1,
     "x": 32.69200515434113,
     "y": 17.229340800000003
   },
-  "Mount Mac Tire": {
+  "minor-Mount Mac Tire": {
+    "name": "Mount Mac Tire",
     "region": "MarbanHollow",
     "major": 0,
     "x": 23.795652638199805,
     "y": 2.9858630400000017
   },
-  "Mox": {
+  "major-Mox": {
+    "name": "Mox",
     "region": "MarbanHollow",
     "major": 1,
     "x": 40.70633449118306,
     "y": 31.772334599999994
   },
-  "Oster Wall": {
+  "major-Oster Wall": {
+    "name": "Oster Wall",
     "region": "MarbanHollow",
     "major": 1,
     "x": 44.40752725757659,
     "y": 19.034227440000002
   },
-  "Pilgrimage": {
+  "minor-Pilgrimage": {
+    "name": "Pilgrimage",
     "region": "MarbanHollow",
     "major": 0,
     "x": 27.666240389265766,
     "y": 32.33288232
   },
-  "Sanctum": {
+  "major-Sanctum": {
+    "name": "Sanctum",
     "region": "MarbanHollow",
     "major": 1,
     "x": 20.552335262374726,
     "y": 26.201095199999997
   },
-  "Slender Cove": {
+  "minor-Slender Cove": {
+    "name": "Slender Cove",
     "region": "MarbanHollow",
     "major": 0,
     "x": 41.17807280072309,
     "y": 25.568173439999995
   },
-  "The Claim": {
+  "minor-The Claim": {
+    "name": "The Claim",
     "region": "MarbanHollow",
     "major": 0,
     "x": 41.800380642554195,
     "y": 11.9935872
   },
-  "The Clutch": {
+  "minor-The Clutch": {
+    "name": "The Clutch",
     "region": "MarbanHollow",
     "major": 0,
     "x": 32.55447172924816,
     "y": 26.099729280000005
   },
-  "The Curse": {
+  "minor-The Curse": {
+    "name": "The Curse",
     "region": "MarbanHollow",
     "major": 0,
     "x": 37.16245877277062,
     "y": 17.526736800000002
   },
-  "The Spitrocks": {
+  "major-The Spitrocks": {
+    "name": "The Spitrocks",
     "region": "MarbanHollow",
     "major": 1,
     "x": 25.938626541609622,
     "y": 9.8159076
   },
-  "Afric's Approach": {
+  "minor-Afric's Approach": {
+    "name": "Afric's Approach",
     "region": "ViperPitHex",
     "major": 0,
     "x": 22.002859917322006,
     "y": 47.727082800000005
   },
-  "Austriaca River": {
+  "minor-Austriaca River": {
+    "name": "Austriaca River",
     "region": "ViperPitHex",
     "major": 0,
     "x": 31.515009704154878,
     "y": 41.2734204
   },
-  "Blackthroat": {
+  "major-Blackthroat": {
+    "name": "Blackthroat",
     "region": "ViperPitHex",
     "major": 1,
     "x": 27.087050220238282,
     "y": 42.179629320000004
   },
-  "Deadsteps": {
+  "minor-Deadsteps": {
+    "name": "Deadsteps",
     "region": "ViperPitHex",
     "major": 0,
     "x": 33.74150988714483,
     "y": 64.40335812000001
   },
-  "Earl Crowley": {
+  "major-Earl Crowley": {
+    "name": "Earl Crowley",
     "region": "ViperPitHex",
     "major": 1,
     "x": 45.117724899946325,
     "y": 53.500399200000004
   },
-  "Earl's Welcome": {
+  "minor-Earl's Welcome": {
+    "name": "Earl's Welcome",
     "region": "ViperPitHex",
     "major": 0,
     "x": 17.241228050658627,
     "y": 57.24803592000001
   },
-  "Fleck Crossing": {
+  "major-Fleck Crossing": {
+    "name": "Fleck Crossing",
     "region": "ViperPitHex",
     "major": 1,
     "x": 33.299895128121904,
     "y": 52.64691479999999
   },
-  "Fort Viper": {
+  "major-Fort Viper": {
+    "name": "Fort Viper",
     "region": "ViperPitHex",
     "major": 1,
     "x": 25.38762238178387,
     "y": 50.434523999999996
   },
-  "Hardcaps": {
+  "minor-Hardcaps": {
+    "name": "Hardcaps",
     "region": "ViperPitHex",
     "major": 0,
     "x": 30.245535627302445,
     "y": 70.840959696
   },
-  "Kirknell": {
+  "major-Kirknell": {
+    "name": "Kirknell",
     "region": "ViperPitHex",
     "major": 1,
     "x": 22.928697885234058,
     "y": 52.268868
   },
-  "Lake Mioira": {
+  "minor-Lake Mioira": {
+    "name": "Lake Mioira",
     "region": "ViperPitHex",
     "major": 0,
     "x": 20.060577632472672,
     "y": 68.36621544
   },
-  "Moltworth": {
+  "major-Moltworth": {
+    "name": "Moltworth",
     "region": "ViperPitHex",
     "major": 1,
     "x": 37.093252673575265,
     "y": 46.425699359999996
   },
-  "Path of the Charmed": {
+  "minor-Path of the Charmed": {
+    "name": "Path of the Charmed",
     "region": "ViperPitHex",
     "major": 0,
     "x": 39.52674803155274,
     "y": 38.0941344
   },
-  "Serenity's Blight": {
+  "major-Serenity's Blight": {
+    "name": "Serenity's Blight",
     "region": "ViperPitHex",
     "major": 1,
     "x": 29.62937670440229,
     "y": 59.3589348
   },
-  "Snakehead Lake": {
+  "minor-Snakehead Lake": {
+    "name": "Snakehead Lake",
     "region": "ViperPitHex",
     "major": 0,
     "x": 27.876855411877045,
     "y": 64.50100056
   },
-  "The Bloody Bowery": {
+  "minor-The Bloody Bowery": {
+    "name": "The Bloody Bowery",
     "region": "ViperPitHex",
     "major": 0,
     "x": 22.667470675256837,
     "y": 55.52149392
   },
-  "The Friars": {
+  "major-The Friars": {
+    "name": "The Friars",
     "region": "ViperPitHex",
     "major": 1,
     "x": 22.36076133527758,
     "y": 42.6332664
   },
-  "The Lady's Lake": {
+  "minor-The Lady's Lake": {
+    "name": "The Lady's Lake",
     "region": "ViperPitHex",
     "major": 0,
     "x": 19.30660011963458,
     "y": 49.219052399999995
   },
-  "The Rockaway": {
+  "minor-The Rockaway": {
+    "name": "The Rockaway",
     "region": "ViperPitHex",
     "major": 0,
     "x": 43.621699824540464,
     "y": 46.62636119999999
   },
-  "The Slithering Scales": {
+  "minor-The Slithering Scales": {
+    "name": "The Slithering Scales",
     "region": "ViperPitHex",
     "major": 0,
     "x": 35.234368635110386,
     "y": 56.4685722
   },
-  "The Tongue": {
+  "minor-The Tongue": {
+    "name": "The Tongue",
     "region": "ViperPitHex",
     "major": 0,
     "x": 40.013101247242986,
     "y": 66.4312392
   },
-  "Twin Fangs": {
+  "minor-Twin Fangs": {
+    "name": "Twin Fangs",
     "region": "ViperPitHex",
     "major": 0,
     "x": 26.567758802186603,
     "y": 57.55236372
   },
-  "Basin Sionnach": {
+  "minor-Basin Sionnach": {
+    "name": "Basin Sionnach",
     "region": "BasinSionnachHex",
     "major": 0,
     "x": -4.544215883842975,
     "y": 112.75056000000001
   },
-  "Basinhome": {
+  "major-Basinhome": {
+    "name": "Basinhome",
     "region": "BasinSionnachHex",
     "major": 1,
     "x": -5.3060030059263035,
     "y": 97.71100919999999
   },
-  "Cunning Cross": {
+  "minor-Cunning Cross": {
+    "name": "Cunning Cross",
     "region": "BasinSionnachHex",
     "major": 0,
     "x": 8.833696299070034,
     "y": 118.00978667999999
   },
-  "Cuttail Station": {
+  "major-Cuttail Station": {
+    "name": "Cuttail Station",
     "region": "BasinSionnachHex",
     "major": 1,
     "x": 5.629539622055635,
     "y": 114.46341659999999
   },
-  "Lamplight": {
+  "major-Lamplight": {
+    "name": "Lamplight",
     "region": "BasinSionnachHex",
     "major": 1,
     "x": 9.329977491425193,
     "y": 105.1425108
   },
-  "Radiant Shore": {
+  "minor-Radiant Shore": {
+    "name": "Radiant Shore",
     "region": "BasinSionnachHex",
     "major": 0,
     "x": -10.080613614265019,
     "y": 102.18773664
   },
-  "Sess": {
+  "major-Sess": {
+    "name": "Sess",
     "region": "BasinSionnachHex",
     "major": 1,
     "x": -10.692050273843428,
     "y": 111.17541671999999
   },
-  "Stoic": {
+  "major-Stoic": {
+    "name": "Stoic",
     "region": "BasinSionnachHex",
     "major": 1,
     "x": 15.567823374921517,
     "y": 110.5202142
   },
-  "The Den": {
+  "major-The Den": {
+    "name": "The Den",
     "region": "BasinSionnachHex",
     "major": 1,
     "x": -3.064700023914547,
     "y": 107.574642
   },
-  "The Foxfields": {
+  "minor-The Foxfields": {
+    "name": "The Foxfields",
     "region": "BasinSionnachHex",
     "major": 0,
     "x": -3.3858280633285283,
     "y": 119.23725096000001
   },
-  "Torchwood": {
+  "minor-Torchwood": {
+    "name": "Torchwood",
     "region": "BasinSionnachHex",
     "major": 0,
     "x": 10.448906146133801,
     "y": 99.6054552
   },
-  "Abandoned Ward": {
+  "major-Abandoned Ward": {
+    "name": "Abandoned Ward",
     "region": "DeadLandsHex",
     "major": 1,
     "x": -3.0983835623794995,
     "y": 0.09549360000000107
   },
-  "Biting Tarn": {
+  "minor-Biting Tarn": {
+    "name": "Biting Tarn",
     "region": "DeadLandsHex",
     "major": 0,
     "x": 14.164574977484797,
     "y": -7.393566959999999
   },
-  "Border Concourse": {
+  "minor-Border Concourse": {
+    "name": "Border Concourse",
     "region": "DeadLandsHex",
     "major": 0,
     "x": 13.909492113824385,
     "y": 3.9540258
   },
-  "Border Thicket": {
+  "minor-Border Thicket": {
+    "name": "Border Thicket",
     "region": "DeadLandsHex",
     "major": 0,
     "x": 3.9177648940604826,
     "y": 6.319059119999999
   },
-  "Brine Glen": {
+  "major-Brine Glen": {
+    "name": "Brine Glen",
     "region": "DeadLandsHex",
     "major": 1,
     "x": 10.163359280049544,
     "y": -7.9928712
   },
-  "Callahan's Belt": {
+  "minor-Callahan's Belt": {
+    "name": "Callahan's Belt",
     "region": "DeadLandsHex",
     "major": 0,
     "x": 7.373653539960937,
     "y": 6.818354639999999
   },
-  "Callahan's Boot": {
+  "major-Callahan's Boot": {
+    "name": "Callahan's Boot",
     "region": "DeadLandsHex",
     "major": 1,
     "x": 2.761999259904627,
     "y": 0.3320243999999981
   },
-  "Callahan's Gate": {
+  "major-Callahan's Gate": {
+    "name": "Callahan's Gate",
     "region": "DeadLandsHex",
     "major": 1,
     "x": 5.9738146498979035,
     "y": 14.027995260000004
   },
-  "Carpal Trail": {
+  "minor-Carpal Trail": {
+    "name": "Carpal Trail",
     "region": "DeadLandsHex",
     "major": 0,
     "x": -7.885808298284802,
     "y": 2.9088720000000023
   },
-  "Cemetary Junction": {
+  "minor-Cemetary Junction": {
+    "name": "Cemetary Junction",
     "region": "DeadLandsHex",
     "major": 0,
     "x": -6.5177802533535765,
     "y": -2.8581552000000023
   },
-  "Cemetary Lane": {
+  "minor-Cemetary Lane": {
+    "name": "Cemetary Lane",
     "region": "DeadLandsHex",
     "major": 0,
     "x": -4.100753788710726,
     "y": -5.708264399999997
   },
-  "Coracoid Footpath": {
+  "minor-Coracoid Footpath": {
+    "name": "Coracoid Footpath",
     "region": "DeadLandsHex",
     "major": 0,
     "x": -15.544028515634011,
     "y": 3.5920915200000003
   },
-  "Crumbling Passage": {
+  "minor-Crumbling Passage": {
+    "name": "Crumbling Passage",
     "region": "DeadLandsHex",
     "major": 0,
     "x": -2.6591153857906633,
     "y": 14.585618736
   },
-  "Hope's Causeway": {
+  "minor-Hope's Causeway": {
+    "name": "Hope's Causeway",
     "region": "DeadLandsHex",
     "major": 0,
     "x": 1.961154530674687,
     "y": -2.860479360000001
   },
-  "Iron's End": {
+  "major-Iron's End": {
+    "name": "Iron's End",
     "region": "DeadLandsHex",
     "major": 1,
     "x": -0.8279538597314016,
     "y": 8.56532232
   },
-  "Jaspar Range": {
+  "minor-Jaspar Range": {
+    "name": "Jaspar Range",
     "region": "DeadLandsHex",
     "major": 0,
     "x": -8.024908882948464,
     "y": -5.875797600000002
   },
-  "Liberation Point": {
+  "major-Liberation Point": {
+    "name": "Liberation Point",
     "region": "DeadLandsHex",
     "major": 1,
     "x": -9.900272207052819,
     "y": -1.8637451999999968
   },
-  "Mandible Crossroads": {
+  "minor-Mandible Crossroads": {
+    "name": "Mandible Crossroads",
     "region": "DeadLandsHex",
     "major": 0,
     "x": -11.631994340660452,
     "y": 5.9160337200000015
   },
-  "Marrow Copse": {
+  "minor-Marrow Copse": {
+    "name": "Marrow Copse",
     "region": "DeadLandsHex",
     "major": 0,
     "x": -5.368280347635121,
     "y": 6.729152400000004
   },
-  "Mercy Meadow": {
+  "minor-Mercy Meadow": {
+    "name": "Mercy Meadow",
     "region": "DeadLandsHex",
     "major": 0,
     "x": -14.71531636369968,
     "y": -1.509798240000002
   },
-  "Mercy's End": {
+  "minor-Mercy's End": {
+    "name": "Mercy's End",
     "region": "DeadLandsHex",
     "major": 0,
     "x": 5.8941484880295505,
     "y": -11.903597999999999
   },
-  "Overgrown Pasture": {
+  "minor-Overgrown Pasture": {
+    "name": "Overgrown Pasture",
     "region": "DeadLandsHex",
     "major": 0,
     "x": -13.368858171013402,
     "y": -5.163375600000002
   },
-  "Path to the Sun": {
+  "minor-Path to the Sun": {
+    "name": "Path to the Sun",
     "region": "DeadLandsHex",
     "major": 0,
     "x": -8.653773022060438,
     "y": -14.154807599999998
   },
-  "Pommel Annex": {
+  "minor-Pommel Annex": {
+    "name": "Pommel Annex",
     "region": "DeadLandsHex",
     "major": 0,
     "x": 0.3096842692364987,
     "y": 3.8396026799999987
   },
-  "Sun's Hollow": {
+  "major-Sun's Hollow": {
+    "name": "Sun's Hollow",
     "region": "DeadLandsHex",
     "major": 1,
     "x": -8.636960766973722,
     "y": -7.975360800000001
   },
-  "Sunhaven Gateway": {
+  "minor-Sunhaven Gateway": {
+    "name": "Sunhaven Gateway",
     "region": "DeadLandsHex",
     "major": 0,
     "x": -3.903369001552047,
     "y": -2.1792326399999986
   },
-  "Tarsal Pathway": {
+  "minor-Tarsal Pathway": {
+    "name": "Tarsal Pathway",
     "region": "DeadLandsHex",
     "major": 0,
     "x": -11.474217537113,
     "y": 3.028682879999998
   },
-  "The Abbey Drag": {
+  "minor-The Abbey Drag": {
+    "name": "The Abbey Drag",
     "region": "DeadLandsHex",
     "major": 0,
     "x": 11.341773903385487,
     "y": 13.35581208
   },
-  "The Blade": {
+  "minor-The Blade": {
+    "name": "The Blade",
     "region": "DeadLandsHex",
     "major": 0,
     "x": 3.8767028191552875,
     "y": 4.253429880000002
   },
-  "The Boneyard": {
+  "minor-The Boneyard": {
+    "name": "The Boneyard",
     "region": "DeadLandsHex",
     "major": 0,
     "x": 4.708290895963316,
     "y": 8.221023360000004
   },
-  "The Crossing": {
+  "minor-The Crossing": {
+    "name": "The Crossing",
     "region": "DeadLandsHex",
     "major": 0,
     "x": -2.6387809707457386,
     "y": 1.9218383999999986
   },
-  "The Iron Passage": {
+  "minor-The Iron Passage": {
+    "name": "The Iron Passage",
     "region": "DeadLandsHex",
     "major": 0,
     "x": 0.002972435104073412,
     "y": 6.644029320000001
   },
-  "The Iron Road": {
+  "minor-The Iron Road": {
+    "name": "The Iron Road",
     "region": "DeadLandsHex",
     "major": 0,
     "x": 1.9408841322276125,
     "y": 13.232859480000002
   },
-  "The Pits": {
+  "major-The Pits": {
+    "name": "The Pits",
     "region": "DeadLandsHex",
     "major": 1,
     "x": -0.6653496227371605,
     "y": -4.6720728000000005
   },
-  "The Plaza": {
+  "minor-The Plaza": {
+    "name": "The Plaza",
     "region": "DeadLandsHex",
     "major": 0,
     "x": -2.1418026625815507,
     "y": 3.5625700800000004
   },
-  "The Salt Farms": {
+  "major-The Salt Farms": {
+    "name": "The Salt Farms",
     "region": "DeadLandsHex",
     "major": 1,
     "x": -1.0040930345563126,
     "y": -12.154082399999998
   },
-  "The Salt March": {
+  "major-The Salt March": {
+    "name": "The Salt March",
     "region": "DeadLandsHex",
     "major": 1,
     "x": 14.207062876614785,
     "y": 0.6507532799999964
   },
-  "The Salt Trail": {
+  "minor-The Salt Trail": {
+    "name": "The Salt Trail",
     "region": "DeadLandsHex",
     "major": 0,
     "x": -3.207018481850543,
     "y": -8.824215599999999
   },
-  "The Shorn Fields": {
+  "minor-The Shorn Fields": {
+    "name": "The Shorn Fields",
     "region": "DeadLandsHex",
     "major": 0,
     "x": -1.0638292498843285,
     "y": -14.901175440000001
   },
-  "The Spine": {
+  "major-The Spine": {
+    "name": "The Spine",
     "region": "DeadLandsHex",
     "major": 1,
     "x": -7.239335853534955,
     "y": 9.510184079999998
   },
-  "The Steppes": {
+  "minor-The Steppes": {
+    "name": "The Steppes",
     "region": "DeadLandsHex",
     "major": 0,
     "x": 7.762511971282226,
     "y": -0.9787788000000006
   },
-  "18th Sideroad": {
+  "minor-18th Sideroad": {
+    "name": "18th Sideroad",
     "region": "HeartlandsHex",
     "major": 0,
     "x": -27.74957082167824,
     "y": -38.8511478
   },
-  "Barronshire ": {
+  "minor-Barronshire ": {
+    "name": "Barronshire ",
     "region": "HeartlandsHex",
     "major": 0,
     "x": -38.53807730101656,
     "y": -55.0549044
   },
-  "Barronswall": {
+  "major-Barronswall": {
+    "name": "Barronswall",
     "region": "HeartlandsHex",
     "major": 1,
     "x": -34.810197095780005,
     "y": -50.73922548
   },
-  "Barrony Ranch": {
+  "major-Barrony Ranch": {
+    "name": "Barrony Ranch",
     "region": "HeartlandsHex",
     "major": 1,
     "x": -35.6571420893042,
     "y": -39.9541536
   },
-  "Barrony Road": {
+  "minor-Barrony Road": {
+    "name": "Barrony Road",
     "region": "HeartlandsHex",
     "major": 0,
     "x": -30.798402863396507,
     "y": -43.26719544
   },
-  "Cageroad": {
+  "minor-Cageroad": {
+    "name": "Cageroad",
     "region": "HeartlandsHex",
     "major": 0,
     "x": -47.689146040303356,
     "y": -56.9409822
   },
-  "Crater Basin": {
+  "minor-Crater Basin": {
+    "name": "Crater Basin",
     "region": "HeartlandsHex",
     "major": 0,
     "x": -39.62590843839794,
     "y": -43.3548918
   },
-  "Deeplaw Post": {
+  "major-Deeplaw Post": {
+    "name": "Deeplaw Post",
     "region": "HeartlandsHex",
     "major": 1,
     "x": -41.06911067535114,
     "y": -51.637601520000004
   },
-  "Erimos Ranch": {
+  "minor-Erimos Ranch": {
+    "name": "Erimos Ranch",
     "region": "HeartlandsHex",
     "major": 0,
     "x": -29.849053345002194,
     "y": -66.45432456
   },
-  "Fort Providence": {
+  "major-Fort Providence": {
+    "name": "Fort Providence",
     "region": "HeartlandsHex",
     "major": 1,
     "x": -19.664135256623027,
     "y": -49.6534932
   },
-  "Greenfield Orchard": {
+  "major-Greenfield Orchard": {
+    "name": "Greenfield Orchard",
     "region": "HeartlandsHex",
     "major": 1,
     "x": -20.759353244288533,
     "y": -43.36343352
   },
-  "Harvester's Range": {
+  "minor-Harvester's Range": {
+    "name": "Harvester's Range",
     "region": "HeartlandsHex",
     "major": 0,
     "x": -31.479320810402577,
     "y": -55.6214832
   },
-  "Janus Field": {
+  "minor-Janus Field": {
+    "name": "Janus Field",
     "region": "HeartlandsHex",
     "major": 0,
     "x": -34.087922348103326,
     "y": -67.450437
   },
-  "Kos Meadows": {
+  "minor-Kos Meadows": {
+    "name": "Kos Meadows",
     "region": "HeartlandsHex",
     "major": 0,
     "x": -41.45605276565894,
     "y": -67.49356896
   },
-  "Loftmire": {
+  "minor-Loftmire": {
+    "name": "Loftmire",
     "region": "HeartlandsHex",
     "major": 0,
     "x": -28.247154377676623,
     "y": -51.911892720000004
   },
-  "Lower Barrony Field": {
+  "minor-Lower Barrony Field": {
+    "name": "Lower Barrony Field",
     "region": "HeartlandsHex",
     "major": 0,
     "x": -31.943032103680018,
     "y": -47.36126772
   },
-  "Oleander Fields": {
+  "minor-Oleander Fields": {
+    "name": "Oleander Fields",
     "region": "HeartlandsHex",
     "major": 0,
     "x": -23.05184788858441,
     "y": -59.031108
   },
-  "Oleander Homestead": {
+  "major-Oleander Homestead": {
+    "name": "Oleander Homestead",
     "region": "HeartlandsHex",
     "major": 1,
     "x": -16.7652288399876,
     "y": -53.6646492
   },
-  "Pandora Compound": {
+  "minor-Pandora Compound": {
+    "name": "Pandora Compound",
     "region": "HeartlandsHex",
     "major": 0,
     "x": -32.872210158369384,
     "y": -61.562538
   },
-  "Proexí": {
+  "major-Proexí": {
+    "name": "Proexí",
     "region": "HeartlandsHex",
     "major": 1,
     "x": -24.04789585233988,
     "y": -66.0616524
   },
-  "Providence Field": {
+  "minor-Providence Field": {
+    "name": "Providence Field",
     "region": "HeartlandsHex",
     "major": 0,
     "x": -25.744334032536365,
     "y": -48.532071599999995
   },
-  "The Blemish": {
+  "major-The Blemish": {
+    "name": "The Blemish",
     "region": "HeartlandsHex",
     "major": 1,
     "x": -24.19182761168008,
     "y": -52.80525
   },
-  "The Breach": {
+  "major-The Breach": {
+    "name": "The Breach",
     "region": "HeartlandsHex",
     "major": 1,
     "x": -36.035560411177784,
     "y": -45.750546
   },
-  "The Fuming Pen": {
+  "minor-The Fuming Pen": {
+    "name": "The Fuming Pen",
     "region": "HeartlandsHex",
     "major": 0,
     "x": -43.06713354216152,
     "y": -60.7368096
   },
-  "The Orchard Wall": {
+  "minor-The Orchard Wall": {
+    "name": "The Orchard Wall",
     "region": "HeartlandsHex",
     "major": 0,
     "x": -22.13926218781123,
     "y": -44.990826840000004
   },
-  "The Plough": {
+  "major-The Plough": {
+    "name": "The Plough",
     "region": "HeartlandsHex",
     "major": 1,
     "x": -28.41984247590847,
     "y": -44.989656839999995
   },
-  "The Rollcage": {
+  "minor-The Rollcage": {
+    "name": "The Rollcage",
     "region": "HeartlandsHex",
     "major": 0,
     "x": -44.666059894609106,
     "y": -48.352991040000006
   },
-  "The Salt Crossing": {
+  "minor-The Salt Crossing": {
+    "name": "The Salt Crossing",
     "region": "HeartlandsHex",
     "major": 0,
     "x": -18.53129005864983,
     "y": -38.55049272
   },
-  "Upper Barrony Field": {
+  "minor-Upper Barrony Field": {
+    "name": "Upper Barrony Field",
     "region": "HeartlandsHex",
     "major": 0,
     "x": -31.579574128169696,
     "y": -39.3380523
   },
-  "Upper Heartlands": {
+  "minor-Upper Heartlands": {
+    "name": "Upper Heartlands",
     "region": "HeartlandsHex",
     "major": 0,
     "x": -37.66206503083974,
     "y": -40.09288572
   },
-  "Balor's Crown": {
+  "minor-Balor's Crown": {
+    "name": "Balor's Crown",
     "region": "EndlessShoreHex",
     "major": 0,
     "x": 76.83673531229837,
     "y": 5.957381520000002
   },
-  "Battered Landing": {
+  "minor-Battered Landing": {
+    "name": "Battered Landing",
     "region": "EndlessShoreHex",
     "major": 0,
     "x": 55.05393642722602,
     "y": -1.804066559999999
   },
-  "Brackish Point": {
+  "major-Brackish Point": {
+    "name": "Brackish Point",
     "region": "EndlessShoreHex",
     "major": 1,
     "x": 54.949283007587354,
     "y": 12.428110440000001
   },
-  "Dannan Ridge": {
+  "major-Dannan Ridge": {
+    "name": "Dannan Ridge",
     "region": "EndlessShoreHex",
     "major": 1,
     "x": 73.48382027388136,
     "y": 9.934857000000001
   },
-  "Dearg's Fang": {
+  "minor-Dearg's Fang": {
+    "name": "Dearg's Fang",
     "region": "EndlessShoreHex",
     "major": 0,
     "x": 67.07629673502082,
     "y": 4.80811392
   },
-  "Enduring Wake": {
+  "major-Enduring Wake": {
+    "name": "Enduring Wake",
     "region": "EndlessShoreHex",
     "major": 1,
     "x": 50.90953555363066,
     "y": -4.0407047999999985
   },
-  "Iron Junction": {
+  "major-Iron Junction": {
+    "name": "Iron Junction",
     "region": "EndlessShoreHex",
     "major": 1,
     "x": 57.29907167557258,
     "y": -10.643979600000002
   },
-  "Kelpie's Mane": {
+  "minor-Kelpie's Mane": {
+    "name": "Kelpie's Mane",
     "region": "EndlessShoreHex",
     "major": 0,
     "x": 74.61307305991559,
     "y": -4.867713719999999
   },
-  "Kelpie's Tail": {
+  "minor-Kelpie's Tail": {
+    "name": "Kelpie's Tail",
     "region": "EndlessShoreHex",
     "major": 0,
     "x": 72.25978135381308,
     "y": -6.295296959999998
   },
-  "Liegehearth": {
+  "minor-Liegehearth": {
+    "name": "Liegehearth",
     "region": "EndlessShoreHex",
     "major": 0,
     "x": 54.9416093296895,
     "y": 1.7536391999999985
   },
-  "Merrow's Rest": {
+  "minor-Merrow's Rest": {
+    "name": "Merrow's Rest",
     "region": "EndlessShoreHex",
     "major": 0,
     "x": 75.16546812582186,
     "y": -9.75883572
   },
-  "Saltbrook Channel": {
+  "major-Saltbrook Channel": {
+    "name": "Saltbrook Channel",
     "region": "EndlessShoreHex",
     "major": 1,
     "x": 54.98077044419237,
     "y": 4.2614733599999965
   },
-  "Sídhe Fall": {
+  "minor-Sídhe Fall": {
+    "name": "Sídhe Fall",
     "region": "EndlessShoreHex",
     "major": 0,
     "x": 62.48947840077628,
     "y": 7.30712376
   },
-  "The Dannan Coast": {
+  "minor-The Dannan Coast": {
+    "name": "The Dannan Coast",
     "region": "EndlessShoreHex",
     "major": 0,
     "x": 70.40233394757003,
     "y": 8.8242336
   },
-  "The Dark Road": {
+  "minor-The Dark Road": {
+    "name": "The Dark Road",
     "region": "EndlessShoreHex",
     "major": 0,
     "x": 77.14470503100928,
     "y": 0.17902547999999996
   },
-  "The Evil Eye": {
+  "major-The Evil Eye": {
+    "name": "The Evil Eye",
     "region": "EndlessShoreHex",
     "major": 1,
     "x": 73.27899002383924,
     "y": 1.4640397199999988
   },
-  "The North Star": {
+  "minor-The North Star": {
+    "name": "The North Star",
     "region": "EndlessShoreHex",
     "major": 0,
     "x": 54.92949314931633,
     "y": 8.5808502
   },
-  "The Old Jack Tar": {
+  "major-The Old Jack Tar": {
+    "name": "The Old Jack Tar",
     "region": "EndlessShoreHex",
     "major": 1,
     "x": 47.396006196751216,
     "y": -0.2181945600000006
   },
-  "The Overland": {
+  "major-The Overland": {
+    "name": "The Overland",
     "region": "EndlessShoreHex",
     "major": 1,
     "x": 66.25784910415152,
     "y": -10.679762520000002
   },
-  "The Selkie Bluffs": {
+  "minor-The Selkie Bluffs": {
+    "name": "The Selkie Bluffs",
     "region": "EndlessShoreHex",
     "major": 0,
     "x": 66.43175060789713,
     "y": -1.4611557600000005
   },
-  "The Styx": {
+  "minor-The Styx": {
+    "name": "The Styx",
     "region": "EndlessShoreHex",
     "major": 0,
     "x": 61.67200141117954,
     "y": -5.009936400000001
   },
-  "The Whispering Waves": {
+  "minor-The Whispering Waves": {
+    "name": "The Whispering Waves",
     "region": "EndlessShoreHex",
     "major": 0,
     "x": 69.82467892981431,
     "y": -2.8841796000000013
   },
-  "Tuatha Watchpost": {
+  "major-Tuatha Watchpost": {
+    "name": "Tuatha Watchpost",
     "region": "EndlessShoreHex",
     "major": 1,
     "x": 77.85070002529952,
     "y": -1.8266579999999983
   },
-  "Vulpine Watch": {
+  "major-Vulpine Watch": {
+    "name": "Vulpine Watch",
     "region": "EndlessShoreHex",
     "major": 1,
     "x": 68.47678992459691,
     "y": 12.687973200000002
   },
-  "Wellchurch": {
+  "major-Wellchurch": {
+    "name": "Wellchurch",
     "region": "EndlessShoreHex",
     "major": 1,
     "x": 63.74658397209387,
     "y": 1.4596945199999993
   },
-  "Woodbind": {
+  "major-Woodbind": {
+    "name": "Woodbind",
     "region": "EndlessShoreHex",
     "major": 1,
     "x": 71.42367885978021,
     "y": -8.412101999999999
   },
-  "Ash Step": {
+  "minor-Ash Step": {
+    "name": "Ash Step",
     "region": "WestgateHex",
     "major": 0,
     "x": -55.50472088420797,
     "y": -55.504404
   },
-  "Candle Hills": {
+  "minor-Candle Hills": {
+    "name": "Candle Hills",
     "region": "WestgateHex",
     "major": 0,
     "x": -66.5181264013215,
     "y": -49.538736
   },
-  "Cattle March": {
+  "minor-Cattle March": {
+    "name": "Cattle March",
     "region": "WestgateHex",
     "major": 0,
     "x": -64.3955667258578,
     "y": -24.436764
   },
-  "Ceo Highlands": {
+  "minor-Ceo Highlands": {
+    "name": "Ceo Highlands",
     "region": "WestgateHex",
     "major": 0,
     "x": -54.325870199760715,
     "y": -50.5714608
   },
-  "Cinder Road": {
+  "minor-Cinder Road": {
+    "name": "Cinder Road",
     "region": "WestgateHex",
     "major": 0,
     "x": -65.07627142276846,
     "y": -55.364576400000004
   },
-  "Coasthill": {
+  "minor-Coasthill": {
+    "name": "Coasthill",
     "region": "WestgateHex",
     "major": 0,
     "x": -51.2061709528406,
     "y": -36.8378208
   },
-  "Coastway": {
+  "minor-Coastway": {
+    "name": "Coastway",
     "region": "WestgateHex",
     "major": 0,
     "x": -60.996757190782496,
     "y": -53.58525984
   },
-  "Cobber's Lane": {
+  "minor-Cobber's Lane": {
+    "name": "Cobber's Lane",
     "region": "WestgateHex",
     "major": 0,
     "x": -48.34239967181093,
     "y": -28.9741428
   },
-  "Ember Hills": {
+  "minor-Ember Hills": {
+    "name": "Ember Hills",
     "region": "WestgateHex",
     "major": 0,
     "x": -59.268986627169284,
     "y": -56.1296556
   },
-  "Fand's Chain": {
+  "minor-Fand's Chain": {
+    "name": "Fand's Chain",
     "region": "WestgateHex",
     "major": 0,
     "x": -71.70134165157216,
     "y": -23.069245679999998
   },
-  "Fields of Badb": {
+  "minor-Fields of Badb": {
+    "name": "Fields of Badb",
     "region": "WestgateHex",
     "major": 0,
     "x": -60.97912602207397,
     "y": -23.40668376
   },
-  "Flidais' Pasture": {
+  "minor-Flidais' Pasture": {
+    "name": "Flidais' Pasture",
     "region": "WestgateHex",
     "major": 0,
     "x": -53.57061983742515,
     "y": -25.92646632
   },
-  "Handsome Hideaway": {
+  "minor-Handsome Hideaway": {
+    "name": "Handsome Hideaway",
     "region": "WestgateHex",
     "major": 0,
     "x": -68.46738483256745,
     "y": -35.974594800000006
   },
-  "Hillcrest": {
+  "minor-Hillcrest": {
+    "name": "Hillcrest",
     "region": "WestgateHex",
     "major": 0,
     "x": -55.663931410131894,
     "y": -40.5122184
   },
-  "Holdfast": {
+  "major-Holdfast": {
+    "name": "Holdfast",
     "region": "WestgateHex",
     "major": 1,
     "x": -63.047607052967464,
     "y": -27.99781812
   },
-  "Inkwell Lane": {
+  "minor-Inkwell Lane": {
+    "name": "Inkwell Lane",
     "region": "WestgateHex",
     "major": 0,
     "x": -57.70901437451205,
     "y": -21.810034440000003
   },
-  "Kardia Road": {
+  "minor-Kardia Road": {
+    "name": "Kardia Road",
     "region": "WestgateHex",
     "major": 0,
     "x": -57.79100965974236,
     "y": -24.436764
   },
-  "Killian Quarter": {
+  "minor-Killian Quarter": {
+    "name": "Killian Quarter",
     "region": "WestgateHex",
     "major": 0,
     "x": -49.54880617609409,
     "y": -23.76274896
   },
-  "Kingstone": {
+  "major-Kingstone": {
+    "name": "Kingstone",
     "region": "WestgateHex",
     "major": 1,
     "x": -55.601698547487814,
     "y": -32.791969800000004
   },
-  "Longstone": {
+  "major-Longstone": {
+    "name": "Longstone",
     "region": "WestgateHex",
     "major": 1,
     "x": -55.52195381979483,
     "y": -44.043822
   },
-  "Lord's Mouth": {
+  "major-Lord's Mouth": {
+    "name": "Lord's Mouth",
     "region": "WestgateHex",
     "major": 1,
     "x": -47.87886795756122,
     "y": -33.506967599999996
   },
-  "Lost Partition": {
+  "major-Lost Partition": {
+    "name": "Lost Partition",
     "region": "WestgateHex",
     "major": 1,
     "x": -48.47486123644715,
     "y": -38.7235368
   },
-  "Rancher's Fast": {
+  "major-Rancher's Fast": {
+    "name": "Rancher's Fast",
     "region": "WestgateHex",
     "major": 1,
     "x": -53.484914499365026,
     "y": -24.54551388
   },
-  "Reaver's Cove": {
+  "minor-Reaver's Cove": {
+    "name": "Reaver's Cove",
     "region": "WestgateHex",
     "major": 0,
     "x": -62.60664160515128,
     "y": -36.8766756
   },
-  "Sanctified Path": {
+  "minor-Sanctified Path": {
+    "name": "Sanctified Path",
     "region": "WestgateHex",
     "major": 0,
     "x": -56.02014428639619,
     "y": -47.6003052
   },
-  "Sanctuary": {
+  "major-Sanctuary": {
+    "name": "Sanctuary",
     "region": "WestgateHex",
     "major": 1,
     "x": -72.56959170141386,
     "y": -27.60902352
   },
-  "Síochána Valley": {
+  "minor-Síochána Valley": {
+    "name": "Síochána Valley",
     "region": "WestgateHex",
     "major": 0,
     "x": -58.224381242561904,
     "y": -50.3946324
   },
-  "Taswell Point": {
+  "minor-Taswell Point": {
+    "name": "Taswell Point",
     "region": "WestgateHex",
     "major": 0,
     "x": -59.50523032060593,
     "y": -46.55506104
   },
-  "The Aging Ocean": {
+  "minor-The Aging Ocean": {
+    "name": "The Aging Ocean",
     "region": "NevishLineHex",
     "major": 0,
     "x": -106.83916304459721,
     "y": 56.37816144
   },
-  "The Bulwark": {
+  "minor-The Bulwark": {
+    "name": "The Bulwark",
     "region": "WestgateHex",
     "major": 0,
     "x": -50.389978867814946,
     "y": -41.1573492
   },
-  "The Divide": {
+  "minor-The Divide": {
+    "name": "The Divide",
     "region": "WestgateHex",
     "major": 0,
     "x": -62.274804087748,
     "y": -50.3946324
   },
-  "The Gallows": {
+  "major-The Gallows": {
+    "name": "The Gallows",
     "region": "WestgateHex",
     "major": 1,
     "x": -67.23364490377207,
     "y": -21.8212488
   },
-  "The Hem": {
+  "minor-The Hem": {
+    "name": "The Hem",
     "region": "WestgateHex",
     "major": 0,
     "x": -49.48510134739171,
     "y": -44.79310296
   },
-  "The King's Road": {
+  "minor-The King's Road": {
+    "name": "The King's Road",
     "region": "WestgateHex",
     "major": 0,
     "x": -51.90231819905933,
     "y": -32.7545856
   },
-  "The Knight's Edge": {
+  "minor-The Knight's Edge": {
+    "name": "The Knight's Edge",
     "region": "WestgateHex",
     "major": 0,
     "x": -58.2663786249032,
     "y": -28.41100488
   },
-  "Triton's Curse": {
+  "minor-Triton's Curse": {
+    "name": "Triton's Curse",
     "region": "WestgateHex",
     "major": 0,
     "x": -74.00093091453991,
     "y": -49.807913400000004
   },
-  "Warden Walk": {
+  "minor-Warden Walk": {
+    "name": "Warden Walk",
     "region": "WestgateHex",
     "major": 0,
     "x": -46.19293972310099,
     "y": -37.1773368
   },
-  "Western Heartlands": {
+  "minor-Western Heartlands": {
+    "name": "Western Heartlands",
     "region": "WestgateHex",
     "major": 0,
     "x": -52.42755359979039,
     "y": -30.374604
   },
-  "Westgate Keep": {
+  "major-Westgate Keep": {
+    "name": "Westgate Keep",
     "region": "WestgateHex",
     "major": 1,
     "x": -57.578918098458644,
     "y": -38.292434639999996
   },
-  "Wire Road": {
+  "minor-Wire Road": {
+    "name": "Wire Road",
     "region": "WestgateHex",
     "major": 0,
     "x": -53.62183560985651,
     "y": -27.3990888
   },
-  "Wyattwick": {
+  "major-Wyattwick": {
+    "name": "Wyattwick",
     "region": "WestgateHex",
     "major": 1,
     "x": -70.28229736646261,
     "y": -47.390556239999995
   },
-  "Zeus' Demise": {
+  "major-Zeus' Demise": {
+    "name": "Zeus' Demise",
     "region": "WestgateHex",
     "major": 1,
     "x": -65.64459498215737,
     "y": -45.8052048
   },
-  "Barrenson": {
+  "minor-Barrenson": {
+    "name": "Barrenson",
     "region": "OarbreakerHex",
     "major": 0,
     "x": -104.8320535621222,
     "y": 15.051130200000003
   },
-  "Base Akri": {
+  "major-Base Akri": {
+    "name": "Base Akri",
     "region": "OarbreakerHex",
     "major": 1,
     "x": -75.62977089294674,
     "y": 17.567617319999997
   },
-  "Castor": {
+  "minor-Castor": {
+    "name": "Castor",
     "region": "OarbreakerHex",
     "major": 0,
     "x": -102.86602111947136,
     "y": 17.871371999999994
   },
-  "Crach Woods": {
+  "minor-Crach Woods": {
+    "name": "Crach Woods",
     "region": "OarbreakerHex",
     "major": 0,
     "x": -95.04356989529663,
     "y": 23.18671296
   },
-  "Fogwood": {
+  "minor-Fogwood": {
+    "name": "Fogwood",
     "region": "OarbreakerHex",
     "major": 0,
     "x": -83.60052529557183,
     "y": 31.317474239999996
   },
-  "Gold": {
+  "major-Gold": {
+    "name": "Gold",
     "region": "OarbreakerHex",
     "major": 1,
     "x": -92.85041363024928,
     "y": 29.97184032
   },
-  "Grisly Refuge": {
+  "minor-Grisly Refuge": {
+    "name": "Grisly Refuge",
     "region": "OarbreakerHex",
     "major": 0,
     "x": -100.80353727985803,
     "y": 12.484767600000001
   },
-  "Integrum": {
+  "major-Integrum": {
+    "name": "Integrum",
     "region": "OarbreakerHex",
     "major": 1,
     "x": -85.73389712499669,
     "y": 8.144064
   },
-  "Kofteri Channel": {
+  "minor-Kofteri Channel": {
+    "name": "Kofteri Channel",
     "region": "OarbreakerHex",
     "major": 0,
     "x": -94.4841271839364,
     "y": 5.9375246399999995
   },
-  "Lion's Head": {
+  "major-Lion's Head": {
+    "name": "Lion's Head",
     "region": "OarbreakerHex",
     "major": 1,
     "x": -99.88110092116798,
     "y": 3.7129625999999973
   },
-  "Martius": {
+  "minor-Martius": {
+    "name": "Martius",
     "region": "OarbreakerHex",
     "major": 0,
     "x": -78.46680152653258,
     "y": 25.753625999999997
   },
-  "Mount Marce": {
+  "minor-Mount Marce": {
+    "name": "Mount Marce",
     "region": "OarbreakerHex",
     "major": 0,
     "x": -89.52404552671379,
     "y": 24.75559296
   },
-  "Neptune's Throne": {
+  "minor-Neptune's Throne": {
+    "name": "Neptune's Throne",
     "region": "OarbreakerHex",
     "major": 0,
     "x": -88.52239943618419,
     "y": 29.59228692
   },
-  "Oasis": {
+  "minor-Oasis": {
+    "name": "Oasis",
     "region": "OarbreakerHex",
     "major": 0,
     "x": -90.02943578211205,
     "y": 2.998116000000003
   },
-  "Obitum": {
+  "minor-Obitum": {
+    "name": "Obitum",
     "region": "OarbreakerHex",
     "major": 0,
     "x": -89.76469805155806,
     "y": 8.950705200000002
   },
-  "Pollux": {
+  "minor-Pollux": {
+    "name": "Pollux",
     "region": "OarbreakerHex",
     "major": 0,
     "x": -104.7437380927771,
     "y": 17.507667600000005
   },
-  "Posterus": {
+  "major-Posterus": {
+    "name": "Posterus",
     "region": "OarbreakerHex",
     "major": 1,
     "x": -80.4974998782379,
     "y": 11.678742
   },
-  "Reliqua": {
+  "major-Reliqua": {
+    "name": "Reliqua",
     "region": "OarbreakerHex",
     "major": 1,
     "x": -86.35823770165554,
     "y": 28.309757039999994
   },
-  "Sandalwood Beach": {
+  "minor-Sandalwood Beach": {
+    "name": "Sandalwood Beach",
     "region": "OarbreakerHex",
     "major": 0,
     "x": -92.16559482769644,
     "y": 25.273612800000002
   },
-  "Sheep's Head": {
+  "minor-Sheep's Head": {
+    "name": "Sheep's Head",
     "region": "OarbreakerHex",
     "major": 0,
     "x": -95.78035853592041,
     "y": 1.3837716000000029
   },
-  "Silver": {
+  "minor-Silver": {
+    "name": "Silver",
     "region": "OarbreakerHex",
     "major": 0,
     "x": -102.18843951801286,
     "y": 26.007105600000003
   },
-  "Skelter Course": {
+  "major-Skelter Course": {
+    "name": "Skelter Course",
     "region": "OarbreakerHex",
     "major": 1,
     "x": -88.45480455993207,
     "y": 20.6716014
   },
-  "Skull Beach": {
+  "minor-Skull Beach": {
+    "name": "Skull Beach",
     "region": "OarbreakerHex",
     "major": 0,
     "x": -93.33138446341398,
     "y": 19.760824080000006
   },
-  "The Conclave": {
+  "major-The Conclave": {
+    "name": "The Conclave",
     "region": "OarbreakerHex",
     "major": 1,
     "x": -92.29336821577078,
     "y": 13.506552
   },
-  "The Dirk": {
+  "minor-The Dirk": {
+    "name": "The Dirk",
     "region": "OarbreakerHex",
     "major": 0,
     "x": -95.26752240194651,
     "y": 7.616854799999999
   },
-  "The Emblem": {
+  "minor-The Emblem": {
+    "name": "The Emblem",
     "region": "OarbreakerHex",
     "major": 0,
     "x": -83.39771655666823,
     "y": 26.843785920000002
   },
-  "The Ides": {
+  "major-The Ides": {
+    "name": "The Ides",
     "region": "OarbreakerHex",
     "major": 1,
     "x": -78.09103324239456,
     "y": 21.846866399999996
   },
-  "Astero's Spear": {
+  "minor-Astero's Spear": {
+    "name": "Astero's Spear",
     "region": "AcrithiaHex",
     "major": 0,
     "x": 37.33523541343975,
     "y": -78.71946948
   },
-  "Camp Omicron": {
+  "major-Camp Omicron": {
+    "name": "Camp Omicron",
     "region": "AcrithiaHex",
     "major": 1,
     "x": 40.876734619580134,
     "y": -76.44629664
   },
-  "Duelling Kegs": {
+  "minor-Duelling Kegs": {
+    "name": "Duelling Kegs",
     "region": "AcrithiaHex",
     "major": 0,
     "x": 24.61952380512183,
     "y": -97.639371
   },
-  "Fated Heel": {
+  "minor-Fated Heel": {
+    "name": "Fated Heel",
     "region": "AcrithiaHex",
     "major": 0,
     "x": 35.62002415807831,
     "y": -84.1702788
   },
-  "Final March": {
+  "minor-Final March": {
+    "name": "Final March",
     "region": "AcrithiaHex",
     "major": 0,
     "x": 44.74748615337046,
     "y": -82.53030852
   },
-  "Heir Apparent": {
+  "major-Heir Apparent": {
+    "name": "Heir Apparent",
     "region": "AcrithiaHex",
     "major": 1,
     "x": 30.226552627579622,
     "y": -75.389873904
   },
-  "Legion Ranch": {
+  "major-Legion Ranch": {
+    "name": "Legion Ranch",
     "region": "AcrithiaHex",
     "major": 1,
     "x": 42.49010128745652,
     "y": -88.70107680000001
   },
-  "Nereid Keep": {
+  "major-Nereid Keep": {
+    "name": "Nereid Keep",
     "region": "AcrithiaHex",
     "major": 1,
     "x": 40.87761671841541,
     "y": -94.85788176
   },
-  "Patridia": {
+  "major-Patridia": {
+    "name": "Patridia",
     "region": "AcrithiaHex",
     "major": 1,
     "x": 27.504568134170057,
     "y": -93.947976
   },
-  "Riverlands": {
+  "minor-Riverlands": {
+    "name": "Riverlands",
     "region": "AcrithiaHex",
     "major": 0,
     "x": 31.910193307897273,
     "y": -101.90793096
   },
-  "Swordfort": {
+  "major-Swordfort": {
+    "name": "Swordfort",
     "region": "AcrithiaHex",
     "major": 1,
     "x": 22.434262366219443,
     "y": -82.56176784
   },
-  "The Brinehold": {
+  "major-The Brinehold": {
+    "name": "The Brinehold",
     "region": "AcrithiaHex",
     "major": 1,
     "x": 31.84099178131605,
     "y": -90.049428
   },
-  "Thetus Ring": {
+  "major-Thetus Ring": {
+    "name": "Thetus Ring",
     "region": "AcrithiaHex",
     "major": 1,
     "x": 29.02125144883982,
     "y": -83.64756456
   },
-  "Weary Slumber": {
+  "minor-Weary Slumber": {
+    "name": "Weary Slumber",
     "region": "AcrithiaHex",
     "major": 0,
     "x": 24.242017511921475,
     "y": -77.35676688
   },
-  "Borderlane": {
+  "major-Borderlane": {
+    "name": "Borderlane",
     "region": "MooringCountyHex",
     "major": 1,
     "x": -24.445455552662136,
     "y": 69.50319768
   },
-  "Gravekeeper's Holdfast": {
+  "major-Gravekeeper's Holdfast": {
+    "name": "Gravekeeper's Holdfast",
     "region": "MooringCountyHex",
     "major": 1,
     "x": -33.53701213471338,
     "y": 47.3490702
   },
-  "Headstone": {
+  "major-Headstone": {
+    "name": "Headstone",
     "region": "MooringCountyHex",
     "major": 1,
     "x": -31.414179349478363,
     "y": 54.17258939999999
   },
-  "Luch's Workshop": {
+  "major-Luch's Workshop": {
+    "name": "Luch's Workshop",
     "region": "MooringCountyHex",
     "major": 1,
     "x": -21.171487112925995,
     "y": 64.71391176
   },
-  "Lyon's Wood": {
+  "minor-Lyon's Wood": {
+    "name": "Lyon's Wood",
     "region": "MooringCountyHex",
     "major": 0,
     "x": -14.398599234154283,
     "y": 57.853148399999995
   },
-  "MacConmara Barrows": {
+  "major-MacConmara Barrows": {
+    "name": "MacConmara Barrows",
     "region": "MooringCountyHex",
     "major": 1,
     "x": -26.94457041758671,
     "y": 43.0021476
   },
-  "Moon's Walk": {
+  "minor-Moon's Walk": {
+    "name": "Moon's Walk",
     "region": "MooringCountyHex",
     "major": 0,
     "x": -33.68563747461396,
     "y": 59.68851839999999
   },
-  "Morrighan's Grave": {
+  "major-Morrighan's Grave": {
+    "name": "Morrighan's Grave",
     "region": "MooringCountyHex",
     "major": 1,
     "x": -20.887968409055365,
     "y": 50.1480648
   },
-  "Ogmaran": {
+  "major-Ogmaran": {
+    "name": "Ogmaran",
     "region": "MooringCountyHex",
     "major": 1,
     "x": -33.2517890928481,
     "y": 65.86443576
   },
-  "Reaching River": {
-    "region": "SpeakingWoodsHex",
-    "major": 0,
-    "x": -21.662939209065588,
-    "y": 83.52505944
+  "major-Reaching River": {
+    "name": "Reaching River",
+    "region": "MooringCountyHex",
+    "major": 1,
+    "x": -41.76924898232271,
+    "y": 62.25267744
   },
-  "Riverhill": {
+  "minor-Riverhill": {
+    "name": "Riverhill",
     "region": "MooringCountyHex",
     "major": 0,
     "x": -23.79242223801728,
     "y": 63.41625684
   },
-  "Scáth Copse": {
+  "minor-Scáth Copse": {
+    "name": "Scáth Copse",
     "region": "MooringCountyHex",
     "major": 0,
     "x": -15.24882112924233,
     "y": 51.85360188
   },
-  "The Cut": {
+  "major-The Cut": {
+    "name": "The Cut",
     "region": "MooringCountyHex",
     "major": 1,
     "x": -40.70759439807814,
     "y": 45.302963039999995
   },
-  "The Graveyard": {
+  "minor-The Graveyard": {
+    "name": "The Graveyard",
     "region": "MooringCountyHex",
     "major": 0,
     "x": -35.62273524642201,
     "y": 52.5709044
   },
-  "The Mound": {
+  "minor-The Mound": {
+    "name": "The Mound",
     "region": "MooringCountyHex",
     "major": 0,
     "x": -29.170344386314067,
     "y": 49.147891200000004
   },
-  "The Spade": {
+  "major-The Spade": {
+    "name": "The Spade",
     "region": "MooringCountyHex",
     "major": 1,
     "x": -41.02070290368901,
     "y": 56.28024468000001
   },
-  "The Wind Hills": {
+  "major-The Wind Hills": {
+    "name": "The Wind Hills",
     "region": "MooringCountyHex",
     "major": 1,
     "x": -35.56034151089892,
     "y": 39.81273012
   },
-  "Wiccwalk": {
+  "major-Wiccwalk": {
+    "name": "Wiccwalk",
     "region": "MooringCountyHex",
     "major": 1,
     "x": -19.051142661163162,
     "y": 43.4655648
   },
-  "Wiccwood": {
+  "minor-Wiccwood": {
+    "name": "Wiccwood",
     "region": "MooringCountyHex",
     "major": 0,
     "x": -24.442063920052785,
     "y": 55.74825
   },
-  "Bannerwatch": {
+  "minor-Bannerwatch": {
+    "name": "Bannerwatch",
     "region": "WeatheredExpanseHex",
     "major": 0,
     "x": 44.21739546781562,
     "y": 22.555920959999995
   },
-  "Barrowsfield": {
+  "minor-Barrowsfield": {
+    "name": "Barrowsfield",
     "region": "WeatheredExpanseHex",
     "major": 0,
     "x": 60.25656699708108,
     "y": 37.2456792
   },
-  "Crow's Nest": {
+  "major-Crow's Nest": {
+    "name": "Crow's Nest",
     "region": "WeatheredExpanseHex",
     "major": 1,
     "x": 53.577929009413396,
     "y": 35.191985759999994
   },
-  "Dullahan's Crest": {
+  "minor-Dullahan's Crest": {
+    "name": "Dullahan's Crest",
     "region": "WeatheredExpanseHex",
     "major": 0,
     "x": 48.55626587921442,
     "y": 31.791461760000004
   },
-  "Eapoe": {
+  "minor-Eapoe": {
+    "name": "Eapoe",
     "region": "WeatheredExpanseHex",
     "major": 0,
     "x": 60.68053811662966,
     "y": 29.8146852
   },
-  "Foxcatcher": {
+  "major-Foxcatcher": {
+    "name": "Foxcatcher",
     "region": "WeatheredExpanseHex",
     "major": 1,
     "x": 63.82357432331064,
     "y": 25.9891164
   },
-  "Frostmarch": {
+  "major-Frostmarch": {
+    "name": "Frostmarch",
     "region": "WeatheredExpanseHex",
     "major": 1,
     "x": 48.793792398761184,
     "y": 37.325012400000006
   },
-  "Huntsfort": {
+  "major-Huntsfort": {
+    "name": "Huntsfort",
     "region": "WeatheredExpanseHex",
     "major": 1,
     "x": 62.550107107244415,
     "y": 34.740918
   },
-  "Kirkyard": {
+  "minor-Kirkyard": {
+    "name": "Kirkyard",
     "region": "WeatheredExpanseHex",
     "major": 0,
     "x": 54.691865200874275,
     "y": 31.577472
   },
-  "Necropolis": {
+  "major-Necropolis": {
+    "name": "Necropolis",
     "region": "WeatheredExpanseHex",
     "major": 1,
     "x": 56.79507024779386,
     "y": 29.206044
   },
-  "Port of Rime": {
+  "major-Port of Rime": {
+    "name": "Port of Rime",
     "region": "WeatheredExpanseHex",
     "major": 1,
     "x": 70.70659028791358,
     "y": 49.32841788
   },
-  "Revenant's Path": {
+  "minor-Revenant's Path": {
+    "name": "Revenant's Path",
     "region": "WeatheredExpanseHex",
     "major": 0,
     "x": 65.19463110156602,
     "y": 48.47422716
   },
-  "Rime Wastes": {
+  "minor-Rime Wastes": {
+    "name": "Rime Wastes",
     "region": "WeatheredExpanseHex",
     "major": 0,
     "x": 52.24105543163995,
     "y": 39.94344072
   },
-  "Shattered Advance": {
+  "major-Shattered Advance": {
+    "name": "Shattered Advance",
     "region": "WeatheredExpanseHex",
     "major": 1,
     "x": 58.542627759832726,
     "y": 42.89355072
   },
-  "Spirit Watch": {
+  "major-Spirit Watch": {
+    "name": "Spirit Watch",
     "region": "WeatheredExpanseHex",
     "major": 1,
     "x": 69.47316379103235,
     "y": 27.881319599999998
   },
-  "The Ivory Bank": {
+  "minor-The Ivory Bank": {
+    "name": "The Ivory Bank",
     "region": "WeatheredExpanseHex",
     "major": 0,
     "x": 59.88312284799872,
     "y": 20.62716372
   },
-  "The Ivory Sea": {
+  "minor-The Ivory Sea": {
+    "name": "The Ivory Sea",
     "region": "WeatheredExpanseHex",
     "major": 0,
     "x": 49.69915212212925,
     "y": 27.874026
   },
-  "The Spear": {
+  "minor-The Spear": {
+    "name": "The Spear",
     "region": "WeatheredExpanseHex",
     "major": 0,
     "x": 71.49861153463758,
     "y": 42.897279600000005
   },
-  "The Stand": {
+  "minor-The Stand": {
+    "name": "The Stand",
     "region": "WeatheredExpanseHex",
     "major": 0,
     "x": 46.06288611164183,
     "y": 40.85726256
   },
-  "The Weathered Wall": {
+  "minor-The Weathered Wall": {
+    "name": "The Weathered Wall",
     "region": "WeatheredExpanseHex",
     "major": 0,
     "x": 49.85556628666538,
     "y": 47.321623079999995
   },
-  "The Weathering Halls": {
+  "major-The Weathering Halls": {
+    "name": "The Weathering Halls",
     "region": "WeatheredExpanseHex",
     "major": 1,
     "x": 61.515361110089984,
     "y": 48.341376
   },
-  "Wightwalk": {
+  "major-Wightwalk": {
+    "name": "Wightwalk",
     "region": "WeatheredExpanseHex",
     "major": 1,
     "x": 71.05927643160554,
     "y": 36.07672932
   },
-  "Wraith's Gate": {
+  "minor-Wraith's Gate": {
+    "name": "Wraith's Gate",
     "region": "WeatheredExpanseHex",
     "major": 0,
     "x": 64.33231090086913,
     "y": 38.4042258
   },
-  "Bastard's Blade": {
+  "minor-Bastard's Blade": {
+    "name": "Bastard's Blade",
     "region": "LochMorHex",
     "major": 0,
     "x": -42.413992563238466,
     "y": -29.11636584
   },
-  "Chattering Prairie": {
+  "minor-Chattering Prairie": {
+    "name": "Chattering Prairie",
     "region": "LochMorHex",
     "major": 0,
     "x": -24.330298838362303,
     "y": -11.034117720000001
   },
-  "Escape": {
+  "minor-Escape": {
+    "name": "Escape",
     "region": "LochMorHex",
     "major": 0,
     "x": -21.249687128426757,
     "y": -32.5924488
   },
-  "Fallen Fields": {
+  "minor-Fallen Fields": {
+    "name": "Fallen Fields",
     "region": "LochMorHex",
     "major": 0,
     "x": -29.93265070794747,
     "y": -19.1439972
   },
-  "Feirmor": {
+  "major-Feirmor": {
+    "name": "Feirmor",
     "region": "LochMorHex",
     "major": 1,
     "x": -30.288086655501523,
     "y": -15.632868959999996
   },
-  "Lake Severspring": {
+  "minor-Lake Severspring": {
+    "name": "Lake Severspring",
     "region": "LochMorHex",
     "major": 0,
     "x": -45.58196198770456,
     "y": -24.4324242
   },
-  "Loch Mor": {
+  "minor-Loch Mor": {
+    "name": "Loch Mor",
     "region": "LochMorHex",
     "major": 0,
     "x": -31.9095210774755,
     "y": -9.7424928
   },
-  "Market Road": {
+  "major-Market Road": {
+    "name": "Market Road",
     "region": "LochMorHex",
     "major": 1,
     "x": -42.68939529271702,
     "y": -18.5447016
   },
-  "Mercy's Wish": {
+  "major-Mercy's Wish": {
+    "name": "Mercy's Wish",
     "region": "LochMorHex",
     "major": 1,
     "x": -32.28363906360405,
     "y": -4.69296288
   },
-  "Missing Bones": {
+  "minor-Missing Bones": {
+    "name": "Missing Bones",
     "region": "LochMorHex",
     "major": 0,
     "x": -15.658731044642877,
     "y": -11.058236999999998
   },
-  "Moon's Copse": {
+  "major-Moon's Copse": {
+    "name": "Moon's Copse",
     "region": "LochMorHex",
     "major": 1,
     "x": -19.137295699716027,
     "y": -18.2880468
   },
-  "Ousterdown": {
+  "minor-Ousterdown": {
+    "name": "Ousterdown",
     "region": "LochMorHex",
     "major": 0,
     "x": -42.6411754139265,
     "y": -23.827382280000002
   },
-  "Pockfields": {
+  "minor-Pockfields": {
+    "name": "Pockfields",
     "region": "LochMorHex",
     "major": 0,
     "x": -28.926021299398403,
     "y": -23.789561040000002
   },
-  "Rip": {
+  "minor-Rip": {
+    "name": "Rip",
     "region": "LochMorHex",
     "major": 0,
     "x": -30.93397505271906,
     "y": -28.1308716
   },
-  "Tear": {
+  "minor-Tear": {
+    "name": "Tear",
     "region": "LochMorHex",
     "major": 0,
     "x": -23.051230585676596,
     "y": -27.9931104
   },
-  "The Founding Fields": {
+  "minor-The Founding Fields": {
+    "name": "The Founding Fields",
     "region": "LochMorHex",
     "major": 0,
     "x": -29.660248029031695,
     "y": -33.495138
   },
-  "The Glean": {
+  "minor-The Glean": {
+    "name": "The Glean",
     "region": "LochMorHex",
     "major": 0,
     "x": -45.3328251851845,
     "y": -17.87850576
   },
-  "The Reaping Road": {
+  "minor-The Reaping Road": {
+    "name": "The Reaping Road",
     "region": "LochMorHex",
     "major": 0,
     "x": -38.698505805068365,
     "y": -1.212178680000001
   },
-  "The Roilfort": {
+  "major-The Roilfort": {
+    "name": "The Roilfort",
     "region": "LochMorHex",
     "major": 1,
     "x": -26.896221258523912,
     "y": -27.331115399999998
   },
-  "Tomb of the First": {
+  "major-Tomb of the First": {
+    "name": "Tomb of the First",
     "region": "LochMorHex",
     "major": 1,
     "x": -40.10477088075561,
     "y": -7.45064172
   },
-  "Westmarch": {
+  "major-Westmarch": {
+    "name": "Westmarch",
     "region": "LochMorHex",
     "major": 1,
     "x": -25.01277646247957,
     "y": -5.64326316
   },
-  "Widow's Wail": {
+  "minor-Widow's Wail": {
+    "name": "Widow's Wail",
     "region": "LochMorHex",
     "major": 0,
     "x": -37.24333288000983,
     "y": -27.44640108
   },
-  "Allsight": {
+  "major-Allsight": {
+    "name": "Allsight",
     "region": "MorgensCrossingHex",
     "major": 1,
     "x": 97.77059928531472,
     "y": 66.65779296
   },
-  "Bastard's Block": {
+  "major-Bastard's Block": {
+    "name": "Bastard's Block",
     "region": "MorgensCrossingHex",
     "major": 1,
     "x": 98.7766637681724,
     "y": 59.838440399999996
   },
-  "Callum's Descent": {
+  "minor-Callum's Descent": {
+    "name": "Callum's Descent",
     "region": "MorgensCrossingHex",
     "major": 0,
     "x": 85.63349546126074,
     "y": 40.140032399999996
   },
-  "Crimson Thread": {
+  "minor-Crimson Thread": {
+    "name": "Crimson Thread",
     "region": "MorgensCrossingHex",
     "major": 0,
     "x": 89.9677982468339,
     "y": 63.38089368
   },
-  "Eversus": {
+  "major-Eversus": {
+    "name": "Eversus",
     "region": "MorgensCrossingHex",
     "major": 1,
     "x": 88.46036200501558,
     "y": 67.617215496
   },
-  "Lividus": {
+  "major-Lividus": {
+    "name": "Lividus",
     "region": "MorgensCrossingHex",
     "major": 1,
     "x": 99.09467661028592,
     "y": 52.6196484
   },
-  "Quietus": {
+  "major-Quietus": {
+    "name": "Quietus",
     "region": "MorgensCrossingHex",
     "major": 1,
     "x": 85.77167445633071,
     "y": 58.94261928
   },
-  "Rising Calm": {
+  "minor-Rising Calm": {
+    "name": "Rising Calm",
     "region": "MorgensCrossingHex",
     "major": 0,
     "x": 93.37196189736557,
     "y": 58.243893119999996
   },
-  "The Bastard Sea": {
+  "minor-The Bastard Sea": {
+    "name": "The Bastard Sea",
     "region": "MorgensCrossingHex",
     "major": 0,
     "x": 88.16534109814205,
     "y": 49.2123924
   },
-  "Ultimus": {
+  "minor-Ultimus": {
+    "name": "Ultimus",
     "region": "MorgensCrossingHex",
-    "major": 1,
+    "major": 0,
     "x": 106.4014512757264,
     "y": 46.87586640000001
   },
-  "Velian Storm": {
+  "minor-Velian Storm": {
+    "name": "Velian Storm",
     "region": "MorgensCrossingHex",
     "major": 0,
     "x": 99.84450842487509,
     "y": 56.813565600000004
   },
-  "Warmonger Bay": {
+  "major-Warmonger Bay": {
+    "name": "Warmonger Bay",
     "region": "MorgensCrossingHex",
-    "major": 0,
-    "x": 97.25141220600369,
-    "y": 40.0991652
+    "major": 1,
+    "x": 98.86354967206296,
+    "y": 41.352498
   },
-  "Buckler Sound": {
+  "major-Buckler Sound": {
+    "name": "Buckler Sound",
     "region": "StonecradleHex",
     "major": 1,
     "x": -61.12884213829112,
     "y": 35.4719592
   },
-  "Fading Lights": {
+  "minor-Daihbi Point": {
+    "name": "Daihbi Point",
+    "region": "StonecradleHex",
+    "major": 0,
+    "x": -69.80987981587788,
+    "y": 49.817218319999995
+  },
+  "major-Fading Lights": {
+    "name": "Fading Lights",
     "region": "StonecradleHex",
     "major": 1,
     "x": -51.839513343956554,
     "y": 29.10379176
   },
-  "Longing": {
+  "minor-Longing": {
+    "name": "Longing",
     "region": "StonecradleHex",
     "major": 0,
     "x": -66.97378864665006,
     "y": 27.6452838
   },
-  "The Cord": {
+  "major-The Cord": {
+    "name": "The Cord",
     "region": "StonecradleHex",
     "major": 1,
     "x": -58.97137595792828,
     "y": 29.006562599999995
   },
-  "The Heir's Knife": {
+  "major-The Dais": {
+    "name": "The Dais",
+    "region": "StonecradleHex",
+    "major": 1,
+    "x": -57.69679718093578,
+    "y": 50.319571319999994
+  },
+  "major-The Heir's Knife": {
+    "name": "The Heir's Knife",
     "region": "StonecradleHex",
     "major": 1,
     "x": -70.86338433897048,
     "y": 26.206336800000003
   },
-  "The Loneliest Shore": {
+  "minor-The Loneliest Shore": {
+    "name": "The Loneliest Shore",
     "region": "StonecradleHex",
     "major": 0,
     "x": -60.52342096044943,
     "y": 44.843884560000006
   },
-  "The Long Fast": {
+  "major-The Long Fast": {
+    "name": "The Long Fast",
     "region": "StonecradleHex",
     "major": 1,
     "x": -65.01362120516178,
     "y": 21.966674400000002
   },
-  "The Pram": {
+  "minor-The Pram": {
+    "name": "The Pram",
     "region": "StonecradleHex",
     "major": 0,
     "x": -66.08432873400328,
     "y": 36.81532188
   },
-  "The Reach": {
+  "major-The Reach": {
+    "name": "The Reach",
     "region": "StonecradleHex",
     "major": 1,
-    "x": -55.92329922892617,
-    "y": 46.12116168
+    "x": -53.21081330214531,
+    "y": 46.609610759999995
   },
-  "The Roiling Comets": {
+  "minor-The Roiling Comets": {
+    "name": "The Roiling Comets",
     "region": "StonecradleHex",
     "major": 0,
     "x": -46.75639968382226,
     "y": 34.4048868
   },
-  "Trammel Pool": {
+  "minor-The Whorl": {
+    "name": "The Whorl",
+    "region": "StonecradleHex",
+    "major": 0,
+    "x": -69.65990721757714,
+    "y": 41.52797064
+  },
+  "major-Trammel Pool": {
+    "name": "Trammel Pool",
     "region": "StonecradleHex",
     "major": 1,
     "x": -50.115866446906004,
     "y": 37.41048576
   },
-  "World's End": {
+  "major-World's End": {
+    "name": "World's End",
     "region": "StonecradleHex",
     "major": 1,
     "x": -73.41936090770284,
     "y": 34.1216406
   },
-  "A Captain's Repose": {
+  "minor-A Captain's Repose": {
+    "name": "A Captain's Repose",
     "region": "AllodsBightHex",
     "major": 0,
     "x": 67.01572871961298,
     "y": -48.081294
   },
-  "Allod's Children": {
+  "minor-Allod's Children": {
+    "name": "Allod's Children",
     "region": "AllodsBightHex",
     "major": 0,
     "x": 47.005857456860326,
     "y": -32.910389280000004
   },
-  "Belaying Trace": {
+  "major-Belaying Trace": {
+    "name": "Belaying Trace",
     "region": "AllodsBightHex",
     "major": 1,
     "x": 52.596667632684174,
     "y": -38.2144932
   },
-  "Blunder Bight": {
+  "minor-Blunder Bight": {
+    "name": "Blunder Bight",
     "region": "AllodsBightHex",
     "major": 0,
     "x": 71.10404066118886,
     "y": -22.59145836
   },
-  "Breath of Cetus": {
+  "minor-Breath of Cetus": {
+    "name": "Breath of Cetus",
     "region": "AllodsBightHex",
     "major": 0,
     "x": 71.28883246902807,
     "y": -41.0807268
   },
-  "Gangrenous Hollow": {
+  "minor-Gangrenous Hollow": {
+    "name": "Gangrenous Hollow",
     "region": "AllodsBightHex",
     "major": 0,
     "x": 55.14212136922225,
     "y": -44.5134204
   },
-  "Harpy's Perch": {
+  "minor-Harpy's Perch": {
+    "name": "Harpy's Perch",
     "region": "AllodsBightHex",
     "major": 0,
     "x": 63.236187119913296,
     "y": -32.3934192
   },
-  "Homesick": {
+  "major-Homesick": {
+    "name": "Homesick",
     "region": "AllodsBightHex",
     "major": 1,
     "x": 57.03433976470929,
     "y": -31.775641919999998
   },
-  "Mercy's Wail": {
+  "major-Mercy's Wail": {
+    "name": "Mercy's Wail",
     "region": "AllodsBightHex",
     "major": 1,
     "x": 63.6532789493464,
     "y": -38.5330572
   },
-  "Rumhold": {
+  "major-Rumhold": {
+    "name": "Rumhold",
     "region": "AllodsBightHex",
     "major": 1,
     "x": 53.024677617587884,
     "y": -26.770996079999996
   },
-  "Scurvyshire": {
+  "major-Scurvyshire": {
+    "name": "Scurvyshire",
     "region": "AllodsBightHex",
     "major": 1,
     "x": 57.844716315943444,
     "y": -25.55883252
   },
-  "The List": {
+  "minor-The List": {
+    "name": "The List",
     "region": "AllodsBightHex",
     "major": 0,
     "x": 51.776559727192776,
     "y": -47.07345492
   },
-  "The Rumroad": {
+  "minor-The Rumroad": {
+    "name": "The Rumroad",
     "region": "AllodsBightHex",
     "major": 0,
     "x": 50.17779466331639,
     "y": -28.23259212
   },
-  "The Stone Plank": {
+  "major-The Stone Plank": {
+    "name": "The Stone Plank",
     "region": "AllodsBightHex",
     "major": 1,
     "x": 73.34623031465003,
     "y": -34.058904479999995
   },
-  "The Turncoat": {
+  "major-The Turncoat": {
+    "name": "The Turncoat",
     "region": "AllodsBightHex",
     "major": 1,
     "x": 58.51554000940706,
     "y": -44.30811024
   },
-  "Titan's End": {
+  "minor-Titan's End": {
+    "name": "Titan's End",
     "region": "AllodsBightHex",
     "major": 0,
     "x": 64.69357900990242,
     "y": -21.925065816
   },
-  "Witch's Last Flight": {
+  "minor-Witch's Last Flight": {
+    "name": "Witch's Last Flight",
     "region": "AllodsBightHex",
     "major": 0,
     "x": 68.051080795986,
     "y": -27.7069338
   },
-  "Baccae Ridge": {
+  "major-Baccae Ridge": {
+    "name": "Baccae Ridge",
     "region": "KalokaiHex",
     "major": 1,
     "x": -1.2723167598476515,
     "y": -116.09683559999999
   },
-  "Bleary": {
+  "minor-Bleary": {
+    "name": "Bleary",
     "region": "KalokaiHex",
     "major": 0,
     "x": -11.245375243187254,
     "y": -110.7972144
   },
-  "Camp Tau": {
+  "major-Camp Tau": {
+    "name": "Camp Tau",
     "region": "KalokaiHex",
     "major": 1,
     "x": 8.560416509625302,
     "y": -111.3891552
   },
-  "Clarity Meadow": {
+  "minor-Clarity Meadow": {
+    "name": "Clarity Meadow",
     "region": "KalokaiHex",
     "major": 0,
     "x": 9.001630541373395,
     "y": -117.981252
   },
-  "Hallow": {
+  "major-Hallow": {
+    "name": "Hallow",
     "region": "KalokaiHex",
     "major": 1,
     "x": 0.07879178141084964,
     "y": -106.3001664
   },
-  "Lost Greensward": {
+  "major-Lost Greensward": {
+    "name": "Lost Greensward",
     "region": "KalokaiHex",
     "major": 1,
     "x": 3.1588980096387154,
     "y": -122.4229212
   },
-  "Night's Regret": {
+  "major-Night's Regret": {
+    "name": "Night's Regret",
     "region": "KalokaiHex",
     "major": 1,
     "x": -11.049196379082838,
     "y": -107.0591436
   },
-  "Sourtooth": {
+  "major-Sourtooth": {
+    "name": "Sourtooth",
     "region": "KalokaiHex",
     "major": 1,
     "x": 6.783929315049956,
     "y": -93.548915496
   },
-  "South March": {
+  "minor-South March": {
+    "name": "South March",
     "region": "KalokaiHex",
     "major": 0,
     "x": -3.3364346854748597,
     "y": -108.85848696
   },
-  "Sweethearth": {
+  "major-Sweethearth": {
+    "name": "Sweethearth",
     "region": "KalokaiHex",
     "major": 1,
     "x": 7.20988079220988,
     "y": -97.73555256
   },
-  "The Stumble": {
+  "minor-The Stumble": {
+    "name": "The Stumble",
     "region": "KalokaiHex",
     "major": 0,
     "x": -5.953383738119642,
     "y": -97.3234278
   },
-  "The Vineroad": {
+  "minor-The Vineroad": {
+    "name": "The Vineroad",
     "region": "KalokaiHex",
     "major": 0,
     "x": 14.244494295899187,
     "y": -104.63027328
   },
-  "Vinum Rillet": {
+  "minor-Vinum Rillet": {
+    "name": "Vinum Rillet",
     "region": "KalokaiHex",
     "major": 0,
     "x": -6.771315079284218,
     "y": -119.39781132
   },
-  "Camp Upsilon": {
+  "major-Camp Upsilon": {
+    "name": "Camp Upsilon",
     "region": "RedRiverHex",
     "major": 1,
     "x": -40.13421602161241,
     "y": -81.74530872
   },
-  "Cannonsmoke": {
+  "major-Cannonsmoke": {
+    "name": "Cannonsmoke",
     "region": "RedRiverHex",
     "major": 1,
     "x": -32.7947912285008,
     "y": -95.21051292
   },
-  "Climb": {
+  "major-Climb": {
+    "name": "Climb",
     "region": "RedRiverHex",
     "major": 1,
     "x": -21.675383786271873,
     "y": -77.16743928
   },
-  "Fort Matchwood": {
+  "major-Fort Matchwood": {
+    "name": "Fort Matchwood",
     "region": "RedRiverHex",
     "major": 1,
     "x": -28.510611776273667,
     "y": -86.08054680000001
   },
-  "Fragment Knolls": {
+  "minor-Fragment Knolls": {
+    "name": "Fragment Knolls",
     "region": "RedRiverHex",
     "major": 0,
     "x": -43.78576848898914,
     "y": -85.17060648
   },
-  "Gunpowder Lane": {
+  "minor-Gunpowder Lane": {
+    "name": "Gunpowder Lane",
     "region": "RedRiverHex",
     "major": 0,
     "x": -25.694191161657248,
     "y": -80.76461832
   },
-  "Judicium": {
+  "major-Judicium": {
+    "name": "Judicium",
     "region": "RedRiverHex",
     "major": 1,
     "x": -21.17593252524667,
     "y": -85.21881551999999
   },
-  "Minos": {
+  "major-Minos": {
+    "name": "Minos",
     "region": "RedRiverHex",
     "major": 1,
     "x": -35.891256607324124,
     "y": -89.0115534
   },
-  "Penance": {
+  "major-Penance": {
+    "name": "Penance",
     "region": "RedRiverHex",
     "major": 1,
     "x": -30.27944732463743,
     "y": -77.98289796
   },
-  "Perish": {
+  "minor-Perish": {
+    "name": "Perish",
     "region": "RedRiverHex",
     "major": 0,
     "x": -39.28690563464985,
     "y": -98.96579424
   },
-  "Red Crossing": {
+  "minor-Red Crossing": {
+    "name": "Red Crossing",
     "region": "RedRiverHex",
     "major": 0,
     "x": -25.482703185438954,
     "y": -102.08269296
   },
-  "The Red River": {
+  "minor-The Red River": {
+    "name": "The Red River",
     "region": "AshFieldsHex",
     "major": 0,
     "x": -60.80370848889752,
     "y": -66.49824960000001
   },
-  "Twelve Drops": {
+  "minor-Twelve Drops": {
+    "name": "Twelve Drops",
     "region": "RedRiverHex",
     "major": 0,
     "x": -21.52216504762962,
     "y": -88.4799108
   },
-  "Victoria Hill": {
+  "major-Victoria Hill": {
+    "name": "Victoria Hill",
     "region": "RedRiverHex",
     "major": 1,
     "x": -19.02491373080992,
     "y": -92.280429
   },
-  "Arise": {
+  "major-Arise": {
+    "name": "Arise",
     "region": "OriginHex",
     "major": 1,
     "x": -95.97531484928281,
     "y": -52.684880400000004
   },
-  "Cado": {
+  "minor-Cado": {
+    "name": "Cado",
     "region": "OriginHex",
     "major": 0,
     "x": -103.30485115648791,
     "y": -53.1893034
   },
-  "Dormio": {
+  "major-Dormio": {
+    "name": "Dormio",
     "region": "OriginHex",
     "major": 1,
-    "x": -78.34267542176676,
-    "y": -53.915583600000005
+    "x": -79.8274680784035,
+    "y": -57.2745546
   },
-  "Exorior": {
+  "minor-Exorior": {
+    "name": "Exorior",
     "region": "OriginHex",
     "major": 0,
     "x": -89.73239461117657,
     "y": -67.91476320000001
   },
-  "Finis": {
+  "major-Finis": {
+    "name": "Finis",
     "region": "OriginHex",
     "major": 1,
     "x": -102.77847966899114,
     "y": -46.371388679999995
   },
-  "Initium": {
+  "major-Initium": {
+    "name": "Initium",
     "region": "OriginHex",
     "major": 1,
     "x": -87.94135153874254,
     "y": -48.1291812
   },
-  "Teichotima": {
+  "major-Teichotima": {
+    "name": "Teichotima",
     "region": "OriginHex",
     "major": 1,
     "x": -100.1951418243696,
     "y": -64.08155052000001
   },
-  "Temple Field": {
+  "minor-Temple Field": {
+    "name": "Temple Field",
     "region": "OriginHex",
     "major": 0,
     "x": -83.71742168170279,
     "y": -54.73041696
   },
-  "The Dreamer's Road": {
+  "minor-The Dreamer's Road": {
+    "name": "The Dreamer's Road",
     "region": "OriginHex",
     "major": 0,
     "x": -89.62615366304972,
     "y": -53.428524120000006
   },
-  "The Echo": {
+  "minor-The Echo": {
+    "name": "The Echo",
     "region": "OriginHex",
     "major": 0,
     "x": -83.09225346188603,
     "y": -60.020427600000005
   },
-  "The Sundering": {
+  "minor-The Sundering": {
+    "name": "The Sundering",
     "region": "OriginHex",
     "major": 0,
     "x": -94.1148935810852,
     "y": -58.877478
   },
-  "World Star": {
+  "major-World Star": {
+    "name": "World Star",
     "region": "OriginHex",
     "major": 1,
     "x": -87.08366007062381,
     "y": -63.963342
   },
-  "Austriaca Reservoir": {
+  "minor-Austriaca Reservoir": {
+    "name": "Austriaca Reservoir",
     "region": "HowlCountyHex",
     "major": 0,
     "x": 32.087641081748316,
     "y": 88.27785
   },
-  "Checkpoint Titim": {
+  "minor-Checkpoint Titim": {
+    "name": "Checkpoint Titim",
     "region": "HowlCountyHex",
     "major": 0,
     "x": 32.2109686418098,
     "y": 93.13733375999999
   },
-  "Fort Red": {
+  "major-Fort Red": {
+    "name": "Fort Red",
     "region": "HowlCountyHex",
     "major": 1,
     "x": 47.12227995389033,
     "y": 93.179745
   },
-  "Fort Rider": {
+  "major-Fort Rider": {
+    "name": "Fort Rider",
     "region": "HowlCountyHex",
     "major": 1,
     "x": 25.7842559198983,
     "y": 77.15692656
   },
-  "Great Warden Dam": {
+  "major-Great Warden Dam": {
+    "name": "Great Warden Dam",
     "region": "HowlCountyHex",
     "major": 1,
     "x": 38.421459900492025,
     "y": 95.17639932
   },
-  "Hungry Wolf": {
+  "major-Hungry Wolf": {
+    "name": "Hungry Wolf",
     "region": "HowlCountyHex",
     "major": 1,
     "x": 18.51206227236922,
     "y": 91.43857692
   },
-  "Little Lamb": {
+  "major-Little Lamb": {
+    "name": "Little Lamb",
     "region": "HowlCountyHex",
     "major": 1,
     "x": 35.60760618517243,
     "y": 78.6453894
   },
-  "Sickleshire": {
+  "major-Sickleshire": {
+    "name": "Sickleshire",
     "region": "HowlCountyHex",
     "major": 1,
     "x": 40.25949032436192,
     "y": 84.31553016
   },
-  "Slipgate Outpost": {
+  "major-Slipgate Outpost": {
+    "name": "Slipgate Outpost",
     "region": "HowlCountyHex",
     "major": 1,
     "x": 27.967082649621503,
     "y": 94.11663708
   },
-  "Snakewall": {
+  "minor-Snakewall": {
+    "name": "Snakewall",
     "region": "HowlCountyHex",
     "major": 0,
     "x": 27.217254160569887,
     "y": 103.28079852
   },
-  "Teller Farm": {
+  "major-Teller Farm": {
+    "name": "Teller Farm",
     "region": "HowlCountyHex",
     "major": 1,
     "x": 27.822415946482636,
     "y": 84.7376532
   },
-  "The Hunting Grounds": {
+  "minor-The Hunting Grounds": {
+    "name": "The Hunting Grounds",
     "region": "HowlCountyHex",
     "major": 0,
     "x": 20.227320500948558,
     "y": 83.67061319999999
   },
-  "Viperwalk": {
+  "minor-Viperwalk": {
+    "name": "Viperwalk",
     "region": "HowlCountyHex",
     "major": 0,
     "x": 43.05918597925232,
     "y": 78.9990876
   },
-  "A Careless Net": {
+  "minor-A Careless Net": {
+    "name": "A Careless Net",
     "region": "ShackledChasmHex",
     "major": 0,
     "x": 29.14935323374729,
     "y": -67.325418
   },
-  "A New Spring": {
+  "minor-A New Spring": {
+    "name": "A New Spring",
     "region": "ShackledChasmHex",
     "major": 0,
     "x": 38.41776273412023,
     "y": -45.47303532
   },
-  "Autumn Pyres": {
+  "minor-Autumn Pyres": {
+    "name": "Autumn Pyres",
     "region": "ShackledChasmHex",
     "major": 0,
     "x": 32.393091705764704,
     "y": -47.7508032
   },
-  "Final Step": {
+  "minor-Final Step": {
+    "name": "Final Step",
     "region": "ShackledChasmHex",
     "major": 0,
     "x": 23.773924407229018,
     "y": -42.185073599999996
   },
-  "Firstmarch": {
+  "major-Firstmarch": {
+    "name": "Firstmarch",
     "region": "ShackledChasmHex",
     "major": 1,
     "x": 46.17694893193362,
     "y": -49.94382096
   },
-  "Gorgon Grove": {
+  "major-Gorgon Grove": {
+    "name": "Gorgon Grove",
     "region": "ShackledChasmHex",
     "major": 1,
     "x": 20.461768404107914,
     "y": -48.81764808
   },
-  "Hades Ladder": {
+  "minor-Hades Ladder": {
+    "name": "Hades Ladder",
     "region": "ShackledChasmHex",
     "major": 0,
     "x": 28.117269329402056,
     "y": -46.7120916
   },
-  "Legion's Dawn": {
+  "minor-Legion's Dawn": {
+    "name": "Legion's Dawn",
     "region": "ShackledChasmHex",
     "major": 0,
     "x": 25.569935832763534,
     "y": -70.1378172
   },
-  "Limewood Holdfast": {
+  "major-Limewood Holdfast": {
+    "name": "Limewood Holdfast",
     "region": "ShackledChasmHex",
     "major": 1,
     "x": 30.77962901299155,
     "y": -53.098261199999996
   },
-  "Manky Hills": {
+  "minor-Manky Hills": {
+    "name": "Manky Hills",
     "region": "ShackledChasmHex",
     "major": 0,
     "x": 47.971570282772035,
     "y": -57.150387359999996
   },
-  "Reflection": {
+  "major-Reflection": {
+    "name": "Reflection",
     "region": "ShackledChasmHex",
     "major": 1,
     "x": 20.168341261105482,
     "y": -57.75565464
   },
-  "Savages": {
+  "major-Savages": {
+    "name": "Savages",
     "region": "ShackledChasmHex",
     "major": 1,
     "x": 27.401704269425764,
     "y": -42.648847200000006
   },
-  "Silk Farms": {
+  "major-Silk Farms": {
+    "name": "Silk Farms",
     "region": "ShackledChasmHex",
     "major": 1,
     "x": 29.4424461602259,
     "y": -59.94358416
   },
-  "Simo's Run": {
+  "major-Simo's Run": {
+    "name": "Simo's Run",
     "region": "ShackledChasmHex",
-    "major": 0,
-    "x": 39.628792151290824,
-    "y": -66.9462228
+    "major": 1,
+    "x": 40.89000018886921,
+    "y": -66.9231108
   },
-  "Southreach": {
+  "minor-Southreach": {
+    "name": "Southreach",
     "region": "ShackledChasmHex",
     "major": 0,
     "x": 31.025223286635907,
     "y": -39.40091856
   },
-  "The Bell Toll": {
+  "major-The Bell Toll": {
+    "name": "The Bell Toll",
     "region": "ShackledChasmHex",
     "major": 1,
     "x": 36.99720283527202,
     "y": -49.7850804
   },
-  "The Blue": {
+  "minor-The Blue": {
+    "name": "The Blue",
     "region": "ShackledChasmHex",
     "major": 0,
     "x": 33.66395419454447,
     "y": -67.5114012
   },
-  "The First Rung": {
+  "minor-The First Rung": {
+    "name": "The First Rung",
     "region": "ShackledChasmHex",
     "major": 0,
     "x": 25.924577808227397,
     "y": -51.922143000000005
   },
-  "The Foolish Maidens": {
+  "minor-The Foolish Maidens": {
+    "name": "The Foolish Maidens",
     "region": "ShackledChasmHex",
     "major": 0,
     "x": 14.308319051799486,
     "y": -56.6294058
   },
-  "The Grave of Rastus": {
+  "major-The Grave of Rastus": {
+    "name": "The Grave of Rastus",
     "region": "ShackledChasmHex",
     "major": 1,
     "x": 38.21875591602128,
     "y": -41.66252568
   },
-  "The Plunging": {
+  "minor-The Plunging": {
+    "name": "The Plunging",
     "region": "ShackledChasmHex",
     "major": 0,
     "x": 19.187018777623763,
     "y": -63.06631704
   },
-  "The Vanguard": {
+  "major-The Vanguard": {
+    "name": "The Vanguard",
     "region": "ShackledChasmHex",
     "major": 1,
     "x": 39.97353691131211,
     "y": -58.3984584
   },
-  "Widow's Web": {
+  "minor-Widow's Web": {
+    "name": "Widow's Web",
     "region": "ShackledChasmHex",
     "major": 0,
     "x": 33.120719321821156,
     "y": -60.2226504
   },
-  "Calmland": {
+  "minor-Calmland": {
+    "name": "Calmland",
     "region": "SpeakingWoodsHex",
     "major": 0,
     "x": -16.664351568237556,
     "y": 97.36049448
   },
-  "Cursed Court": {
+  "minor-Cursed Court": {
+    "name": "Cursed Court",
     "region": "SpeakingWoodsHex",
     "major": 0,
     "x": -30.73812624821653,
     "y": 92.0642256
   },
-  "Fort Blather": {
+  "major-Fort Blather": {
+    "name": "Fort Blather",
     "region": "SpeakingWoodsHex",
     "major": 1,
     "x": -20.341072950873304,
     "y": 79.098426
   },
-  "Hush": {
+  "major-Hush": {
+    "name": "Hush",
     "region": "SpeakingWoodsHex",
     "major": 1,
     "x": -32.194152589348974,
     "y": 99.97875108
   },
-  "Inari Base": {
+  "major-Inari Base": {
+    "name": "Inari Base",
     "region": "SpeakingWoodsHex",
     "major": 1,
     "x": -20.283674172751113,
     "y": 102.33388188
   },
-  "Mount Rell": {
+  "minor-Mount Rell": {
+    "name": "Mount Rell",
     "region": "SpeakingWoodsHex",
     "major": 0,
     "x": -43.74529835976794,
     "y": 87.67252296000001
   },
-  "Mute": {
+  "minor-Mute": {
+    "name": "Mute",
     "region": "SpeakingWoodsHex",
     "major": 0,
     "x": -38.69247743687364,
     "y": 97.45547687999999
   },
-  "Rell Foothills": {
+  "minor-Reaching River": {
+    "name": "Reaching River",
+    "region": "SpeakingWoodsHex",
+    "major": 0,
+    "x": -21.662939209065588,
+    "y": 83.52505944
+  },
+  "minor-Rell Foothills": {
+    "name": "Rell Foothills",
     "region": "SpeakingWoodsHex",
     "major": 0,
     "x": -37.98743146786188,
     "y": 84.0316194
   },
-  "Sotto Bank": {
+  "major-Sotto Bank": {
+    "name": "Sotto Bank",
     "region": "SpeakingWoodsHex",
     "major": 1,
     "x": -27.790021829058524,
     "y": 88.4454516
   },
-  "Stem": {
+  "major-Stem": {
+    "name": "Stem",
     "region": "SpeakingWoodsHex",
     "major": 1,
     "x": -34.81372174989137,
     "y": 82.32592104
   },
-  "The Filament": {
+  "major-The Filament": {
+    "name": "The Filament",
     "region": "SpeakingWoodsHex",
     "major": 1,
     "x": -38.42180528456072,
     "y": 90.85860072
   },
-  "Tine": {
+  "major-Tine": {
+    "name": "Tine",
     "region": "SpeakingWoodsHex",
     "major": 1,
     "x": -25.3551650791463,
     "y": 96.2793162
   },
-  "Wound": {
+  "major-Wound": {
+    "name": "Wound",
     "region": "SpeakingWoodsHex",
     "major": 1,
     "x": -14.457586372149045,
     "y": 91.7357616
   },
-  "Aspisa": {
+  "minor-Aspisa": {
+    "name": "Aspisa",
     "region": "TerminusHex",
     "major": 0,
     "x": 61.53129500757116,
     "y": -87.33803184
   },
-  "Bay of the Ward": {
+  "minor-Bay of the Ward": {
+    "name": "Bay of the Ward",
     "region": "TerminusHex",
     "major": 0,
     "x": 64.34133973531883,
     "y": -66.69941652
   },
-  "Bloody Palm Fort": {
+  "major-Bloody Palm Fort": {
+    "name": "Bloody Palm Fort",
     "region": "TerminusHex",
     "major": 1,
     "x": 77.99580569939506,
     "y": -72.83029176
   },
-  "Cerberus Wake": {
+  "major-Cerberus Wake": {
+    "name": "Cerberus Wake",
     "region": "TerminusHex",
     "major": 1,
     "x": 53.2813322134331,
     "y": -80.2938528
   },
-  "Dogbone": {
+  "minor-Dogbone": {
+    "name": "Dogbone",
     "region": "TerminusHex",
     "major": 0,
     "x": 51.0604297415251,
     "y": -69.28070256
   },
-  "Martyr's Fang": {
+  "minor-Martyr's Fang": {
+    "name": "Martyr's Fang",
     "region": "TerminusHex",
     "major": 0,
     "x": 62.64132410810235,
     "y": -69.61230936
   },
-  "Rising Loom": {
+  "minor-Rising Loom": {
+    "name": "Rising Loom",
     "region": "TerminusHex",
     "major": 0,
     "x": 62.69306614685108,
     "y": -79.35192359999999
   },
-  "Sever": {
+  "minor-Sever": {
+    "name": "Sever",
     "region": "TerminusHex",
     "major": 0,
     "x": 76.6726740741648,
     "y": -68.603625
   },
-  "The Legion's Bounty": {
+  "minor-The Legion's Bounty": {
+    "name": "The Legion's Bounty",
     "region": "TerminusHex",
     "major": 0,
     "x": 54.598339861264066,
     "y": -76.34682216
   },
-  "The Phalanx": {
+  "minor-The Phalanx": {
+    "name": "The Phalanx",
     "region": "TerminusHex",
     "major": 0,
     "x": 57.96785016344262,
     "y": -76.2766848
   },
-  "The Respite": {
+  "minor-The Respite": {
+    "name": "The Respite",
     "region": "TerminusHex",
     "major": 0,
     "x": 59.16043199243602,
     "y": -80.746668
   },
-  "Therizó": {
+  "major-Therizó": {
+    "name": "Therizó",
     "region": "TerminusHex",
     "major": 1,
     "x": 61.197019039758956,
     "y": -80.5904784
   },
-  "Three Siblings": {
+  "minor-Three Siblings": {
+    "name": "Three Siblings",
     "region": "TerminusHex",
     "major": 0,
     "x": 74.50027498312349,
     "y": -80.8234776
   },
-  "Thunder Plains": {
+  "minor-Thunder Plains": {
+    "name": "Thunder Plains",
     "region": "TerminusHex",
     "major": 0,
     "x": 54.497474228895456,
     "y": -63.42757632
   },
-  "Thunderbolt": {
+  "major-Thunderbolt": {
+    "name": "Thunderbolt",
     "region": "TerminusHex",
     "major": 1,
     "x": 56.68082140524531,
     "y": -57.2513796
   },
-  "Warlord's Stead": {
+  "major-Warlord's Stead": {
+    "name": "Warlord's Stead",
     "region": "TerminusHex",
     "major": 1,
     "x": 52.86151261182418,
     "y": -66.92406552
   },
-  "Winding Bolas": {
+  "major-Winding Bolas": {
+    "name": "Winding Bolas",
     "region": "TerminusHex",
     "major": 1,
     "x": 74.72756092547559,
     "y": -64.2057264
   },
-  "Blackroad": {
+  "minor-Blackroad": {
+    "name": "Blackroad",
     "region": "LinnMercyHex",
     "major": 0,
     "x": -31.8403045859753,
     "y": 30.069030599999998
   },
-  "Fort Duncan": {
+  "major-Fort Duncan": {
+    "name": "Fort Duncan",
     "region": "LinnMercyHex",
     "major": 1,
     "x": -20.55134669019345,
     "y": 8.421753599999999
   },
-  "Gallant Gough Boulevard": {
+  "minor-Gallant Gough Boulevard": {
+    "name": "Gallant Gough Boulevard",
     "region": "LinnMercyHex",
     "major": 0,
     "x": -47.094532443808696,
     "y": 20.512081800000004
   },
-  "Hardline": {
+  "major-Hardline": {
+    "name": "Hardline",
     "region": "LinnMercyHex",
     "major": 1,
     "x": -36.21554307602672,
     "y": 14.803425000000004
   },
-  "Lathair": {
+  "major-Lathair": {
+    "name": "Lathair",
     "region": "LinnMercyHex",
     "major": 1,
     "x": -21.001980307053426,
     "y": 24.771304800000003
   },
-  "Merciful Strait": {
+  "minor-Merciful Strait": {
+    "name": "Merciful Strait",
     "region": "LinnMercyHex",
     "major": 0,
     "x": -16.178616486839523,
     "y": 11.6891118
   },
-  "Mudhole": {
+  "minor-Mudhole": {
+    "name": "Mudhole",
     "region": "LinnMercyHex",
     "major": 0,
     "x": -27.48186920578233,
     "y": 25.11402408
   },
-  "Nathair": {
+  "minor-Nathair": {
+    "name": "Nathair",
     "region": "LinnMercyHex",
     "major": 0,
     "x": -26.490671954236507,
     "y": 21.11519052
   },
-  "Outwich Ranch": {
+  "major-Outwich Ranch": {
+    "name": "Outwich Ranch",
     "region": "LinnMercyHex",
     "major": 1,
     "x": -16.382954141631977,
     "y": 18.4747464
   },
-  "Rotdust": {
+  "major-Rotdust": {
+    "name": "Rotdust",
     "region": "LinnMercyHex",
     "major": 1,
     "x": -26.830483694993763,
     "y": 30.535605360000005
   },
-  "Solas Burn": {
+  "minor-Solas Burn": {
+    "name": "Solas Burn",
     "region": "LinnMercyHex",
     "major": 0,
     "x": -20.791717791422506,
     "y": 27.885146759999998
   },
-  "The Crimson Gardens": {
+  "major-The Crimson Gardens": {
+    "name": "The Crimson Gardens",
     "region": "LinnMercyHex",
     "major": 1,
     "x": -41.6332166217416,
     "y": 13.37719572
   },
-  "The Drone": {
+  "minor-The Drone": {
+    "name": "The Drone",
     "region": "LinnMercyHex",
     "major": 0,
     "x": -43.13009303476039,
     "y": 27.98573004
   },
-  "The First Coin": {
+  "major-The First Coin": {
+    "name": "The First Coin",
     "region": "LinnMercyHex",
     "major": 1,
     "x": -34.19966997072167,
     "y": 10.1357712
   },
-  "The Great Scale": {
+  "minor-The Great Scale": {
+    "name": "The Great Scale",
     "region": "LinnMercyHex",
     "major": 0,
     "x": -34.08647407650007,
     "y": 25.52948532
   },
-  "The Last Grove": {
+  "major-The Last Grove": {
+    "name": "The Last Grove",
     "region": "LinnMercyHex",
     "major": 1,
     "x": -35.268866458438644,
     "y": 4.1547816
   },
-  "The Long Whine": {
+  "major-The Long Whine": {
+    "name": "The Long Whine",
     "region": "LinnMercyHex",
     "major": 1,
     "x": -36.30199208742158,
     "y": 28.441295999999994
   },
-  "The Prairie Bazaar": {
+  "major-The Prairie Bazaar": {
+    "name": "The Prairie Bazaar",
     "region": "LinnMercyHex",
     "major": 1,
     "x": -25.63997866420067,
     "y": 9.345571200000002
   },
-  "The River Mercy": {
+  "minor-The River Mercy": {
+    "name": "The River Mercy",
     "region": "FarranacCoastHex",
     "major": 0,
     "x": -58.420740101386244,
     "y": -5.4773928000000005
   },
-  "Ulster Falls": {
+  "major-Ulster Falls": {
+    "name": "Ulster Falls",
     "region": "LinnMercyHex",
     "major": 1,
     "x": -31.884242003785126,
     "y": 19.791811080000002
   },
-  "Bramble Field": {
+  "minor-Bramble Field": {
+    "name": "Bramble Field",
     "region": "ClansheadValleyHex",
     "major": 0,
     "x": 58.64129895311018,
     "y": 70.6007088
   },
-  "Fallen Crown": {
+  "major-Fallen Crown": {
+    "name": "Fallen Crown",
     "region": "ClansheadValleyHex",
     "major": 1,
     "x": 54.35566249974373,
     "y": 74.3132142
   },
-  "Fort Ealar": {
+  "major-Fort Ealar": {
+    "name": "Fort Ealar",
     "region": "ClansheadValleyHex",
     "major": 1,
     "x": 57.727707277227964,
     "y": 64.24678296
   },
-  "Fort Esterwild": {
+  "major-Fort Esterwild": {
+    "name": "Fort Esterwild",
     "region": "ClansheadValleyHex",
     "major": 1,
     "x": 72.10176012325567,
     "y": 68.9082264
   },
-  "Fort Windham": {
+  "major-Fort Windham": {
+    "name": "Fort Windham",
     "region": "ClansheadValleyHex",
     "major": 1,
     "x": 59.24226973032488,
     "y": 84.95159616
   },
-  "Lost Orphans": {
+  "minor-Lost Orphans": {
+    "name": "Lost Orphans",
     "region": "ClansheadValleyHex",
     "major": 0,
     "x": 53.24422960667401,
     "y": 67.8651012
   },
-  "Sweetholt": {
+  "major-Sweetholt": {
+    "name": "Sweetholt",
     "region": "ClansheadValleyHex",
     "major": 1,
     "x": 74.75938839829514,
     "y": 77.5447686
   },
-  "Tallowild": {
+  "minor-Tallowild": {
+    "name": "Tallowild",
     "region": "ClansheadValleyHex",
     "major": 0,
     "x": 55.17175481864285,
     "y": 81.543132
   },
-  "The Bastard's Channel": {
+  "minor-The Bastard's Channel": {
+    "name": "The Bastard's Channel",
     "region": "ClansheadValleyHex",
     "major": 0,
     "x": 64.60943210187692,
     "y": 71.2696302
   },
-  "The King": {
+  "major-The King": {
+    "name": "The King",
     "region": "ClansheadValleyHex",
     "major": 1,
     "x": 65.58627550197025,
     "y": 76.1720724
   },
-  "The Pike": {
+  "major-The Pike": {
+    "name": "The Pike",
     "region": "ClansheadValleyHex",
     "major": 1,
     "x": 66.84365875567333,
     "y": 59.5281456
   },
-  "The Weathered Advance": {
+  "minor-The Weathered Advance": {
+    "name": "The Weathered Advance",
     "region": "ClansheadValleyHex",
     "major": 0,
     "x": 57.379649866114164,
     "y": 59.13219960000001
   },
-  "Throne of Druiminn": {
+  "minor-Throne of Druiminn": {
+    "name": "Throne of Druiminn",
     "region": "ClansheadValleyHex",
     "major": 0,
     "x": 68.75958657112689,
     "y": 83.70253692
   },
-  "Anchor Beach": {
+  "major-Anchor Beach": {
+    "name": "Anchor Beach",
     "region": "GodcroftsHex",
     "major": 1,
     "x": 87.61411953129893,
     "y": 2.913301800000003
   },
-  "Argosa": {
+  "minor-Argosa": {
+    "name": "Argosa",
     "region": "GodcroftsHex",
     "major": 0,
     "x": 92.05132193114503,
     "y": 19.334829600000006
   },
-  "Bagh Mòr": {
+  "minor-Bagh Mòr": {
+    "name": "Bagh Mòr",
     "region": "GodcroftsHex",
     "major": 0,
     "x": 92.55063684513067,
     "y": 5.815573199999999
   },
-  "Barreller's Bay": {
+  "minor-Barreller's Bay": {
+    "name": "Barreller's Bay",
     "region": "GodcroftsHex",
     "major": 0,
     "x": 100.91611925285375,
     "y": 19.46343348
   },
-  "Blackwatch": {
+  "major-Blackwatch": {
+    "name": "Blackwatch",
     "region": "GodcroftsHex",
     "major": 1,
     "x": 87.72693963977733,
     "y": 7.232083200000002
   },
-  "Chamil Ravine": {
+  "minor-Chamil Ravine": {
+    "name": "Chamil Ravine",
     "region": "GodcroftsHex",
     "major": 0,
     "x": 93.23257781062571,
     "y": 25.069905
   },
-  "Den of Thieves": {
+  "minor-Den of Thieves": {
+    "name": "Den of Thieves",
     "region": "GodcroftsHex",
     "major": 0,
     "x": 86.92417150276658,
     "y": 12.968502119999997
   },
-  "Exile": {
+  "minor-Exile": {
+    "name": "Exile",
     "region": "GodcroftsHex",
     "major": 0,
     "x": 90.71396074642823,
     "y": 12.8945808
   },
-  "Isawa": {
+  "major-Isawa": {
+    "name": "Isawa",
     "region": "GodcroftsHex",
     "major": 1,
     "x": 99.36037500549982,
     "y": 6.90773544
   },
-  "Kolas": {
+  "minor-Kolas": {
+    "name": "Kolas",
     "region": "GodcroftsHex",
     "major": 0,
     "x": 79.8823498964365,
     "y": 12.715230599999998
   },
-  "Lipsia": {
+  "minor-Lipsia": {
+    "name": "Lipsia",
     "region": "GodcroftsHex",
     "major": 0,
     "x": 92.60770099103684,
     "y": 28.29947724
   },
-  "Peripti Depths": {
+  "minor-Peripti Depths": {
+    "name": "Peripti Depths",
     "region": "GodcroftsHex",
     "major": 0,
     "x": 84.36927822789131,
     "y": 8.945598240000002
   },
-  "Perpetua Channel": {
+  "minor-Perpetua Channel": {
+    "name": "Perpetua Channel",
     "region": "GodcroftsHex",
     "major": 0,
     "x": 78.16811925896027,
     "y": 23.594833800000004
   },
-  "Primus Trames": {
+  "minor-Primus Trames": {
+    "name": "Primus Trames",
     "region": "GodcroftsHex",
     "major": 0,
     "x": 86.88136352064737,
     "y": 18.999699120000002
   },
-  "Promithiens": {
+  "major-Promithiens": {
+    "name": "Promithiens",
     "region": "GodcroftsHex",
     "major": 1,
     "x": 96.04363932147945,
     "y": 13.086518400000003
   },
-  "Protos": {
+  "major-Protos": {
+    "name": "Protos",
     "region": "GodcroftsHex",
     "major": 1,
     "x": 80.61376031145669,
     "y": 17.889170399999998
   },
-  "Saegio": {
+  "minor-Saegio": {
+    "name": "Saegio",
     "region": "GodcroftsHex",
     "major": 0,
     "x": 92.5211218679853,
     "y": 20.54855232
   },
-  "Skodio": {
+  "major-Skodio": {
+    "name": "Skodio",
     "region": "GodcroftsHex",
     "major": 1,
     "x": 98.19460947992951,
     "y": 27.079988760000006
   },
-  "The Axehead": {
+  "major-The Axehead": {
+    "name": "The Axehead",
     "region": "GodcroftsHex",
     "major": 1,
     "x": 83.58134323543254,
     "y": 24.011633880000005
   },
-  "The Dice Road": {
+  "minor-The Dice Road": {
+    "name": "The Dice Road",
     "region": "GodcroftsHex",
     "major": 0,
     "x": 96.93533482674458,
     "y": 23.932225439999996
   },
-  "The Fleece Road": {
+  "major-The Fleece Road": {
+    "name": "The Fleece Road",
     "region": "GodcroftsHex",
     "major": 1,
     "x": 101.03038264462907,
     "y": 3.6659988000000006
   },
-  "The Kris Ford": {
+  "minor-The Kris Ford": {
+    "name": "The Kris Ford",
     "region": "GodcroftsHex",
     "major": 0,
     "x": 98.29105838273883,
     "y": 9.860671439999997
   },
-  "Ursa Trail": {
+  "minor-Ursa Trail": {
+    "name": "Ursa Trail",
     "region": "GodcroftsHex",
     "major": 0,
     "x": 97.96156827915404,
     "y": 2.1507174000000013
   },
-  "Vicit Lagoon": {
+  "minor-Vicit Lagoon": {
+    "name": "Vicit Lagoon",
     "region": "GodcroftsHex",
     "major": 0,
     "x": 87.44652906643987,
     "y": 22.810628879999996
   },
-  "Blackcoat Way": {
+  "major-Blackcoat Way": {
+    "name": "Blackcoat Way",
     "region": "NevishLineHex",
     "major": 1,
     "x": -99.0568776629578,
     "y": 47.05855919999999
   },
-  "Blinding Stones": {
+  "major-Blinding Stones": {
+    "name": "Blinding Stones",
     "region": "NevishLineHex",
     "major": 1,
     "x": -97.26858855130781,
     "y": 64.53259596000001
   },
-  "Grief Mother": {
+  "major-Grief Mother": {
+    "name": "Grief Mother",
     "region": "NevishLineHex",
     "major": 1,
     "x": -84.40050372226986,
     "y": 48.662702280000005
   },
-  "Mistle Shrine": {
+  "major-Mistle Shrine": {
+    "name": "Mistle Shrine",
     "region": "NevishLineHex",
     "major": 1,
     "x": -79.1424572260571,
     "y": 56.2648392
   },
-  "Nevish Trail": {
+  "minor-Nevish Trail": {
+    "name": "Nevish Trail",
     "region": "NevishLineHex",
     "major": 0,
     "x": -98.72933507730104,
     "y": 69.12209052
   },
-  "Plumage": {
+  "minor-Plumage": {
+    "name": "Plumage",
     "region": "NevishLineHex",
     "major": 0,
     "x": -85.11207148611041,
     "y": 43.78129452
   },
-  "Princefal": {
+  "major-Princefal": {
+    "name": "Princefal",
     "region": "NevishLineHex",
     "major": 1,
     "x": -90.13183116175391,
     "y": 53.795462400000005
   },
-  "Princefal Burn": {
+  "minor-Princefal Burn": {
+    "name": "Princefal Burn",
     "region": "CallumsCapeHex",
     "major": 0,
     "x": -74.11964055002029,
     "y": 70.31336256
   },
-  "Tear Road": {
+  "minor-Tear Road": {
+    "name": "Tear Road",
     "region": "NevishLineHex",
     "major": 0,
     "x": -97.90341080663376,
     "y": 54.948666239999994
   },
-  "The Arrow": {
+  "minor-The Arrow": {
+    "name": "The Arrow",
     "region": "NevishLineHex",
     "major": 0,
     "x": -80.61664723759836,
     "y": 51.7415544
   },
-  "The Scrying Belt": {
+  "major-The Scrying Belt": {
+    "name": "The Scrying Belt",
     "region": "NevishLineHex",
     "major": 1,
     "x": -88.7941607020449,
     "y": 63.662030279999996
   },
-  "Tomb Father": {
+  "major-Tomb Father": {
+    "name": "Tomb Father",
     "region": "NevishLineHex",
     "major": 1,
     "x": -98.65240292299141,
     "y": 41.9155092
   },
-  "Unruly": {
+  "major-Unruly": {
+    "name": "Unruly",
     "region": "NevishLineHex",
     "major": 1,
     "x": -85.98170204972776,
     "y": 69.227037
   },
-  "Callum's Keep": {
+  "major-Callum's Keep": {
+    "name": "Callum's Keep",
     "region": "CallumsCapeHex",
     "major": 1,
     "x": -65.783240799561,
     "y": 81.53333424
   },
-  "Camp Hollow": {
+  "major-Camp Hollow": {
+    "name": "Camp Hollow",
     "region": "CallumsCapeHex",
     "major": 1,
     "x": -51.12297722701551,
     "y": 79.8125184
   },
-  "Holdout": {
+  "major-Holdout": {
+    "name": "Holdout",
     "region": "CallumsCapeHex",
     "major": 1,
     "x": -52.846403807203345,
     "y": 69.4670292
   },
-  "Hollowhill": {
+  "minor-Hollowhill": {
+    "name": "Hollowhill",
     "region": "CallumsCapeHex",
     "major": 0,
     "x": -56.68784571579205,
     "y": 84.17356668
   },
-  "Ire": {
+  "major-Ire": {
+    "name": "Ire",
     "region": "CallumsCapeHex",
-    "major": 0,
-    "x": -66.57693437598071,
-    "y": 58.566621600000005
+    "major": 1,
+    "x": -62.423494691323015,
+    "y": 59.417051400000005
   },
-  "Lookout": {
+  "major-Lookout": {
+    "name": "Lookout",
     "region": "CallumsCapeHex",
     "major": 1,
     "x": -51.105551410250726,
     "y": 61.943533200000005
   },
-  "Naofa": {
+  "major-Naofa": {
+    "name": "Naofa",
     "region": "CallumsCapeHex",
     "major": 1,
-    "x": -74.53252515875978,
-    "y": 75.1038516
+    "x": -76.25696270236298,
+    "y": 71.865756
   },
-  "Scouts Jest": {
+  "major-Scouts Jest": {
+    "name": "Scouts Jest",
     "region": "CallumsCapeHex",
     "major": 1,
     "x": -72.48683777792982,
     "y": 63.2249856
   },
-  "The Dreg": {
+  "minor-The Dreg": {
+    "name": "The Dreg",
     "region": "CallumsCapeHex",
     "major": 0,
     "x": -60.31267915171904,
     "y": 81.28638756000001
   },
-  "The Gunwall": {
+  "minor-The Gunwall": {
+    "name": "The Gunwall",
     "region": "CallumsCapeHex",
     "major": 0,
     "x": -64.11032082092188,
     "y": 76.4397324
   },
-  "The River Vein": {
+  "minor-The River Vein": {
+    "name": "The River Vein",
     "region": "CallumsCapeHex",
     "major": 0,
     "x": -59.32680109748529,
     "y": 72.02908368
   },
-  "Trail of the Dead": {
+  "minor-Trail of the Dead": {
+    "name": "Trail of the Dead",
     "region": "CallumsCapeHex",
     "major": 0,
     "x": -64.80019028362959,
     "y": 67.552416
   },
-  "Valta Downs": {
+  "minor-Valta Downs": {
+    "name": "Valta Downs",
     "region": "CallumsCapeHex",
     "major": 0,
     "x": -55.349717163285476,
     "y": 60.082628400000004
   },
-  "A Lost Sot": {
+  "minor-Vex": {
+    "name": "Vex",
+    "region": "CallumsCapeHex",
+    "major": 0,
+    "x": -66.57693437598071,
+    "y": 58.566621600000005
+  },
+  "minor-A Lost Sot": {
+    "name": "A Lost Sot",
     "region": "FishermansRowHex",
     "major": 0,
     "x": -75.84596990879754,
     "y": -17.76399984
   },
-  "Arcadia": {
+  "major-Arcadia": {
+    "name": "Arcadia",
     "region": "FishermansRowHex",
     "major": 1,
     "x": -97.3516405260948,
     "y": -26.31434148
   },
-  "Bident Crossroads": {
+  "minor-Bident Crossroads": {
+    "name": "Bident Crossroads",
     "region": "FishermansRowHex",
     "major": 0,
     "x": -95.46880846034415,
     "y": -22.1695164
   },
-  "Black Well": {
+  "major-Black Well": {
+    "name": "Black Well",
     "region": "FishermansRowHex",
     "major": 1,
     "x": -97.38127896382173,
     "y": -11.038161599999999
   },
-  "Cat Step": {
+  "minor-Cat Step": {
+    "name": "Cat Step",
     "region": "FishermansRowHex",
     "major": 0,
     "x": -87.73053324264849,
     "y": -1.1827247760000006
   },
-  "Dankana Post": {
+  "minor-Dankana Post": {
+    "name": "Dankana Post",
     "region": "FishermansRowHex",
     "major": 0,
     "x": -100.84505370633107,
     "y": -22.9178232
   },
-  "Eidolo": {
+  "major-Eidolo": {
+    "name": "Eidolo",
     "region": "FishermansRowHex",
     "major": 1,
     "x": -94.26862029558829,
     "y": -18.82872
   },
-  "Fort Ember": {
+  "major-Fort Ember": {
+    "name": "Fort Ember",
     "region": "FishermansRowHex",
     "major": 1,
     "x": -92.5705555118374,
     "y": -25.389966599999997
   },
-  "Hangmen's Court": {
+  "major-Hangmen's Court": {
+    "name": "Hangmen's Court",
     "region": "FishermansRowHex",
     "major": 1,
     "x": -81.34667131915216,
     "y": -19.2981024
   },
-  "Heart of Rites": {
+  "minor-Heart of Rites": {
+    "name": "Heart of Rites",
     "region": "FishermansRowHex",
     "major": 0,
     "x": -98.76060884811844,
     "y": -16.87385952
   },
-  "House Roloi": {
+  "minor-House Roloi": {
+    "name": "House Roloi",
     "region": "FishermansRowHex",
     "major": 0,
     "x": -102.7184158882144,
     "y": -27.859508639999998
   },
-  "Lake Nerites": {
+  "minor-Lake Nerites": {
+    "name": "Lake Nerites",
     "region": "FishermansRowHex",
     "major": 0,
     "x": -99.93774937488034,
     "y": -19.54406412
   },
-  "Liberty Hill": {
+  "minor-Liberty Hill": {
+    "name": "Liberty Hill",
     "region": "FishermansRowHex",
     "major": 0,
     "x": -98.25901053691217,
     "y": -12.882165119999996
   },
-  "Oceanwatch": {
+  "major-Oceanwatch": {
+    "name": "Oceanwatch",
     "region": "FishermansRowHex",
     "major": 1,
     "x": -91.46705153167255,
     "y": -12.0174588
   },
-  "Partisan Island": {
+  "major-Partisan Island": {
+    "name": "Partisan Island",
     "region": "FishermansRowHex",
     "major": 1,
     "x": -85.66521646073431,
     "y": -7.263486360000002
   },
-  "Peripti Landing": {
+  "major-Peripti Landing": {
+    "name": "Peripti Landing",
     "region": "FishermansRowHex",
     "major": 1,
     "x": -101.30173938584083,
     "y": -16.3449864
   },
-  "Progonos Watch": {
+  "minor-Progonos Watch": {
+    "name": "Progonos Watch",
     "region": "FishermansRowHex",
     "major": 0,
     "x": -92.73532592085363,
     "y": -15.6656664
   },
-  "The Dire Strings": {
+  "minor-The Dire Strings": {
+    "name": "The Dire Strings",
     "region": "FishermansRowHex",
     "major": 0,
     "x": -78.51156118350175,
     "y": -22.108604399999997
   },
-  "The Rite Road": {
+  "minor-The Rite Road": {
+    "name": "The Rite Road",
     "region": "FishermansRowHex",
     "major": 0,
     "x": -94.80752989103495,
     "y": -13.862763360000002
   },
-  "The Satyr Stone": {
+  "major-The Satyr Stone": {
+    "name": "The Satyr Stone",
     "region": "FishermansRowHex",
     "major": 1,
     "x": -85.64045575520963,
     "y": -23.181098400000003
   },
-  "The Three Sisters": {
+  "major-The Three Sisters": {
+    "name": "The Three Sisters",
     "region": "FishermansRowHex",
     "major": 1,
     "x": -85.05641030135837,
     "y": -12.701001599999998
   },
-  "Torch of Demeter": {
+  "minor-Torch of Demeter": {
+    "name": "Torch of Demeter",
     "region": "FishermansRowHex",
     "major": 0,
     "x": -95.86982090002824,
     "y": -24.547791599999996
   },
-  "Adze Crossroads": {
+  "minor-Adze Crossroads": {
+    "name": "Adze Crossroads",
     "region": "UmbralWildwoodHex",
     "major": 0,
     "x": -5.143867669726685,
     "y": -31.91497308
   },
-  "Amethyst": {
+  "major-Amethyst": {
+    "name": "Amethyst",
     "region": "UmbralWildwoodHex",
     "major": 1,
     "x": 13.997402698972707,
     "y": -31.99842864
   },
-  "Atropos' Fate": {
+  "major-Atropos' Fate": {
+    "name": "Atropos' Fate",
     "region": "UmbralWildwoodHex",
     "major": 1,
     "x": 3.819291570267282,
     "y": -46.2360096
   },
-  "Clotho's Refuge": {
+  "major-Clotho's Refuge": {
+    "name": "Clotho's Refuge",
     "region": "UmbralWildwoodHex",
     "major": 1,
     "x": 5.497554856365724,
     "y": -29.663406720000005
   },
-  "Dredgefield": {
+  "minor-Dredgefield": {
+    "name": "Dredgefield",
     "region": "UmbralWildwoodHex",
     "major": 0,
     "x": 12.590442585937403,
     "y": -48.82722264
   },
-  "Golden Concourse": {
+  "minor-Golden Concourse": {
+    "name": "Golden Concourse",
     "region": "UmbralWildwoodHex",
     "major": 0,
     "x": -13.72478214120299,
     "y": -43.65496656
   },
-  "GoldenRoot Ranch": {
+  "major-GoldenRoot Ranch": {
+    "name": "GoldenRoot Ranch",
     "region": "UmbralWildwoodHex",
     "major": 1,
     "x": -13.485655622402227,
     "y": -37.8182736
   },
-  "Hermit's Rest": {
+  "major-Hermit's Rest": {
+    "name": "Hermit's Rest",
     "region": "UmbralWildwoodHex",
     "major": 1,
     "x": 7.902334613286548,
     "y": -40.2358824
   },
-  "Lachesis' Tally ": {
+  "major-Lachesis' Tally ": {
+    "name": "Lachesis' Tally ",
     "region": "UmbralWildwoodHex",
     "major": 1,
     "x": 14.941256766564763,
     "y": -37.6110054
   },
-  "Leatherback Pathway": {
+  "minor-Leatherback Pathway": {
+    "name": "Leatherback Pathway",
     "region": "UmbralWildwoodHex",
     "major": 0,
     "x": 9.555677568057881,
     "y": -31.46541336
   },
-  "Sentry": {
+  "major-Sentry": {
+    "name": "Sentry",
     "region": "UmbralWildwoodHex",
     "major": 1,
     "x": -3.5392958015948786,
     "y": -47.7102996
   },
-  "Steely Fields": {
+  "minor-Steely Fields": {
+    "name": "Steely Fields",
     "region": "UmbralWildwoodHex",
     "major": 0,
     "x": -13.044349722679302,
     "y": -29.62635048
   },
-  "Stray": {
+  "major-Stray": {
+    "name": "Stray",
     "region": "UmbralWildwoodHex",
     "major": 1,
     "x": 8.130938299893042,
     "y": -24.6430008
   },
-  "Terrapin Woods": {
+  "minor-Terrapin Woods": {
+    "name": "Terrapin Woods",
     "region": "UmbralWildwoodHex",
     "major": 0,
     "x": 10.348159817424815,
     "y": -35.67418776
   },
-  "The Dredgewood": {
+  "minor-The Dredgewood": {
+    "name": "The Dredgewood",
     "region": "UmbralWildwoodHex",
     "major": 0,
     "x": 12.624960002943148,
     "y": -41.82206508
   },
-  "The Foundry": {
+  "major-The Foundry": {
+    "name": "The Foundry",
     "region": "UmbralWildwoodHex",
     "major": 1,
     "x": -8.52814086447643,
     "y": -26.0877492
   },
-  "The Frontier": {
+  "minor-The Frontier": {
+    "name": "The Frontier",
     "region": "UmbralWildwoodHex",
     "major": 0,
     "x": 5.422244732996372,
     "y": -43.979652
   },
-  "The Gap": {
+  "minor-The Gap": {
+    "name": "The Gap",
     "region": "UmbralWildwoodHex",
     "major": 0,
     "x": -2.3863755805056996,
     "y": -37.1465712
   },
-  "The Strands": {
+  "minor-The Strands": {
+    "name": "The Strands",
     "region": "UmbralWildwoodHex",
     "major": 0,
     "x": 1.0747794697982194,
     "y": -26.562302640000002
   },
-  "Thunder Row": {
+  "minor-Thunder Row": {
+    "name": "Thunder Row",
     "region": "UmbralWildwoodHex",
     "major": 0,
     "x": -9.156638778765652,
     "y": -41.87398212
   },
-  "Thunderfoot": {
+  "major-Thunderfoot": {
+    "name": "Thunderfoot",
     "region": "UmbralWildwoodHex",
     "major": 1,
     "x": -5.619834400262226,
     "y": -36.528521760000004
   },
-  "Vagrant Bastion": {
+  "major-Vagrant Bastion": {
+    "name": "Vagrant Bastion",
     "region": "UmbralWildwoodHex",
     "major": 1,
     "x": 1.1029758713047961,
     "y": -23.8177404
   },
-  "Wasting Holt": {
+  "minor-Wasting Holt": {
+    "name": "Wasting Holt",
     "region": "UmbralWildwoodHex",
     "major": 0,
     "x": 2.880421652079079,
     "y": -51.8406084
   },
-  "Weaver's Trail": {
+  "minor-Weaver's Trail": {
+    "name": "Weaver's Trail",
     "region": "UmbralWildwoodHex",
     "major": 0,
     "x": 2.8659156572836615,
     "y": -34.063446240000005
   },
-  "Brodytown": {
+  "major-Brodytown": {
+    "name": "Brodytown",
     "region": "ReachingTrailHex",
     "major": 1,
     "x": -1.5379602836919766,
     "y": 78.3801252
   },
-  "Camp Eos": {
+  "minor-Camp Eos": {
+    "name": "Camp Eos",
     "region": "ReachingTrailHex",
     "major": 0,
     "x": 11.2631249403154,
     "y": 64.66504464
   },
-  "Caragtais": {
+  "minor-Caragtais": {
+    "name": "Caragtais",
     "region": "ReachingTrailHex",
     "major": 0,
     "x": -1.2701214893721087,
     "y": 70.9413696
   },
-  "Duffy's Farm": {
+  "minor-Duffy's Farm": {
+    "name": "Duffy's Farm",
     "region": "ReachingTrailHex",
     "major": 0,
     "x": -8.696007348952197,
     "y": 69.5491542
   },
-  "Dugan's Approach": {
+  "minor-Dugan's Approach": {
+    "name": "Dugan's Approach",
     "region": "ReachingTrailHex",
     "major": 0,
     "x": 8.777160913634404,
     "y": 84.46078080000001
   },
-  "Dwyersfield": {
+  "minor-Dwyersfield": {
+    "name": "Dwyersfield",
     "region": "ReachingTrailHex",
     "major": 0,
     "x": -11.323302564608877,
     "y": 80.38313172
   },
-  "Dwyerstown": {
+  "major-Dwyerstown": {
+    "name": "Dwyerstown",
     "region": "ReachingTrailHex",
     "major": 1,
     "x": -13.738905699180101,
     "y": 76.89913092
   },
-  "Elksford": {
+  "major-Elksford": {
+    "name": "Elksford",
     "region": "ReachingTrailHex",
     "major": 1,
     "x": -6.261517655247113,
     "y": 72.10171439999999
   },
-  "Featherfield": {
+  "minor-Featherfield": {
+    "name": "Featherfield",
     "region": "ReachingTrailHex",
     "major": 0,
     "x": -1.6816214274139973,
     "y": 61.250004000000004
   },
-  "Fisherman's Floe": {
+  "minor-Fisherman's Floe": {
+    "name": "Fisherman's Floe",
     "region": "ReachingTrailHex",
     "major": 0,
     "x": 6.607650883340117,
     "y": 69.9396732
   },
-  "Fort Mac Conaill": {
+  "major-Fort Mac Conaill": {
+    "name": "Fort Mac Conaill",
     "region": "ReachingTrailHex",
     "major": 1,
     "x": 9.186994341671287,
     "y": 59.4620496
   },
-  "Harpy": {
+  "major-Harpy": {
+    "name": "Harpy",
     "region": "ReachingTrailHex",
     "major": 1,
     "x": -1.5710897044625725,
     "y": 57.010842
   },
-  "Hookhall": {
+  "minor-Hookhall": {
+    "name": "Hookhall",
     "region": "ReachingTrailHex",
     "major": 0,
     "x": -4.755446546593296,
     "y": 66.60627840000001
   },
-  "Humidus": {
+  "minor-Humidus": {
+    "name": "Humidus",
     "region": "ReachingTrailHex",
     "major": 0,
     "x": -8.679534298695637,
     "y": 65.97563616
   },
-  "Ice Ranch": {
+  "major-Ice Ranch": {
+    "name": "Ice Ranch",
     "region": "ReachingTrailHex",
     "major": 1,
     "x": 9.273129921152005,
     "y": 76.0358628
   },
-  "Limestone Holdfast": {
+  "major-Limestone Holdfast": {
+    "name": "Limestone Holdfast",
     "region": "ReachingTrailHex",
     "major": 1,
     "x": -7.783116945800948,
     "y": 84.39920964000001
   },
-  "Mac Conaill's Pass": {
+  "minor-Mac Conaill's Pass": {
+    "name": "Mac Conaill's Pass",
     "region": "ReachingTrailHex",
     "major": 0,
     "x": 5.658220304968005,
     "y": 54.50526000000001
   },
-  "Mousetrap": {
+  "major-Mousetrap": {
+    "name": "Mousetrap",
     "region": "ReachingTrailHex",
     "major": 1,
     "x": 14.92232614405836,
     "y": 70.80611868
   },
-  "Nightchurch": {
+  "major-Nightchurch": {
+    "name": "Nightchurch",
     "region": "ReachingTrailHex",
     "major": 1,
     "x": -4.27749571721667,
     "y": 63.184390199999996
   },
-  "Pitfall": {
+  "minor-Pitfall": {
+    "name": "Pitfall",
     "region": "ReachingTrailHex",
     "major": 0,
     "x": 16.49134593731401,
     "y": 76.37101272
   },
-  "Puncta": {
+  "minor-Puncta": {
+    "name": "Puncta",
     "region": "ReachingTrailHex",
     "major": 0,
     "x": -12.296832066533113,
     "y": 68.8022316
   },
-  "Reprieve": {
+  "major-Reprieve": {
+    "name": "Reprieve",
     "region": "ReachingTrailHex",
     "major": 1,
     "x": 2.6421776478057915,
     "y": 65.66181983999999
   },
-  "Scorpion": {
+  "minor-Scorpion": {
+    "name": "Scorpion",
     "region": "ReachingTrailHex",
     "major": 0,
     "x": -5.926896662914039,
     "y": 58.92593256000001
   },
-  "The Ark": {
+  "major-The Ark": {
+    "name": "The Ark",
     "region": "ReachingTrailHex",
     "major": 1,
     "x": 10.82710290406808,
     "y": 69.91569
   },
-  "The Bait": {
+  "minor-The Bait": {
+    "name": "The Bait",
     "region": "ReachingTrailHex",
     "major": 0,
     "x": 9.472534972372639,
     "y": 69.9216192
   },
-  "The Cairns": {
+  "minor-The Cairns": {
+    "name": "The Cairns",
     "region": "ReachingTrailHex",
     "major": 0,
     "x": 5.071583010288304,
     "y": 81.40020912
   },
-  "The Chicken Coop": {
+  "minor-The Chicken Coop": {
+    "name": "The Chicken Coop",
     "region": "ReachingTrailHex",
     "major": 0,
     "x": -6.667937834680565,
     "y": 75.0761784
   },
-  "The Deckard": {
+  "minor-The Deckard": {
+    "name": "The Deckard",
     "region": "ReachingTrailHex",
     "major": 0,
     "x": -2.2285102345209644,
     "y": 88.51643586
   },
-  "The Knot": {
+  "minor-The Knot": {
+    "name": "The Knot",
     "region": "ReachingTrailHex",
     "major": 0,
     "x": -1.333571914451877,
     "y": 66.3004656
   },
-  "The Reaching Heights": {
+  "minor-The Reaching Heights": {
+    "name": "The Reaching Heights",
     "region": "ReachingTrailHex",
     "major": 0,
     "x": 2.709929655707171,
     "y": 70.289316
   },
-  "The Rime Ledge": {
+  "minor-The Rime Ledge": {
+    "name": "The Rime Ledge",
     "region": "ReachingTrailHex",
     "major": 0,
     "x": 17.385891428259946,
     "y": 63.169687440000004
   },
-  "The Rousing Fields": {
+  "minor-The Rousing Fields": {
+    "name": "The Rousing Fields",
     "region": "ReachingTrailHex",
     "major": 0,
     "x": -10.149772324550275,
     "y": 73.15697628
   },
-  "The Scar": {
+  "minor-The Scar": {
+    "name": "The Scar",
     "region": "ReachingTrailHex",
     "major": 0,
     "x": -7.767614952509142,
     "y": 70.4275848
   },
-  "The Squeeze": {
+  "minor-The Squeeze": {
+    "name": "The Squeeze",
     "region": "ReachingTrailHex",
     "major": 0,
     "x": -6.798123068863447,
     "y": 51.9654852
   },
-  "Thýlak": {
+  "minor-Thýlak": {
+    "name": "Thýlak",
     "region": "ReachingTrailHex",
     "major": 0,
     "x": -15.091245105024496,
     "y": 63.339652799999996
   },
-  "Windy Way": {
+  "minor-Windy Way": {
+    "name": "Windy Way",
     "region": "ReachingTrailHex",
     "major": 0,
     "x": -10.560099179221217,
     "y": 87.170001264
   },
-  "Callahan's Eye": {
+  "minor-Callahan's Eye": {
+    "name": "Callahan's Eye",
     "region": "CallahansPassageHex",
     "major": 0,
     "x": -7.169937288853866,
     "y": 44.559239039999994
   },
-  "Chapel Access": {
+  "minor-Chapel Access": {
+    "name": "Chapel Access",
     "region": "CallahansPassageHex",
     "major": 0,
     "x": 16.04082497303856,
     "y": 35.16527304
   },
-  "Cragsfield": {
+  "minor-Cragsfield": {
+    "name": "Cragsfield",
     "region": "CallahansPassageHex",
     "major": 0,
     "x": 3.6543864769802674,
     "y": 46.83652452
   },
-  "Cragsroad": {
+  "minor-Cragsroad": {
+    "name": "Cragsroad",
     "region": "CallahansPassageHex",
     "major": 0,
     "x": -1.4574444469794585,
     "y": 41.28816708
   },
-  "Cragstown": {
+  "major-Cragstown": {
+    "name": "Cragstown",
     "region": "CallahansPassageHex",
     "major": 1,
     "x": 1.478435296142795,
     "y": 48.968328240000005
   },
-  "Crumbling Post": {
+  "major-Crumbling Post": {
+    "name": "Crumbling Post",
     "region": "CallahansPassageHex",
     "major": 1,
     "x": -5.290359677288601,
     "y": 27.9042552
   },
-  "Lingering Lashes": {
+  "minor-Lingering Lashes": {
+    "name": "Lingering Lashes",
     "region": "CallahansPassageHex",
     "major": 0,
     "x": -3.538351348930526,
     "y": 48.12507216
   },
-  "Lochan": {
+  "minor-Lochan": {
+    "name": "Lochan",
     "region": "CallahansPassageHex",
     "major": 0,
     "x": 2.838497015871713,
     "y": 35.7154812
   },
-  "Lochan Berth": {
+  "major-Lochan Berth": {
+    "name": "Lochan Berth",
     "region": "CallahansPassageHex",
     "major": 1,
     "x": 3.391005981439079,
     "y": 38.74511952
   },
-  "Lost Tops": {
+  "minor-Lost Tops": {
+    "name": "Lost Tops",
     "region": "CallahansPassageHex",
     "major": 0,
     "x": -9.811725197155766,
     "y": 22.641176520000002
   },
-  "Overlook Hill": {
+  "major-Overlook Hill": {
+    "name": "Overlook Hill",
     "region": "CallahansPassageHex",
     "major": 1,
     "x": 1.8334094096695104,
     "y": 30.666553200000003
   },
-  "Scáth Passing": {
+  "major-Scáth Passing": {
+    "name": "Scáth Passing",
     "region": "CallahansPassageHex",
     "major": 1,
     "x": -5.488204220013641,
     "y": 34.85364948
   },
-  "Sioc Approach": {
+  "minor-Sioc Approach": {
+    "name": "Sioc Approach",
     "region": "CallahansPassageHex",
     "major": 0,
     "x": 5.8488712942790535,
     "y": 29.803695840000003
   },
-  "Solas Gateway": {
+  "minor-Solas Gateway": {
+    "name": "Solas Gateway",
     "region": "CallahansPassageHex",
     "major": 0,
     "x": -10.338541059607717,
     "y": 38.76493464
   },
-  "Solas Gorge": {
+  "major-Solas Gorge": {
+    "name": "Solas Gorge",
     "region": "CallahansPassageHex",
     "major": 1,
     "x": -11.932683626288863,
     "y": 42.09370308
   },
-  "Soured Fields": {
+  "minor-Soured Fields": {
+    "name": "Soured Fields",
     "region": "CallahansPassageHex",
     "major": 0,
     "x": -16.21694704833915,
     "y": 34.842348
   },
-  "The Crumbling Passage": {
+  "major-The Crumbling Passage": {
+    "name": "The Crumbling Passage",
     "region": "CallahansPassageHex",
     "major": 1,
     "x": -1.067441615048594,
     "y": 25.7499144
   },
-  "The Key": {
+  "minor-The Key": {
+    "name": "The Key",
     "region": "CallahansPassageHex",
     "major": 0,
     "x": 9.953519939071928,
     "y": 20.291526000000005
   },
-  "The Lance": {
+  "minor-The Lance": {
+    "name": "The Lance",
     "region": "CallahansPassageHex",
     "major": 0,
     "x": -4.001705978305674,
     "y": 51.31016208
   },
-  "The Latch": {
+  "major-The Latch": {
+    "name": "The Latch",
     "region": "CallahansPassageHex",
     "major": 1,
     "x": 10.226523708899965,
     "y": 29.4072138
   },
-  "The Procession": {
+  "major-The Procession": {
+    "name": "The Procession",
     "region": "CallahansPassageHex",
     "major": 1,
     "x": 11.234645868117031,
     "y": 38.18532132
   },
-  "The Rust Road": {
+  "minor-The Rust Road": {
+    "name": "The Rust Road",
     "region": "CallahansPassageHex",
     "major": 0,
     "x": -11.586642322315068,
     "y": 28.837665
   },
-  "The Stern": {
+  "minor-The Stern": {
+    "name": "The Stern",
     "region": "CallahansPassageHex",
     "major": 0,
     "x": 12.453513577294231,
     "y": 25.7393844
   },
-  "Twisted Mumble": {
+  "minor-Twisted Mumble": {
+    "name": "Twisted Mumble",
     "region": "CallahansPassageHex",
     "major": 0,
     "x": 8.076075244153138,
     "y": 47.803653
   },
-  "Whispering Gulch": {
+  "minor-Whispering Gulch": {
+    "name": "Whispering Gulch",
     "region": "CallahansPassageHex",
     "major": 0,
     "x": 0.6246829272526568,
     "y": 16.382509199999994
   },
-  "White Chapel": {
+  "major-White Chapel": {
+    "name": "White Chapel",
     "region": "CallahansPassageHex",
     "major": 1,
     "x": 11.736764625949956,
     "y": 44.388453600000005
   },
-  "Winding Crag": {
+  "minor-Winding Crag": {
+    "name": "Winding Crag",
     "region": "CallahansPassageHex",
     "major": 0,
     "x": 1.6336298197822572,
     "y": 45.16201872
   },
-  "Ashtown": {
+  "major-Ashtown": {
+    "name": "Ashtown",
     "region": "AshFieldsHex",
     "major": 1,
     "x": -60.97406455392205,
     "y": -73.8905544
   },
-  "Camp Omega": {
+  "major-Camp Omega": {
+    "name": "Camp Omega",
     "region": "AshFieldsHex",
     "major": 1,
     "x": -52.85228709882243,
     "y": -58.57632612
   },
-  "Cometa": {
+  "major-Cometa": {
+    "name": "Cometa",
     "region": "AshFieldsHex",
     "major": 1,
     "x": -70.78116000734138,
     "y": -62.0810946
   },
-  "Electi": {
+  "major-Electi": {
+    "name": "Electi",
     "region": "AshFieldsHex",
     "major": 1,
     "x": -63.17794484618548,
     "y": -58.807368
   },
-  "Gunslinger's Pass": {
+  "minor-Gunslinger's Pass": {
+    "name": "Gunslinger's Pass",
     "region": "AshFieldsHex",
     "major": 0,
     "x": -65.52633678839948,
     "y": -87.06782412
   },
-  "Mount Blackmoth": {
+  "minor-Mount Blackmoth": {
+    "name": "Mount Blackmoth",
     "region": "AshFieldsHex",
     "major": 0,
     "x": -57.52680650934961,
     "y": -62.0433144
   },
-  "Mount Brimstone": {
+  "minor-Mount Brimstone": {
+    "name": "Mount Brimstone",
     "region": "AshFieldsHex",
     "major": 0,
     "x": -64.95285615165406,
     "y": -83.0504772
   },
-  "Omega Valley": {
+  "minor-Omega Valley": {
+    "name": "Omega Valley",
     "region": "AshFieldsHex",
     "major": 0,
     "x": -50.89057203529657,
     "y": -65.07514259999999
   },
-  "Sootflow": {
+  "major-Sootflow": {
+    "name": "Sootflow",
     "region": "AshFieldsHex",
     "major": 1,
     "x": -52.56384493660824,
     "y": -79.96287132
   },
-  "Tar Creek": {
+  "minor-Tar Creek": {
+    "name": "Tar Creek",
     "region": "AshFieldsHex",
     "major": 0,
     "x": -71.5824358093763,
     "y": -75.490614
   },
-  "The Ashfort": {
+  "major-The Ashfort": {
+    "name": "The Ashfort",
     "region": "AshFieldsHex",
     "major": 1,
     "x": -50.93809729243122,
     "y": -69.17775624000001
   },
-  "The Calamity": {
+  "major-The Calamity": {
+    "name": "The Calamity",
     "region": "AshFieldsHex",
     "major": 1,
     "x": -71.2667346315526,
     "y": -70.11416664000001
   },
-  "The Stillness": {
+  "minor-The Stillness": {
+    "name": "The Stillness",
     "region": "AshFieldsHex",
     "major": 0,
     "x": -66.655382144029,
     "y": -69.02563068
   },
-  "Twin Flames": {
+  "minor-Twin Flames": {
+    "name": "Twin Flames",
     "region": "AshFieldsHex",
     "major": 0,
     "x": -49.38608762374655,
     "y": -75.5112384
   },
-  "Wasteful Calm": {
+  "minor-Wasteful Calm": {
+    "name": "Wasteful Calm",
     "region": "AshFieldsHex",
     "major": 0,
     "x": -63.40258241357077,
     "y": -77.8421016
   },
-  "Bootnap": {
+  "major-Bootnap": {
+    "name": "Bootnap",
     "region": "DrownedValeHex",
     "major": 1,
     "x": 44.782354830279985,
     "y": -20.098062000000002
   },
-  "Coaldrifter Stead": {
+  "major-Coaldrifter Stead": {
+    "name": "Coaldrifter Stead",
     "region": "DrownedValeHex",
     "major": 1,
     "x": 38.708958857118446,
     "y": -29.6224794
   },
-  "Eastmarch": {
+  "major-Eastmarch": {
+    "name": "Eastmarch",
     "region": "DrownedValeHex",
     "major": 1,
     "x": 20.885318427464163,
     "y": -19.0011492
   },
-  "Esterfal": {
+  "minor-Esterfal": {
+    "name": "Esterfal",
     "region": "DrownedValeHex",
     "major": 0,
     "x": 43.883721837992255,
     "y": -25.0401096
   },
-  "Fleetsfall River": {
+  "minor-Fleetsfall River": {
+    "name": "Fleetsfall River",
     "region": "DrownedValeHex",
     "major": 0,
     "x": 31.37822327793419,
     "y": -3.00673836
   },
-  "Linger": {
+  "minor-Linger": {
+    "name": "Linger",
     "region": "DrownedValeHex",
     "major": 0,
     "x": 31.31368872761295,
     "y": -12.411453599999998
   },
-  "Loggerhead": {
+  "major-Loggerhead": {
+    "name": "Loggerhead",
     "region": "DrownedValeHex",
     "major": 1,
     "x": 28.429740994572,
     "y": -7.486110720000003
   },
-  "Singing Serpents": {
+  "major-Singing Serpents": {
+    "name": "Singing Serpents",
     "region": "DrownedValeHex",
     "major": 1,
     "x": 38.74589934392196,
     "y": -11.25898848
   },
-  "Sop Fields": {
+  "minor-Sop Fields": {
+    "name": "Sop Fields",
     "region": "DrownedValeHex",
     "major": 0,
     "x": 32.78819258676053,
     "y": -24.2352612
   },
-  "Splinter Pens": {
+  "major-Splinter Pens": {
+    "name": "Splinter Pens",
     "region": "DrownedValeHex",
     "major": 1,
     "x": 30.795571640008802,
     "y": -28.831147200000004
   },
-  "Sprite's Game": {
+  "minor-Sprite's Game": {
+    "name": "Sprite's Game",
     "region": "DrownedValeHex",
     "major": 0,
     "x": 24.746588853697915,
     "y": -15.585739199999999
   },
-  "The Baths": {
+  "major-The Baths": {
+    "name": "The Baths",
     "region": "DrownedValeHex",
     "major": 1,
     "x": 34.803270888591015,
     "y": -18.93853944
   },
-  "The Other Vein": {
+  "minor-The Other Vein": {
+    "name": "The Other Vein",
     "region": "DrownedValeHex",
     "major": 0,
     "x": 16.202837472194908,
     "y": -21.6040176
   },
-  "The Saltcaps": {
+  "major-The Saltcaps": {
+    "name": "The Saltcaps",
     "region": "DrownedValeHex",
     "major": 1,
     "x": 37.49057792350021,
     "y": -6.094413360000001
   },
-  "The Turtlerocks": {
+  "minor-The Turtlerocks": {
+    "name": "The Turtlerocks",
     "region": "DrownedValeHex",
     "major": 0,
     "x": 35.26330081180001,
     "y": -12.904220159999998
   },
-  "The Wash": {
+  "major-The Wash": {
+    "name": "The Wash",
     "region": "DrownedValeHex",
     "major": 1,
     "x": 27.0359101037862,
     "y": -18.438681600000002
   },
-  "The Willow Wood": {
+  "minor-The Willow Wood": {
+    "name": "The Willow Wood",
     "region": "DrownedValeHex",
     "major": 0,
     "x": 23.954782935530325,
     "y": -30.1490748
   },
-  "Vessel": {
+  "major-Vessel": {
+    "name": "Vessel",
     "region": "DrownedValeHex",
     "major": 1,
     "x": 26.28784747517392,
     "y": -25.740792000000003
   },
-  "Wisp's Warning": {
+  "major-Wisp's Warning": {
+    "name": "Wisp's Warning",
     "region": "DrownedValeHex",
     "major": 1,
     "x": 24.928691133043124,
     "y": -10.576484280000003
   },
-  "Apollo's Landing": {
+  "minor-Apollo's Landing": {
+    "name": "Apollo's Landing",
     "region": "FarranacCoastHex",
     "major": 0,
     "x": -64.41701436459778,
     "y": -2.8715493599999977
   },
-  "Carrion Fields": {
+  "minor-Carrion Fields": {
+    "name": "Carrion Fields",
     "region": "FarranacCoastHex",
     "major": 0,
     "x": -56.721310184470866,
     "y": 1.5172387200000017
   },
-  "Cora Lushlands": {
+  "minor-Cora Lushlands": {
+    "name": "Cora Lushlands",
     "region": "FarranacCoastHex",
     "major": 0,
     "x": -59.66302375184114,
     "y": -13.2160068
   },
-  "Cormac Beach": {
+  "minor-Cormac Beach": {
+    "name": "Cormac Beach",
     "region": "FarranacCoastHex",
     "major": 0,
     "x": -62.702462812747925,
     "y": -10.205275319999998
   },
-  "Gulf of the Daughters": {
+  "minor-Gulf of the Daughters": {
+    "name": "Gulf of the Daughters",
     "region": "FarranacCoastHex",
     "major": 0,
     "x": -81.65306228048019,
     "y": -2.9987546400000014
   },
-  "Hermes Inlet": {
+  "minor-Hermes Inlet": {
+    "name": "Hermes Inlet",
     "region": "FarranacCoastHex",
     "major": 0,
     "x": -71.09900865103833,
     "y": 2.437380000000001
   },
-  "Huskhollow": {
+  "major-Huskhollow": {
+    "name": "Huskhollow",
     "region": "FarranacCoastHex",
     "major": 1,
     "x": -57.99044630356972,
     "y": -2.26010664
   },
-  "Iuxta Homestead": {
+  "major-Iuxta Homestead": {
+    "name": "Iuxta Homestead",
     "region": "FarranacCoastHex",
     "major": 1,
     "x": -52.726731428602086,
     "y": 10.963216079999999
   },
-  "Kardia": {
+  "minor-Kardia": {
+    "name": "Kardia",
     "region": "FarranacCoastHex",
     "major": 0,
     "x": -56.327095559232255,
     "y": -13.146484680000002
   },
-  "Liberation Street": {
+  "minor-Liberation Street": {
+    "name": "Liberation Street",
     "region": "FarranacCoastHex",
     "major": 0,
     "x": -47.789792187193626,
     "y": -12.449674799999999
   },
-  "Macha's Keening": {
+  "major-Macha's Keening": {
+    "name": "Macha's Keening",
     "region": "FarranacCoastHex",
     "major": 1,
     "x": -53.17013491113501,
     "y": -10.168866000000001
   },
-  "Mara": {
+  "major-Mara": {
+    "name": "Mara",
     "region": "FarranacCoastHex",
     "major": 1,
     "x": -46.81336863621604,
     "y": 0.566102879999999
   },
-  "McCarthy Fields": {
+  "minor-McCarthy Fields": {
+    "name": "McCarthy Fields",
     "region": "FarranacCoastHex",
     "major": 0,
     "x": -57.34992698672752,
     "y": -10.1193048
   },
-  "Mooring Dens": {
+  "minor-Mooring Dens": {
+    "name": "Mooring Dens",
     "region": "FarranacCoastHex",
     "major": 0,
     "x": -57.72903411056626,
     "y": 7.734417839999999
   },
-  "Pleading Wharf": {
+  "major-Pleading Wharf": {
+    "name": "Pleading Wharf",
     "region": "FarranacCoastHex",
     "major": 1,
     "x": -56.320016321171565,
     "y": -7.8288854400000005
   },
-  "Scarp of Ambrose": {
+  "major-Scarp of Ambrose": {
+    "name": "Scarp of Ambrose",
     "region": "FarranacCoastHex",
     "major": 1,
     "x": -62.523673600187436,
     "y": 4.3437290399999995
   },
-  "Scythe": {
+  "major-Scythe": {
+    "name": "Scythe",
     "region": "FarranacCoastHex",
     "major": 1,
     "x": -49.57420247498312,
     "y": 5.453923320000001
   },
-  "Sickle Hill": {
+  "minor-Sickle Hill": {
+    "name": "Sickle Hill",
     "region": "FarranacCoastHex",
     "major": 0,
     "x": -62.98525405527938,
     "y": 2.0072246400000004
   },
-  "Skeleton Road": {
+  "minor-Skeleton Road": {
+    "name": "Skeleton Road",
     "region": "FarranacCoastHex",
     "major": 0,
     "x": -57.66041039613444,
     "y": 5.255144999999999
   },
-  "Sunder Beach": {
+  "minor-Sunder Beach": {
+    "name": "Sunder Beach",
     "region": "FarranacCoastHex",
     "major": 0,
     "x": -67.54958843014478,
     "y": 2.8848996000000007
   },
-  "Terra": {
+  "major-Terra": {
+    "name": "Terra",
     "region": "FarranacCoastHex",
     "major": 1,
     "x": -56.917266237559396,
     "y": 3.4144070400000004
   },
-  "The Bay of Artemis": {
+  "minor-The Bay of Artemis": {
+    "name": "The Bay of Artemis",
     "region": "FarranacCoastHex",
     "major": 0,
     "x": -67.72344878036319,
     "y": -6.747606000000001
   },
-  "The Bone Haft": {
+  "major-The Bone Haft": {
+    "name": "The Bone Haft",
     "region": "FarranacCoastHex",
     "major": 1,
     "x": -61.60915409932862,
     "y": 10.670552280000003
   },
-  "The Heart Road": {
+  "minor-The Heart Road": {
+    "name": "The Heart Road",
     "region": "FarranacCoastHex",
     "major": 0,
     "x": -54.65914476507801,
     "y": -15.0092784
   },
-  "The Iron Beach": {
+  "minor-The Iron Beach": {
+    "name": "The Iron Beach",
     "region": "FarranacCoastHex",
     "major": 0,
     "x": -68.41575710917202,
     "y": 8.54577648
   },
-  "The Jade Cove": {
+  "major-The Jade Cove": {
+    "name": "The Jade Cove",
     "region": "FarranacCoastHex",
     "major": 1,
     "x": -64.3850808902688,
     "y": -5.364921599999999
   },
-  "The Mirror": {
+  "minor-The Mirror": {
+    "name": "The Mirror",
     "region": "FarranacCoastHex",
     "major": 0,
     "x": -48.0707668548381,
     "y": 3.199995359999999
   },
-  "The Reaping Fields": {
+  "minor-The Reaping Fields": {
+    "name": "The Reaping Fields",
     "region": "FarranacCoastHex",
     "major": 0,
     "x": -55.29447873749454,
     "y": -0.717136919999998
   },
-  "The Snag": {
+  "minor-The Snag": {
+    "name": "The Snag",
     "region": "FarranacCoastHex",
     "major": 0,
     "x": -45.211160393898275,
     "y": -10.333947599999998
   },
-  "The Spearhead": {
+  "major-The Spearhead": {
+    "name": "The Spearhead",
     "region": "FarranacCoastHex",
     "major": 1,
     "x": -71.78966335630017,
     "y": 10.7472852
   },
-  "The Winged Walk": {
+  "minor-The Winged Walk": {
+    "name": "The Winged Walk",
     "region": "FarranacCoastHex",
     "major": 0,
     "x": -49.17764708700113,
     "y": -5.440179599999999
   },
-  "Transient Valley": {
+  "minor-Transient Valley": {
+    "name": "Transient Valley",
     "region": "FarranacCoastHex",
     "major": 0,
     "x": -56.310678211729666,
     "y": 11.74442328
   },
-  "Victa": {
+  "major-Victa": {
+    "name": "Victa",
     "region": "FarranacCoastHex",
     "major": 1,
     "x": -63.99034373994255,
