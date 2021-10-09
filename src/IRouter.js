@@ -243,7 +243,7 @@
                     if (th.major != 1) {
                         var ownership = API.ownership(th.x + 128, th.y - 128, th.region).ownership;
                         var control = ownership == "COLONIALS" ? 0 : (ownership == "WARDENS" ? 1 : 2);
-                        RegionLabels.addText(Recase(ks[t]), ks[t], control, th.x, th.y, 5, 9, '#bbbbbb');
+                        RegionLabels.addText(Recase(th.name), th.name, control, th.x, th.y, 5, 9, '#bbbbbb');
                     }
                 }
 
@@ -252,7 +252,7 @@
                     if (th.major == 1) {
                         var ownership = API.ownership(th.x + 128, th.y - 128, th.region).ownership;
                         var control = ownership == "COLONIALS" ? 0 : (ownership == "WARDENS" ? 1 : 2);
-                        RegionLabels.addText(Recase(ks[t]), ks[t], control, th.x, th.y, 3, 9, '#fff');
+                        RegionLabels.addText(Recase(th.name), th.name, control, th.x, th.y, 3, 9, '#fff');
                     }
                 }
 

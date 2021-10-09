@@ -1,5 +1,5 @@
 #!/bin/bash
-branch="dev"
+branch="live"
 #"live"
 k=$(echo "256 / 7" | bc)
 w=$(echo "scale=20; $k * 2 / sqrt(3)" | bc)
@@ -56,7 +56,7 @@ download()
 #		offsetx=$(echo "$offsetx + 128" | bc)
 #		offsety=$(echo "$offsety - 128" | bc)
 
-		wget -qO - "https://war-service-$branch.foxholeservices.com/api/worldconquest/maps/$f/static" | jq "[.mapTextItems[] | if .mapMarkerType==\"Major\" then {\"key\":.text, \"value\": {region: \"$f\", major: 1, x:((((.x*$w)+$offsetx)-$w2)), y:(((((1-.y)*$k)+$offsety)-$k2))}} else  {\"key\":.text, \"value\": {region: \"$f\", major: 0, x:((((.x*$w)+$offsetx)-$w2)), y:(((((1-.y)*$k)+$offsety)-$k2))}} end]"
+wget -qO - "https://war-service-$branch.foxholeservices.com/api/worldconquest/maps/$f/static" | jq "[.mapTextItems[] | if .mapMarkerType==\"Major\" then {\"key\": (\"major-\" + .text), \"value\": {name: .text, region: \"$f\", major: 1, x:((((.x*$w)+$offsetx)-$w2)), y:(((((1-.y)*$k)+$offsety)-$k2))}} else  {\"key\":( \"minor-\" + .text), \"value\": {name: .text, region: \"$f\", major: 0, x:((((.x*$w)+$offsetx)-$w2)), y:(((((1-.y)*$k)+$offsety)-$k2))}} end]"
 		
         done
         echo "]"
