@@ -163,8 +163,6 @@ exports.API = {
 
         if (shard == null)
             shard = 'war-service-live';
-        else
-            shard = 'war-service-live-'.concat(shard);
 
         APIQuery("https://".concat(shard).concat(".foxholeservices.com/api/worldconquest/war"),
             function (war) {

@@ -15,8 +15,7 @@
         }
 
 
-        .leaflet-routing-alt-minimized table tr td span.summary-routeinfo div
-        {
+        .leaflet-routing-alt-minimized table tr td span.summary-routeinfo div {
             display: none;
         }
 
@@ -46,12 +45,12 @@
                 text-indent: 2px;
             }
 
-        .roadtier div span {
-            position: relative;
-            top: -1px;
-            display: inline-block;
-            vertical-align: middle;
-        }
+                .roadtier div span {
+                    position: relative;
+                    top: -1px;
+                    display: inline-block;
+                    vertical-align: middle;
+                }
 
         .detailed-routeinfo {
             margin-top: 4px;
@@ -1593,7 +1592,7 @@
         if (location.protocol !== 'https:' && (location.hostname.toLowerCase() == "www.logiwaze.com" || location.hostname.toLowerCase() == "logiwaze.com"))
             location.replace('https:'.concat(location.href.substring(location.protocol.length)));
 
-        var build="eaa982cf370fe313743dcb16d27b51f44749a9e2";
+        var build = "1247780cf2b96be0b42e5a029c9bba0ac1813d09";
         if ("serviceWorker" in navigator) {
 
             window.addEventListener("load", function () {
@@ -1605,7 +1604,7 @@
         }
 
     </script>
-    <script src="FoxholeRouter.js?548b8d005ef8d88cfd5e03ea101f78fd"></script>
+    <script src="FoxholeRouter.js?f6b347bc54cf9c2122b123c5d155d1ea"></script>
     <script type="text/javascript">
 
         //window.indexedDB.open("logiwaze").onsuccess = function (e) {
@@ -1636,8 +1635,28 @@
         //db.createObjectStore("version", { version: })
         //objectStore.createIndex("name", "name", { unique: false });
 
+        var startingWaypoints = [];
 
 
+        // load initial waypoints
+        var points = startingWaypoints;
+        var layers = 16384 * 2 - 1;
+
+        var shard = 0;
+        var shard_url;
+
+        var j = [];
+        var h;
+
+        if (typeof (location.hash) != 'undefined' && location.hash != "" && location.hash != "#") {
+            h = decodeURI(location.hash.substr(1));
+            j = h.split(':');
+        }
+
+        if (j.length > 3)
+            shard = parseInt(j[3]);
+
+        shard_url = Shards[Object.keys(Shards)[shard]];
 
 
         var urlParams = new URLSearchParams(window.location.search);
@@ -1682,8 +1701,7 @@
         //    document.getElementsByClassName('leaflet-control-youtube-toggle')[0].style.display = "block";
         //}
 
-    
-        var shard = urlParams.get('shard2') != null ? "2" : urlParams.get('shard');
+
 
         var APIManager = API.Create();
 
@@ -1777,26 +1795,35 @@
 
             Router.VectorControlGrid.build = "?".concat(build);
 
+            var Options = {
+                '<img src="MapIcons/MapIconStaticBase3.webp" class="layer-icon">Town Halls': Router.TownHalls,
+                '<img src="MapIcons/fencing.webp" class="layer-icon">Borders': Router.Borders,
+                '<img src="MapIcons/road-route.webp" class="layer-icon">Road Quality': Router.RoadsCanvas,
+                '<img src="Colonial Route.webp" class="layer-icon">Colonial Roads': Router.ColonialRoads,
+                '<img src="Warden Route.webp" class="layer-icon">Warden Roads': Router.WardenRoads,
+                '<img src="Shortest Route.webp" class="layer-icon">Uncontrolled Roads': Router.NeutralRoads,
+                '<img src="MapIcons/MapIconManufacturing.webp" class="layer-icon">Refineries': Router.Refineries,
+                '<img src="MapIcons/MapIconFactory.webp" class="layer-icon">Factories': Router.Factories,
+                '<img src="MapIcons/MapIconStorageFacility.webp" class="layer-icon">Storage': Router.Storage,
+                '<img src="MapIcons/MapIconSalvage.webp" class="layer-icon">Salvage': Router.Salvage,
+                '<img src="MapIcons/MapIconComponents.webp" class="layer-icon">Components': Router.Components,
+                '<img src="MapIcons/MapIconFuel.webp" class="layer-icon">Fuel': Router.Fuel,
+                '<img src="MapIcons/MapIconSulfur.webp" class="layer-icon">Sulfur': Router.Sulfur,
+                '<img src="MapIcons/Control.webp" class="layer-icon">Control': Router.MapControl,
+                '<img src="MapIcons/Labels.webp" class="layer-icon">Labels': Router.Labels,
+                '<img src="font.svg" class="layer-icon">Basic Font': Router.BoringFont
+            };
+
+            var shard_layers = {};
+            let keys = Object.keys(Shards);
+            for (var i = 0; i < keys.length; i++)
+                shard_layers[keys[i]] = L.layerGroup();
+
+            shard_layers[Object.keys(shard_layers)[shard]].addTo(mymap);
+
             L.control.layers(
-                {},
-                {
-                    '<img src="MapIcons/MapIconStaticBase3.webp" class="layer-icon">Town Halls': Router.TownHalls,
-                    '<img src="MapIcons/fencing.webp" class="layer-icon">Borders': Router.Borders,
-                    '<img src="MapIcons/road-route.webp" class="layer-icon">Road Quality': Router.RoadsCanvas,
-                    '<img src="Colonial Route.webp" class="layer-icon">Colonial Roads': Router.ColonialRoads,
-                    '<img src="Warden Route.webp" class="layer-icon">Warden Roads': Router.WardenRoads,
-                    '<img src="Shortest Route.webp" class="layer-icon">Uncontrolled Roads': Router.NeutralRoads,
-                    '<img src="MapIcons/MapIconManufacturing.webp" class="layer-icon">Refineries': Router.Refineries,
-                    '<img src="MapIcons/MapIconFactory.webp" class="layer-icon">Factories': Router.Factories,
-                    '<img src="MapIcons/MapIconStorageFacility.webp" class="layer-icon">Storage': Router.Storage,
-                    '<img src="MapIcons/MapIconSalvage.webp" class="layer-icon">Salvage': Router.Salvage,
-                    '<img src="MapIcons/MapIconComponents.webp" class="layer-icon">Components': Router.Components,
-                    '<img src="MapIcons/MapIconFuel.webp" class="layer-icon">Fuel': Router.Fuel,
-                    '<img src="MapIcons/MapIconSulfur.webp" class="layer-icon">Sulfur': Router.Sulfur,
-                    '<img src="MapIcons/Control.webp" class="layer-icon">Control': Router.MapControl,
-                    '<img src="MapIcons/Labels.webp" class="layer-icon">Labels': Router.Labels,
-                    '<img src="font.svg" class="layer-icon">Basic Font': Router.BoringFont
-                },
+                shard_layers,
+                Options,
                 {
                     position: 'topleft',
                     autoZIndex: false
@@ -1875,8 +1902,6 @@
             };
 
             L.control.youtube().addTo(mymap);*/
-
-            var startingWaypoints = [];
 
             //class custom_formatter extends L.Routing.ItineraryBuilder {
             //    constructor(API) {
@@ -2050,7 +2075,7 @@
 
                 ss.onclick = () => Router.screenshot();
                 tt.onclick = () => Router.copy();
-                
+
                 x.title = "Reverse Waypoints";
             }
 
@@ -2243,7 +2268,7 @@
                     }
 
                 var counter = 0;
-                var keys = Object.keys(active_layers);
+                keys = Object.keys(active_layers);
                 for (var i = 0; i < keys.length; i++)
                     if (active_layers[keys[i]] === true)
                         switch (keys[i].replace(/<.*> */, '')) {
@@ -2311,12 +2336,29 @@
 
                 l = l.concat(':').concat(Math.round(center[0] * 1000) / 1000).concat(',').concat(Math.round(center[1] * 1000) / 1000).concat(',').concat(zoom);
 
+                // add shard
+                l = l.concat(':').concat(shard.toFixed().toString());
+
                 if (location.hash != l) {
                     for (let b of document.getElementsByClassName("copy-paste-url-button"))
                         b.classList.add("dirty");
                     location.hash = l;
                 }
+
             }
+
+            mymap.on('baselayerchange', function (e) {
+                // change shard here
+                let keys = Object.keys(Shards);
+                for (shard = 0; shard < keys.length; shard++)
+                    if (keys[shard] == e.name)
+                        break;
+
+                if (update_state != null)
+                    update_state();
+
+                location.reload();
+            });
 
             mymap.on('overlayadd', function (event) {
                 if (no_update) return;
@@ -2432,42 +2474,34 @@
 
 
 
+            // filter layers
+            if (j.length > 1)
+                layers = parseInt(j[1], 16);
+
+            if (j.length > 2) {
+                // set camera
+                var coords = j[2].split(/,/);
+                var z = parseFloat(coords[2]);
+                PauseAutoZoom();
+
+                var zoom = mymap.getZoom();
+                var s = mymap.unproject([getPanelVisibleWidth(), getPanelVisibleHeight()], zoom);
+                var xoffset = isNaN(s.lng) ? 0 : s.lng;
+                var yoffset = isNaN(s.lat) ? 0 : s.lat;
+
+                mymap.setView([parseFloat(coords[1]) + .5 * yoffset, parseFloat(coords[0]) + .5 * xoffset], z);
+                ResumeAutoZoom();
+            }
 
 
-            // load initial waypoints
-            var points = startingWaypoints;
-            var layers = 16384 * 2 - 1;
+            Router.Control.on('routeselected', function (event) {
+                Router.setRoute(event.route);
+                CurrentRoute = event.route;
+                AutoZoom = true;
+                SmartAutoZoom();
+            });
 
-            if (typeof (location.hash) != 'undefined' && location.hash != "" && location.hash != "#") {
-                var h = decodeURI(location.hash.substr(1));
-                var j = h.split(':');
-
-                // filter layers
-                if (j.length > 1)
-                    layers = parseInt(j[1], 16);
-
-                if (j.length > 2) {
-                    // set camera
-                    var coords = j[2].split(/,/);
-                    var z = parseFloat(coords[2]);
-                    PauseAutoZoom();
-
-                    var zoom = mymap.getZoom();
-                    var s = mymap.unproject([getPanelVisibleWidth(), getPanelVisibleHeight()], zoom);
-                    var xoffset = isNaN(s.lng) ? 0 : s.lng;
-                    var yoffset = isNaN(s.lat) ? 0 : s.lat;
-
-                    mymap.setView([parseFloat(coords[1]) + .5 * yoffset, parseFloat(coords[0]) + .5 * xoffset], z);
-                    ResumeAutoZoom();
-                }
-
-                Router.Control.on('routeselected', function (event) {
-                    Router.setRoute(event.route);
-                    CurrentRoute = event.route;
-                    AutoZoom = true;
-                    SmartAutoZoom();
-                });
-
+            if (j.length > 0) {
                 h = j[0];
 
                 var l = h.split("|");
@@ -2507,7 +2541,9 @@
             active_layers["Labels"] = (layers & 16384) != 0;
             active_layers["Basic Font"] = (layers & 32768) != 0;
 
-            var keys = Object.keys(active_layers);
+
+
+            keys = Object.keys(active_layers);
             for (var i = 0; i < keys.length; i++)
                 if (false == active_layers[keys[i]])
                     switch (keys[i].replace(/<.*> */, '')) {
@@ -2643,7 +2679,7 @@
             //for (var e of document.getElementsByClassName('leaflet-routing-container'))
             //    makeResizeable(e);
 
-        }, shard);
+        }, shard_url);
 
 
     </script>
