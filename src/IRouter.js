@@ -1,5 +1,5 @@
-﻿define(['leaflet', 'json-loader!../Roads.geojson', './geojson-path-finder/index.js', 'leaflet-routing-machine', '../towns.json', 'jquery'],
-    function (L, Paths, PathFinder, routing_machine, towns) {
+﻿define(['leaflet', 'json-loader!../Roads.geojson', './geojson-path-finder/index.js', 'leaflet-routing-machine', '../towns.json', '../Shards.json'],
+    function (L, Paths, PathFinder, routing_machine, towns, shards) {
 
         return {
             FoxholeRouter: function (mymap, API, Narrator) {
@@ -407,6 +407,8 @@
                     WardenRoads: L.layerGroup().addTo(mymap),
                     ColonialRoads: L.layerGroup().addTo(mymap),
                     NeutralRoads: L.layerGroup().addTo(mymap),
+
+                    Shards: shards,
 
                     renderer: renderer,
 

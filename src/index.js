@@ -37,3 +37,5 @@ global.YouTube = {
 global.Panel = {
     Create: (APIManager, Router, Geocoder) => require('./Panel.js').Panel(APIManager, Router, Geocoder)
 }
+
+global.Shards = require('../Shards.json');
