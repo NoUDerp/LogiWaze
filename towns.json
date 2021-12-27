@@ -2621,8 +2621,8 @@
     "name": "The Dais",
     "region": "StonecradleHex",
     "major": 1,
-    "x": -57.69679718093578,
-    "y": 50.319571319999994
+    "x": -57.69679551816701,
+    "y": 50.31957258
   },
   "major-The Heir's Knife": {
     "name": "The Heir's Knife",
@@ -4070,8 +4070,8 @@
     "name": "Ire",
     "region": "CallumsCapeHex",
     "major": 1,
-    "x": -62.423494691323015,
-    "y": 59.417051400000005
+    "x": -62.42349178147765,
+    "y": 59.417046
   },
   "major-Lookout": {
     "name": "Lookout",
