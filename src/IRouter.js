@@ -742,11 +742,17 @@
                         let cx = cam.min.x;
                         let cy = cam.min.y;
 
+                        let u = this.Control.getWaypoints();
 
+                        var waypoint_count = 0;
+                        if (u != null)
+                            for (let m of u)
+                                if (m != null && m.latLng != null)
+                                    waypoint_count++;
 
-                        if (this.Control.routeSelected != null) {
+                        if (this.Control.routeSelected != null && waypoint_count > 1) {
                             ctx.save();
-                            var pixelScale = 2; // temporarily disabled: window.devicePixelRatio;
+                            var pixelScale = 1; // temporarily disabled: window.devicePixelRatio;
                             ctx.scale(pixelScale, pixelScale);
                             for (let style of [
                                 { color: 'black', opacity: 0.15, weight: 9 },
@@ -775,41 +781,48 @@
                                 ctx.stroke();
                                 ctx.restore();
                             }
-
-                            let u = this.Control.routeSelected.waypoints;
-                            let marker_loaded = false;
-                            let marker_shadow_loaded = false;
-
-                            function drawMarkers(ctx) {
-                                for (let m of u) {
-                                    let p = mymap.project([m.latLng.lat, m.latLng.lng]);
-                                    ctx.drawImage(marker_shadow, p.x - cx - marker.width / 2, p.y - cy - marker.height);
-                                }
-                                for (let m of u) {
-                                    let p = mymap.project([m.latLng.lat, m.latLng.lng]);
-                                    ctx.drawImage(marker, p.x - cx - marker.width / 2, p.y - cy - marker.height);
-                                }
-                                ctx.restore();
-                            }
-
-                            let marker = this.marker, marker_shadow = this.marker_shadow;
-                            if (marker == null) {
-                                this.marker = marker = new Image();
-                                marker.src = "marker-icon.png";
-                                marker.onload = function () {
-                                    marker_loaded = true; if (marker_shadow_loaded && marker_loaded) drawMarkers(ctx);
-                                }
-                                this.marker_shadow = marker_shadow = new Image();
-                                marker_shadow.src = "marker-shadow.png";
-                                marker_shadow.onload = function () {
-                                    marker_shadow_loaded = true; if (marker_shadow_loaded && marker_loaded) drawMarkers(ctx);
-                                }
-                                // set up the cache on this
-                            }
-                            else
-                                setTimeout(() => drawMarkers(ctx), 0);
-
                         }
+
+                        let marker_loaded = false;
+                        let marker_shadow_loaded = false;
+
+                        function drawMarkers(ctx) {
+
+                            if (u != null) {
+                                for (let m of u)
+                                    if (m != null && m.latLng != null) {
+                                        let p = mymap.project([m.latLng.lat, m.latLng.lng]);
+                                        ctx.drawImage(marker_shadow, p.x - cx - marker.width / 2, p.y - cy - marker.height);
+
+                                    }
+
+                                for (let m of u)
+                                    if (m != null && m.latLng != null) {
+                                        let p = mymap.project([m.latLng.lat, m.latLng.lng]);
+                                        ctx.drawImage(marker, p.x - cx - marker.width / 2, p.y - cy - marker.height);
+                                    }
+                            }
+                            ctx.restore();
+                        }
+
+                        let marker = this.marker, marker_shadow = this.marker_shadow;
+                        if (marker == null) {
+                            this.marker = marker = new Image();
+                            marker.src = "marker-icon.png";
+                            marker.onload = function () {
+                                marker_loaded = true; if (marker_shadow_loaded && marker_loaded) drawMarkers(ctx);
+                            }
+                            this.marker_shadow = marker_shadow = new Image();
+                            marker_shadow.src = "marker-shadow.png";
+                            marker_shadow.onload = function () {
+                                marker_shadow_loaded = true; if (marker_shadow_loaded && marker_loaded) drawMarkers(ctx);
+                            }
+                            // set up the cache on this
+                        }
+                        else
+                            setTimeout(() => drawMarkers(ctx), 0);
+
+
                     },
 
                     narrate: function () {
