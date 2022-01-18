@@ -1450,7 +1450,7 @@
             }
         }
 
-        .copy-button, .copy-paste-url-button, .refresh-button, .screenshot-button {
+        .copy-button, .copy-paste-url-button, .refresh-button, .screenshot-button, .report-button {
             float: left !important
         }
 
@@ -1509,7 +1509,7 @@
         if (location.protocol !== 'https:' && (location.hostname.toLowerCase() == "www.logiwaze.com" || location.hostname.toLowerCase() == "logiwaze.com"))
             location.replace('https:'.concat(location.href.substring(location.protocol.length)));
 
-        var build="d8b71da34347e9b0784b526f0f82461981fe6f91";
+        var build = "c4ae8a3951d687f52c7741a18edebd83aa861b42";
         if ("serviceWorker" in navigator) {
 
             window.addEventListener("load", function () {
@@ -1521,7 +1521,7 @@
         }
 
     </script>
-    <script src="FoxholeRouter.js?50afedb38a5a7abb885ced8e70fb7f57"></script>
+    <script src="FoxholeRouter.js?f90cfa7667dcb8cf36ca391a53a0400c"></script>
     <script type="text/javascript">
 
         //window.indexedDB.open("logiwaze").onsuccess = function (e) {
@@ -1945,6 +1945,8 @@
 
             // add another button
             for (let x of document.getElementsByClassName("leaflet-routing-reverse-waypoints")) {
+
+                x.title = "Reverse Waypoints";
                 var b = document.createElement("button");
                 b.className = "copy-paste-url-button";
                 b.alt = "Copy URL";
@@ -1993,7 +1995,20 @@
                 ss.onclick = () => Router.screenshot();
                 tt.onclick = () => Router.copy();
 
-                x.title = "Reverse Waypoints";
+
+                if (window.location.hostname.toUpperCase() == "WWW.LOGIWAZE.COM")
+                {
+                    let ttt = document.createElement("button");
+                    ttt.className = "report-button";
+                    download_icon = document.createElement("img");
+                    download_icon.src = "bug.svg";
+                    download_icon.style.width = "20px";
+                    download_icon.style.height = "20px";
+                    ttt.appendChild(download_icon);
+                    ttt.alt = "Report Error";
+                    ttt.title = "Report Error";
+                    tt.after(ttt);
+                }
             }
 
             for (let y of document.getElementsByClassName("leaflet-routing-add-waypoint")) {
@@ -2260,6 +2275,20 @@
                     for (let b of document.getElementsByClassName("copy-paste-url-button"))
                         b.classList.add("dirty");
                     location.hash = l;
+                }
+
+                // update the report button (if the url is logiwaze.com) to link properly
+                if (window.location.host.toUpperCase() == "WWW.LOGIWAZE.COM")
+                {
+                    var report_buttons = document.getElementsByClassName("report-button");
+                    if (report_buttons != null)
+                        for (var i = 0; i < report_buttons.length; i++) {
+                            report_buttons[i].onclick = function () {
+                                // open url in new tab
+                                var URL = "https://docs.google.com/forms/d/e/1FAIpQLSe2TdapwEIY6IlAHpzb9ZX7rPmx9N3BkyqFKoIsko-WCMehlg/viewform?usp=pp_url&entry.1290713637=".concat(encodeURIComponent(window.location));
+                                window.open(URL, '_blank');
+                            };
+                        }
                 }
 
             }
@@ -2559,6 +2588,7 @@
             document.getElementById("map-frame").style.opacity = '1';
             document.getElementById("loader-holder").style.opacity = '0';
             setTimeout(function () { document.getElementById("loader-holder").style.display = 'none'; }, 1000);
+
 
             //function makeResizeable(p) {
             //var p = document.getElementsByClassName('leaflet-router-container')[0];

@@ -1,4 +1,5 @@
 const assets = [
+    "bug.svg",
     "HTD.webp",
     "copy.svg",
     "download-file.svg",
