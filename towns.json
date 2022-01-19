@@ -3079,6 +3079,13 @@
     "x": -87.08366007062381,
     "y": -63.963342
   },
+  "major-Coldbutt": {
+   "name": "Coldbutt",
+   "region": "HowlCountyHex",
+   "major": 1,
+   "x": 42.421459900492025,
+   "y": 93.17639932
+  },
   "minor-Austriaca Reservoir": {
     "name": "Austriaca Reservoir",
     "region": "HowlCountyHex",

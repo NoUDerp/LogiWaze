@@ -270,8 +270,8 @@
                     { text: "Inquisitor Silenus Trail", x: 75.701 - 128, y: -123.834 + 128 },
                     { text: "Antraxen's Drive", x: 217.082 - 128, y: -136.754 + 128 },
                     { text: "Fork of Malarthyn", x: 70.279 - 128, y: -103.977 + 128 },
-                    { text: "Maybar's Finesse", x: 158.151 - 128, y: -101.223 + 128 }
-
+                    { text: "Maybar's Finesse", x: 158.151 - 128, y: -101.223 + 128 },
+                    { text: "Coldbutt", x: 160.854 - 128, y: -23.942 + 128 }
                 ]
                 )
                     RegionLabels.addText(Recase(credit.text), credit.text, control, credit.x, credit.y, 7, 9, '#DAA520');
