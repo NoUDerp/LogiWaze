@@ -1509,19 +1509,19 @@
         if (location.protocol !== 'https:' && (location.hostname.toLowerCase() == "www.logiwaze.com" || location.hostname.toLowerCase() == "logiwaze.com"))
             location.replace('https:'.concat(location.href.substring(location.protocol.length)));
 
-        var build = "c4ae8a3951d687f52c7741a18edebd83aa861b42";
+        var build="287dd1a5e55f57d0128112643e3130c85f3f3396";
         if ("serviceWorker" in navigator) {
 
             window.addEventListener("load", function () {
                 navigator.serviceWorker
-                    .register("ServiceWorker.js?a46f972633d6a4e960d5f1ed4130864a")
+                    .register("ServiceWorker.js?5865c449bf4ef5ef56f80dd71c360538")
                     .then(function (res) { return res.update(); })// console.log("service worker registered"))
                     .catch(function (err) { console.log("service worker not registered", err); })
             });
         }
 
     </script>
-    <script src="FoxholeRouter.js?f90cfa7667dcb8cf36ca391a53a0400c"></script>
+    <script src="FoxholeRouter.js?af694dc47bcdb11e3637555621a27e61"></script>
     <script type="text/javascript">
 
         //window.indexedDB.open("logiwaze").onsuccess = function (e) {
