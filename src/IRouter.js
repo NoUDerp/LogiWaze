@@ -273,8 +273,12 @@
                     { text: "Maybar's Finesse", x: 158.151 - 128, y: -101.223 + 128 },
                     { text: "Coldbutt", x: 160.854 - 128, y: -23.942 + 128 }
                 ]
-                )
+                ) {
+                    var region = API.calculateRegion(credit.x + 128, credit.y - 128);
+                    var ownership = API.ownership(credit.x + 128, credit.y - 128, region).ownership;
+                    let control = ownership == "COLONIALS" ? 0 : (ownership == "WARDENS" ? 1 : 2);
                     RegionLabels.addText(Recase(credit.text), credit.text, control, credit.x, credit.y, 7, 9, '#DAA520');
+                }
 
                 for (var key in JSONRoads._layers) {
                     var layer = JSONRoads._layers[key];
