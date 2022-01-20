@@ -1,5 +1,5 @@
-﻿define(['leaflet', 'json-loader!../Roads.geojson', './geojson-path-finder/index.js', 'leaflet-routing-machine', '../towns.json', '../Shards.json'],
-    function (L, Paths, PathFinder, routing_machine, towns, shards) {
+﻿define(['leaflet', 'json-loader!../Roads.geojson', './geojson-path-finder/index.js', 'leaflet-routing-machine', '../towns.json', '../Shards.json', '@zuzak/owo'],
+    function (L, Paths, PathFinder, routing_machine, towns, shards, owo) {
 
         return {
             FoxholeRouter: function (mymap, API, Narrator) {
@@ -16,6 +16,7 @@
                 var Intersections = {};
                 var BorderCache = {};
                 var BorderCrossings = {};
+                var Garages = {};
 
                 var keys = Object.keys(JSONRoads._layers);
 
@@ -116,7 +117,7 @@
                 var renderer = L.canvas({ tolerance: .2 }).addTo(mymap);
 
                 var RegionLabels = VectorTextGrid.Create(8, [128, 128]);
-                var ControlLayer = VectorControlGrid.Create(5, 8, [128, 128], API, .30, .17, GridDepth);
+                var ControlLayer = VectorControlGrid.Create(7, 8, [128, 128], API, .30, .17, GridDepth);
 
                 var regions = API.regions;
                 var h = 256 / 7;
@@ -152,6 +153,8 @@
                         icon = 'MapIconConstructionYard';
                     else if (ic.icon == 52)
                         icon = 'MapIconSeaport';
+                    else if (ic.icon == 12)
+                        icon = 'MapIconVehicle';
                     else
                         return null;
 
@@ -211,6 +214,8 @@
                         if (th.nuked) {
                             var data = { ownership: th.control, icon: th.mapIcon };
                             var icon = resolveIcon(data);
+                            if (icon == 12) // vehicle factory
+                                Garages.push({ x: th.x, y: th.y, nuked: th.nuked, ownership: th.control });
                             ControlLayer.addIcon(icon, th.x, th.y, th.nuked, 0, 9);
                         }
                     }
@@ -243,7 +248,7 @@
                     if (th.major != 1) {
                         var ownership = API.ownership(th.x + 128, th.y - 128, th.region).ownership;
                         var control = ownership == "COLONIALS" ? 0 : (ownership == "WARDENS" ? 1 : 2);
-                        RegionLabels.addText(Recase(th.name), th.name, control, th.x, th.y, 5, 9, '#bbbbbb');
+                        RegionLabels.addText(Recase(owo.translate(th.name)), owo.translate(th.name), control, th.x, th.y, 5, 9, '#bbbbbb');
                     }
                 }
 
@@ -252,12 +257,12 @@
                     if (th.major == 1) {
                         var ownership = API.ownership(th.x + 128, th.y - 128, th.region).ownership;
                         var control = ownership == "COLONIALS" ? 0 : (ownership == "WARDENS" ? 1 : 2);
-                        RegionLabels.addText(Recase(th.name), th.name, control, th.x, th.y, 3, 9, '#fff');
+                        RegionLabels.addText(Recase(owo.translate(th.name)), owo.translate(th.name), control, th.x, th.y, 3, 9, '#fff');
                     }
                 }
 
                 for (var i = 0; i < API.regions.length; i++)
-                    RegionLabels.addText(Recase(API.regions[i].realName), API.regions[i].realName, 4, API.regions[i].x, API.regions[i].y, 0, 3, '#ffffff', 2.5);
+                    RegionLabels.addText(Recase(owo.translate(API.regions[i].realName)), owo.translate(API.regions[i].realName), 4, API.regions[i].x, API.regions[i].y, 0, 3, '#ffffff', 2.5);
 
 
                 for (var credit of [ // wow these are all wrong now
@@ -271,13 +276,14 @@
                     { text: "Antraxen's Drive", x: 217.082 - 128, y: -136.754 + 128 },
                     { text: "Fork of Malarthyn", x: 70.279 - 128, y: -103.977 + 128 },
                     { text: "Maybar's Finesse", x: 158.151 - 128, y: -101.223 + 128 },
-                    { text: "Coldbutt", x: 160.854 - 128, y: -23.942 + 128 }
+		    { text: "Rust Bay", x: 190.195 - 128, y: -202.842 + 128},
+		    { text: "Sentsu's View", x: 30.13 - 128, y: -114.392 + 128}
                 ]
                 ) {
                     var region = API.calculateRegion(credit.x + 128, credit.y - 128);
                     var ownership = API.ownership(credit.x + 128, credit.y - 128, region).ownership;
                     let control = ownership == "COLONIALS" ? 0 : (ownership == "WARDENS" ? 1 : 2);
-                    RegionLabels.addText(Recase(credit.text), credit.text, control, credit.x, credit.y, 7, 9, '#DAA520');
+                    RegionLabels.addText(owo.translate(Recase(credit.text)), owo.translate(credit.text), control, credit.x, credit.y, 7, 9, '#DAA520');
                 }
 
                 for (var key in JSONRoads._layers) {
@@ -624,12 +630,12 @@
 
 
                     showFactories: function () {
-                        ControlLayer.enableIcons(['MapIconFactory.webp', 'MapIconMassProductionFactory.webp', 'MapIconConstructionYard.webp', 'MapIconFactoryWarden.webp', 'MapIconMassProductionFactoryWarden.webp', 'MapIconConstructionYardWarden.webp', 'MapIconFactoryColonial.webp', 'MapIconMassProductionFactoryColonial.webp', 'MapIconConstructionYardColonial.webp']);
+                        ControlLayer.enableIcons(['MapIconFactory.webp', 'MapIconMassProductionFactory.webp', 'MapIconConstructionYard.webp', 'MapIconFactoryWarden.webp', 'MapIconMassProductionFactoryWarden.webp', 'MapIconConstructionYardWarden.webp', 'MapIconFactoryColonial.webp', 'MapIconMassProductionFactoryColonial.webp', 'MapIconConstructionYardColonial.webp', 'MapIconVehicle.webp', 'MapIconVehicleWarden.webp', 'MapIconVehicleColonial.webp']);
                         ControlLayer.redraw();
                     },
 
                     hideFactories: function () {
-                        ControlLayer.disableIcons(['MapIconFactory.webp', 'MapIconMassProductionFactory.webp', 'MapIconConstructionYard.webp', 'MapIconFactoryWarden.webp', 'MapIconMassProductionFactoryWarden.webp', 'MapIconConstructionYardWarden.webp', 'MapIconFactoryColonial.webp', 'MapIconMassProductionFactoryColonial.webp', 'MapIconConstructionYardColonial.webp']);
+                        ControlLayer.disableIcons(['MapIconFactory.webp', 'MapIconMassProductionFactory.webp', 'MapIconConstructionYard.webp', 'MapIconFactoryWarden.webp', 'MapIconMassProductionFactoryWarden.webp', 'MapIconConstructionYardWarden.webp', 'MapIconFactoryColonial.webp', 'MapIconMassProductionFactoryColonial.webp', 'MapIconConstructionYardColonial.webp', 'MapIconVehicle.webp', 'MapIconVehicleWarden.webp', 'MapIconVehicleColonial.webp']);
                         ControlLayer.redraw();
                     },
 
@@ -928,6 +934,231 @@
 
                         if (no_warden_path)
                             wardenPath = null;
+
+                        let call = callback.bind(context);
+                        var route_builder = function (name, opath, wp) {
+                            var coordinates = [];
+                            var instructions = [];
+                            var accumulated_distance = 0.0;
+                            var crossroads = [];
+                            var last_region = null;
+                            for (var i = 0; i < opath.path.length; i++) {
+                                coordinates[i] = L.latLng(opath.path[i][1], opath.path[i][0]);
+                                if (i > 0) {
+                                    var dy = opath.path[i][0] - opath.path[i - 1][0];
+                                    var dx = opath.path[i][1] - opath.path[i - 1][1];
+
+                                    var distance = (Math.sqrt(dx * dx + dy * dy) / 256.0) * 12012.0;
+                                    var hash = opath.path[i][0].toFixed(3).concat("|").concat(opath.path[i][1].toFixed(3));
+                                    var lastHash = opath.path[i - 1][0].toFixed(3).concat("|").concat(opath.path[i - 1][1].toFixed(3));
+                                    var borderStart = BorderCrossings[lastHash] === 1;
+                                    var borderEnd = BorderCrossings[hash] === 1;
+                                    var intersection = Intersections[hash] > 2 || i == 1 || i == opath.path.length - 1;
+
+                                    if (intersection || borderStart) { /* if this is an intersection or border */
+                                        var region = opath.path[i][2];
+                                        crossroads.push({
+                                            angleIn: FoxholeRouter.calculateAngle(opath.path[i - 1], opath.path[i]),
+                                            angleOut: i < opath.path.length - 1 ? FoxholeRouter.calculateAngle(opath.path[i], opath.path[i + 1]) : null,
+                                            coordinates: [opath.path[i - 1], opath.path[i]],
+                                            distanceFromLast: accumulated_distance + distance,
+                                            region: region,
+                                            border: borderStart,
+                                            regionChange: region != last_region
+                                        });
+                                        accumulated_distance = 0;
+                                    }
+                                    else
+                                        accumulated_distance += distance;
+                                    last_region = region;
+                                }
+                            }
+
+                            var turns = {
+                                0: 'Continue', 1: 'Veer left', 2: 'Turn left', 3: 'Sharp turn left', 4: 'About turn', 5: 'Sharp turn right', 6: 'Turn right', 7: 'Veer right',
+                                "-1": 'Veer right', "-2": 'Turn right', "-3": 'Sharp turn right', "-4": 'About turn', "-5": 'Sharp turn left', "-6": 'Turn left', "-7": 'Veer left',
+                            };
+
+
+                            for (var i = 0; i < crossroads.length - 1; i++) {
+                                var j = crossroads[i];
+                                {
+                                    var direction = FoxholeRouter.angleToDirection(j.angleOut);
+                                    var jangleIn = parseInt(Math.round((j.angleIn / (Math.PI * 2)) * 8)) % 8;
+                                    var jangleOut = parseInt(Math.round((j.angleOut / (Math.PI * 2)) * 8)) % 8;
+                                    var border = i < crossroads.length - 1 && (i < crossroads.length - 1 && crossroads[i + 1].border) ? 1 : 0;
+                                    var region_change = i == 0 || crossroads[i].regionChange;
+                                    var turnicon = turns[jangleOut - jangleIn];
+                                    if (jangleIn == jangleOut)
+                                        var text = "Continue ".concat(direction).concat(" ").concat(i < crossroads.length - 1 ? crossroads[i + 1].distanceFromLast.toFixed().toString().concat(" meters") : '');
+                                    else {
+                                        var text = turns[jangleOut - jangleIn].concat(' and drive ').concat(direction).concat(' for ').concat(crossroads[i + 1].distanceFromLast.toFixed().toString()).concat(" meters");
+                                    }
+                                    instructions.push({ distance: crossroads[i + 1].distanceFromLast, time: 0, text: j.region.concat('|').concat(text).concat('|').concat(border.toString()).concat('|').concat(region_change ? '1' : '0').concat('|').concat(turnicon).concat('|').concat(j.tier) });
+                                }
+                            }
+                            instructions.push({ distance: 0, time: 0, text: crossroads[crossroads.length - 1].region.concat("|").concat("You have arrived at your destination.|0|0|0|") });
+
+
+                            var distance = (opath.weight / 256.0) * 12012.0; //map scale 
+
+                            calcDistance = (x, y) => Math.sqrt(Math.pow(y[0] - x[0], 2) + Math.pow(y[1] - x[1], 2));
+
+                            let sums = [0, 0, 0];
+                            for (let i = 0; i < opath.path.length - 1; i++)
+                                sums[(opath.path[i][3] - 1) % 3] += calcDistance(opath.path[i], opath.path[i + 1]);
+
+                            let sumSum = sums[0] + sums[1] + sums[2];
+
+                            return {
+                                name: name,
+                                summary:
+                                {
+                                    totalTime: distance,
+                                    totalDistance: {
+                                        distance: distance,
+                                        breakdown: [sums[0] / sumSum, sums[1] / sumSum, sums[2] / sumSum]
+                                    }
+                                },
+                                inputWaypoints: wp,
+                                waypoints: wp,
+                                instructions: instructions,
+                                coordinates: coordinates
+                            }
+                        };
+
+                        if (path === null)
+                            call({ status: -1, message: "Could not find a route" }, []);
+                        else {
+
+                            if (path != null && (
+                                (wardenPath != null && wardenPath.path.length == path.path.length && wardenPath.path.reduce(function (result, value, index, array) { if (!result) return false; return path.path[index][0] == wardenPath.path[index][0] && path.path[index][1] == wardenPath.path[index][1]; }))
+                                ||
+                                (colonialPath != null && colonialPath.path.length == path.path.length && colonialPath.path.reduce(function (result, value, index, array) { if (!result) return false; return path.path[index][0] == colonialPath.path[index][0] && path.path[index][1] == colonialPath.path[index][1]; }))
+                            )
+                            )
+                                var routes = [];
+                            else
+                                var routes = [route_builder("Shortest Route", path, waypoints)];
+
+                            if (wardenPath != null)
+                                routes.unshift(route_builder("Warden Route", wardenPath, waypoints));
+                            if (colonialPath != null)
+                                routes.unshift(route_builder("Colonial Route", colonialPath, waypoints));
+
+                            call(null, routes);
+                        }
+                    },
+
+                    // very work-in-progress
+                    find_garage: function (start /*waypoints, callback, context, options*/) {
+                        highlighter.clearLayers();
+                        let w_waypoints = {};
+                        let c_waypoints = {};
+                        for (var w in Garages)
+                            waypoints.push(w);
+
+                        // modify new waypoints (garages) to find closest ones
+                        for (var i = 0; i < w_waypoints.length; i++) {
+                            var closestPoint = null;
+                            var distance = 0.0;
+                            for (var key in FoxholeRouter.Roads._layers) {
+                                var layer = FoxholeRouter.Roads._layers[key];
+                                for (var k = 0; k < layer._latlngs.length; k++) {
+
+                                    var wplat = w_waypoints[i].y;
+                                    var wplng = w_waypoints[i].x;
+
+                                    var lat = layer._latlngs[k].lat;
+                                    var lng = layer._latlngs[k].lng;
+                                    var distance_squared = (lat - wplat) * (lat - wplat) + (lng - wplng) * (lng - wplng);
+                                    if (!closestPoint || distance_squared < distance) {
+                                        distance = distance_squared;
+                                        closestPoint = L.latLng(lat, lng);
+                                    }
+                                }
+                            }
+                            w_waypoints[i].latLng = closestPoint;
+                        }
+
+                        for (var i = 0; i < c_waypoints.length; i++) {
+                            var closestPoint = null;
+                            var distance = 0.0;
+                            for (var key in FoxholeRouter.Roads._layers) {
+                                var layer = FoxholeRouter.Roads._layers[key];
+                                for (var k = 0; k < layer._latlngs.length; k++) {
+
+                                    var wplat = c_waypoints[i].y;
+                                    var wplng = c_waypoints[i].x;
+
+                                    var lat = layer._latlngs[k].lat;
+                                    var lng = layer._latlngs[k].lng;
+                                    var distance_squared = (lat - wplat) * (lat - wplat) + (lng - wplng) * (lng - wplng);
+                                    if (!closestPoint || distance_squared < distance) {
+                                        distance = distance_squared;
+                                        closestPoint = L.latLng(lat, lng);
+                                    }
+                                }
+                            }
+                            c_waypoints[i].latLng = closestPoint;
+                        }
+
+                        var wardenPath = null;
+                        var colonialPath = null;
+                        var no_warden_path = false;
+                        var no_colonial_path = false;
+
+                        for (var i = 0; i < w_waypoints.length - 1; i++) {
+                            var start = w_waypoints[i].latLng;
+                            var finish = w_waypoints[i + 1].latLng;
+
+                            if (!no_warden_path && FoxholeRouter.wardenPathFinder != null) {
+                                if (wardenPath == null)
+                                    wardenPath = FoxholeRouter.wardenPathFinder.findPath({ name: "path", geometry: { coordinates: [start.lng, start.lat] } }, { geometry: { coordinates: [finish.lng, finish.lat] } });
+                                else {
+                                    var p = FoxholeRouter.wardenPathFinder.findPath({ name: "path", geometry: { coordinates: [start.lng, start.lat] } }, { geometry: { coordinates: [finish.lng, finish.lat] } });
+                                    if (p != null && p.path != null) {
+                                        for (var k = 0; k < p.path.length; k++)
+                                            wardenPath.path.push(p.path[k]);
+                                        wardenPath.weight += p.weight;
+                                    }
+                                    else
+                                        wardenPath = null;
+                                }
+                            }
+                            if (wardenPath == null)
+                                no_warden_path = true;
+                        }
+
+                        for (var i = 0; i < c_waypoints.length - 1; i++) {
+                            var start = c_waypoints[i].latLng;
+                            var finish = c_waypoints[i + 1].latLng;
+                            if (!no_colonial_path && FoxholeRouter.colonialPathFinder != null) {
+                                if (colonialPath == null)
+                                    colonialPath = FoxholeRouter.colonialPathFinder.findPath({ name: "path", geometry: { coordinates: [start.lng, start.lat] } }, { geometry: { coordinates: [finish.lng, finish.lat] } });
+                                else {
+                                    var p = FoxholeRouter.colonialPathFinder.findPath({ name: "path", geometry: { coordinates: [start.lng, start.lat] } }, { geometry: { coordinates: [finish.lng, finish.lat] } });
+                                    if (p != null && p.path != null) {
+                                        for (var k = 0; k < p.path.length; k++)
+                                            colonialPath.path.push(p.path[k]);
+                                        colonialPath.weight += p.weight;
+                                    }
+                                    else
+                                        colonialPath = null;
+                                }
+                            }
+                            if (colonialPath == null)
+                                no_colonial_path = true;
+
+                        }
+
+                        if (no_colonial_path)
+                            colonialPath = null;
+
+                        if (no_warden_path)
+                            wardenPath = null;
+
+
 
                         let call = callback.bind(context);
                         var route_builder = function (name, opath, wp) {
