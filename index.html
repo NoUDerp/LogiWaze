@@ -1509,19 +1509,19 @@
         if (location.protocol !== 'https:' && (location.hostname.toLowerCase() == "www.logiwaze.com" || location.hostname.toLowerCase() == "logiwaze.com"))
             location.replace('https:'.concat(location.href.substring(location.protocol.length)));
 
-        var build="eb894e02f89fa019eece26e3e250438ddfcc9591";
+        var build="a0129cab464e000226c1abbe0fb3a86fd7fb21e6";
         if ("serviceWorker" in navigator) {
 
             window.addEventListener("load", function () {
                 navigator.serviceWorker
-                    .register("ServiceWorker.js?5865c449bf4ef5ef56f80dd71c360538")
+                    .register("ServiceWorker.js?dece5bf44221de7f88665c7784a6a35e")
                     .then(function (res) { return res.update(); })// console.log("service worker registered"))
                     .catch(function (err) { console.log("service worker not registered", err); })
             });
         }
 
     </script>
-    <script src="FoxholeRouter.js?cdb8297024404db75615618de2b0cb8b"></script>
+    <script src="FoxholeRouter.js?776d39a7a302d6b94eeca05ad9e903f1"></script>
     <script type="text/javascript">
 
         //window.indexedDB.open("logiwaze").onsuccess = function (e) {
@@ -1716,9 +1716,9 @@
                 '<img src="MapIcons/MapIconStaticBase3.webp" class="layer-icon">Town Halls': Router.TownHalls,
                 '<img src="MapIcons/fencing.webp" class="layer-icon">Borders': Router.Borders,
                 '<img src="MapIcons/road-route.webp" class="layer-icon">Road Quality': Router.RoadsCanvas,
-                '<img src="Colonial Route.webp" class="layer-icon">Colonial Roads': Router.ColonialRoads,
-                '<img src="Warden Route.webp" class="layer-icon">Warden Roads': Router.WardenRoads,
-                '<img src="Shortest Route.webp" class="layer-icon">Uncontrolled Roads': Router.NeutralRoads,
+                '<img src="MapIcons/road-route.webp" class="layer-icon">Road Control': Router.ColonialRoads,
+                /*'<img src="Warden Route.webp" class="layer-icon">Warden Roads': Router.WardenRoads,
+                '<img src="Shortest Route.webp" class="layer-icon">Uncontrolled Roads': Router.NeutralRoads,*/
                 '<img src="MapIcons/MapIconManufacturing.webp" class="layer-icon">Refineries': Router.Refineries,
                 '<img src="MapIcons/MapIconFactory.webp" class="layer-icon">Factories': Router.Factories,
                 '<img src="MapIcons/MapIconStorageFacility.webp" class="layer-icon">Storage': Router.Storage,
@@ -2210,18 +2210,18 @@
                             case "Borders":
                                 counter |= 2;
                                 break;
-                            case "Warden Roads":
-                                counter |= 4;
-                                break;
-                            case "Colonial Roads":
+                            //case "Warden Roads":
+                            //    counter |= 4;
+                            //    break;
+                            case "Road Control":
                                 counter |= 8;
                                 break;
                             case "Road Quality":
                                 counter |= 16;
                                 break;
-                            case "Uncontrolled Roads":
-                                counter |= 32;
-                                break;
+                            //case "Uncontrolled Roads":
+                            //    counter |= 32;
+                            //    break;
                             case "Refineries":
                                 counter |= 64;
                                 break;
@@ -2336,15 +2336,15 @@
                     case "Salvage":
                         Router.showSalvage();
                         break;
-                    case "Warden Roads":
-                        Router.showWarden();
-                        break;
-                    case "Colonial Roads":
+                    //case "Warden Roads":
+                    //    Router.showWarden();
+                    //    break;
+                    case "Road Control":
                         Router.showColonial();
                         break;
-                    case "Uncontrolled Roads":
-                        Router.showNeutral();
-                        break;
+                    //case "Uncontrolled Roads":
+                    //    Router.showNeutral();
+                    //    break;
                     case "Road Quality":
                         Router.showQuality();
                         break;
@@ -2392,15 +2392,15 @@
                     case "Salvage":
                         Router.hideSalvage();
                         break;
-                    case "Warden Roads":
-                        Router.hideWarden();
-                        break;
-                    case "Colonial Roads":
+                    //case "Warden Roads":
+                    //    Router.hideWarden();
+                    //    break;
+                    case "Road Control":
                         Router.hideColonial();
                         break;
-                    case "Uncontrolled Roads":
-                        Router.hideNeutral();
-                        break;
+                    //case "Uncontrolled Roads":
+                    //    Router.hideNeutral();
+                    //    break;
                     case "Road Quality":
                         Router.hideQuality();
                         break;
@@ -2472,9 +2472,9 @@
 
             active_layers["Road Quality"] = (layers & 16) != 0;
             active_layers["Borders"] = (layers & 2) != 0;
-            active_layers["Warden Roads"] = (layers & 4) != 0;
-            active_layers["Colonial Roads"] = (layers & 8) != 0;
-            active_layers["Uncontrolled Roads"] = (layers & 32) != 0;
+            //active_layers["Warden Roads"] = (layers & 4) != 0;
+            active_layers["Road Control"] = (layers & 8) != 0;
+            //active_layers["Uncontrolled Roads"] = (layers & 32) != 0;
             active_layers["Refineries"] = (layers & 64) != 0;
             active_layers["Factories"] = (layers & 128) != 0;
             active_layers["Storage"] = (layers & 256) != 0;
@@ -2505,18 +2505,18 @@
                             Router.Borders.remove();
                             Router.hideBorders();
                             break;
-                        case "Warden Roads":
-                            Router.WardenRoads.remove();
-                            Router.hideWarden();
-                            break;
-                        case "Colonial Roads":
+                        //case "Warden Roads":
+                        //    Router.WardenRoads.remove();
+                        //    Router.hideWarden();
+                        //    break;
+                        case "Road Control":
                             Router.ColonialRoads.remove();
                             Router.hideColonial();
                             break;
-                        case "Uncontrolled Roads":
-                            Router.NeutralRoads.remove();
-                            Router.hideNeutral();
-                            break;
+                        //case "Uncontrolled Roads":
+                        //    Router.NeutralRoads.remove();
+                        //    Router.hideNeutral();
+                        //    break;
                         case "Refineries":
                             Router.hideRefineries();
                             Router.Refineries.remove();
@@ -2545,18 +2545,18 @@
                             Router.Sulfur.remove();
                             Router.hideSulfur();
                             break;
-                        case "Warden Roads":
-                            Router.WardenRoads.remove();
-                            Router.hideWarden();
-                            break;
-                        case "Colonial Roads":
+                        //case "Warden Roads":
+                        //    Router.WardenRoads.remove();
+                        //    Router.hideWarden();
+                        //    break;
+                        case "Road Control":
                             Router.ColonialRoads.remove();
                             Router.hideColonial();
                             break;
-                        case "Uncontrolled Roads":
-                            Router.NeutralRoads.remove();
-                            Router.hideNeutral();
-                            break;
+                        //case "Uncontrolled Roads":
+                        //    Router.NeutralRoads.remove();
+                        //    Router.hideNeutral();
+                        //    break;
                         case "Road Quality":
                             Router.RoadsCanvas.remove();
                             Router.hideQuality();

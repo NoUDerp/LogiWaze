@@ -155,9 +155,9 @@ exports.API = {
         return kriging.predict(x - 128, y + 128, exports.API.variogram)
     },
 
-    townHallIcons : [35, 5, 6, 7, 8, 9, 10, 45, 46, 47, 29, 17, 34, 51, 39, 52, 33, 18, 19, 56, 57, 58],
+    townHallIcons : [35, 5, 6, 7, 8, 9, 10, 45, 46, 47, 29, 17, 34, 51, 39, 12, 52, 33, 18, 19, 56, 57, 58],
 
-    krigingControlPointIcons: [35, 5, 6, 7, 8, 9, 10, 45, 46, 47, 29, 56, 57, 58],
+    krigingControlPointIcons: [/* safe house 35, */5, 6, 7, 8, 9, 10, 45, 46, 47, 29, 56, 57, 58],
 
     update: function (completionCallback, shard) {
 

@@ -441,7 +441,7 @@ define(['leaflet', 'intersects'],
                                 if (x >= 0 && y >= 0 && x < grid_x_size && y < grid_y_size) {
                                     for (; i < sources[x][y].length; i++) {
                                         var j = sources[x][y][i];
-                                        if (controls[j.options.control]) {
+                                        if (controls[0 /*j.options.control*/ ]) {
                                             ctx.strokeStyle = colors[j.options.control];
                                             ctx.beginPath();
                                             var coordsx = coords.x * tile.width / pixelScale;
