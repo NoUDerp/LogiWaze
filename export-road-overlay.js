@@ -1,8 +1,8 @@
 const sharp = require("sharp")
 
-sharp("roads.svg")
+sharp("Roads.svg")
   .png()
-  .toFile("roads.png")
+  .toFile("Roads.png")
   .then(function(info) {
     console.log(info)
   })
