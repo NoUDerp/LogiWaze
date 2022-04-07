@@ -29,6 +29,7 @@
     "leaflet-routing-machine": "^3.2.12",
     "ndjson-cli": "^0.3.1",
     "point-in-polygon": "*",
+    "sharp": "^0.30.3",
     "superagent": "*",
     "tap": "^12.0.0",
     "tap-spec": "^5.0.0",
@@ -42,9 +43,9 @@
     "zlib": "^1.0.5"
   },
   "devDependencies": {
+    "jq": "*",
     "make": "*",
-    "webpack-cli": "*",
     "webpack": "*",
-    "jq": "*"
+    "webpack-cli": "*"
   }
 }
