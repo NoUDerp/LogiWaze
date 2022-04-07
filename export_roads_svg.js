@@ -3,10 +3,10 @@ var geojson = require('./Roads.geojson');
 
 // set the line width
 var zoom = 7;
-var width = .3 * Math.pow(2, zoom);
+var width = .3;
 
 var features = geojson.features;
-process.stdout.write(`<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 -256 256 256\"><style type=\"text/css\">.road{fill:none; stroke-width: "${width}";}\n .tier-1,.tier-4 {stroke:#5a9565}\n .tier-2,.tier-5{stroke:#94954e}\n .tier-3,.tier-6{stroke:#957458}</style>`);
+process.stdout.write(`<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 -256 256 256\"><style type=\"text/css\">.road{fill:none; stroke-width: ${width};}\n .tier-1,.tier-4 {stroke:#5a9565}\n .tier-2,.tier-5{stroke:#94954e}\n .tier-3,.tier-6{stroke:#957458}</style>`);
 for(var i=0;i<features.length;i++)
 {
 	var feature = features[i];

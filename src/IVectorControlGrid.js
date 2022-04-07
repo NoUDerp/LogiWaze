@@ -252,7 +252,7 @@ define(['leaflet', 'intersects'],
                             c.t.loadIcons(c);
                             c.img = new Image();
                             var scale = Math.pow(2, Math.max(0, c.coords.z - c.t.max_native_zoom));
-                            c.img.src = 'Tiles/'.concat(Math.min(c.coords.z, c.t.max_native_zoom)).concat('_').concat(Math.floor(c.coords.x / scale)).concat('_').concat(Math.floor(c.coords.y / scale)).concat('.webp').concat(c.t.build);
+		            c.img.src = 'Tiles/'.concat(Math.min(c.coords.z, c.t.max_native_zoom)).concat('_').concat(Math.floor(c.coords.x / scale)).concat('_').concat(Math.floor(c.coords.y / scale)).concat('.webp').concat(c.t.build);
                             c.phase_2_complete = false;
                             c.phase_3_complete = false;
                             c.img.onload = () => c.t.yield(c, 2);
@@ -386,12 +386,12 @@ define(['leaflet', 'intersects'],
                 var grid_x_size = c.t.grid_x_size;
                 var grid_y_size = c.t.grid_y_size;
                 var controls = c.t.controls;
-                var quality = c.t.quality;
+                //var quality = c.t.quality;
                 let pixelScale = c.t.pixelScale;
                 function draw(i, start_x, start_y, end_x, end_y, x, y, step) {
                     var startTime = Date.now();
                     if (step == 1) {
-                        if (quality) {
+                        /*if (quality) {
                             var tiers = ['', '#957458', '#94954e', '#5a9565'];
                             ctx.lineWidth = outerWidth;
                             for (; y < end_y; y++, x = start_x)
@@ -424,7 +424,7 @@ define(['leaflet', 'intersects'],
                                     }
                                 }
 
-                        }
+                        }*/
                         // move to step 2, reset all starting values (only once)
                         step = 2;
                         x = start_x;

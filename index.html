@@ -1509,7 +1509,7 @@
         if (location.protocol !== 'https:' && (location.hostname.toLowerCase() == "www.logiwaze.com" || location.hostname.toLowerCase() == "logiwaze.com"))
             location.replace('https:'.concat(location.href.substring(location.protocol.length)));
 
-        var build="a0129cab464e000226c1abbe0fb3a86fd7fb21e6";
+        var build="41e33392a312a7bcb290023122d28574ce93c6eb";
         if ("serviceWorker" in navigator) {
 
             window.addEventListener("load", function () {
@@ -1521,7 +1521,7 @@
         }
 
     </script>
-    <script src="FoxholeRouter.js?776d39a7a302d6b94eeca05ad9e903f1"></script>
+    <script src="FoxholeRouter.js?0097c8d2297bf7f7c04efce99497ae67"></script>
     <script type="text/javascript">
 
         //window.indexedDB.open("logiwaze").onsuccess = function (e) {
@@ -1715,7 +1715,7 @@
             var Options = {
                 '<img src="MapIcons/MapIconStaticBase3.webp" class="layer-icon">Town Halls': Router.TownHalls,
                 '<img src="MapIcons/fencing.webp" class="layer-icon">Borders': Router.Borders,
-                '<img src="MapIcons/road-route.webp" class="layer-icon">Road Quality': Router.RoadsCanvas,
+                /*'<img src="MapIcons/road-route.webp" class="layer-icon">Road Quality': Router.RoadsCanvas,*/
                 '<img src="MapIcons/road-route.webp" class="layer-icon">Road Control': Router.ColonialRoads,
                 /*'<img src="Warden Route.webp" class="layer-icon">Warden Roads': Router.WardenRoads,
                 '<img src="Shortest Route.webp" class="layer-icon">Uncontrolled Roads': Router.NeutralRoads,*/
@@ -2216,9 +2216,9 @@
                             case "Road Control":
                                 counter |= 8;
                                 break;
-                            case "Road Quality":
-                                counter |= 16;
-                                break;
+                            //case "Road Quality":
+                            //    counter |= 16;
+                            //    break;
                             //case "Uncontrolled Roads":
                             //    counter |= 32;
                             //    break;
@@ -2345,9 +2345,9 @@
                     //case "Uncontrolled Roads":
                     //    Router.showNeutral();
                     //    break;
-                    case "Road Quality":
-                        Router.showQuality();
-                        break;
+                    //case "Road Quality":
+                    //    Router.showQuality();
+                    //    break;
                     case "Borders":
                         Router.showBorders();
                         break;
@@ -2401,9 +2401,9 @@
                     //case "Uncontrolled Roads":
                     //    Router.hideNeutral();
                     //    break;
-                    case "Road Quality":
-                        Router.hideQuality();
-                        break;
+                    //case "Road Quality":
+                    //    Router.hideQuality();
+                    //    break;
                     case "Borders":
                         Router.hideBorders();
                         break;
@@ -2470,7 +2470,7 @@
                 }
             }
 
-            active_layers["Road Quality"] = (layers & 16) != 0;
+            //active_layers["Road Quality"] = (layers & 16) != 0;
             active_layers["Borders"] = (layers & 2) != 0;
             //active_layers["Warden Roads"] = (layers & 4) != 0;
             active_layers["Road Control"] = (layers & 8) != 0;
@@ -2557,10 +2557,10 @@
                         //    Router.NeutralRoads.remove();
                         //    Router.hideNeutral();
                         //    break;
-                        case "Road Quality":
-                            Router.RoadsCanvas.remove();
-                            Router.hideQuality();
-                            break;
+                        //case "Road Quality":
+                        //    Router.RoadsCanvas.remove();
+                        //    Router.hideQuality();
+                        //    break;
                         case "Labels":
                             Router.Labels.remove();
                             Router.hideLabels();
