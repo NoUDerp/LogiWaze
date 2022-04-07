@@ -1,6 +1,11 @@
 ﻿define(['leaflet', 'json-loader!../Roads.geojson', './geojson-path-finder/index.js', 'leaflet-routing-machine', '../towns.json', '../Shards.json', '@zuzak/owo'],
     function (L, Paths, PathFinder, routing_machine, towns, shards, owo) {
 
+            function owotranslate(text)
+	    {
+		    return text;
+	    }
+
         return {
             FoxholeRouter: function (mymap, API, Narrator) {
 
@@ -248,7 +253,7 @@
                     if (th.major != 1) {
                         var ownership = API.ownership(th.x + 128, th.y - 128, th.region).ownership;
                         var control = ownership == "COLONIALS" ? 0 : (ownership == "WARDENS" ? 1 : 2);
-                        RegionLabels.addText(Recase(owo.translate(th.name)), owo.translate(th.name), control, th.x, th.y, 5, 9, '#bbbbbb');
+                        RegionLabels.addText(Recase(owotranslate(th.name)), owotranslate(th.name), control, th.x, th.y, 5, 9, '#bbbbbb');
                     }
                 }
 
@@ -257,12 +262,12 @@
                     if (th.major == 1) {
                         var ownership = API.ownership(th.x + 128, th.y - 128, th.region).ownership;
                         var control = ownership == "COLONIALS" ? 0 : (ownership == "WARDENS" ? 1 : 2);
-                        RegionLabels.addText(Recase(owo.translate(th.name)), owo.translate(th.name), control, th.x, th.y, 3, 9, '#fff');
+                        RegionLabels.addText(Recase(owotranslate(th.name)), owotranslate(th.name), control, th.x, th.y, 3, 9, '#fff');
                     }
                 }
 
                 for (var i = 0; i < API.regions.length; i++)
-                    RegionLabels.addText(Recase(owo.translate(API.regions[i].realName)), owo.translate(API.regions[i].realName), 4, API.regions[i].x, API.regions[i].y, 0, 3, '#ffffff', 2.5);
+                    RegionLabels.addText(Recase(owotranslate(API.regions[i].realName)), owotranslate(API.regions[i].realName), 4, API.regions[i].x, API.regions[i].y, 0, 3, '#ffffff', 2.5);
 
 
                 for (var credit of [ // wow these are all wrong now
@@ -283,7 +288,7 @@
                     var region = API.calculateRegion(credit.x + 128, credit.y - 128);
                     var ownership = API.ownership(credit.x + 128, credit.y - 128, region).ownership;
                     let control = ownership == "COLONIALS" ? 0 : (ownership == "WARDENS" ? 1 : 2);
-                    RegionLabels.addText(owo.translate(Recase(credit.text)), owo.translate(credit.text), control, credit.x, credit.y, 7, 9, '#DAA520');
+                    RegionLabels.addText(owotranslate(Recase(credit.text)), owotranslate(credit.text), control, credit.x, credit.y, 7, 9, '#DAA520');
                 }
 
                 for (var key in JSONRoads._layers) {
