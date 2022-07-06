@@ -440,8 +440,8 @@
                         return angle;
                     },
 
-                    truckSpeed: 3600.0 / 50000.0 / .35, // 45 kmh (75% of 60kmh)
-                    jeepSpeed: 3600.0 / 55000.0 / .35,
+                    truckSpeed: 3600.0 / 50000.0 / .70, // 45 kmh (75% of 60kmh)
+                    jeepSpeed: 3600.0 / 55000.0 / .70,
                     flatbedSpeed: 3600 / 25000.0,
                     htdSpeed: .8 * 3600 / 14500 / .90 / .65,
 
