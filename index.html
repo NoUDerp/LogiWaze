@@ -1508,7 +1508,7 @@
         if (location.protocol !== 'https:' && (location.hostname.toLowerCase() == "www.logiwaze.com" || location.hostname.toLowerCase() == "logiwaze.com"))
             location.replace('https:'.concat(location.href.substring(location.protocol.length)));
 
-        var build="7a678082d3e79e5c0395847f35a95958e4f2a258";
+        var build="031d8c8fef5357a7a24beb50055991a496a1f764";
         if ("serviceWorker" in navigator) {
 
             window.addEventListener("load", function () {
@@ -1520,7 +1520,7 @@
         }
 
     </script>
-    <script src="FoxholeRouter.js?75e0c55a9c0631e73f55d6778a63a38a"></script>
+    <script src="FoxholeRouter.js?7757c8b7391bf3be0b9fc32c42abf1d0"></script>
     <script type="text/javascript">
 
         //window.indexedDB.open("logiwaze").onsuccess = function (e) {
@@ -1995,8 +1995,7 @@
                 tt.onclick = () => Router.copy();
 
 
-                if (window.location.hostname.toUpperCase() == "WWW.LOGIWAZE.COM")
-                {
+                if (window.location.hostname.toUpperCase() == "WWW.LOGIWAZE.COM") {
                     let ttt = document.createElement("button");
                     ttt.className = "report-button";
                     download_icon = document.createElement("img");
@@ -2054,7 +2053,7 @@
             function createButton(label, container, image) {
                 var btn = L.DomUtil.create('img', '', container);
                 btn.setAttribute('src', image);
-                btn.setAttribute('style', 'max-width: 32px; max-height: 32px; margin: 4px;');
+                btn.setAttribute('style', 'width: 28px; height: 28px; margin: 4px;');
                 btn.innerHTML = label;
                 return btn;
             }
@@ -2066,13 +2065,14 @@
                     if (!mm.prevent_double_click) {
 
                         let u = document.getElementsByClassName('leaflet-control-layers')[0];
-                        if (u.classList.contains('leaflet-control-layers-expanded')) {
+                        if (u.classList.contains('leaflet-control-layers-expanded'))
                             u.classList.remove('leaflet-control-layers-expanded');
-                        }
                         else {
                             var container = L.DomUtil.create('div'),
                                 startBtn = createButton('Start here', container, 'ray-start-arrow.svg'),
-                                destBtn = createButton('End here', container, 'ray-end.svg');
+                                destBtn = createButton('End here', container, 'ray-end.svg'),
+                                cgarageBtn = createButton('Find garage', container, 'MapIcons/MapIconVehicleColonial.webp'),
+								wgarageBtn = createButton('Find garage', container, 'MapIcons/MapIconVehicleWarden.webp');
 
                             L.DomEvent.on(startBtn, 'click', function () {
                                 Router.Control.spliceWaypoints(0, 1, e.latlng);
@@ -2084,7 +2084,25 @@
                                 mymap.closePopup();
                             });
 
-                            container.setAttribute('style', 'width: 66px; padding: 0');
+                            L.DomEvent.on(cgarageBtn, 'click', function () {
+                                var bestGarage = Router.findGarage(e.latlng, "COLONIALS");
+                                if (bestGarage != null) {
+                                    Router.Control.spliceWaypoints(0, 1, e.latlng);
+                                    Router.Control.spliceWaypoints(1, Router.Control.getWaypoints().length - 1, bestGarage);
+                                }
+                                mymap.closePopup();
+                            });
+
+                            L.DomEvent.on(wgarageBtn, 'click', function () {
+	                            var bestGarage = Router.findGarage(e.latlng, "WARDENS");
+	                            if (bestGarage != null) {
+		                            Router.Control.spliceWaypoints(0, 1, e.latlng);
+                                    Router.Control.spliceWaypoints(1, Router.Control.getWaypoints().length - 1, bestGarage);
+	                            }
+	                            mymap.closePopup();
+                            });
+
+                            container.setAttribute('style', 'width: 72px; padding: 0; text-align: center; margin: auto');
 
                             if (APIManager.calculateRegion(e.latlng.lng, e.latlng.lat) != null) {
                                 L.popup()
@@ -2277,8 +2295,7 @@
                 }
 
                 // update the report button (if the url is logiwaze.com) to link properly
-                if (window.location.host.toUpperCase() == "WWW.LOGIWAZE.COM")
-                {
+                if (window.location.host.toUpperCase() == "WWW.LOGIWAZE.COM") {
                     var report_buttons = document.getElementsByClassName("report-button");
                     if (report_buttons != null)
                         for (var i = 0; i < report_buttons.length; i++) {
