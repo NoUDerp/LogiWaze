@@ -21,6 +21,7 @@
                 var BorderCache = {};
                 var BorderCrossings = {};
                 var Garages = [];
+		var Refineries =[];
 
                 var keys = Object.keys(JSONRoads._layers);
 
@@ -242,6 +243,8 @@
                         var icon = resolveIcon(data);
                         if (data.icon == 12) // vehicle factory
                             Garages.push({ lng: th.x + 128, lat: th.y - 128, nuked: th.nuked, ownership: th.control });
+			if (data.icon == 17) // refinery
+			    Refineries.push({ lng:th.x + 128, lat: th.y - 128, nuked: th.nuked, ownership: th.control });
                         ControlLayer.addIcon(icon, th.x, th.y, false, 0, 9);
                     }
                 }
@@ -409,7 +412,8 @@
                     API: API,
                     Roads: JSONRoads,
 
-                    Garages: Garages,
+                    RefineriesList: Refineries,
+		    Garages: Garages,
 
                     // virtual layers
                     BoringFont: L.layerGroup().addTo(mymap),
@@ -1057,14 +1061,17 @@
                     },
 
                     // very work-in-progress
-                    findGarage: function (currentLocation, currentOwnership) {
+                    findGarage: function (currentLocation, currentOwnership, garages) {
                         highlighter.clearLayers();
                         let waypoints = [currentLocation];
 
                         if(currentOwnership == null)
                             currentOwnership = API.ownership(currentLocation.lng, currentLocation.lat, API.calculateRegion(currentLocation.lng, currentLocation.lat)).ownership;
 
-                        for (let w of FoxholeRouter.Garages)
+			if(garages == null)
+			    garages = FoxholeRouter.Garages;
+
+                        for (let w of garages)
                             if (w.ownership === currentOwnership)
                                 waypoints.push(w);
 

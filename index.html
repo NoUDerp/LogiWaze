@@ -1508,7 +1508,7 @@
         if (location.protocol !== 'https:' && (location.hostname.toLowerCase() == "www.logiwaze.com" || location.hostname.toLowerCase() == "logiwaze.com"))
             location.replace('https:'.concat(location.href.substring(location.protocol.length)));
 
-        var build="031d8c8fef5357a7a24beb50055991a496a1f764";
+        var build="68de97a456cb189500db91c16675b57520c301d8";
         if ("serviceWorker" in navigator) {
 
             window.addEventListener("load", function () {
@@ -1520,7 +1520,7 @@
         }
 
     </script>
-    <script src="FoxholeRouter.js?7757c8b7391bf3be0b9fc32c42abf1d0"></script>
+    <script src="FoxholeRouter.js?7bb45867f79590c146ef7f04f955178f"></script>
     <script type="text/javascript">
 
         //window.indexedDB.open("logiwaze").onsuccess = function (e) {
@@ -2072,7 +2072,8 @@
                                 startBtn = createButton('Start here', container, 'ray-start-arrow.svg'),
                                 destBtn = createButton('End here', container, 'ray-end.svg'),
                                 cgarageBtn = createButton('Find garage', container, 'MapIcons/MapIconVehicleColonial.webp'),
-								wgarageBtn = createButton('Find garage', container, 'MapIcons/MapIconVehicleWarden.webp');
+								wgarageBtn = createButton('Find garage', container, 'MapIcons/MapIconVehicleWarden.webp'),
+			        refineryBtn=createButton('Find refinery', container, 'MapIcons/MapIconManufacturing.webp');
 
                             L.DomEvent.on(startBtn, 'click', function () {
                                 Router.Control.spliceWaypoints(0, 1, e.latlng);
@@ -2101,6 +2102,15 @@
 	                            }
 	                            mymap.closePopup();
                             });
+
+					    L.DomEvent.on(refineryBtn, 'click', function (){
+					var bestRefinery= Router.findGarage(e.latlng, null, Router.RefineriesList);
+					    if(bestRefinery != null) {
+								Router.Control.spliceWaypoints(0, 1,e.latlng);
+								Router.Control.spliceWaypoints(1, Router.Control.getWaypoints().length - 1, bestRefinery);
+							}
+								mymap.closePopup();
+							});
 
                             container.setAttribute('style', 'width: 72px; padding: 0; text-align: center; margin: auto');
 
