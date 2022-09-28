@@ -1,4 +1,5 @@
 const assets = [
+
     "bug.svg",
     "HTD.webp",
     "copy.svg",
@@ -1419,6 +1420,7 @@ const assets = [
     "MapIcons/MapIconForwardBase3Colonial.webp",
     "MapIcons/MapIconForwardBase3Warden.webp",
     "MapIcons/MapIconFuel.webp",
+    "MapIcons/MapIconCoal.webp",
     "MapIcons/MapIconFuelColonial.webp",
     "MapIcons/MapIconFuelWarden.webp",
     "MapIcons/MapIconHomeBaseHallColonial.webp",
