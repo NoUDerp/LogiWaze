@@ -54,10 +54,11 @@ let regionNameMap = [];
 for (var i = 0; i < regions.length; i++)
     regionNameMap[regions[i].name] = regions[i].realName;
 
-function APIQuery(URL, success, error) {
+function APIQuery(URL, success, retryer) {
+
     superagent.get(URL).then(res => {
         success(res.body);
-    }).catch(error => { console.log(error); alert("War API cannot be contacted right now: ".concat(error)); });
+    }).catch(error => { if (retryer != null) retryer(error); });// { console.log(error); alert("War API cannot be contacted right now: ".concat(error)); });
 }
 
 
@@ -126,8 +127,8 @@ exports.API = {
         if (!(region in exports.API.mapControl))
             return "OFFLINE";
 
-            x -= 128;
-            y += 128;
+        x -= 128;
+        y += 128;
 
         var u = exports.API.mapControl[region];
         var distanceSquared = -1;
@@ -155,11 +156,11 @@ exports.API = {
         return kriging.predict(x - 128, y + 128, exports.API.variogram)
     },
 
-    townHallIcons : [35, 5, 6, 7, 8, 9, 10, 45, 46, 47, 29, 17, 34, 51, 39, 12, 52, 33, 18, 19, 56, 57, 58],
+    townHallIcons: [35, 5, 6, 7, 8, 9, 10, 45, 46, 47, 29, 17, 34, 51, 39, 12, 52, 33, 18, 19, 56, 57, 58, 59, 60],
 
-    krigingControlPointIcons: [/* safe house 35, */5, 6, 7, 8, 9, 10, 45, 46, 47, 29, 56, 57, 58],
+    krigingControlPointIcons: [/* safe house 35, */5, 6, 7, 8, 9, 10, 45, 46, 47, 29, 56, 57, 58, 59, 60],
 
-    update: function (completionCallback, shard) {
+    update: function (completionCallback, shard, retryer) {
 
         if (shard == null)
             shard = 'war-service-live';
@@ -194,7 +195,7 @@ exports.API = {
                                                 y = ((((1 - y) * yf) + offset.y) - yf * .5);
                                                 var key = x.toFixed(3).toString().concat('|').concat(y.toFixed(3).toString());
                                                 var control = mapData.mapItems[j].teamId;
-                                                exports.API.mapControl[mapName][key] = { x: x, y: y, control: control, mapIcon: icon, nuked: (mapData.mapItems[j].flags & 0x10) != 0, town:                                                 exports.API.krigingControlPointIcons.includes(icon)                                                                                                };
+                                                exports.API.mapControl[mapName][key] = { x: x, y: y, control: control, mapIcon: icon, nuked: (mapData.mapItems[j].flags & 0x10) != 0, town: exports.API.krigingControlPointIcons.includes(icon) };
                                                 if ((mapData.mapItems[j].flags & 0x10) == 0 && control != "OFFLINE" && exports.API.krigingControlPointIcons.includes(icon)) {
                                                     p_x.push(x);
                                                     p_y.push(y);
@@ -224,8 +225,10 @@ exports.API = {
                                 });
 
                         }
-                    });
-            });
+                    },
+                    retryer);
+            },
+            retryer);
     }
 };
 
