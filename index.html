@@ -1508,7 +1508,7 @@
         if (location.protocol !== 'https:' && (location.hostname.toLowerCase() == "www.logiwaze.com" || location.hostname.toLowerCase() == "logiwaze.com"))
             location.replace('https:'.concat(location.href.substring(location.protocol.length)));
 
-        var build="a49990d9c0693c01dc7abdc7886d68bce951141c";
+        var build="f1a53eee4a5b8f62f7c5d952f5d663a8331c387c";
         if ("serviceWorker" in navigator) {
 
             window.addEventListener("load", function () {
@@ -1520,7 +1520,7 @@
         }
 
     </script>
-    <script src="FoxholeRouter.js?c41c5b9fe1a7fb4030f74f041563b0cb"></script>
+    <script src="FoxholeRouter.js?93148a775cbe1dead6be9ddded6e31bb"></script>
     <script type="text/javascript">
 
         //window.indexedDB.open("logiwaze").onsuccess = function (e) {
@@ -1556,7 +1556,7 @@
 
         // load initial waypoints
         var points = startingWaypoints;
-        var layers = 16384 * 2 - 1;
+	var layers = (1 << 16) - 1;
 
         var shard = 0;
         var tryshards = {};
@@ -1730,6 +1730,7 @@
                     '<img src="MapIcons/MapIconComponents.webp" class="layer-icon">Components': Router.Components,
                     '<img src="MapIcons/MapIconFuel.webp" class="layer-icon">Fuel': Router.Fuel,
                     '<img src="MapIcons/MapIconSulfur.webp" class="layer-icon">Sulfur': Router.Sulfur,
+                    '<img src="MapIcons/MapIconCoal.webp" class="layer-icon">Coal': Router.Coal,
                     '<img src="MapIcons/Control.webp" class="layer-icon">Control': Router.MapControl,
                     '<img src="MapIcons/Labels.webp" class="layer-icon">Labels': Router.Labels,
                     '<img src="font.svg" class="layer-icon">Basic Font': Router.BoringFont
@@ -2079,7 +2080,6 @@
                                     cgarageBtn = createButton('Find garage', container, 'MapIcons/MapIconVehicleColonial.webp'),
                                     wgarageBtn = createButton('Find garage', container, 'MapIcons/MapIconVehicleWarden.webp'),
                                     refineryBtn = createButton('Find refinery', container, 'MapIcons/MapIconManufacturing.webp');
-                                    factoryBtn = createButton('Find factory', container, 'MapIcons/MapIconFactory.webp');
 
                                 L.DomEvent.on(startBtn, 'click', function () {
                                     Router.Control.spliceWaypoints(0, 1, e.latlng);
@@ -2092,7 +2092,7 @@
                                 });
 
                                 L.DomEvent.on(cgarageBtn, 'click', function () {
-                                    var bestGarage = Router.findStructure(e.latlng, "COLONIALS");
+                                    var bestGarage = Router.findGarage(e.latlng, "COLONIALS");
                                     if (bestGarage != null) {
                                         Router.Control.spliceWaypoints(0, 1, e.latlng);
                                         Router.Control.spliceWaypoints(1, Router.Control.getWaypoints().length - 1, bestGarage);
@@ -2101,7 +2101,7 @@
                                 });
 
                                 L.DomEvent.on(wgarageBtn, 'click', function () {
-                                    var bestGarage = Router.findStructure(e.latlng, "WARDENS");
+                                    var bestGarage = Router.findGarage(e.latlng, "WARDENS");
                                     if (bestGarage != null) {
                                         Router.Control.spliceWaypoints(0, 1, e.latlng);
                                         Router.Control.spliceWaypoints(1, Router.Control.getWaypoints().length - 1, bestGarage);
@@ -2110,19 +2110,10 @@
                                 });
 
                                 L.DomEvent.on(refineryBtn, 'click', function () {
-                                    var bestRefinery = Router.findStructure(e.latlng, null, Router.RefineriesList);
+                                    var bestRefinery = Router.findGarage(e.latlng, null, Router.RefineriesList);
                                     if (bestRefinery != null) {
                                         Router.Control.spliceWaypoints(0, 1, e.latlng);
                                         Router.Control.spliceWaypoints(1, Router.Control.getWaypoints().length - 1, bestRefinery);
-                                    }
-                                    mymap.closePopup();
-                                });
-
-                                L.DomEvent.on(factoryBtn, 'click', function () {
-                                    var bestFactory = Router.findStructure(e.latlng, null, Router.FactoriesList);
-                                    if (bestFactory != null) {
-                                        Router.Control.spliceWaypoints(0, 1, e.latlng);
-                                        Router.Control.spliceWaypoints(1, Router.Control.getWaypoints().length - 1, bestFactory);
                                     }
                                     mymap.closePopup();
                                 });
@@ -2247,52 +2238,55 @@
                         if (active_layers[keys[i]] === true)
                             switch (keys[i].replace(/<.*> */, '')) {
                                 case "Town Halls":
-                                    counter |= 1;
+                                    counter |= 1 << 0;
                                     break;
                                 case "Borders":
-                                    counter |= 2;
+                                    counter |= 1 << 2;
                                     break;
                                 //case "Warden Roads":
-                                //    counter |= 4;
+                                //    counter |= 1 << 3;
                                 //    break;
                                 case "Road Control":
-                                    counter |= 8;
+                                    counter |= 1 << 4;
                                     break;
                                 //case "Road Quality":
-                                //    counter |= 16;
+                                //    counter |= 1 << 5;
                                 //    break;
                                 //case "Uncontrolled Roads":
-                                //    counter |= 32;
+                                //    counter |= 1 << 6;
                                 //    break;
                                 case "Refineries":
-                                    counter |= 64;
+                                    counter |= 1 << 7;
                                     break;
                                 case "Factories":
-                                    counter |= 128;
+                                    counter |= 1 << 8;
                                     break;
                                 case "Storage":
-                                    counter |= 256;
+                                    counter |= 1 << 9;
                                     break;
                                 case "Salvage":
-                                    counter |= 512;
+                                    counter |= 1 << 10;
                                     break;
                                 case "Components":
-                                    counter |= 1024;
+                                    counter |= 1 << 11;
                                     break;
                                 case "Fuel":
-                                    counter |= 2048;
+                                    counter |= 1 << 12;
                                     break;
                                 case "Sulfur":
-                                    counter |= 4096;
+                                    counter |= 1 << 13;
+                                    break;
+                                case "Coal":
+                                    counter |= 1 << 14;
                                     break;
                                 case "Control":
-                                    counter |= 8192;
+                                    counter |= 1 << 15;
                                     break;
                                 case "Labels":
-                                    counter |= 16384;
+                                    counter |= 1 << 16;
                                     break;
                                 case "Basic Font":
-                                    counter |= 32768;
+                                    counter |= 1 << 17;
                                     break;
                             }
 
@@ -2374,6 +2368,9 @@
                         case "Sulfur":
                             Router.showSulfur();
                             break;
+                        case "Coal":
+                            Router.showCoal();
+                            break;
                         case "Salvage":
                             Router.showSalvage();
                             break;
@@ -2429,6 +2426,9 @@
                             break;
                         case "Sulfur":
                             Router.hideSulfur();
+                            break;
+                        case "Coal":
+                            Router.hideCoal();
                             break;
                         case "Salvage":
                             Router.hideSalvage();
@@ -2510,25 +2510,23 @@
                             points.push([parseFloat(a[0]), parseFloat(a[1])]);
                     }
                 }
-
-                //active_layers["Road Quality"] = (layers & 16) != 0;
-                active_layers["Borders"] = (layers & 2) != 0;
-                //active_layers["Warden Roads"] = (layers & 4) != 0;
-                active_layers["Road Control"] = (layers & 8) != 0;
-                //active_layers["Uncontrolled Roads"] = (layers & 32) != 0;
-                active_layers["Refineries"] = (layers & 64) != 0;
-                active_layers["Factories"] = (layers & 128) != 0;
-                active_layers["Storage"] = (layers & 256) != 0;
-                active_layers["Salvage"] = (layers & 512) != 0;
-                active_layers["Components"] = (layers & 1024) != 0;
-                active_layers["Fuel"] = (layers & 2048) != 0;
-                active_layers["Sulfur"] = (layers & 4096) != 0;
-                active_layers["Town Halls"] = (layers & 1) != 0;
-                active_layers["Control"] = (layers & 8192) != 0;
-                active_layers["Labels"] = (layers & 16384) != 0;
-                active_layers["Basic Font"] = (layers & 32768) != 0;
-
-
+                active_layers["Town Halls"] = (layers & (1 << 0)) != 0;
+                active_layers["Borders"] = (layers & (1 << 1)) != 0;
+                //active_layers["Warden Roads"] = (layers & (1 << 2)) != 0;
+                active_layers["Road Control"] = (layers & (1 << 3)) != 0;
+                //active_layers["Road Quality"] = (layers & (1 << 4)) != 0;
+                //active_layers["Uncontrolled Roads"] = (layers & (1 << 5)) != 0;
+                active_layers["Refineries"] = (layers & (1 << 6)) != 0;
+                active_layers["Factories"] = (layers & (1 << 7)) != 0;
+                active_layers["Storage"] = (layers & (1 << 8)) != 0;
+                active_layers["Salvage"] = (layers & (1 << 9)) != 0;
+                active_layers["Components"] = (layers & (1 << 10)) != 0;
+                active_layers["Fuel"] = (layers & (1 << 11)) != 0;
+                active_layers["Sulfur"] = (layers & (1 << 12)) != 0;
+                active_layers["Coal"] = (layers & (1 << 13)) != 0;
+                active_layers["Control"] = (layers & (1 << 14)) != 0;
+                active_layers["Labels"] = (layers & (1 << 15)) != 0;
+                active_layers["Basic Font"] = (layers & (1 << 16)) != 0;
 
                 keys = Object.keys(active_layers);
                 for (var i = 0; i < keys.length; i++)
@@ -2585,6 +2583,10 @@
                             case "Sulfur":
                                 Router.Sulfur.remove();
                                 Router.hideSulfur();
+                                break;
+                            case "Coal":
+                                Router.Coal.remove();
+                                Router.hideCoal();
                                 break;
                             //case "Warden Roads":
                             //    Router.WardenRoads.remove();
