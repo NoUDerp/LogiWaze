@@ -21,8 +21,7 @@
                 var BorderCache = {};
                 var BorderCrossings = {};
                 var Garages = [];
-                var Refineries = [];
-                var Factories = [];
+		var Refineries =[];
 
                 var keys = Object.keys(JSONRoads._layers);
 
@@ -195,7 +194,7 @@
                     if (ic.icon == 61)
                         return 'MapIconOilWell.webp';
                     if (ic.icon == 62)
-			return 'MapIconCoal.webp';
+                        return 'MapIconCoal.webp';
                     return null;
                 }
 
@@ -245,10 +244,8 @@
                         var icon = resolveIcon(data);
                         if (data.icon == 12) // vehicle factory
                             Garages.push({ lng: th.x + 128, lat: th.y - 128, nuked: th.nuked, ownership: th.control });
-                        if (data.icon == 17) // refinery
-                            Refineries.push({ lng:th.x + 128, lat: th.y - 128, nuked: th.nuked, ownership: th.control });
-                        if (data.icon == 34 || data.icon == 51) // factory or MPF
-                            Factories.push({ lng:th.x + 128, lat: th.y - 128, nuked: th.nuked, ownership: th.control });
+			if (data.icon == 17) // refinery
+			    Refineries.push({ lng:th.x + 128, lat: th.y - 128, nuked: th.nuked, ownership: th.control });
                         ControlLayer.addIcon(icon, th.x, th.y, false, 0, 9);
                     }
                 }
@@ -412,13 +409,13 @@
                     Fuel: L.layerGroup().addTo(mymap),
                     Salvage: L.layerGroup().addTo(mymap),
                     Sulfur: L.layerGroup().addTo(mymap),
+                    Coal: L.layerGroup().addTo(mymap),
                     VectorControlGrid: ControlLayer,
                     API: API,
                     Roads: JSONRoads,
 
                     RefineriesList: Refineries,
-		    Garages: Garages,
-                    FactoriesList: Factories,
+                    Garages: Garages,
 
                     // virtual layers
                     BoringFont: L.layerGroup().addTo(mymap),
@@ -619,6 +616,16 @@
 
                     showSulfur: function () {
                         ControlLayer.enableIcons(['MapIconSulfur.webp', 'MapIconSulfurMine.webp', 'MapIconSulfurWarden.webp', 'MapIconSulfurMineWarden.webp', 'MapIconSulfurColonial.webp', 'MapIconSulfurMineColonial.webp']);
+                        ControlLayer.redraw();
+                    },
+
+                    hideCoal: function () {
+                        ControlLayer.disableIcons(['MapIconCoal.webp']);
+                        ControlLayer.redraw();
+                    },
+
+                    showCoal: function () {
+                        ControlLayer.enableIcons(['MapIconCoal.webp']);
                         ControlLayer.redraw();
                     },
 
@@ -1066,21 +1073,21 @@
                     },
 
                     // very work-in-progress
-                    findStructure: function (currentLocation, currentOwnership, structures) {
+                    findGarage: function (currentLocation, currentOwnership, garages) {
                         highlighter.clearLayers();
+                        let waypoints = [currentLocation];
 
                         if(currentOwnership == null)
                             currentOwnership = API.ownership(currentLocation.lng, currentLocation.lat, API.calculateRegion(currentLocation.lng, currentLocation.lat)).ownership;
 
-                        if(structures == null)
-                            structures = FoxholeRouter.Garages;
+			if(garages == null)
+			    garages = FoxholeRouter.Garages;
 
-                        let waypoints = [currentLocation];
-                        for (let w of structures)
+                        for (let w of garages)
                             if (w.ownership === currentOwnership)
                                 waypoints.push(w);
 
-                        // modify new waypoints (structures) to find closest roads (round an exact location to the nearest road)
+                        // modify new waypoints (garages) to find closest roads (round an exact location to the nearest road)
                         for (var i = 0; i < waypoints.length; i++) {
                             var closestPoint = null;
                             var distance = 0.0;
@@ -1105,7 +1112,7 @@
 
                         var Path = null;
                         let pathfinder = currentOwnership === "COLONIALS" ? FoxholeRouter.colonialPathFinder : FoxholeRouter.wardenPathFinder;
-                        var bestStructure = null;
+                        var bestGarage = null;
 
                         if (pathfinder != null && waypoints.length > 0) {
                             var start = waypoints[0].latLng;
@@ -1116,7 +1123,7 @@
                                     Path = pathfinder.findPath(
                                         { name: "path", geometry: { coordinates: [start.lng, start.lat] } },
                                         { geometry: { coordinates: [finish.lng, finish.lat] } });
-                                    bestStructure = finish;
+                                    bestGarage = finish;
                                 } else {
                                     var p = pathfinder.findPath(
                                         { name: "path", geometry: { coordinates: [start.lng, start.lat] } },
@@ -1124,14 +1131,16 @@
 
                                     if (p != null && p.weight < Path.weight && Path.weight > 0) {
                                         Path = p;
-                                        bestStructure = finish;
+                                        bestGarage = finish;
                                     }
                                 }
                             }
                         }
-                        return bestStructure;
+
+                        return bestGarage;
                     }
                 };
+
                 return FoxholeRouter;
             }
         };
