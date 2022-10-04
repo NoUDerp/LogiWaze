@@ -46,7 +46,7 @@
   "devDependencies": {
     "jq": "*",
     "make": "*",
-    "webpack": "*",
-    "webpack-cli": "*"
+    "webpack": "^5.0.0",
+    "webpack-cli": "^4.0.0"
   }
 }
