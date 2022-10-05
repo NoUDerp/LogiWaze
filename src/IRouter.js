@@ -21,7 +21,8 @@
                 var BorderCache = {};
                 var BorderCrossings = {};
                 var Garages = [];
-		var Refineries =[];
+                var Refineries = [];
+                var Factories = [];
 
                 var keys = Object.keys(JSONRoads._layers);
 
@@ -246,6 +247,8 @@
                             Garages.push({ lng: th.x + 128, lat: th.y - 128, nuked: th.nuked, ownership: th.control });
 			if (data.icon == 17) // refinery
 			    Refineries.push({ lng:th.x + 128, lat: th.y - 128, nuked: th.nuked, ownership: th.control });
+                        if (data.icon == 34 || data.icon == 51) // factory or MPF
+                            Factories.push({ lng:th.x + 128, lat: th.y - 128, nuked: th.nuked, ownership: th.control });
                         ControlLayer.addIcon(icon, th.x, th.y, false, 0, 9);
                     }
                 }
@@ -416,6 +419,7 @@
 
                     RefineriesList: Refineries,
                     Garages: Garages,
+                    FactoriesList: Factories,
 
                     // virtual layers
                     BoringFont: L.layerGroup().addTo(mymap),
@@ -1073,21 +1077,21 @@
                     },
 
                     // very work-in-progress
-                    findGarage: function (currentLocation, currentOwnership, garages) {
+                    findStructure: function (currentLocation, currentOwnership, structures) {
                         highlighter.clearLayers();
-                        let waypoints = [currentLocation];
 
                         if(currentOwnership == null)
                             currentOwnership = API.ownership(currentLocation.lng, currentLocation.lat, API.calculateRegion(currentLocation.lng, currentLocation.lat)).ownership;
 
-			if(garages == null)
-			    garages = FoxholeRouter.Garages;
+                        if(structures == null)
+                            structures = FoxholeRouter.Garages;
 
-                        for (let w of garages)
+                        let waypoints = [currentLocation];
+                        for (let w of structures)
                             if (w.ownership === currentOwnership)
                                 waypoints.push(w);
 
-                        // modify new waypoints (garages) to find closest roads (round an exact location to the nearest road)
+                        // modify new waypoints (structures) to find closest roads (round an exact location to the nearest road)
                         for (var i = 0; i < waypoints.length; i++) {
                             var closestPoint = null;
                             var distance = 0.0;
@@ -1112,7 +1116,7 @@
 
                         var Path = null;
                         let pathfinder = currentOwnership === "COLONIALS" ? FoxholeRouter.colonialPathFinder : FoxholeRouter.wardenPathFinder;
-                        var bestGarage = null;
+                        var bestStructure = null;
 
                         if (pathfinder != null && waypoints.length > 0) {
                             var start = waypoints[0].latLng;
@@ -1123,7 +1127,7 @@
                                     Path = pathfinder.findPath(
                                         { name: "path", geometry: { coordinates: [start.lng, start.lat] } },
                                         { geometry: { coordinates: [finish.lng, finish.lat] } });
-                                    bestGarage = finish;
+                                    bestStructure = finish;
                                 } else {
                                     var p = pathfinder.findPath(
                                         { name: "path", geometry: { coordinates: [start.lng, start.lat] } },
@@ -1131,16 +1135,14 @@
 
                                     if (p != null && p.weight < Path.weight && Path.weight > 0) {
                                         Path = p;
-                                        bestGarage = finish;
+                                        bestStructure = finish;
                                     }
                                 }
                             }
                         }
-
-                        return bestGarage;
+                        return bestStructure;
                     }
                 };
-
                 return FoxholeRouter;
             }
         };
