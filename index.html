@@ -1508,7 +1508,7 @@
         if (location.protocol !== 'https:' && (location.hostname.toLowerCase() == "www.logiwaze.com" || location.hostname.toLowerCase() == "logiwaze.com"))
             location.replace('https:'.concat(location.href.substring(location.protocol.length)));
 
-        var build="7de00602fe130e0c26280552b664faf011f3f569";
+        var build="403397c4789f381eb47db69545942d18362fa0f0";
         if ("serviceWorker" in navigator) {
 
             window.addEventListener("load", function () {
@@ -1520,7 +1520,7 @@
         }
 
     </script>
-    <script src="FoxholeRouter.js?379076ad7753463a792231d81d2af4b6"></script>
+    <script src="FoxholeRouter.js?ea2e30aba8fda30c849e0b9c3cb54315"></script>
     <script type="text/javascript">
 
         //window.indexedDB.open("logiwaze").onsuccess = function (e) {
@@ -1730,7 +1730,6 @@
                     '<img src="MapIcons/MapIconComponents.webp" class="layer-icon">Components': Router.Components,
                     '<img src="MapIcons/MapIconFuel.webp" class="layer-icon">Fuel': Router.Fuel,
                     '<img src="MapIcons/MapIconSulfur.webp" class="layer-icon">Sulfur': Router.Sulfur,
-                    '<img src="MapIcons/MapIconCoal.webp" class="layer-icon">Coal': Router.Coal,
                     '<img src="MapIcons/Control.webp" class="layer-icon">Control': Router.MapControl,
                     '<img src="MapIcons/Labels.webp" class="layer-icon">Labels': Router.Labels,
                     '<img src="font.svg" class="layer-icon">Basic Font': Router.BoringFont
@@ -2238,55 +2237,52 @@
                         if (active_layers[keys[i]] === true)
                             switch (keys[i].replace(/<.*> */, '')) {
                                 case "Town Halls":
-                                    counter |= 1 << 0;
+                                    counter |= 1;
                                     break;
                                 case "Borders":
-                                    counter |= 1 << 2;
+                                    counter |= 2;
                                     break;
                                 //case "Warden Roads":
-                                //    counter |= 1 << 3;
+                                //    counter |= 4;
                                 //    break;
                                 case "Road Control":
-                                    counter |= 1 << 4;
+                                    counter |= 8;
                                     break;
                                 //case "Road Quality":
-                                //    counter |= 1 << 5;
+                                //    counter |= 16;
                                 //    break;
                                 //case "Uncontrolled Roads":
-                                //    counter |= 1 << 6;
+                                //    counter |= 32;
                                 //    break;
                                 case "Refineries":
-                                    counter |= 1 << 7;
+                                    counter |= 64;
                                     break;
                                 case "Factories":
-                                    counter |= 1 << 8;
+                                    counter |= 128;
                                     break;
                                 case "Storage":
-                                    counter |= 1 << 9;
+                                    counter |= 256;
                                     break;
                                 case "Salvage":
-                                    counter |= 1 << 10;
+                                    counter |= 512;
                                     break;
                                 case "Components":
-                                    counter |= 1 << 11;
+                                    counter |= 1024;
                                     break;
                                 case "Fuel":
-                                    counter |= 1 << 12;
+                                    counter |= 2048;
                                     break;
                                 case "Sulfur":
-                                    counter |= 1 << 13;
-                                    break;
-                                case "Coal":
-                                    counter |= 1 << 14;
+                                    counter |= 4096;
                                     break;
                                 case "Control":
-                                    counter |= 1 << 15;
+                                    counter |= 8192;
                                     break;
                                 case "Labels":
-                                    counter |= 1 << 16;
+                                    counter |= 16384;
                                     break;
                                 case "Basic Font":
-                                    counter |= 1 << 17;
+                                    counter |= 32768;
                                     break;
                             }
 
@@ -2368,9 +2364,6 @@
                         case "Sulfur":
                             Router.showSulfur();
                             break;
-                        case "Coal":
-                            Router.showCoal();
-                            break;
                         case "Salvage":
                             Router.showSalvage();
                             break;
@@ -2426,9 +2419,6 @@
                             break;
                         case "Sulfur":
                             Router.hideSulfur();
-                            break;
-                        case "Coal":
-                            Router.hideCoal();
                             break;
                         case "Salvage":
                             Router.hideSalvage();
@@ -2510,23 +2500,25 @@
                             points.push([parseFloat(a[0]), parseFloat(a[1])]);
                     }
                 }
-                active_layers["Town Halls"] = (layers & (1 << 0)) != 0;
-                active_layers["Borders"] = (layers & (1 << 1)) != 0;
-                //active_layers["Warden Roads"] = (layers & (1 << 2)) != 0;
-                active_layers["Road Control"] = (layers & (1 << 3)) != 0;
-                //active_layers["Road Quality"] = (layers & (1 << 4)) != 0;
-                //active_layers["Uncontrolled Roads"] = (layers & (1 << 5)) != 0;
-                active_layers["Refineries"] = (layers & (1 << 6)) != 0;
-                active_layers["Factories"] = (layers & (1 << 7)) != 0;
-                active_layers["Storage"] = (layers & (1 << 8)) != 0;
-                active_layers["Salvage"] = (layers & (1 << 9)) != 0;
-                active_layers["Components"] = (layers & (1 << 10)) != 0;
-                active_layers["Fuel"] = (layers & (1 << 11)) != 0;
-                active_layers["Sulfur"] = (layers & (1 << 12)) != 0;
-                active_layers["Coal"] = (layers & (1 << 13)) != 0;
-                active_layers["Control"] = (layers & (1 << 14)) != 0;
-                active_layers["Labels"] = (layers & (1 << 15)) != 0;
-                active_layers["Basic Font"] = (layers & (1 << 16)) != 0;
+
+                //active_layers["Road Quality"] = (layers & 16) != 0;
+                active_layers["Borders"] = (layers & 2) != 0;
+                //active_layers["Warden Roads"] = (layers & 4) != 0;
+                active_layers["Road Control"] = (layers & 8) != 0;
+                //active_layers["Uncontrolled Roads"] = (layers & 32) != 0;
+                active_layers["Refineries"] = (layers & 64) != 0;
+                active_layers["Factories"] = (layers & 128) != 0;
+                active_layers["Storage"] = (layers & 256) != 0;
+                active_layers["Salvage"] = (layers & 512) != 0;
+                active_layers["Components"] = (layers & 1024) != 0;
+                active_layers["Fuel"] = (layers & 2048) != 0;
+                active_layers["Sulfur"] = (layers & 4096) != 0;
+                active_layers["Town Halls"] = (layers & 1) != 0;
+                active_layers["Control"] = (layers & 8192) != 0;
+                active_layers["Labels"] = (layers & 16384) != 0;
+                active_layers["Basic Font"] = (layers & 32768) != 0;
+
+
 
                 keys = Object.keys(active_layers);
                 for (var i = 0; i < keys.length; i++)
@@ -2583,10 +2575,6 @@
                             case "Sulfur":
                                 Router.Sulfur.remove();
                                 Router.hideSulfur();
-                                break;
-                            case "Coal":
-                                Router.Coal.remove();
-                                Router.hideCoal();
                                 break;
                             //case "Warden Roads":
                             //    Router.WardenRoads.remove();
