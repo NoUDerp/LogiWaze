@@ -1508,7 +1508,7 @@
         if (location.protocol !== 'https:' && (location.hostname.toLowerCase() == "www.logiwaze.com" || location.hostname.toLowerCase() == "logiwaze.com"))
             location.replace('https:'.concat(location.href.substring(location.protocol.length)));
 
-        var build="403397c4789f381eb47db69545942d18362fa0f0";
+        var build="a49990d9c0693c01dc7abdc7886d68bce951141c";
         if ("serviceWorker" in navigator) {
 
             window.addEventListener("load", function () {
@@ -1520,7 +1520,7 @@
         }
 
     </script>
-    <script src="FoxholeRouter.js?ea2e30aba8fda30c849e0b9c3cb54315"></script>
+    <script src="FoxholeRouter.js?c41c5b9fe1a7fb4030f74f041563b0cb"></script>
     <script type="text/javascript">
 
         //window.indexedDB.open("logiwaze").onsuccess = function (e) {
@@ -2079,6 +2079,7 @@
                                     cgarageBtn = createButton('Find garage', container, 'MapIcons/MapIconVehicleColonial.webp'),
                                     wgarageBtn = createButton('Find garage', container, 'MapIcons/MapIconVehicleWarden.webp'),
                                     refineryBtn = createButton('Find refinery', container, 'MapIcons/MapIconManufacturing.webp');
+                                    factoryBtn = createButton('Find factory', container, 'MapIcons/MapIconFactory.webp');
 
                                 L.DomEvent.on(startBtn, 'click', function () {
                                     Router.Control.spliceWaypoints(0, 1, e.latlng);
@@ -2091,7 +2092,7 @@
                                 });
 
                                 L.DomEvent.on(cgarageBtn, 'click', function () {
-                                    var bestGarage = Router.findGarage(e.latlng, "COLONIALS");
+                                    var bestGarage = Router.findStructure(e.latlng, "COLONIALS");
                                     if (bestGarage != null) {
                                         Router.Control.spliceWaypoints(0, 1, e.latlng);
                                         Router.Control.spliceWaypoints(1, Router.Control.getWaypoints().length - 1, bestGarage);
@@ -2100,7 +2101,7 @@
                                 });
 
                                 L.DomEvent.on(wgarageBtn, 'click', function () {
-                                    var bestGarage = Router.findGarage(e.latlng, "WARDENS");
+                                    var bestGarage = Router.findStructure(e.latlng, "WARDENS");
                                     if (bestGarage != null) {
                                         Router.Control.spliceWaypoints(0, 1, e.latlng);
                                         Router.Control.spliceWaypoints(1, Router.Control.getWaypoints().length - 1, bestGarage);
@@ -2109,10 +2110,19 @@
                                 });
 
                                 L.DomEvent.on(refineryBtn, 'click', function () {
-                                    var bestRefinery = Router.findGarage(e.latlng, null, Router.RefineriesList);
+                                    var bestRefinery = Router.findStructure(e.latlng, null, Router.RefineriesList);
                                     if (bestRefinery != null) {
                                         Router.Control.spliceWaypoints(0, 1, e.latlng);
                                         Router.Control.spliceWaypoints(1, Router.Control.getWaypoints().length - 1, bestRefinery);
+                                    }
+                                    mymap.closePopup();
+                                });
+
+                                L.DomEvent.on(factoryBtn, 'click', function () {
+                                    var bestFactory = Router.findStructure(e.latlng, null, Router.FactoriesList);
+                                    if (bestFactory != null) {
+                                        Router.Control.spliceWaypoints(0, 1, e.latlng);
+                                        Router.Control.spliceWaypoints(1, Router.Control.getWaypoints().length - 1, bestFactory);
                                     }
                                     mymap.closePopup();
                                 });
