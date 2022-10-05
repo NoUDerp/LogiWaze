@@ -194,7 +194,7 @@
                     if (ic.icon == 61)
                         return 'MapIconOilWell.webp';
                     if (ic.icon == 62)
-			return 'MapIconCoal.webp';
+                        return 'MapIconCoal.webp';
                     return null;
                 }
 
@@ -409,12 +409,13 @@
                     Fuel: L.layerGroup().addTo(mymap),
                     Salvage: L.layerGroup().addTo(mymap),
                     Sulfur: L.layerGroup().addTo(mymap),
+                    Coal: L.layerGroup().addTo(mymap),
                     VectorControlGrid: ControlLayer,
                     API: API,
                     Roads: JSONRoads,
 
                     RefineriesList: Refineries,
-		    Garages: Garages,
+                    Garages: Garages,
 
                     // virtual layers
                     BoringFont: L.layerGroup().addTo(mymap),
@@ -615,6 +616,16 @@
 
                     showSulfur: function () {
                         ControlLayer.enableIcons(['MapIconSulfur.webp', 'MapIconSulfurMine.webp', 'MapIconSulfurWarden.webp', 'MapIconSulfurMineWarden.webp', 'MapIconSulfurColonial.webp', 'MapIconSulfurMineColonial.webp']);
+                        ControlLayer.redraw();
+                    },
+
+                    hideCoal: function () {
+                        ControlLayer.disableIcons(['MapIconCoal.webp']);
+                        ControlLayer.redraw();
+                    },
+
+                    showCoal: function () {
+                        ControlLayer.enableIcons(['MapIconCoal.webp']);
                         ControlLayer.redraw();
                     },
 
