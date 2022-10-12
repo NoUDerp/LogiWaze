@@ -1508,7 +1508,7 @@
         if (location.protocol !== 'https:' && (location.hostname.toLowerCase() == "www.logiwaze.com" || location.hostname.toLowerCase() == "logiwaze.com"))
             location.replace('https:'.concat(location.href.substring(location.protocol.length)));
 
-        var build="b72f6cb675c95b9223fa6a9e48dcafa0d0a1a613";
+        var build="2990d5a0338a6e54e66bc8008db83672c9c3e83e";
         if ("serviceWorker" in navigator) {
 
             window.addEventListener("load", function () {
@@ -1556,7 +1556,7 @@
 
         // load initial waypoints
         var points = startingWaypoints;
-	var layers = (1 << 16) - 1;
+	var layers = (1 << 17) - 1;
 
         var shard = 0;
         var tryshards = {};
