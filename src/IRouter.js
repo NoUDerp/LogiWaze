@@ -192,9 +192,9 @@
                         return 'MapIconSalvageMine.webp';
                     if (ic.icon == 40)
                         return 'MapIconComponentMine.webp';
-                    if (ic.icon == 61)
-                        return 'MapIconOilWell.webp';
                     if (ic.icon == 62)
+                        return 'MapIconOilWell.webp';
+                    if (ic.icon == 61)
                         return 'MapIconCoal.webp';
                     return null;
                 }
