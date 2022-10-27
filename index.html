@@ -1511,7 +1511,7 @@
         if (location.protocol !== 'https:' && (location.hostname.toLowerCase() == "www.logiwaze.com" || location.hostname.toLowerCase() == "logiwaze.com"))
             location.replace('https:'.concat(location.href.substring(location.protocol.length)));
 
-        var build="d11d6882b7c42db18796cfb5e94920b5cb76d258";
+        var build="fa4d18c8e183694858f47e095af7e27409e71501";
         if ("serviceWorker" in navigator) {
 
             window.addEventListener("load", function () {
@@ -1559,7 +1559,7 @@
 
         // load initial waypoints
         var points = startingWaypoints;
-	var layers = (1 << 17) - 1;
+	var layers = (1 << 18) - 1;
 
         var shard = 0;
         var tryshards = {};
@@ -1722,10 +1722,8 @@
                 var Options = {
                     '<img src="MapIcons/MapIconStaticBase3.webp" class="layer-icon">Town Halls': Router.TownHalls,
                     '<img src="MapIcons/fencing.webp" class="layer-icon">Borders': Router.Borders,
-                    /*'<img src="MapIcons/road-route.webp" class="layer-icon">Road Quality': Router.RoadsCanvas,*/
                     '<img src="MapIcons/road-route.webp" class="layer-icon">Road Control': Router.ColonialRoads,
-                    /*'<img src="Warden Route.webp" class="layer-icon">Warden Roads': Router.WardenRoads,
-                    '<img src="Shortest Route.webp" class="layer-icon">Uncontrolled Roads': Router.NeutralRoads,*/
+                    '<img src="Shortest Route.webp" class="layer-icon">Uncontrolled Roads': Router.NeutralRoads,
                     '<img src="MapIcons/MapIconManufacturing.webp" class="layer-icon">Refineries': Router.Refineries,
                     '<img src="MapIcons/MapIconFactory.webp" class="layer-icon">Factories': Router.Factories,
                     '<img src="MapIcons/MapIconStorageFacility.webp" class="layer-icon">Storage': Router.Storage,
@@ -2256,18 +2254,9 @@
                                 case "Borders":
                                     counter |= 1 << 2;
                                     break;
-                                //case "Warden Roads":
-                                //    counter |= 1 << 3;
-                                //    break;
                                 case "Road Control":
                                     counter |= 1 << 4;
                                     break;
-                                //case "Road Quality":
-                                //    counter |= 1 << 5;
-                                //    break;
-                                //case "Uncontrolled Roads":
-                                //    counter |= 1 << 6;
-                                //    break;
                                 case "Refineries":
                                     counter |= 1 << 7;
                                     break;
@@ -2523,23 +2512,20 @@
                             points.push([parseFloat(a[0]), parseFloat(a[1])]);
                     }
                 }
-                active_layers["Town Halls"] = (layers & (1 << 0)) != 0;
-                active_layers["Borders"] = (layers & (1 << 1)) != 0;
-                //active_layers["Warden Roads"] = (layers & (1 << 2)) != 0;
-                active_layers["Road Control"] = (layers & (1 << 3)) != 0;
-                //active_layers["Road Quality"] = (layers & (1 << 4)) != 0;
-                //active_layers["Uncontrolled Roads"] = (layers & (1 << 5)) != 0;
-                active_layers["Refineries"] = (layers & (1 << 6)) != 0;
-                active_layers["Factories"] = (layers & (1 << 7)) != 0;
-                active_layers["Storage"] = (layers & (1 << 8)) != 0;
-                active_layers["Salvage"] = (layers & (1 << 9)) != 0;
-                active_layers["Components"] = (layers & (1 << 10)) != 0;
-                active_layers["Fuel"] = (layers & (1 << 11)) != 0;
-                active_layers["Sulfur"] = (layers & (1 << 12)) != 0;
-                active_layers["Coal"] = (layers & (1 << 13)) != 0;
-                active_layers["Control"] = (layers & (1 << 14)) != 0;
-                active_layers["Labels"] = (layers & (1 << 15)) != 0;
-                active_layers["Basic Font"] = (layers & (1 << 16)) != 0;
+                active_layers["Town Halls"] = (layers & (1 << 1)) != 0;
+                active_layers["Borders"] = (layers & (1 << 2)) != 0;
+                active_layers["Road Control"] = (layers & (1 << 4)) != 0;
+                active_layers["Refineries"] = (layers & (1 << 7)) != 0;
+                active_layers["Factories"] = (layers & (1 << 8)) != 0;
+                active_layers["Storage"] = (layers & (1 << 9)) != 0;
+                active_layers["Salvage"] = (layers & (1 << 10)) != 0;
+                active_layers["Components"] = (layers & (1 << 11)) != 0;
+                active_layers["Fuel"] = (layers & (1 << 12)) != 0;
+                active_layers["Sulfur"] = (layers & (1 << 13)) != 0;
+                active_layers["Coal"] = (layers & (1 << 14)) != 0;
+                active_layers["Control"] = (layers & (1 << 15)) != 0;
+                active_layers["Labels"] = (layers & (1 << 16)) != 0;
+                active_layers["Basic Font"] = (layers & (1 << 17)) != 0;
 
                 keys = Object.keys(active_layers);
                 for (var i = 0; i < keys.length; i++)
