@@ -32,7 +32,7 @@ let regions = [
     { name: "MarbanHollow", realName: "Marban Hollow", y: oy + .5 * height, x: ox + .75 * width },
     { name: "UmbralWildwoodHex", realName: "Umbral Wildwood", y: oy - height, x: ox },
     { name: "HeartlandsHex", realName: "Heartlands", y: oy - 1.5 * height, x: ox - .75 * width },
-    { name: "LochMorHex", realName: "Loch Mor", y: oy - .5 * height, x: ox - .75 * width },
+    { name: "LochMorHex", realName: "Loch Mór", y: oy - .5 * height, x: ox - .75 * width },
     { name: "LinnMercyHex", realName: "Linn of Mercy", y: oy + .5 * height, x: ox - .75 * width },
     { name: "StonecradleHex", realName: "Stonecradle", y: oy + height, x: ox - 1.5 * width },
     { name: "FarranacCoastHex", realName: "Farranac Coast", y: oy, x: ox - 1.5 * width },
