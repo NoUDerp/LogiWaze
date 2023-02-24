@@ -1511,19 +1511,19 @@
         if (location.protocol !== 'https:' && (location.hostname.toLowerCase() == "www.logiwaze.com" || location.hostname.toLowerCase() == "logiwaze.com"))
             location.replace('https:'.concat(location.href.substring(location.protocol.length)));
 
-        var build="6577c77f06eca1ca477b2d36a828a1f2467d44bd";
+        var build="de4fb05fc9363a89f6d1498ea80fc7b398c1059a";
         if ("serviceWorker" in navigator) {
 
             window.addEventListener("load", function () {
                 navigator.serviceWorker
-                    .register("ServiceWorker.js?28bc36120943fc1dde58a8cfc0c65351")
+                    .register("ServiceWorker.js?f5a9160d7aeb47ddbc21f4b1d966596f")
                     .then(function (res) { return res.update(); })// console.log("service worker registered"))
                     .catch(function (err) { console.log("service worker not registered", err); })
             });
         }
 
     </script>
-    <script src="FoxholeRouter.js?b4075dc2d27556e2d888a2ba4a47cd74"></script>
+    <script src="FoxholeRouter.js?666fbeeefc540ec7aed354ebf825712e"></script>
     <script type="text/javascript">
 
         //window.indexedDB.open("logiwaze").onsuccess = function (e) {
@@ -1601,7 +1601,7 @@
                 maxBounds: L.latLngBounds(L.latLng(-384, -256), L.latLng(128, 512)),
 
             });
-        L.imageOverlay("Background.webp", [[-170 - 128, -230 + 128], [170 - 128, 230 + 128]], { pane: 'imagebg', opacity: 0.4 }).addTo(mymap);
+        L.imageOverlay("Background.webp", [[70.125, -225.5], [-327.125, 481.5]], { pane: 'imagebg', opacity: 0.4 }).addTo(mymap);
 
 
         var pane = mymap.createPane('imagebg');
