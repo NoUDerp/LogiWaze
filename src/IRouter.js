@@ -283,13 +283,14 @@
                     { text: "Kastow Peak", x: (124.817 - 128) * 0.90726470872655477280009094078879, y: (-122.72 + 128) * 0.90726470872655477280009094078879 },
                     { text: "DragonZephyr Col", x: (119.176 - 128) * 0.90726470872655477280009094078879, y: (-83.464 + 128) * 0.90726470872655477280009094078879 },
                     { text: "Skaj Sound", x: (49.826 - 128) * 0.90726470872655477280009094078879, y: (-102.048 + 128) * 0.90726470872655477280009094078879 },
-                    { text: "Inquisitor Silenus Trail", x: 75.701 - 128, y: -123.834 + 128 },
+                    { text: "Inquisitor Silenus Trail", x: 44.403 - 128, y: 75.701 + 128 },
                     { text: "Antraxen's Drive", x: 217.082 - 128, y: -136.754 + 128 },
                     { text: "Fork of Malarthyn", x: 70.279 - 128, y: -103.977 + 128 },
                     { text: "Maybar's Finesse", x: 158.151 - 128, y: -101.223 + 128 },
-                    { text: "Rust Bay", x: 190.195 - 128, y: -202.842 + 128 },
-                    { text: "Sentsu's View", x: 30.13 - 128, y: -114.392 + 128 },
-		    { text: "Afrowner Beach", x: 60.885 - 128, y: -157.764 + 128 }
+                    { text: "Rust's Hideout", x: 173.935 - 128, y: -54.206190.195 + 128 },
+                    { text: "Sentsu's Perch", x: 30.13 - 128, y: -114.392 + 128 },
+		    { text: "Afrowner Beach", x: 60.885 - 128, y: -157.764 + 128 },
+		    { text: "Rick's Causeway", x: 70.904 - 128, y: -202.422 + 128 }
                 ]
                 ) {
                     var region = API.calculateRegion(credit.x + 128, credit.y - 128);

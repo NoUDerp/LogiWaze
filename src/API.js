@@ -35,10 +35,10 @@ let regions = [
     { name: "LochMorHex", realName: "Loch Mór", y: oy - .5 * height, x: ox - .75 * width },
     { name: "LinnMercyHex", realName: "Linn of Mercy", y: oy + .5 * height, x: ox - .75 * width },
     { name: "StonecradleHex", realName: "Stonecradle", y: oy + height, x: ox - 1.5 * width },
-    { name: "FarranacCoastHex", realName: "Farranac Coast", y: oy, x: ox - 1.5 * width },
-    { name: "WestgateHex", realName: "Westgate", y: oy - height, x: ox - 1.5 * width },
-    { name: "FishermansRowHex", realName: "Fisherman's Row", y: oy - .5 * height, x: ox - 2.25 * width },
-    { name: "OarbreakerHex", realName: "Oarbreaker", y: oy + .5 * height, x: ox - 2.25 * width },
+    { name: "KingsCageHex", realName: "King's Cage", y: oy, x: ox - 1.5 * width },
+    { name: "SableportHex", realName: "Sableport", y: oy - height, x: ox - 1.5 * width },
+    { name: "WestgateHex", realName: "Westgate", y: oy - .5 * height, x: ox - 2.25 * width },
+    { name: "FarranacCoastHex", realName: "Farranac Coast", y: oy + .5 * height, x: ox - 2.25 * width },
     { name: "GreatMarchHex", realName: "The Great March", y: oy - 2 * height, x: ox },
     { name: "TempestIslandHex", realName: "Tempest Island", y: oy - .5 * height, x: ox + 2.25 * width },
     { name: "EndlessShoreHex", realName: "Endless Shore", y: oy, x: ox + 1.5 * width },
@@ -92,10 +92,10 @@ exports.API = {
         if (f == "LinnMercyHex") return { x: -0.75 * w, y: 0.5 * k };
         if (f == "ReachingTrailHex") return { x: 0, y: 2 * k };
         if (f == "StonecradleHex") return { x: -1.5 * w, y: k };
-        if (f == "FarranacCoastHex") return { x: -1.5 * w, y: 0 };
-        if (f == "WestgateHex") return { x: -1.5 * w, y: -k };
-        if (f == "FishermansRowHex") return { x: -2.25 * w, y: -0.5 * k };
-        if (f == "OarbreakerHex") return { x: -2.25 * w, y: 0.5 * k };
+        if (f == "KingsCageHex") return { x: -1.5 * w, y: 0 };
+        if (f == "SableportHex") return { x: -1.5 * w, y: -k };
+        if (f == "WestgateHex") return { x: -2.25 * w, y: -0.5 * k };
+        if (f == "FarranacCoastHex") return { x: -2.25 * w, y: 0.5 * k };
         if (f == "GreatMarchHex") return { x: 0, y: -2 * k };
         if (f == "TempestIslandHex") return { x: 2.25 * w, y: -0.5 * k };
         if (f == "GodcroftsHex") return { x: 2.25 * w, y: 0.5 * k };
@@ -119,7 +119,7 @@ exports.API = {
         if (f == "KalokaiHex") return { x: 0, y: -3 * k };
         if (f == "AshFieldsHex") return { x: -1.5 * w, y: -2 * k };
         if (f == "OriginHex") return { x: -2.25 * w, y: -1.5 * k };
-
+	    //	console.log(`Unexpected region name ${f}`);
         return { x: 0, y: 0 };
     },
 
