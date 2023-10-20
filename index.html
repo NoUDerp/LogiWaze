@@ -2,6 +2,7 @@
 <head>
     <link rel="icon" href="favicon.svg">
     <link rel="manifest" href="manifest.json" crossorigin="" />
+    <meta name="google" content="notranslate">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no, width=device-width" />
     <meta charset="UTF-8">
@@ -81,6 +82,35 @@
 
         .detailed-routeinfo {
             margin-top: 4px
+        }
+
+        .logiwaze-credits div.credits {
+            display: none;
+        }
+
+        .logiwaze-credits div.credits a {
+            text-shadow: none;
+
+        }
+
+        .logiwaze-credits.leaflet-control-layers-expanded div.credits {
+            display: block;
+        }
+
+        .logiwaze-credits div.logiwaze-logo {
+            font-size: 26px;
+            padding: 5px;
+            color: #444;
+            display: block;
+            font-weight: 400;
+            width: 34px;
+            height: 34px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .logiwaze-credits.leaflet-control-layers-expanded div.logiwaze-logo {
+            display: none;
         }
 
         .leaflet-routing-alternatives-container {
@@ -1511,7 +1541,7 @@
         if (location.protocol !== 'https:' && (location.hostname.toLowerCase() == "www.logiwaze.com" || location.hostname.toLowerCase() == "logiwaze.com"))
             location.replace('https:'.concat(location.href.substring(location.protocol.length)));
 
-        var build="78e10981103fb4719b2ddb91957be14bd171450a";
+        var build="4fc6dc9a0a1c42ca44e2b98d703431b43ca47dff";
         if ("serviceWorker" in navigator) {
 
             window.addEventListener("load", function () {
@@ -1523,7 +1553,7 @@
         }
 
     </script>
-    <script src="FoxholeRouter.js?8d110af7593501e4a5a32948aa85c9c0"></script>
+    <script src="FoxholeRouter.js?ce615bba14578a21627a6ea88529456f"></script>
     <script type="text/javascript">
 
         //window.indexedDB.open("logiwaze").onsuccess = function (e) {
@@ -1559,7 +1589,7 @@
 
         // load initial waypoints
         var points = startingWaypoints;
-	var layers = (1 << 18) - 1;
+        var layers = (1 << 18) - 1;
 
         var shard = 0;
         var tryshards = {};
@@ -1601,32 +1631,15 @@
                 maxBounds: L.latLngBounds(L.latLng(-384, -256), L.latLng(128, 512)),
 
             });
-        L.imageOverlay("Background.webp", [[70.125, -225.5], [-327.125, 481.5]], { pane: 'imagebg', opacity: 0.4 }).addTo(mymap);
+
+        const width = 900;
+        const height = width * 9 / 16;
+
+        L.imageOverlay("Background.webp", [[height * .5 - 128, -width * .5 + 128], [-height * .5 - 128, width * .5 + 128]], { pane: 'imagebg', opacity: 0.4 }).addTo(mymap);
 
 
         var pane = mymap.createPane('imagebg');
         mymap.getPane('imagebg').style.zIndex = 50;
-
-        /*L.control.youtube = function (options) {
-            return new L.Control.YouTube(options);
-        };
-        L.control.youtube().addTo(mymap);*/
-
-        //function SetYouTubePlaylist() {
-        //    var list = document.getElementById("youtube-selector").value;
-        //    document.getElementById("youtube-player").src = "https://www.youtube.com/embed/videoseries?list=".concat(list);
-        //}
-
-        //function showJukebox() {
-        //    document.getElementsByClassName('youtube-player-contents')[0].style.display = "block";
-        //    document.getElementsByClassName('leaflet-control-youtube-toggle')[0].style.display = "none";
-        //}
-        //function hideJukebox() {
-        //    document.getElementsByClassName('youtube-player-contents')[0].style.display = "none";
-        //    document.getElementsByClassName('leaflet-control-youtube-toggle')[0].style.display = "block";
-        //}
-
-
 
         var APIManager = API.Create();
 
@@ -1750,183 +1763,63 @@
                     {
                         position: 'topleft',
                         autoZIndex: false
-                        //, opacity: .75
                     }
                 ).addTo(mymap);
 
-
-                // seam fix
-                /*let originalInitTile = L.GridLayer.prototype._initTile;
-                if (!originalInitTile.isPatched) {
-                    L.GridLayer.include({
-                        _initTile: function (tile) {
-                            originalInitTile.call(this, tile);
-                            var tileSize = this.getTileSize();
-                            tile.style.width = tileSize.x + 1 + 'px';
-                            tile.style.height = tileSize.y + 1 + 'px';
-                        }
-                    });
-                }*/
-
-                /*L.Control.YouTube = L.Control.extend({
-                    options: {
-                        position: 'topleft',
-                    },
-
+                L.Control.Credits = L.Control.extend({
                     onAdd: function (map) {
-                        var controlDiv = L.DomUtil.create('div', 'leaflet-control-youtube');
-                        L.DomEvent
-                            .addListener(controlDiv, 'click', L.DomEvent.stopPropagation)
-                            .addListener(controlDiv, 'click', L.DomEvent.preventDefault)
-                            .addListener(controlDiv, 'click', function () {
-                            });
 
-                        var controlUI = L.DomUtil.create('div', 'leaflet-control-youtube-interior leaflet-bar', controlDiv);
-                        controlUI.setAttribute("onmouseleave", "hideJukebox()");
-                        controlUI.title = 'Music';
+                        const container = L.DomUtil.create('div', 'logiwaze-credits leaflet-control leaflet-control-layers');
+                        container.innerHTML =
+                            '<div class="credits">' +
+                            '<center><h2>LogiWaze</h2></center>' +
+                            '<p>Map image thanks to Rust<br />Available as a game mod</br><a target="_blank" href="https://rustard.itch.io/improved-map-mod">https://rustard.itch.io/improved-map-mod</a></p><hr>' +
+                            '<p>Source code:<br /><a target="_blank" href="https://github.com/NoUDerp/LogiWaze">https://github.com/NoUDerp/LogiWaze</a></p><hr>' +
+                            "<p><i>Special thanks to</i>:" +
+                            "<div>Afrowner</div>" +
+                            "<div>Antraxen</div>" +
+                            "<div>Bazlow</div>" +
+                            "<div>Cainsiderate</div>" +
+                            "<div>DragonZephyr</div>" +
+                            "<div>Fireblade</div>" +
+                            "<div>Hayden</div>" +
+                            "<div>Icanari</div>" +
+                            "<div>Inquisitor Silenus</div>" +
+                            "<div>Kastow</div>" +
+                            "<div>Malarthyn</div>" +
+                            "<div>Maybar</div>" +
+                            "<div>Rick</div>" +
+                            "<div>Rust</div>" +
+                            "<div>Sentsu</div>" +
+                            "<div>Skaj</div>" +
+                            "<div>Steely Phil</div>" +
+                            "</p>" +
+                            '</div>' +
+                            '<div class="credits-icon"><div class="logiwaze-logo">LW</div></div>';
 
-                        var playlists = {
-                            "Xanxth's \"Colonial National Guard\"": "PLP_k06DgiSSLDyzQZWAoHHW8bAXGO21AG",
-                            "Derp's \"Out Of Logi Babylon\"": "PLkQvYA5-_pJ1sRms9hkr1q3DHUQvaK7iF",
-                            "DragonZephyr's \"Caovia's Rolling Hills\"": "PLv1A0_5bkdtBP9rIciaA1tH1LxVcC3Y5_",
-                            "Skaj's \"Electro-Dungeon\"": "PLoxO-JyRQapNGIQg6c1ZeVbggI_DiJ0I2",
-                            "Foxhole A.M.": "PLkQvYA5-_pJ3Jq4YR2KmzhPEgTwuD8PkL"
-                        };
+                        container.addEventListener('mouseleave', () => {
+                            L.DomUtil.removeClass(this._container, 'leaflet-control-layers-expanded');
+                        });
 
-                        var options = "";
-                        var keys = Object.keys(playlists);
-                        var selected = parseInt((Math.random() * 1000).toFixed().toString()) % keys.length;
-                        for (var i = 0; i < keys.length; i++) {
-                            var option = document.createElement("option");
-                            option.setAttribute("value", playlists[keys[i]]);
-                            option.innerText = keys[i];
-                            if (i === selected)
-                                option.setAttribute("selected", "selected");
-                            options = options.concat(option.outerHTML);
-                        }
-                        var toggle = "<a class='leaflet-control-youtube-toggle' href='#' title='Jukebox' onmouseover='showJukebox()' onclick='showJukebox()''></a>";
-                        var selector = toggle.concat("<div class='youtube-player-contents' style='padding: 2px'><select id=\"youtube-selector\" onchange=\"SetYouTubePlaylist()\">").concat(options).concat("</select>");
+                        container.addEventListener('mouseenter', () => {
+                            L.DomUtil.addClass(this._container, 'leaflet-control-layers-expanded');
+                        });
 
-                        var frame = document.createElement("iframe");
-                        frame.setAttribute("id", "youtube-player");
-                        frame.style.width = "450px";
-                        frame.style.height = "300px";
-                        frame.setAttribute("src", "https://www.youtube.com/embed/videoseries?list=".concat(playlists[keys[selected]]));
-                        frame.setAttribute("frameborder", "0");
-                        frame.setAttribute("allow", "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture");
-                        frame.setAttribute("allowfullscreen", "true");
-                        controlUI.innerHTML = selector.concat(frame.outerHTML).concat("</div>");
-                        return controlDiv;
+
+                        return container;
                     }
                 });
 
-                L.control.youtube = function (options) {
-                    return new L.Control.YouTube(options);
-                };
+                L.control.credits = function (opts) {
+                    return new L.Control.Credits(opts);
+                }
 
-                L.control.youtube().addTo(mymap);*/
+                L.control.credits({
+                    position: 'topleft',
+                    collapsed: false,
+                    autoZIndex: false
+                }).addTo(mymap);
 
-                //class custom_formatter extends L.Routing.ItineraryBuilder {
-                //    constructor(API) {
-                //        super();
-                //        this.index = 0;
-                //        this.counter = 1;
-                //        this.first = true;
-                //        this.API = API;
-                //    }
-
-                //    createStep(text, distance, steps) {
-
-                //        var region;
-                //        var border = 0;
-                //        var newRegion = false;
-                //        var turnicon = "";
-                //        if (text.indexOf("|") >= 0) {
-                //            var u = text.split("\|");
-                //            region = u[0];
-                //            text = u[1];
-                //            border = parseInt(u[2]);
-                //            newRegion = parseInt(u[3]) === 1;
-                //            turnicon = u[4];
-                //        }
-                //        else
-                //            region = "";
-
-
-                //        if (newRegion || this.first) {
-                //            var container2 = document.createElement("TR");
-                //            container2.style.padding = ".1em 2px";
-                //            var divider2 = document.createElement("TD");
-                //            divider2.setAttribute("colspan", "2");
-                //            divider2.innerText = this.API.mapRegionName(region);
-                //            divider2.style["font-size"] = "normal";
-                //            divider2.style.width = "100%";
-                //            divider2.style["pointer-events"] = "none";
-                //            container2.appendChild(divider2);
-                //            this.block.appendChild(container2);
-                //            this.first = false;
-                //        }
-
-                //        if (border === 1) {
-                //            var container3 = document.createElement("TR");
-                //            container3.style.padding = ".1em 2px";
-                //            var divider3 = document.createElement("TD");
-                //            divider3.setAttribute("colspan", "2");
-                //            divider3.innerText = "You are approaching a border crossing, check your radio";
-                //            divider3.style = "font-size: x-small; width: 100%";
-                //            divider3.style["padding-left"] = "2em";
-                //            container3.appendChild(divider3);
-                //            this.block.appendChild(container3);
-                //        }
-
-
-                //        var container = document.createElement("TR");
-                //        container.classList.add("narrator-step-".concat((this.counter++).toString()));
-                //        container.classList.add("narrator-steps");
-                //        container.style.padding = ".1em 2px";
-                //        var divider2 = document.createElement("TD");
-
-                //        if (turnicon != "" && turnicon != null && window.beta)
-                //            divider2.innerHTML = "<div class=\"".concat(turnicon.replace(' ', '-').toLowerCase()).concat('"></div>');
-
-                //        var divider1 = document.createElement("TD");
-
-                //        if (border === 1)
-                //            divider1.innerText = text.concat(" and cross the border");
-                //        else
-                //            divider1.innerText = text;
-                //        divider1.style = "font-size: x-small; width: 100%";
-                //        divider1.style["padding-left"] = "2em";
-                //        container.appendChild(divider2);
-                //        container.appendChild(divider1);
-                //        container.index = this.index++;
-                //        this.block.appendChild(container);
-
-                //        return container;
-                //    }
-
-                //    createContainer(className) {
-
-                //        var table = document.createElement("TABLE");
-                //        table.setAttribute("style", "width: 100%");
-                //        if (className != null)
-                //            table.setAttribute("class", className.concat(" ").concat("detailed-routeinfo"));
-                //        else
-                //            table.setAttribute("class", "detailed-routeinfo");
-                //        this.container = table;
-                //        return table;
-                //    }
-
-                //    createStepsContainer(container) {
-
-                //        this.block = L.Routing.ItineraryBuilder.prototype.createStepsContainer(container);
-                //        this.container.appendChild(this.block);
-                //        return this.block;
-                //    }
-                //}
-
-
-                //var form = Panel.Create(APIManager);
                 window.playing = false;
                 window.narrateDirections = function () {
                     if (!window.playing) {
@@ -2024,39 +1917,6 @@
                 mymap.fitBounds([[-256, 0], [0, 256]], { paddingBottomRight: [getPanelVisibleWidth(), getPanelVisibleHeight()] });
                 ResumeAutoZoom();
 
-                /*L.Routing.control(
-                    {
-                        showAlternatives: false,
-                        routeWhileDragging: false,
-                        router: Router,
-                        autoRoute: true,
-                        geocoder: Geocoder,
-                        plan: new L.Routing.Plan([], {
-                            maxGeocoderTolerance: 100000000,
-                            geocoder: Geocoder,
-                            reverseWaypoints: true
-                        }),
-                        routeLine: function (route, options) {
-                            if (route.name == "Shortest Route")
-                                return L.Routing.line(route, {
-                                    addWaypoints: options.addWaypoints, styles: [
-                                        { color: 'black', opacity: 0.15, weight: 7 }, { color: 'white', opacity: 0.8, weight: 6 }, { color: '#9E3031', opacity: 1, weight: 2, dashArray: '10,10' }
-                                    ]
-                                });
-                            return L.Routing.line(route, {
-                                addWaypoints: options.addWaypoints, styles: [
-                                    { color: 'black', opacity: 0.15, weight: 7 }, { color: 'white', opacity: 0.8, weight: 6 }, { color: '#5E9339', opacity: 1, weight: 2, dashArray: '10,10' }
-                                ]
-                            });
-                        },
-                        fitSelectedRoutes: false,
-                        itineraryBuilder: form,
-                        summaryTemplate: Router.summaryTemplate,
-                        collapsible: true,
-                        formatter: new custom_time_formatter(Router)
-                    }
-                ).addTo(mymap);*/
-
                 function createButton(label, container, image) {
                     var btn = L.DomUtil.create('img', '', container);
                     btn.setAttribute('src', image);
@@ -2081,7 +1941,7 @@
                                     cgarageBtn = createButton('Find garage', container, 'MapIcons/MapIconVehicleColonial.webp'),
                                     wgarageBtn = createButton('Find garage', container, 'MapIcons/MapIconVehicleWarden.webp'),
                                     refineryBtn = createButton('Find refinery', container, 'MapIcons/MapIconManufacturing.webp');
-                                    factoryBtn = createButton('Find factory', container, 'MapIcons/MapIconFactory.webp');
+                                factoryBtn = createButton('Find factory', container, 'MapIcons/MapIconFactory.webp');
 
                                 L.DomEvent.on(startBtn, 'click', function () {
                                     Router.Control.spliceWaypoints(0, 1, e.latlng);
@@ -2206,8 +2066,6 @@
                 };
 
                 var collapse_button = document.getElementsByClassName("leaflet-routing-collapse-btn")[0];
-
-                //document.getElementsByClassName("leaflet-routing-container")[0].classList.add("leaflet-routing-container-hide");
 
                 collapse_button.addEventListener("click", function () {
                     if (AutoZoom)
@@ -2435,18 +2293,9 @@
                         case "Salvage":
                             Router.hideSalvage();
                             break;
-                        //case "Warden Roads":
-                        //    Router.hideWarden();
-                        //    break;
                         case "Road Control":
                             Router.hideColonial();
                             break;
-                        //case "Uncontrolled Roads":
-                        //    Router.hideNeutral();
-                        //    break;
-                        //case "Road Quality":
-                        //    Router.hideQuality();
-                        //    break;
                         case "Borders":
                             Router.hideBorders();
                             break;
@@ -2587,22 +2436,10 @@
                                 Router.Coal.remove();
                                 Router.hideCoal();
                                 break;
-                            //case "Warden Roads":
-                            //    Router.WardenRoads.remove();
-                            //    Router.hideWarden();
-                            //    break;
                             case "Road Control":
                                 Router.ColonialRoads.remove();
                                 Router.hideColonial();
                                 break;
-                            //case "Uncontrolled Roads":
-                            //    Router.NeutralRoads.remove();
-                            //    Router.hideNeutral();
-                            //    break;
-                            //case "Road Quality":
-                            //    Router.RoadsCanvas.remove();
-                            //    Router.hideQuality();
-                            //    break;
                             case "Labels":
                                 Router.Labels.remove();
                                 Router.hideLabels();
@@ -2631,61 +2468,8 @@
                 document.getElementById("loader-holder").style.opacity = '0';
                 setTimeout(function () { document.getElementById("loader-holder").style.display = 'none'; }, 1000);
 
-
-                //function makeResizeable(p) {
-                //var p = document.getElementsByClassName('leaflet-router-container')[0];
-                //    p.addEventListener('click', function init() {
-                //        p.removeEventListener('click', init, false);
-                //        p.className = p.className + ' resizable';
-                //        var resizer = document.createElement('div');
-                //        resizer.className = 'resizer';
-                //        p.appendChild(resizer);
-                //        resizer.addEventListener('mousedown', initDrag, false);
-                //    }, false);
-
-                //    var startX, startY, startWidth, startHeight;
-
-                //    function initDrag(e) {
-                //        startX = e.clientX;
-                //        startY = e.clientY;
-                //        startWidth = parseInt(document.defaultView.getComputedStyle(p).width, 10);
-                //        startHeight = parseInt(document.defaultView.getComputedStyle(p).height, 10);
-                //        document.documentElement.addEventListener('mousemove', doDrag, false);
-                //        document.documentElement.addEventListener('mouseup', stopDrag, false);
-                //    }
-
-                //    function doDrag(e) {
-                //        p.style.width = (startWidth + e.clientX - startX) + 'px';
-                //        p.style.height = (startHeight + e.clientY - startY) + 'px';
-                //    }
-
-                //    function stopDrag(e) {
-                //        document.documentElement.removeEventListener('mousemove', doDrag, false);
-                //        document.documentElement.removeEventListener('mouseup', stopDrag, false);
-                //    }
-                //}
-
-                //for (var e of document.getElementsByClassName('leaflet-routing-container'))
-                //    makeResizeable(e);
-
             }, shard_url, function (error) { console.log(error); alert("War API cannot be contacted right now, it may be offline or there may be a network problem"); });
         }
-            //catch (error) {
-            //    if (first_error == null)
-            //        first_error = error;
-            //    if (shard_url in tryshards)
-            //        delete tryshards[shard_url];
-            //    if (Object.keys(tryshards).length == 0) {
-            //        alert("War API cannot be contacted right now: ".concat(first_error));
-            //    }
-            //    else {
-            //        shard_url = Object.keys(tryshards)[0];
-            //        shard = tryshards[Object.keys(tryshards)[0]];
-            //        break update_error_loop;
-
-            //    }
-            //}
-
 
     </script>
 </body>

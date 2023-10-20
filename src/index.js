@@ -30,10 +30,6 @@ global.Narrator = {
     Create: () => require('./INarrator.js').Narrator()
 };
 
-global.YouTube = {
-    Create: () => require('./IYouTube.js').YouTube()
-};
-
 global.Panel = {
     Create: (APIManager, Router, Geocoder) => require('./Panel.js').Panel(APIManager, Router, Geocoder)
 }

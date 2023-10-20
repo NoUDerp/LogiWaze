@@ -2,8 +2,8 @@ const pip = require('point-in-polygon');
 const kriging = require('@sakitam-gis/kriging');
 const superagent = require('superagent');
 
-var height = 256 / 7;
-var width = height * 2 / Math.sqrt(3);
+var width = 256 / 7;
+var height = width * Math.sqrt(3) / 2;
 var halfwidth = width * .5;
 var halfheight = height * .5;
 
@@ -11,43 +11,50 @@ let regionPolygon = [[halfwidth * .5, halfheight], [halfwidth, 0], [halfwidth * 
 let ox = 0;
 let oy = 0;
 let regions = [
-    { name: "NevishLineHex", realName: "Nevish Line", y: oy + 1.5 * height, x: ox - 2.25 * width },
-    { name: "AcrithiaHex", realName: "Acrithia", y: oy - 2.5 * height, x: ox + .75 * width },
-    { name: "RedRiverHex", realName: "Red River", y: oy - 2.5 * height, x: ox - .75 * width },
-    { name: "CallumsCapeHex", realName: "Callum's Cape", y: oy + 2 * height, x: ox - 1.5 * width },
-    { name: "SpeakingWoodsHex", realName: "Speaking Woods", y: oy + 2.5 * height, x: ox - .75 * width },
-    { name: "BasinSionnachHex", realName: "Basin Sionnach", y: oy + 3 * height, x: ox },
-    { name: "HowlCountyHex", realName: "Howl County", y: oy + 2.5 * height, x: ox + .75 * width },
-    { name: "ClansheadValleyHex", realName: "Clanshead Valley", y: oy + 2 * height, x: ox + 1.5 * width },
-    { name: "MorgensCrossingHex", realName: "Morgen's Crossing", y: oy + 1.5 * height, x: ox + 2.25 * width },
-    { name: "TheFingersHex", realName: "The Fingers", y: oy - 1.5 * height, x: ox + 2.25 * width },
-    { name: "TerminusHex", realName: "Terminus", y: oy - 2 * height, x: ox + 1.5 * width },
-    { name: "KalokaiHex", realName: "Kalokai", y: oy - 3 * height, x: ox },
-    { name: "AshFieldsHex", realName: "Ash Fields", y: oy - 2 * height, x: ox - 1.5 * width },
-    { name: "OriginHex", realName: "Origin", y: oy - 1.5 * height, x: ox - 2.25 * width },
-    { name: "GodcroftsHex", realName: "Godcrofts", y: .5 * height + oy, x: 2.25 * width + ox },
-    { name: "DeadLandsHex", realName: "Deadlands", y: oy, x: ox },
-    { name: "ReachingTrailHex", realName: "Reaching Trail", y: oy + 2 * height, x: ox },
-    { name: "CallahansPassageHex", realName: "Callahan's Passage", y: oy + height, x: ox },
-    { name: "MarbanHollow", realName: "Marban Hollow", y: oy + .5 * height, x: ox + .75 * width },
-    { name: "UmbralWildwoodHex", realName: "Umbral Wildwood", y: oy - height, x: ox },
-    { name: "HeartlandsHex", realName: "Heartlands", y: oy - 1.5 * height, x: ox - .75 * width },
-    { name: "LochMorHex", realName: "Loch Mór", y: oy - .5 * height, x: ox - .75 * width },
-    { name: "LinnMercyHex", realName: "Linn of Mercy", y: oy + .5 * height, x: ox - .75 * width },
-    { name: "StonecradleHex", realName: "Stonecradle", y: oy + height, x: ox - 1.5 * width },
-    { name: "KingsCageHex", realName: "King's Cage", y: oy, x: ox - 1.5 * width },
-    { name: "SableportHex", realName: "Sableport", y: oy - height, x: ox - 1.5 * width },
-    { name: "WestgateHex", realName: "Westgate", y: oy - .5 * height, x: ox - 2.25 * width },
-    { name: "FarranacCoastHex", realName: "Farranac Coast", y: oy + .5 * height, x: ox - 2.25 * width },
-    { name: "GreatMarchHex", realName: "The Great March", y: oy - 2 * height, x: ox },
-    { name: "TempestIslandHex", realName: "Tempest Island", y: oy - .5 * height, x: ox + 2.25 * width },
-    { name: "EndlessShoreHex", realName: "Endless Shore", y: oy, x: ox + 1.5 * width },
-    { name: "AllodsBightHex", realName: "Allods Bight", y: oy - height, x: ox + 1.5 * width },
-    { name: "WeatheredExpanseHex", realName: "Weathered Expanse", y: oy + height, x: ox + 1.5 * width },
-    { name: "DrownedValeHex", realName: "Drowned Vale", y: oy - .5 * height, x: ox + .75 * width },
-    { name: "ShackledChasmHex", realName: "Shackled Chasm", y: oy - 1.5 * height, x: ox + .75 * width },
-    { name: "ViperPitHex", realName: "Viper Pit", y: oy + 1.5 * height, x: ox + .75 * width },
-    { name: "MooringCountyHex", realName: "Mooring County", y: oy + 1.5 * height, x: ox - .75 * width }
+
+    { name: "KingsCageHex", realName: "King's Cage", x: ox - 1.5 * width, y: oy },
+    { name: "WestgateHex", realName: "Westgate", x: ox + -2.25 * width, y: oy + -.5 * height },
+    { name: "FarranacCoastHex", realName: "Farranac Coast", x: ox + -2.25 * width, y: oy + .5 * height },
+    { name: "EndlessShoreHex", realName: "Endless Shore", x: ox + 2.25 * width, y: oy + -.5 * height },
+    { name: "StlicanShelfHex", realName: "Stlican Shelf", x: ox + 2.25 * width, y: oy + .5 * height },
+    { name: "OarbreakerHex", realName: "Oarbreaker", x: ox + -3 * width, y: oy + 1 * height },
+    { name: "FishermansRowHex", realName: "Fisherman's Row", x: ox + -3 * width, y: oy + 0 * height },
+    { name: "StemaLandingHex", realName: "Stema Landing", x: ox + -3 * width, y: oy + -1 * height },
+    { name: "GodcroftsHex", realName: "Godcrofts", x: ox + 3 * width, y: oy + 1 * height },
+    { name: "SableportHex", realName: "Sableport", x: ox + -1.5 * width, y: oy + -1 * height },
+    { name: "TempestIslandHex", realName: "Tempest Island", x: ox + 3 * width, y: oy + 0 * height },
+    { name: "ReaversPassHex", realName: "Reaver's Pass", x: ox + 2.25 * width, y: oy + -1.5 * height },
+    { name: "TheFingersHex", realName: "TheFingersHex", x: ox + 3 * width, y: oy + -1 * height },
+    { name: "ClahstraHex", realName: "The Clahstra", x: ox + 1.5 * width, y: oy + 0 * height },
+    { name: "DeadLandsHex", realName: "Deadlands", x: ox + 0 * width, y: oy + 0 * height },
+    { name: "CallahansPassageHex", realName: "Callahan's Passage", x: ox + 0 * width, y: oy + 1 * height },
+    { name: "MarbanHollow", realName: "Marban Hollow", x: ox + .75 * width, y: oy + .5 * height },
+    { name: "UmbralWildwoodHex", realName: "Umbral Wildwood", x: ox + 0 * width, y: oy + -1 * height },
+    { name: "MooringCountyHex", realName: "The Moors", x: ox + -.75 * width, y: oy + 1.5 * height },
+    { name: "HeartlandsHex", realName: "Heartlands", x: ox + -.75 * width, y: oy + -1.5 * height },
+    { name: "LochMorHex", realName: "Loch Mór", x: ox + -.75 * width, y: oy + -.5 * height },
+    { name: "LinnMercyHex", realName: "Linn of Mercy", x: ox + -.75 * width, y: oy + .5 * height },
+    { name: "ReachingTrailHex", realName: "Reaching Trail", x: ox + 0 * width, y: oy + 2 * height },
+    { name: "StonecradleHex", realName: "Stonecradle", x: ox + -1.5 * width, y: oy + 1 * height },
+    { name: "GreatMarchHex", realName: "Great March", x: ox + 0 * width, y: oy + -2 * height },
+    { name: "AllodsBightHex", realName: "Allod's Bight", x: ox + 1.5 * width, y: oy + -1.0 * height },
+    { name: "WeatheredExpanseHex", realName: "Weathered Expanse", x: ox + 1.5 * width, y: oy + 1.0 * height },
+    { name: "DrownedValeHex", realName: "Drowned Vale", x: ox + .75 * width, y: oy + -.5 * height },
+    { name: "ShackledChasmHex", realName: "Shackled Chasm", x: ox + .75 * width, y: oy + -1.5 * height },
+    { name: "ViperPitHex", realName: "Viper Pit", x: ox + .75 * width, y: oy + 1.5 * height },
+    { name: "NevishLineHex", realName: "Nevish Line", x: ox + -2.25 * width, y: oy + 1.5 * height },
+    { name: "AcrithiaHex", realName: "Acrithia", x: ox + .75 * width, y: oy + -2.5 * height },
+    { name: "RedRiverHex", realName: "Red River", x: ox + -.75 * width, y: oy + -2.5 * height },
+    { name: "CallumsCapeHex", realName: "Callum's Cape", x: ox + -1.5 * width, y: oy + 2 * height },
+    { name: "SpeakingWoodsHex", realName: "Speaking Woods", x: ox + -.75 * width, y: oy + 2.5 * height },
+    { name: "BasinSionnachHex", realName: "Basin Sionnach", x: ox + 0 * width, y: oy + 3 * height },
+    { name: "HowlCountyHex", realName: "Howl County", x: ox + .75 * width, y: oy + 2.5 * height },
+    { name: "ClansheadValleyHex", realName: "Clanshead Valley", x: ox + 1.5 * width, y: oy + 2 * height },
+    { name: "MorgensCrossingHex", realName: "Morgen's Crossing", x: ox + 2.25 * width, y: oy + 1.5 * height },
+    { name: "TerminusHex", realName: "Terminus", x: ox + 1.5 * width, y: oy + -2 * height },
+    { name: "KalokaiHex", realName: "Kalokai", x: ox + 0 * width, y: oy + -3 * height },
+    { name: "AshFieldsHex", realName: "Ash Fields", x: ox + -1.5 * width, y: oy + -2 * height },
+    { name: "OriginHex", realName: "Origin", x: ox + -2.25 * width, y: oy + -1.5 * height }
 ];
 
 let regionNameMap = [];
@@ -80,46 +87,54 @@ exports.API = {
     mapControl: {},
     resources: {},
     remapXY: function (f) {
-        var k = 256 / 7;
-        var w = k * 2 / Math.sqrt(3);
-        if (f == "DeadLandsHex") return { x: 0, y: 0 };
-        if (f == "CallahansPassageHex") return { x: 0, y: k };
-        if (f == "MarbanHollow") return { x: 0.75 * w, y: 0.5 * k };
-        if (f == "UmbralWildwoodHex") return { x: 0, y: -k };
-        if (f == "MooringCountyHex") return { x: -0.75 * w, y: 1.5 * k };
-        if (f == "HeartlandsHex") return { x: -0.75 * w, y: - 1.5 * k };
-        if (f == "LochMorHex") return { x: -0.75 * w, y: -0.5 * k };
-        if (f == "LinnMercyHex") return { x: -0.75 * w, y: 0.5 * k };
-        if (f == "ReachingTrailHex") return { x: 0, y: 2 * k };
-        if (f == "StonecradleHex") return { x: -1.5 * w, y: k };
+
+        var w = 256 / 7;
+        var k = w * Math.sqrt(3) / 2;
+
         if (f == "KingsCageHex") return { x: -1.5 * w, y: 0 };
-        if (f == "SableportHex") return { x: -1.5 * w, y: -k };
-        if (f == "WestgateHex") return { x: -2.25 * w, y: -0.5 * k };
-        if (f == "FarranacCoastHex") return { x: -2.25 * w, y: 0.5 * k };
+        if (f == "WestgateHex") return { x: -2.25 * w, y: -.5 * k };
+        if (f == "FarranacCoastHex") return { x: -2.25 * w, y: .5 * k };
+        if (f == "EndlessShoreHex") return { x: 2.25 * w, y: -.5 * k };
+        if (f == "StlicanShelfHex") return { x: 2.25 * w, y: .5 * k };
+        if (f == "OarbreakerHex") return { x: -3 * w, y: 1 * k };
+        if (f == "FishermansRowHex") return { x: -3 * w, y: 0 };
+        if (f == "StemaLandingHex") return { x: -3 * w, y: -1 * k };
+        if (f == "GodcroftsHex") return { x: 3 * w, y: 1 * k };
+        if (f == "SableportHex") return { x: -1.5 * w, y: -1 * k };
+        if (f == "TempestIslandHex") return { x: 3 * w, y: 0 };
+        if (f == "ReaversPassHex") return { x: 2.25 * w, y: -1.5 * k };
+        if (f == "TheFingersHex") return { x: 3 * w, y: -1 * k };
+        if (f == "ClahstraHex") return { x: 1.5 * w, y: 0 };
+        if (f == "DeadLandsHex") return { x: 0, y: 0 };
+        if (f == "CallahansPassageHex") return { x: 0, y: 1 * k };
+        if (f == "MarbanHollow") return { x: .75 * w, y: .5 * k };
+        if (f == "UmbralWildwoodHex") return { x: 0, y: -1 * k };
+        if (f == "MooringCountyHex") return { x: -.75 * w, y: 1.5 * k };
+        if (f == "HeartlandsHex") return { x: -.75 * w, y: -1.5 * k };
+        if (f == "LochMorHex") return { x: -.75 * w, y: -.5 * k };
+        if (f == "LinnMercyHex") return { x: -.75 * w, y: .5 * k };
+        if (f == "ReachingTrailHex") return { x: 0, y: 2 * k };
+        if (f == "StonecradleHex") return { x: -1.5 * w, y: 1 * k };
         if (f == "GreatMarchHex") return { x: 0, y: -2 * k };
-        if (f == "TempestIslandHex") return { x: 2.25 * w, y: -0.5 * k };
-        if (f == "GodcroftsHex") return { x: 2.25 * w, y: 0.5 * k };
-        if (f == "EndlessShoreHex") return { x: 1.5 * w, y: 0 };
-        if (f == "AllodsBightHex") return { x: 1.5 * w, y: -k };
-        if (f == "WeatheredExpanseHex") return { x: 1.5 * w, y: k };
-        if (f == "DrownedValeHex") return { x: 0.75 * w, y: -0.5 * k };
-        if (f == "ShackledChasmHex") return { x: 0.75 * w, y: -1.5 * k };
-        if (f == "ViperPitHex") return { x: 0.75 * w, y: 1.5 * k };
+        if (f == "AllodsBightHex") return { x: 1.5 * w, y: -1.0 * k };
+        if (f == "WeatheredExpanseHex") return { x: 1.5 * w, y: 1.0 * k };
+        if (f == "DrownedValeHex") return { x: .75 * w, y: -.5 * k };
+        if (f == "ShackledChasmHex") return { x: .75 * w, y: -1.5 * k };
+        if (f == "ViperPitHex") return { x: .75 * w, y: 1.5 * k };
         if (f == "NevishLineHex") return { x: -2.25 * w, y: 1.5 * k };
-        if (f == "AcrithiaHex") return { x: 0.75 * w, y: -2.5 * k };
-        if (f == "RedRiverHex") return { x: -0.75 * w, y: -2.5 * k };
+        if (f == "AcrithiaHex") return { x: .75 * w, y: -2.5 * k };
+        if (f == "RedRiverHex") return { x: -.75 * w, y: -2.5 * k };
         if (f == "CallumsCapeHex") return { x: -1.5 * w, y: 2 * k };
-        if (f == "SpeakingWoodsHex") return { x: -0.75 * w, y: 2.5 * k };
+        if (f == "SpeakingWoodsHex") return { x: -.75 * w, y: 2.5 * k };
         if (f == "BasinSionnachHex") return { x: 0, y: 3 * k };
-        if (f == "HowlCountyHex") return { x: 0.75 * w, y: 2.5 * k };
+        if (f == "HowlCountyHex") return { x: .75 * w, y: 2.5 * k };
         if (f == "ClansheadValleyHex") return { x: 1.5 * w, y: 2 * k };
         if (f == "MorgensCrossingHex") return { x: 2.25 * w, y: 1.5 * k };
-        if (f == "TheFingersHex") return { x: 2.25 * w, y: -1.5 * k };
         if (f == "TerminusHex") return { x: 1.5 * w, y: -2 * k };
         if (f == "KalokaiHex") return { x: 0, y: -3 * k };
         if (f == "AshFieldsHex") return { x: -1.5 * w, y: -2 * k };
         if (f == "OriginHex") return { x: -2.25 * w, y: -1.5 * k };
-	    //	console.log(`Unexpected region name ${f}`);
+
         return { x: 0, y: 0 };
     },
 
@@ -175,8 +190,8 @@ exports.API = {
                         var complete = maps.length;
                         var p_x = [], p_y = [], p_t = [];
 
-                        var yf = 256 / 7;
-                        var xf = yf * 2 / Math.sqrt(3);
+                        var xf = 256 / 7;
+                        var yf = xf * Math.sqrt(3) / 2;
 
                         for (var i = 0; i < maps.length; i++) {
                             const mapName = maps[i];
