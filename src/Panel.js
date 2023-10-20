@@ -22,24 +22,10 @@ define(['leaflet', './Itinerary.js', 'jquery'], function (L, Itinerary, $) {
             a = a.concat("<tr>");
             a = a.concat("<td style=\"text-align: right\"><img src=\'Truck.webp\' class='fast-truck' /></td>");
             a = a.concat("<td style=\"text-align: left\">").concat(t2).concat("</td>");
-            //a = a.concat("<td style=\"text-align: right\"><img src=\'Truck.webp\' class='slow-truck' /></td>");
-            //a = a.concat("<td style=\"text-align: left\">").concat(t2).concat("</td>");
-            //a = a.concat("</tr>");
-            //a = a.concat("<tr>");
-            //a = a.concat("<td style=\"text-align: right\"><img src=\'Jeep.webp\' class='fast-truck' /></td>");
-            //a = a.concat("<td style=\"text-align: left\">").concat(t3).concat("</td>");
-            //a = a.concat("<td style=\"text-align: right\"><img src=\'Jeep.webp\' class='slow-truck'  /></td>");
-            //a = a.concat("<td style=\"text-align: left\">").concat(t4).concat("</td>");
-            //a = a.concat("</tr>");
-            //a = a.concat("<tr>");
             a = a.concat("<td style=\"text-align: right\"><img src=\'Flatbed.webp\' class='fast-truck' /></td>");
             a = a.concat("<td style=\"text-align: left\">").concat(t6).concat("</td>");
-            //a = a.concat("<td style=\"text-align: right\"><img src=\'Flatbed.webp\' class='slow-truck' /></td>");
-            //a = a.concat("<td style=\"text-align: left\">").concat(t6).concat("</td>");
-
             a = a.concat("<td style=\"text-align: right\"><img src=\'HTD.webp\' class='slowest-truck' /></td>");
             a = a.concat("<td style=\"text-align: left\">").concat(t7).concat("</td>");
-
             a = a.concat("</tr>");
             a = a.concat("</table></div>");
             return a;
