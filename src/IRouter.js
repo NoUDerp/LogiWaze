@@ -123,11 +123,12 @@
                 var renderer = L.canvas({ tolerance: .2 }).addTo(mymap);
 
                 var RegionLabels = VectorTextGrid.Create(8, [128, 128]);
-                var ControlLayer = VectorControlGrid.Create(7, 8, [128, 128], API, .30, .17, GridDepth);
+                var ControlLayer = VectorControlGrid.Create(7, 8, [128, 128], API, .30, .08 /* road width on map */, GridDepth);
 
                 var regions = API.regions;
-                var h = 256 / 7;
-                var w = h * 2 / Math.sqrt(3);
+
+                var w = 256 / 7;
+                var h = w * Math.sqrt(3) / 2;
 
                 regions.forEach(region => ControlLayer.addHex(region.x, -region.y, w, h, !(region.name in API.mapControl)));
 
@@ -268,36 +269,13 @@
                     if (th.major == 1) {
                         var ownership = API.ownership(th.x + 128, th.y - 128, th.region).ownership;
                         var control = ownership == "COLONIALS" ? 0 : (ownership == "WARDENS" ? 1 : 2);
-                        RegionLabels.addText(Recase(owotranslate(th.name)), owotranslate(th.name), control, th.x, th.y, 3, 9, '#fff');
+                        RegionLabels.addText(Recase(owotranslate(th.name)), owotranslate(th.name), control, th.x, th.y, 4, 9, '#fff');
                     }
                 }
 
                 for (var i = 0; i < API.regions.length; i++)
-                    RegionLabels.addText(Recase(owotranslate(API.regions[i].realName)), owotranslate(API.regions[i].realName), 4, API.regions[i].x, API.regions[i].y, 0, 3, '#ffffff', 2.5);
+                    RegionLabels.addText(Recase(owotranslate(API.regions[i].realName)), owotranslate(API.regions[i].realName), 4, API.regions[i].x, API.regions[i].y, 0, 4, '#ffffff', 2.5);
 
-
-                for (var credit of [ // wow these are all wrong now
-                    { text: "Hayden Grove", x: (139.079 - 128) * 0.90726470872655477280009094078879, y: (-155.292 + 128) * 0.90726470872655477280009094078879 },
-                    { text: "Steely Phil Bridge", x: (18.18 - 128) * 0.90726470872655477280009094078879, y: (-161.439 + 128) * 0.90726470872655477280009094078879 },
-                    { text: "Icanari Killing Fields", x: (134.071 - 128) * 0.90726470872655477280009094078879, y: (-143.104 + 128) * 0.90726470872655477280009094078879 },
-                    { text: "Kastow Peak", x: (124.817 - 128) * 0.90726470872655477280009094078879, y: (-122.72 + 128) * 0.90726470872655477280009094078879 },
-                    { text: "DragonZephyr Col", x: (119.176 - 128) * 0.90726470872655477280009094078879, y: (-83.464 + 128) * 0.90726470872655477280009094078879 },
-                    { text: "Skaj Sound", x: (49.826 - 128) * 0.90726470872655477280009094078879, y: (-102.048 + 128) * 0.90726470872655477280009094078879 },
-                    { text: "Inquisitor Silenus Trail", x: 44.403 - 128, y: 75.701 + 128 },
-                    { text: "Antraxen's Drive", x: 217.082 - 128, y: -136.754 + 128 },
-                    { text: "Fork of Malarthyn", x: 70.279 - 128, y: -103.977 + 128 },
-                    { text: "Maybar's Finesse", x: 158.151 - 128, y: -101.223 + 128 },
-                    { text: "Rust's Hideout", x: 173.935 - 128, y: -54.206190.195 + 128 },
-                    { text: "Sentsu's Perch", x: 30.13 - 128, y: -114.392 + 128 },
-		    { text: "Afrowner Beach", x: 60.885 - 128, y: -157.764 + 128 },
-		    { text: "Rick's Causeway", x: 70.904 - 128, y: -202.422 + 128 }
-                ]
-                ) {
-                    var region = API.calculateRegion(credit.x + 128, credit.y - 128);
-                    var ownership = API.ownership(credit.x + 128, credit.y - 128, region).ownership;
-                    let control = ownership == "COLONIALS" ? 0 : (ownership == "WARDENS" ? 1 : 2);
-                    RegionLabels.addText(owotranslate(Recase(credit.text)), owotranslate(credit.text), control, credit.x, credit.y, 7, 9, '#DAA520');
-                }
 
                 for (var key in JSONRoads._layers) {
                     var layer = JSONRoads._layers[key];

@@ -22,24 +22,10 @@ define(['leaflet', './Itinerary.js', 'jquery'], function (L, Itinerary, $) {
             a = a.concat("<tr>");
             a = a.concat("<td style=\"text-align: right\"><img src=\'Truck.webp\' class='fast-truck' /></td>");
             a = a.concat("<td style=\"text-align: left\">").concat(t2).concat("</td>");
-            //a = a.concat("<td style=\"text-align: right\"><img src=\'Truck.webp\' class='slow-truck' /></td>");
-            //a = a.concat("<td style=\"text-align: left\">").concat(t2).concat("</td>");
-            //a = a.concat("</tr>");
-            //a = a.concat("<tr>");
-            //a = a.concat("<td style=\"text-align: right\"><img src=\'Jeep.webp\' class='fast-truck' /></td>");
-            //a = a.concat("<td style=\"text-align: left\">").concat(t3).concat("</td>");
-            //a = a.concat("<td style=\"text-align: right\"><img src=\'Jeep.webp\' class='slow-truck'  /></td>");
-            //a = a.concat("<td style=\"text-align: left\">").concat(t4).concat("</td>");
-            //a = a.concat("</tr>");
-            //a = a.concat("<tr>");
             a = a.concat("<td style=\"text-align: right\"><img src=\'Flatbed.webp\' class='fast-truck' /></td>");
             a = a.concat("<td style=\"text-align: left\">").concat(t6).concat("</td>");
-            //a = a.concat("<td style=\"text-align: right\"><img src=\'Flatbed.webp\' class='slow-truck' /></td>");
-            //a = a.concat("<td style=\"text-align: left\">").concat(t6).concat("</td>");
-
             a = a.concat("<td style=\"text-align: right\"><img src=\'HTD.webp\' class='slowest-truck' /></td>");
             a = a.concat("<td style=\"text-align: left\">").concat(t7).concat("</td>");
-
             a = a.concat("</tr>");
             a = a.concat("</table></div>");
             return a;
@@ -49,11 +35,11 @@ define(['leaflet', './Itinerary.js', 'jquery'], function (L, Itinerary, $) {
             if (typeof d === 'object') {
                 let a = L.Routing.Formatter.prototype.formatDistance.call(this, d.distance, precision).replace(' ', '');
                 if (d.breakdown[2] > 0)
-                    a = a.concat('<div class="roadtier" style="width: 100%"><div style="background-color: #5a9565; width: ').concat(d.breakdown[2] * 100.0).concat('%"><span>Gravel/Paved&nbsp;(').concat(Math.round(d.breakdown[2] * 100.0)).concat('%)</span></div></div>');
+                    a = a.concat('<div class="roadtier" style="width: 100%"><div style="background-color: #957458; width: ').concat(d.breakdown[2] * 100.0).concat('%"><span>Gravel/Paved&nbsp;(').concat(Math.round(d.breakdown[2] * 100.0)).concat('%)</span></div></div>');
                 if (d.breakdown[1] > 0)
                     a = a.concat('<div class="roadtier" style="width: 100%"><div style="background-color: #94954e; width: ').concat(d.breakdown[1] * 100.0).concat('%"><span>Dirt&nbsp;(').concat(Math.round(d.breakdown[1] * 100.0)).concat('%)</span></div></div>');
                 if (d.breakdown[0] > 0)
-                    a = a.concat('<div class="roadtier" style="width: 100%"><div style="background-color: #957458; width: ').concat(d.breakdown[0] * 100.0).concat('%"><span>Mud&nbsp;(').concat(Math.round(d.breakdown[0] * 100.0)).concat('%)</span></div></div>');
+                    a = a.concat('<div class="roadtier" style="width: 100%"><div style="background-color: #eee;  width: ').concat(d.breakdown[0] * 100.0).concat('%"><span>Mud&nbsp;(').concat(Math.round(d.breakdown[0] * 100.0)).concat('%)</span></div></div>');
                 return a;
             }
             else
