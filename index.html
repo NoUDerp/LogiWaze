@@ -60,7 +60,7 @@
         .roadtier {
             line-height: 16px;
             font-size: 10px;
-            background: #ccc;
+            background: #444;
             height: 16px;
             margin: 3px 0;
             padding: 1px;
@@ -89,8 +89,8 @@
         }
 
         .logiwaze-credits div.credits a {
+            overflow-y: scroll;
             text-shadow: none;
-
         }
 
         .logiwaze-credits.leaflet-control-layers-expanded div.credits {
@@ -1541,7 +1541,7 @@
         if (location.protocol !== 'https:' && (location.hostname.toLowerCase() == "www.logiwaze.com" || location.hostname.toLowerCase() == "logiwaze.com"))
             location.replace('https:'.concat(location.href.substring(location.protocol.length)));
 
-        var build="4fc6dc9a0a1c42ca44e2b98d703431b43ca47dff";
+        var build="29f581830decbae1d8513a4bc3b114289238b193";
         if ("serviceWorker" in navigator) {
 
             window.addEventListener("load", function () {
@@ -1553,7 +1553,7 @@
         }
 
     </script>
-    <script src="FoxholeRouter.js?ce615bba14578a21627a6ea88529456f"></script>
+    <script src="FoxholeRouter.js?f1f0c5f40146195ad13764c09a28059c"></script>
     <script type="text/javascript">
 
         //window.indexedDB.open("logiwaze").onsuccess = function (e) {

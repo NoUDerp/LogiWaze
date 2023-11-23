@@ -10,7 +10,7 @@ echo "Generating road data:"
 roads="$(mktemp).sqlite";
 ogr2ogr "$roads" ./road_source.geojson -f SQLite -dsco SPATIALITE=YES -nln roads
 
-echo "delete from [roads] where [geometry] is null; update [roads] set geometry = ATM_Transform(ATM_Transform(geometry, ATM_CreateScale(128.0 / 20037500, 128.0 / 20037500)), ATM_CreateTranslate(128.0, -128.0)); update roads set tier=3 where tier=4; update roads set tier=1 where tier=0;" \
+echo "delete from [roads] where [geometry] is null; update [roads] set geometry = ATM_Transform(ATM_Transform(geometry, ATM_CreateScale(128.0 / 20037500, 128.0 / 20037500)), ATM_CreateTranslate(128.0, -128.0)); update roads set tier=3 where tier=4; update roads set tier=1 where tier=0; update roads set tier=(3-tier)+1;" \
         | spatialite "$roads"
 
 rm -rf Roads.geojson
