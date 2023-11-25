@@ -6,7 +6,6 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no, width=device-width" />
     <meta charset="UTF-8">
-    <!--<meta name="google" content="notranslate">-->
     <meta http-equiv="Content-Language" content="en">
     <title>LogiWaze</title>
 
@@ -86,18 +85,20 @@
 
         .logiwaze-credits div.credits {
             display: none;
+            overflow-y: hidden;
+            overflow-x: hidden;
+            padding: 4px;
         }
 
-        .logiwaze-credits div.credits a {
-            overflow-y: scroll;
-            text-shadow: none;
-        }
+            .logiwaze-credits div.credits a {
+                text-shadow: none;
+            }
 
         .logiwaze-credits.leaflet-control-layers-expanded div.credits {
             display: block;
         }
 
-        .logiwaze-credits div.logiwaze-logo {
+        .logiwaze-credits a.logiwaze-logo {
             font-size: 26px;
             padding: 5px;
             color: #444;
@@ -107,9 +108,10 @@
             height: 34px;
             text-align: center;
             vertical-align: middle;
+            text-decoration: none;
         }
 
-        .logiwaze-credits.leaflet-control-layers-expanded div.logiwaze-logo {
+        .logiwaze-credits.leaflet-control-layers-expanded a.logiwaze-logo {
             display: none;
         }
 
@@ -1419,6 +1421,10 @@
                 overflow-y: auto
             }
 
+            .leaflet-control {
+                float: right;
+            }
+
             .leaflet-top.leaflet-left {
                 left: unset;
                 right: 10px
@@ -1475,10 +1481,7 @@
 
             .leaflet-routing-container.leaflet-routing-container-hide {
                 top: calc(100% - 10px);
-                /*position: absolute !important;*/
                 left: 0;
-                /*width: 100%;*/
-                /*height: unset;*/
             }
         }
 
@@ -1541,7 +1544,7 @@
         if (location.protocol !== 'https:' && (location.hostname.toLowerCase() == "www.logiwaze.com" || location.hostname.toLowerCase() == "logiwaze.com"))
             location.replace('https:'.concat(location.href.substring(location.protocol.length)));
 
-        var build="29f581830decbae1d8513a4bc3b114289238b193";
+        var build = "29f581830decbae1d8513a4bc3b114289238b193";
         if ("serviceWorker" in navigator) {
 
             window.addEventListener("load", function () {
@@ -1554,38 +1557,9 @@
 
     </script>
     <script src="FoxholeRouter.js?f1f0c5f40146195ad13764c09a28059c"></script>
-    <script type="text/javascript">
-
-        //window.indexedDB.open("logiwaze").onsuccess = function (e) {
-        //    //var db = e.target.result;
-        //    if (!e.target.result.objectStoreNames.contains("version")) {
-        //        e.target.result.createObjectStore("version", { keyPath: "id" });
-        //        e.target.result.createIndex("build", "build", { unique: true });
-        //    }
-        //    const query = e.target.result.transaction(['version'], 'readwrite');
-        //    const store = query.objectStore('version');
-        //    const cursor = store.openCursor();
-        //    cursor.onsuccess = (f) => {
-        //        const c = f.target.result;
-        //        if (c) {
-        //            var old_build = c.value;
-        //            if (old_build != build) {
-        //                alert('An update is available');
-        //                window.serviceWorker.update();
-        //            }
-        //        }
-        //        else
-        //            alert('need to store build here');
-        //    };
-        //};
-
-
-
-        //db.createObjectStore("version", { version: })
-        //objectStore.createIndex("name", "name", { unique: false });
+<script type="text/javascript">
 
         var startingWaypoints = [];
-
 
         // load initial waypoints
         var points = startingWaypoints;
@@ -1767,13 +1741,13 @@
                 ).addTo(mymap);
 
                 L.Control.Credits = L.Control.extend({
-                    onAdd: function (map) {
 
+                    onAdd: function (map) {
                         const container = L.DomUtil.create('div', 'logiwaze-credits leaflet-control leaflet-control-layers');
                         container.innerHTML =
                             '<div class="credits">' +
                             '<center><h2>LogiWaze</h2></center>' +
-                            '<p>Map image thanks to Rust<br />Available as a game mod</br><a target="_blank" href="https://rustard.itch.io/improved-map-mod">https://rustard.itch.io/improved-map-mod</a></p><hr>' +
+                            '<p>Map image thanks to Rust<br /><a target="_blank" href="https://rustard.itch.io/improved-map-mod">https://rustard.itch.io/improved-map-mod</a></p><hr>' +
                             '<p>Source code:<br /><a target="_blank" href="https://github.com/NoUDerp/LogiWaze">https://github.com/NoUDerp/LogiWaze</a></p><hr>' +
                             "<p><i>Special thanks to</i>:" +
                             "<div>Afrowner</div>" +
@@ -1795,7 +1769,9 @@
                             "<div>Steely Phil</div>" +
                             "</p>" +
                             '</div>' +
-                            '<div class="credits-icon"><div class="logiwaze-logo">LW</div></div>';
+                            '<a class="logiwaze-logo credits-icon" href="#" title="About" role="button">LW</a>';
+
+                        L.DomEvent.on(container, 'click', L.DomEvent.stopPropagation);
 
                         container.addEventListener('mouseleave', () => {
                             L.DomUtil.removeClass(this._container, 'leaflet-control-layers-expanded');
@@ -1816,7 +1792,6 @@
 
                 L.control.credits({
                     position: 'topleft',
-                    collapsed: false,
                     autoZIndex: false
                 }).addTo(mymap);
 
@@ -2185,7 +2160,6 @@
                                 };
                             }
                     }
-
                 }
 
                 mymap.on('baselayerchange', function (e) {
@@ -2234,18 +2208,9 @@
                         case "Salvage":
                             Router.showSalvage();
                             break;
-                        //case "Warden Roads":
-                        //    Router.showWarden();
-                        //    break;
                         case "Road Control":
                             Router.showColonial();
                             break;
-                        //case "Uncontrolled Roads":
-                        //    Router.showNeutral();
-                        //    break;
-                        //case "Road Quality":
-                        //    Router.showQuality();
-                        //    break;
                         case "Borders":
                             Router.showBorders();
                             break;
@@ -2392,18 +2357,10 @@
                                 Router.Borders.remove();
                                 Router.hideBorders();
                                 break;
-                            //case "Warden Roads":
-                            //    Router.WardenRoads.remove();
-                            //    Router.hideWarden();
-                            //    break;
                             case "Road Control":
                                 Router.ColonialRoads.remove();
                                 Router.hideColonial();
                                 break;
-                            //case "Uncontrolled Roads":
-                            //    Router.NeutralRoads.remove();
-                            //    Router.hideNeutral();
-                            //    break;
                             case "Refineries":
                                 Router.hideRefineries();
                                 Router.Refineries.remove();
