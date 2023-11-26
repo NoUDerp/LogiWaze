@@ -69,7 +69,7 @@
             .roadtier div {
                 display: inline-block;
                 height: 100%;
-                text-indent: 2px
+                credits text-indent: 2px
             }
 
                 .roadtier div span {
@@ -1544,7 +1544,7 @@
         if (location.protocol !== 'https:' && (location.hostname.toLowerCase() == "www.logiwaze.com" || location.hostname.toLowerCase() == "logiwaze.com"))
             location.replace('https:'.concat(location.href.substring(location.protocol.length)));
 
-        var build = "29f581830decbae1d8513a4bc3b114289238b193";
+        var build="49e9f74c2e7d1a6555d20340aee3630fae5c7639";
         if ("serviceWorker" in navigator) {
 
             window.addEventListener("load", function () {
@@ -1556,7 +1556,7 @@
         }
 
     </script>
-    <script src="FoxholeRouter.js?f1f0c5f40146195ad13764c09a28059c"></script>
+    <script src="FoxholeRouter.js?4325c15a39315343ff33c43d4d4c50f0"></script>
 <script type="text/javascript">
 
         var startingWaypoints = [];
@@ -1741,6 +1741,30 @@
                 ).addTo(mymap);
 
                 L.Control.Credits = L.Control.extend({
+                    collapsed: true,
+
+                    collapse: function (ev) {
+                        // On touch devices `pointerleave` is fired while clicking on a checkbox.
+                        // The control was collapsed instead of adding the layer to the map.
+                        // So we allow collapse if it is not touch and pointerleave.
+                        if (!ev || !(ev.type === 'pointerleave' && ev.pointerType === 'touch'))
+                            this._container.classList.remove('leaflet-control-layers-expanded');
+                        return this;
+                    },
+
+                    expand: function () {
+                        this._container.classList.add('leaflet-control-layers-expanded');
+                        this._section.style.height = null;
+                        const acceptableHeight = this._map.getSize().y - (this._container.offsetTop + 50);
+                        if (acceptableHeight < this._section.clientHeight) {
+                            this._section.classList.add('leaflet-control-layers-scrollbar');
+                            this._section.style.height = `${acceptableHeight}px`;
+                        } else {
+                            this._section.classList.remove('leaflet-control-layers-scrollbar');
+                        }
+                        this._checkDisabledLayers();
+                        return this;
+                    },
 
                     onAdd: function (map) {
                         const container = L.DomUtil.create('div', 'logiwaze-credits leaflet-control leaflet-control-layers');
@@ -1764,23 +1788,43 @@
                             "<div>Maybar</div>" +
                             "<div>Rick</div>" +
                             "<div>Rust</div>" +
+							"<div>Seabass</div>" +
                             "<div>Sentsu</div>" +
                             "<div>Skaj</div>" +
                             "<div>Steely Phil</div>" +
                             "</p>" +
-                            '</div>' +
-                            '<a class="logiwaze-logo credits-icon" href="#" title="About" role="button">LW</a>';
+                            '</div>';
+                        //+
+                        const link = L.DomUtil.create('a', 'logiwaze-logo credits-icon', container);
+                        link.href = '#';
+                        link.title = "About";
+                        link.role = "button";
+                        link.innerHTML = "LW";
 
-                        L.DomEvent.on(container, 'click', L.DomEvent.stopPropagation);
+                        // makes this work on IE touch devices by stopping it from firing a mouseout event when the touch is released
+                        container.setAttribute('aria-haspopup', true);
 
-                        container.addEventListener('mouseleave', () => {
-                            L.DomUtil.removeClass(this._container, 'leaflet-control-layers-expanded');
-                        });
+                        L.DomEvent.disableClickPropagation(container);
+                        L.DomEvent.disableScrollPropagation(container);
 
-                        container.addEventListener('mouseenter', () => {
-                            L.DomUtil.addClass(this._container, 'leaflet-control-layers-expanded');
-                        });
+                        mymap.on('click', this.collapse, this);
 
+                        L.DomEvent.on(container, {
+                            pointerenter: this.expand,
+                            pointerleave: this.collapse
+                        }, this);
+
+                        L.DomEvent.on(link, {
+                            keydown(e) {
+                                if (e.code === 'Enter')
+                                    this.expand();
+                            },
+                            // Certain screen readers intercept the key event and instead send a click event
+                            click(e) {
+                                DomEvent.preventDefault(e);
+                                this.expand;
+                            }
+                        }, this);
 
                         return container;
                     }
