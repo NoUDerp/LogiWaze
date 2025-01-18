@@ -10,27 +10,27 @@ module.exports.VectorControlGrid = {
 };
 
 module.exports.VectorTextGrid = {
-    Create: (MaxZoom, Offset) => require('./IVectorTextGrid.js').Create(MaxZoom, Offset)
+    Create: (MaxZoom, Offset) => require('./IVectorTextGrid.ts').Create(MaxZoom, Offset)
 };
 
 module.exports.FoxholeRouter = {
-    Create: (mymap, API, Narrator) => new require('./IRouter.js').FoxholeRouter(mymap, API, Narrator)
+    Create: (mymap, API) => require('./IRouter.ts').Router(mymap, API)
 };
 
 module.exports.API = {
-    Create: () => require('./API.js').API
+    Create: () => require('./API.ts').API
 };
 
 module.exports.FoxholeGeocoder = {
-    Create: (API) => require('./IGeocoder.js').FoxholeGeocoder(API)
+    Create: (API) => require('./IGeocoder.ts').FoxholeGeocoder(API)
 };
 
 module.exports.Narrator = {
-    Create: () => require('./INarrator.js').Narrator()
+    Create: () => require('./INarrator.ts').Narrator()
 };
 
 module.exports.Panel = {
-    Create: (APIManager, Router, Geocoder) => require('./Panel.js').Panel(APIManager, Router, Geocoder)
+    Create: (APIManager, Router, Geocoder) => require('./Panel.ts').Panel(APIManager, Router, Geocoder)
 }
 
 module.exports.Shards = require('../Shards.json');

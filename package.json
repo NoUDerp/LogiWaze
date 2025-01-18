@@ -6,23 +6,29 @@
   "homepage": "https://www.logiwaze.com/",
   "directories": {},
   "scripts": {
+    "clean": "rimraf build .parcel-cache",
     "build": "rimraf build .parcel-cache && parcel build",
-    "debug": "parcel build && parcel",
+    "start": "parcel",
+    "open": "parcel --open index.html",
     "check": "tsc --noEmit"
   },
   "targets": {
     "global": {
       "context": "browser",
+      "sourceMap": {
+        "inline": true
+      },
       "includeNodeModules": true,
       "outputFormat": "global"
     }
   },
-  "source": "index.html",
+  "source": "./src/index.html",
   "author": "Derp",
   "license": "MIT",
   "dependencies": {
     "@babel/preset-env": "^7.26.0",
     "@parcel/babel-preset-env": "^2.13.3",
+    "@parcel/config-webextension": "^2.13.3",
     "@sakitam-gis/kriging": "*",
     "@swc/helpers": "^0.5.15",
     "@turf/distance": "^6.0.1",

@@ -1,7 +1,8 @@
 ﻿<html lang="en">
 <head>
-    <link rel="icon" href="favicon.svg">
-    <link rel="manifest" href="manifest.json" crossorigin=""/>
+    <link rel="icon" href="../favicon.svg">
+    <!--    TODO: Restore this for progressive web app -->
+    <!--    <link rel="manifest" href="../manifest.json" crossorigin=""/>-->
     <meta name="google" content="notranslate">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no, width=device-width"/>
@@ -451,13 +452,13 @@
         }
 
         .leaflet-control-layers-toggle {
-            background-image: url(layers.png);
+            background-image: url(../layers.png);
             width: 36px;
             height: 36px
         }
 
         .leaflet-retina .leaflet-control-layers-toggle {
-            background-image: url(layers-2x.png);
+            background-image: url(../layers-2x.png);
             background-size: 26px 26px
         }
 
@@ -510,7 +511,7 @@
         }
 
         .leaflet-default-icon-path {
-            background-image: url(marker-icon.png)
+            background-image: url(../marker-icon.png)
         }
 
         .leaflet-container .leaflet-control-attribution {
@@ -1079,17 +1080,17 @@
 
         @font-face {
             font-family: "Celtic";
-            src: url(Celtic.woff2)
+            src: url(../Celtic.woff2)
         }
 
         @font-face {
             font-family: "Roman";
-            src: url(Roman.woff2)
+            src: url(../Roman.woff2)
         }
 
         @font-face {
             font-family: "Italic";
-            src: url(Italic.woff2)
+            src: url(../Italic.woff2)
         }
 
         .town-neutral {
@@ -1542,24 +1543,33 @@
     if (location.protocol !== 'https:' && (location.hostname.toLowerCase() == "www.logiwaze.com" || location.hostname.toLowerCase() == "logiwaze.com"))
         location.replace('https:'.concat(location.href.substring(location.protocol.length)));
 
-    var build = "5bfb6f185b4989c796928229bd7b00601d791edd";
+    // TODO: fix this
     // if ("serviceWorker" in navigator) {
-    //     window.addEventListener("load", function () {
-    //         navigator.serviceWorker.register('ServiceWorker.js', {type: 'module'})
-    //             .then(function (res) {
-    //                 return res.update();
-    //             })
-    //             .catch(function (err) {
-    //                 console.log("service worker not registered", err);
-    //             })
+    //     window.addEventListener("load", async function () {
+    //         try {
+    //             let res = await navigator.serviceWorker.register(new URL("./ServiceWorker.js"));
+    //             return res.update();
+    //         } catch (err) {
+    //             console.log("service worker not registered", err);
+    //         }
     //     });
     // }
 
 </script>
 
 <script type="module">
-    import {Shards, L, $, VectorControlGrid, VectorTextGrid , FoxholeRouter, API, FoxholeGeocoder, Narrator, Panel} from './src/index.ts';
-    
+    import {
+        Shards,
+        L,
+        $,
+        VectorControlGrid,
+        VectorTextGrid,
+        FoxholeRouter,
+        API,
+        FoxholeGeocoder,
+        Panel
+    } from './index.ts';
+
     var startingWaypoints = [];
 
     // load initial waypoints
@@ -1704,14 +1714,12 @@
     update_error_loop: {
         APIManager.update(function () {
 
-            var VoiceNarrator = Narrator.Create();
-
-
-            var Router = FoxholeRouter.Create(mymap, APIManager, VoiceNarrator);
-
             var Geocoder = FoxholeGeocoder.Create(APIManager);
+            
+            var Router = FoxholeRouter.Create(mymap, APIManager);
 
-            Router.VectorControlGrid.build = "?".concat(build);
+
+            Router.VectorControlGrid.build = "";//"?".concat(build);
 
             var Options = {
                 '<img src="MapIcons/MapIconStaticBase3.webp" class="layer-icon">Town Halls': Router.TownHalls,
@@ -1898,23 +1906,7 @@
             new L.Control.Credits().addTo(mymap);
 
             window.playing = false;
-            window.narrateDirections = function () {
-                if (!window.playing) {
-                    window.playing = true;
-                    x = document.getElementsByClassName("play-button");
-                    if (x != null)
-                        for (var i = 0; i < x.length; i++) ;
-                    //x[i].innerText = "❙❙";
-                    Router.narrate();
-                } else {
-                    window.playing = false;
-                    x = document.getElementsByClassName("play-button");
-                    if (x != null)
-                        for (var i = 0; i < x.length; i++) ;
-                    //x[i].innerText = "▶";
-                    Router.pauseNarrate();
-                }
-            };
+
 
             Router.Control = Panel.Create(APIManager, Router, Geocoder).addTo(mymap);
 

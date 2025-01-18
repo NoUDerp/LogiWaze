@@ -1,13 +1,10 @@
 //@ts-nocheck
-define(['leaflet', '../towns.json'], function (L, towns) {
-    return {
+let L = require('leaflet');
+let towns = require('../towns.json');
+module.exports.FoxholeGeocoder =  function (API) {
+            let l = Object.keys(towns);
 
-        FoxholeGeocoder: function (API) {
-            var l = Object.keys(towns);
-            //for (var i = 0; i < l.length; i++)
-            //  towns[l[i]].region = API.calculateRegion(towns[l[i]].x, towns[l[i]].y);
-
-            var FoxholeGeocoder = {
+            return {
                 API: API,
                 Towns: towns,
                 /* distance between two strings */
@@ -146,7 +143,5 @@ define(['leaflet', '../towns.json'], function (L, towns) {
                     return call(output, []);
                 }
             };
-            return FoxholeGeocoder;
-        }
-    };
-});
+        };
+

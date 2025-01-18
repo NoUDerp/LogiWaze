@@ -12,10 +12,10 @@
 {
   "compilerOptions": {
     "sourceMap": true,
-    "removeComments": true,
+    "removeComments": false,
     "incremental": true,
     "target": "ES6",
-    "module": "CommonJS",
+    "module": "ES6",
     "moduleResolution": "node",
     "rootDir": "./src",
     "outFile": "./FoxholeRouter.js",
