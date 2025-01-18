@@ -7,7 +7,7 @@
   "directories": {},
   "scripts": {
     "clean": "rimraf .parcel-cache dist/*",
-    "build": "rimraf .parcel-cache dist && mkdir dist && parcel build && mkdirp dist/Tiles && ncp Tiles/ dist/Tiles && mkdirp dist/MapIcons && ncp MapIcons/ dist/MapIcons && ncp Background.webp dist && ncp layers-2x.png dist && ncp font.svg dist && ncp download-file.svg dist",   
+    "build": "rimraf .parcel-cache dist && mkdir dist && parcel build && mkdirp dist/Tiles && ncp Tiles/ dist/Tiles && mkdirp dist/MapIcons && ncp MapIcons/ dist/MapIcons && ncp Background.webp dist/Background.webp && ncp layers-2x.png dist/layers-2x.png && ncp font.svg dist/font.svg && ncp download-file.svg dist/download-file.svg && ncp copy.svg dist/copy.svg && ncp marker-icon.png dist/marker-icon.3f7d3721.png && ncp marker-icon-2x.png dist/marker-icon-2x.png && ncp ShortestRoute.webp dist/ShortestRoute.webp && ncp ray-start-arrow.svg dist/ray-start-arrow.svg && ncp ray-end.svg dist/ray-end.svg ",   
     "start": "parcel",
     "open": "parcel --open index.html",
     "check": "tsc --noEmit"

@@ -1627,7 +1627,8 @@
 
 
     var pane = mymap.createPane('imagebg');
-    mymap.getPane('imagebg').style.zIndex = 50;
+    //mymap.getPane('imagebg')
+    pane.style.zIndex = 50;
 
     var APIManager = API.Create();
 
@@ -1682,7 +1683,7 @@
         if (!portraitPanel(element))
             return 0;
 
-        return element.offsetHeight;//.clientHeight;//.offsetHeight;
+        return element.offsetHeight;
     }
 
     function getPanelVisibleWidth(element) {
@@ -1708,8 +1709,11 @@
         if (element.classList.contains("leaflet-routing-container-hide"))
             return 0;
 
-        return element.offsetWidth;//.clientHeight;//.offsetHeight;
+        return element.offsetWidth;
     }
+    
+    global.getPanelVisibleWidth = getPanelVisibleWidth;
+    global.getPanelVisibleHeight = getPanelVisibleHeight;
 
     update_error_loop: {
         APIManager.update(function () {
@@ -1725,7 +1729,7 @@
                 '<img src="MapIcons/MapIconStaticBase3.webp" class="layer-icon">Town Halls': Router.TownHalls,
                 '<img src="MapIcons/fencing.webp" class="layer-icon">Borders': Router.Borders,
                 '<img src="MapIcons/road-route.webp" class="layer-icon">Road Control': Router.ColonialRoads,
-                '<img src="Shortest Route.webp" class="layer-icon">Uncontrolled Roads': Router.NeutralRoads,
+                '<img src="ShortestRoute.webp" class="layer-icon">Uncontrolled Roads': Router.NeutralRoads,
                 '<img src="MapIcons/MapIconManufacturing.webp" class="layer-icon">Refineries': Router.Refineries,
                 '<img src="MapIcons/MapIconFactory.webp" class="layer-icon">Factories': Router.Factories,
                 '<img src="MapIcons/MapIconStorageFacility.webp" class="layer-icon">Storage': Router.Storage,

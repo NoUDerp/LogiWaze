@@ -381,8 +381,8 @@ module.exports.Create = function (mymap, API) {
 
             var scale = 1; // temporarily disabled: window.devicePixelRatio;
 
-            copy_paste_canvas.width = (e.newSize.x - getPanelVisibleWidth()) * scale;
-            copy_paste_canvas.height = (e.newSize.y - getPanelVisibleHeight()) * scale;
+            copy_paste_canvas.width = (e.newSize.x - global.getPanelVisibleWidth()) * scale;
+            copy_paste_canvas.height = (e.newSize.y - global.getPanelVisibleHeight()) * scale;
 
             copy_paste_canvas.style.width = (e.newSize.x - getPanelVisibleWidth()).toString().concat('px');
             copy_paste_canvas.style.height = (e.newSize.y - getPanelVisibleHeight()).toString().concat('px');
