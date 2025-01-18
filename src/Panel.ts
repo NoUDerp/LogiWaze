@@ -1,6 +1,6 @@
 //@ts-nocheck
 let L = require('leaflet');
-let Itinerary = require('./Itinerary');
+let Itinerary = require('./Itinerary.ts');
 let $ = require('jquery');
 
 class custom_time_formatter extends L.Routing.Formatter {
@@ -538,8 +538,7 @@ let panelFn = (API, Router, Geocoder) => {
         formatter: new custom_time_formatter(Router)
     });
     pp.on('routeselected', (e) => pp.routeSelected = e.route);
-
     return pp;
 };
 
-module.exports.Panel = panelFn;
+module.exports.Create = panelFn;

@@ -1,9 +1,11 @@
 //@ts-nocheck
-define(['leaflet', 'leaflet-routing-machine'], function (L, R) {
-    var Formatter = L.Routing.Formatter;
-    var ItineraryBuilder = L.Routing.ItineraryBuilder;
+let L = require('leaflet');
+let R = require('leaflet-routing-machine');
 
-    module.exports = L.Control.extend({
+var Formatter = L.Routing.Formatter;
+var ItineraryBuilder = L.Routing.ItineraryBuilder;
+
+module.exports = L.Control.extend({
         includes: ((typeof L.Evented !== 'undefined' && L.Evented.prototype) || L.Mixin.Events),
 
         options: {
@@ -49,8 +51,6 @@ define(['leaflet', 'leaflet-routing-machine'], function (L, R) {
                 (collapsible ? 'leaflet-routing-collapsible ' : '') +
                 this.options.containerClassName);
 
-            
-
 
             this._altContainer = this.createAlternativesContainer();
             this._container.appendChild(this._altContainer);
@@ -89,7 +89,7 @@ define(['leaflet', 'leaflet-routing-machine'], function (L, R) {
                 this._altElements.push(altDiv);
             }
 
-            this._selectRoute({ route: this._routes[0], alternatives: this._routes.slice(1) });
+            this._selectRoute({route: this._routes[0], alternatives: this._routes.slice(1)});
 
             return this;
         },
@@ -109,8 +109,8 @@ define(['leaflet', 'leaflet-routing-machine'], function (L, R) {
 
         _createAlternative: function (alt, i) {
             var altDiv = L.DomUtil.create('div', 'leaflet-routing-alt ' +
-                this.options.alternativeClassName +
-                (i > 0 ? ' leaflet-routing-alt-minimized ' + this.options.minimizedClassName : '')),
+                    this.options.alternativeClassName +
+                    (i > 0 ? ' leaflet-routing-alt-minimized ' + this.options.minimizedClassName : '')),
                 template = this.options.summaryTemplate,
                 data = L.extend({
                     name: alt.name,
@@ -227,9 +227,4 @@ define(['leaflet', 'leaflet-routing-machine'], function (L, R) {
         }
     });
 
-    /*return {
-        Itinerary: (Options) => new prototype(Options),
-        prototype: prototype
-    };*/
-});
 

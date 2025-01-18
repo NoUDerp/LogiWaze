@@ -14,7 +14,7 @@ module.exports.VectorTextGrid = {
 };
 
 module.exports.FoxholeRouter = {
-    Create: (mymap, API) => require('./IRouter.ts').Router(mymap, API)
+    Create: (mymap, API) => require('./IRouter.ts').Create(mymap, API)
 };
 
 module.exports.API = {
@@ -30,7 +30,7 @@ module.exports.Narrator = {
 };
 
 module.exports.Panel = {
-    Create: (APIManager, Router, Geocoder) => require('./Panel.ts').Panel(APIManager, Router, Geocoder)
+    Create: (APIManager, Router, Geocoder) => require('./Panel.ts').Create(APIManager, Router, Geocoder)
 }
 
 module.exports.Shards = require('../Shards.json');

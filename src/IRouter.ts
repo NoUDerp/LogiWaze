@@ -15,7 +15,7 @@ function owotranslate(text) {
     return text;
 }
 
-module.exports.Router = function (mymap, API) {
+module.exports.Create = function (mymap, API) {
 
     
     function Recase(x) {
@@ -894,10 +894,6 @@ module.exports.Router = function (mymap, API) {
 
         angleToDirection: function (angle) {
             return FoxholeRouter.cardinalDirections[parseInt(Math.round((angle / (Math.PI * 2)) * 8)) % 8];
-        },
-
-        LocateTown: function (name) {
-
         },
 
         route: function (waypoints, callback, context, options) {

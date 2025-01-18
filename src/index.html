@@ -1908,7 +1908,8 @@
             window.playing = false;
 
 
-            Router.Control = Panel.Create(APIManager, Router, Geocoder).addTo(mymap);
+            let panel = Panel.Create(APIManager, Router, Geocoder);
+            Router.Control = panel.addTo(mymap);
 
             // add another button
             for (let x of document.getElementsByClassName("leaflet-routing-reverse-waypoints")) {
