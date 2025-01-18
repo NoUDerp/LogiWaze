@@ -1,0 +1,3 @@
+[submodule "tiler"]
+	path = Tiler
+	url = https://github.com/NoUDerp/Tiler
