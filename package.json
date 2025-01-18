@@ -6,11 +6,17 @@
   "homepage": "https://www.logiwaze.com/",
   "directories": {},
   "scripts": {
-    "clean": "rimraf build .parcel-cache",
-    "build": "rimraf build .parcel-cache && parcel build",
+    "clean": "rimraf .parcel-cache dist/*",
+    "build": "rimraf .parcel-cache dist && mkdir dist && parcel build && mkdirp dist/Tiles && ncp Tiles/ dist/Tiles && mkdirp dist/MapIcons && ncp MapIcons/ dist/MapIcons && ncp Background.webp dist && ncp layers-2x.png dist && ncp font.svg dist && ncp download-file.svg dist",   
     "start": "parcel",
     "open": "parcel --open index.html",
     "check": "tsc --noEmit"
+  },
+  "staticFiles": {
+    "staticPath": [
+      "./src/static"
+    ],
+    "distDir": "./dist"
   },
   "targets": {
     "global": {
@@ -66,8 +72,10 @@
   "devDependencies": {
     "@parcel/packager-raw-url": "^2.13.3",
     "@parcel/transformer-webmanifest": "^2.13.3",
+    "cp": "^0.2.0",
     "jq": "*",
     "make": "*",
+    "ncp": "^2.0.0",
     "sharp": "^0.32.4",
     "svgo": "^3.3.2",
     "webpack": "5.94.0",
