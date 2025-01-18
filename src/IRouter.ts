@@ -1,4 +1,5 @@
-﻿define(['leaflet', 'json-loader!../Roads.geojson', './geojson-path-finder/index.js', 'leaflet-routing-machine', '../towns.json', '../Shards.json', '@zuzak/owo'],
+﻿//@ts-nocheck
+define(['leaflet', 'json-loader!../Roads.geojson', './geojson-path-finder/index.js', 'leaflet-routing-machine', '../towns.json', '../Shards.json', '@zuzak/owo'],
     function (L, Paths, PathFinder, routing_machine, towns, shards, owo) {
 
         function owotranslate(text) {

@@ -1,3 +1,4 @@
+//@ts-nocheck
 'use strict';
 
 var explode = require('@turf/explode').default,

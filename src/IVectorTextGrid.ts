@@ -1,3 +1,4 @@
+//@ts-nocheck
 define(['leaflet', 'intersects'],
     function (L, intersects) {
 

@@ -1,3 +1,4 @@
+//@ts-nocheck
 define(['leaflet', '../towns.json'], function (L, towns) {
     return {
 

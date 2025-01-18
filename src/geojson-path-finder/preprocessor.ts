@@ -1,3 +1,4 @@
+//@ts-nocheck
 'use strict';
 
 var topology = require('./topology'),

@@ -1,3 +1,4 @@
+//@ts-nocheck
 'use strict';
 
 var findPath = require('./dijkstra'),

@@ -1,3 +1,4 @@
+//@ts-nocheck
 define(['leaflet', 'leaflet-routing-machine'], function (L, R) {
     var Formatter = L.Routing.Formatter;
     var ItineraryBuilder = L.Routing.ItineraryBuilder;

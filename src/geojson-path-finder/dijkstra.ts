@@ -1,3 +1,4 @@
+//@ts-nocheck
 var Queue = require('tinyqueue').default;
 
 module.exports = function(graph, start, end) {

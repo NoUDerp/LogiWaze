@@ -1542,25 +1542,24 @@
     if (location.protocol !== 'https:' && (location.hostname.toLowerCase() == "www.logiwaze.com" || location.hostname.toLowerCase() == "logiwaze.com"))
         location.replace('https:'.concat(location.href.substring(location.protocol.length)));
 
-    var build="5bfb6f185b4989c796928229bd7b00601d791edd";
-    if ("serviceWorker" in navigator) {
-
-        window.addEventListener("load", function () {
-            navigator.serviceWorker
-                .register("ServiceWorker.js?f5a9160d7aeb47ddbc21f4b1d966596f")
-                .then(function (res) {
-                    return res.update();
-                })// console.log("service worker registered"))
-                .catch(function (err) {
-                    console.log("service worker not registered", err);
-                })
-        });
-    }
+    var build = "5bfb6f185b4989c796928229bd7b00601d791edd";
+    // if ("serviceWorker" in navigator) {
+    //     window.addEventListener("load", function () {
+    //         navigator.serviceWorker.register('ServiceWorker.js', {type: 'module'})
+    //             .then(function (res) {
+    //                 return res.update();
+    //             })
+    //             .catch(function (err) {
+    //                 console.log("service worker not registered", err);
+    //             })
+    //     });
+    // }
 
 </script>
-<script src="FoxholeRouter.js?e46a6459ea44ed80e2e5a151db4420bd"></script>
-<script type="text/javascript">
 
+<script type="module">
+    import {Shards, L, $, VectorControlGrid, VectorTextGrid , FoxholeRouter, API, FoxholeGeocoder, Narrator, Panel} from './src/index.ts';
+    
     var startingWaypoints = [];
 
     // load initial waypoints
@@ -1861,7 +1860,7 @@
                             this._expandSafely();
                         }
                     }, this);
-                    
+
                     if (!collapsed)
                         this.expand();
                 },

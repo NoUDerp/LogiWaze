@@ -1,37 +1,36 @@
+//@ts-nocheck
 'use strict';
 
-global.L = require('leaflet');
-global.$ = require('jquery');
-//require('jquery-ui');
+module.exports.L = require('leaflet');
 
+module.exports.$ = require('jquery');
 
-
-global.VectorControlGrid = {
+module.exports.VectorControlGrid = {
     Create: (MaxNativeZoom, MaxZoom, Offset, API, RoadWidth, ControlWidth, GridDepth) => require('./IVectorControlGrid.js').Create(MaxNativeZoom, MaxZoom, Offset, API, RoadWidth, ControlWidth, GridDepth)
 };
 
-global.VectorTextGrid = {
+module.exports.VectorTextGrid = {
     Create: (MaxZoom, Offset) => require('./IVectorTextGrid.js').Create(MaxZoom, Offset)
 };
 
-global.FoxholeRouter = {
+module.exports.FoxholeRouter = {
     Create: (mymap, API, Narrator) => new require('./IRouter.js').FoxholeRouter(mymap, API, Narrator)
 };
 
-global.API = {
+module.exports.API = {
     Create: () => require('./API.js').API
 };
 
-global.FoxholeGeocoder = {
+module.exports.FoxholeGeocoder = {
     Create: (API) => require('./IGeocoder.js').FoxholeGeocoder(API)
 };
 
-global.Narrator = {
+module.exports.Narrator = {
     Create: () => require('./INarrator.js').Narrator()
 };
 
-global.Panel = {
+module.exports.Panel = {
     Create: (APIManager, Router, Geocoder) => require('./Panel.js').Panel(APIManager, Router, Geocoder)
 }
 
-global.Shards = require('../Shards.json');
+module.exports.Shards = require('../Shards.json');

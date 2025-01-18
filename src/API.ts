@@ -1,3 +1,4 @@
+//@ts-nocheck
 const pip = require('point-in-polygon');
 const kriging = require('@sakitam-gis/kriging');
 const superagent = require('superagent');

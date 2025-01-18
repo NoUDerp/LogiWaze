@@ -1,3 +1,4 @@
+//@ts-nocheck
 define(null, function () {
     return {
         Narrator: function () {

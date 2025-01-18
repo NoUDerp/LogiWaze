@@ -1,3 +1,4 @@
+//@ts-nocheck
 define(['leaflet', './Itinerary.js', 'jquery'], function (L, Itinerary, $) {
 
     class custom_time_formatter extends L.Routing.Formatter {
@@ -492,44 +493,47 @@ define(['leaflet', './Itinerary.js', 'jquery'], function (L, Itinerary, $) {
         }
     }
 
-
-    return {
-        Panel: (API, Router, Geocoder) => {
-            let pp = new prototype({
-                showAlternatives: false,
-                show: false,
-                routeWhileDragging: false,
-                router: Router,
-                autoRoute: true,
-                geocoder: Geocoder,
-                plan: new L.Routing.Plan([], {
-                    maxGeocoderTolerance: 100000000,
-                    geocoder: Geocoder,
-                    reverseWaypoints: true
-                }),
-                routeLine: function (route, options) {
-                    if (route.name == "Shortest Route")
-                        return L.Routing.line(route, {
-                            addWaypoints: options.addWaypoints, styles: [
-                                { color: 'black', opacity: 0.15, weight: 7 }, { color: 'white', opacity: 0.8, weight: 6 }, { color: '#9E3031', opacity: 1, weight: 2, dashArray: '10,10' }
-                            ]
-                        });
-                    return L.Routing.line(route, {
-                        addWaypoints: options.addWaypoints, styles: [
-                            { color: 'black', opacity: 0.15, weight: 7 }, { color: 'white', opacity: 0.8, weight: 6 }, { color: '#5E9339', opacity: 1, weight: 2, dashArray: '10,10' }
-                        ]
-                    });
-                },
-                fitSelectedRoutes: false,
-                itineraryBuilder: new PanelFormatter(API),
-                summaryTemplate: Router.summaryTemplate,
-                collapsible: true,
-                formatter: new custom_time_formatter(Router)
+    let panelFn = (API, Router, Geocoder) => {
+    let pp = new prototype({
+        showAlternatives: false,
+        show: false,
+        routeWhileDragging: false,
+        router: Router,
+        autoRoute: true,
+        geocoder: Geocoder,
+        plan: new L.Routing.Plan([], {
+            maxGeocoderTolerance: 100000000,
+            geocoder: Geocoder,
+            reverseWaypoints: true
+        }),
+        routeLine: function (route, options) {
+            if (route.name == "Shortest Route")
+                return L.Routing.line(route, {
+                    addWaypoints: options.addWaypoints, styles: [
+                        { color: 'black', opacity: 0.15, weight: 7 }, { color: 'white', opacity: 0.8, weight: 6 }, { color: '#9E3031', opacity: 1, weight: 2, dashArray: '10,10' }
+                    ]
+                });
+            return L.Routing.line(route, {
+                addWaypoints: options.addWaypoints, styles: [
+                    { color: 'black', opacity: 0.15, weight: 7 }, { color: 'white', opacity: 0.8, weight: 6 }, { color: '#5E9339', opacity: 1, weight: 2, dashArray: '10,10' }
+                ]
             });
-            pp.on('routeselected', (e) => pp.routeSelected = e.route);
+        },
+        fitSelectedRoutes: false,
+        itineraryBuilder: new PanelFormatter(API),
+        summaryTemplate: Router.summaryTemplate,
+        collapsible: true,
+        formatter: new custom_time_formatter(Router)
+    });
+    pp.on('routeselected', (e) => pp.routeSelected = e.route);
 
-            return pp;
-        }
+    return pp;
+};
+    
+    module.exports.Panel = panelFn;
+    
+    return {
+        Panel: panelFn
     };
 });
 
