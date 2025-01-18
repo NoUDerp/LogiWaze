@@ -25,10 +25,6 @@ module.exports.FoxholeGeocoder = {
     Create: (API) => require('./IGeocoder.ts').FoxholeGeocoder(API)
 };
 
-module.exports.Narrator = {
-    Create: () => require('./INarrator.ts').Narrator()
-};
-
 module.exports.Panel = {
     Create: (APIManager, Router, Geocoder) => require('./Panel.ts').Create(APIManager, Router, Geocoder)
 }

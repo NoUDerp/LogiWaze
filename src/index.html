@@ -1921,9 +1921,8 @@
                 b.title = "Copy URL";
                 b.appendChild(document.createElement("div"));
                 x.after(b);
-                b.onclick = function () {
-                    navigator.clipboard.writeText(location.href).then(function () {
-                    });
+                b.onclick = async function () {
+                    await navigator.clipboard.writeText(location.href);
                     b.classList.remove("dirty");
                 };
 
