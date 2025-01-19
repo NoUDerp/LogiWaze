@@ -20,6 +20,7 @@
       "description": "LogiWaze Foxhole Routes",
       "url": "/",
       "icons": [{ "src": "/favicon.svg", "sizes": "192x192" }]
+      }
   ],
   "description": "LogiWaze Foxhole Routes",
   "screenshots": [

@@ -1,8 +1,7 @@
 ﻿<html lang="en">
 <head>
     <link rel="icon" href="../favicon.svg">
-    <!--    TODO: Restore this for progressive web app -->
-    <!--    <link rel="manifest" href="../manifest.json" crossorigin=""/>-->
+    <link rel="manifest" href="../manifest.json" crossorigin=""/>
     <meta name="google" content="notranslate">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no, width=device-width"/>
@@ -1539,23 +1538,7 @@
         <div id="mapid" style="height: 100%; width: 100%; background: #444444;"></div>
     </div>
 </div>
-<script type="text/javascript">
-    if (location.protocol !== 'https:' && (location.hostname.toLowerCase() == "www.logiwaze.com" || location.hostname.toLowerCase() == "logiwaze.com"))
-        location.replace('https:'.concat(location.href.substring(location.protocol.length)));
-
-    // TODO: fix this
-    // if ("serviceWorker" in navigator) {
-    //     window.addEventListener("load", async function () {
-    //         try {
-    //             let res = await navigator.serviceWorker.register(new URL("./ServiceWorker.js"));
-    //             return res.update();
-    //         } catch (err) {
-    //             console.log("service worker not registered", err);
-    //         }
-    //     });
-    // }
-
-</script>
+<script type="module" src="./ServiceWorker.ts"></script>
 
 <script type="module">
     import {

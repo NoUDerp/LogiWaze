@@ -1,5 +1,5 @@
 {
-  "name": "LogiWaze",
+  "name": "logiwaze",
   "version": "1.0.0",
   "description": "Foxhole Map Router",
   "repository": "https://github.com/NoUDerp/logiwaze",
@@ -7,27 +7,10 @@
   "directories": {},
   "scripts": {
     "clean": "rimraf .parcel-cache dist/*",
-    "build": "rimraf .parcel-cache dist && mkdir dist && parcel build && mkdirp dist/Tiles && ncp Tiles/ dist/Tiles && mkdirp dist/MapIcons && ncp MapIcons/ dist/MapIcons && ncp Background.webp dist/Background.webp && ncp layers-2x.png dist/layers-2x.png && ncp font.svg dist/font.svg && ncp download-file.svg dist/download-file.svg && ncp copy.svg dist/copy.svg && ncp marker-icon.png dist/marker-icon.3f7d3721.png && ncp marker-icon-2x.png dist/marker-icon-2x.png && ncp ShortestRoute.webp dist/ShortestRoute.webp && ncp ray-start-arrow.svg dist/ray-start-arrow.svg && ncp ray-end.svg dist/ray-end.svg ",   
-    "start": "parcel",
-    "open": "parcel --open index.html",
-    "check": "tsc --noEmit"
+    "start": "rimraf .parcel-cache dist && mkdir dist && parcel build && mkdirp dist/Tiles && ncp Tiles/ dist/Tiles && mkdirp dist/MapIcons && ncp MapIcons/ dist/MapIcons && ncp Background.webp dist/Background.webp && ncp layers-2x.png dist/layers-2x.png && ncp font.svg dist/font.svg && ncp download-file.svg dist/download-file.svg && ncp copy.svg dist/copy.svg && ncp marker-icon.png dist/marker-icon.3f7d3721.png && ncp marker-icon-2x.png dist/marker-icon-2x.png && ncp ShortestRoute.webp dist/ShortestRoute.webp && ncp ray-start-arrow.svg dist/ray-start-arrow.svg && ncp ray-end.svg dist/ray-end.svg && ncp bug.svg dist/bug.svg && ncp HTD.webp dist/HTD.webp && ncp bug.svg dist/bug.svg && ncp download-file.svg dist/download-file.svg && ncp ColonialRoute.webp dist/ColonialRoute.webp && ncp marker-shadow.png dist/marker-shadow.png && ncp marker-icon.png dist/marker-icon-2x.png && ncp marker-icon-2x.png dist/marker-icon-2x.png && ncp favicon192.png dist/favicon192.e9ac555f.png && ncp Truck.webp dist/Truck.webp && ncp Flatbed.webp dist/Flatbed.webp && parcel",
+    "build": "parcel build"
   },
-  "staticFiles": {
-    "staticPath": [
-      "./src/static"
-    ],
-    "distDir": "./dist"
-  },
-  "targets": {
-    "global": {
-      "context": "browser",
-      "sourceMap": {
-        "inline": true
-      },
-      "includeNodeModules": true,
-      "outputFormat": "global"
-    }
-  },
+
   "source": "./src/index.html",
   "author": "Derp",
   "license": "MIT",
@@ -72,6 +55,7 @@
   "devDependencies": {
     "@parcel/packager-raw-url": "^2.13.3",
     "@parcel/transformer-webmanifest": "^2.13.3",
+    "bash": "^0.0.1",
     "cp": "^0.2.0",
     "jq": "*",
     "make": "*",

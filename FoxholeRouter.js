@@ -252,7 +252,6 @@ define([
             }
             if (c.tile.pendingLoad == 0) c.t.yield(c, 8);
         },
-        pixelScale: 1,
         build: "",
         renderer: function(c, phase) {
             switch(phase){

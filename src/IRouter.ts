@@ -11,35 +11,31 @@ let VectorTextGrid = require('./IVectorTextGrid');
 let VectorControlGrid = require('./IVectorControlGrid');
 let API = require('./API');
 
-function owotranslate(text) {
+function owoTranslate(text) {
     return text;
 }
 
 module.exports.Create = function (mymap, API) {
 
-    
-    function Recase(x) {
-        return x.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
-    }
+    let changeCase = (x) => x.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
 
+    const JSONRoads = L.geoJSON(Paths);
+    const MainRoutes = {crs: Paths.crs, features: [], type: "FeatureCollection", filter: Paths.filter};
+    const WardenRoutes = {crs: Paths.crs, features: [], type: "FeatureCollection", filter: Paths.filter};
+    const ColonialRoutes = {crs: Paths.crs, features: [], type: "FeatureCollection", filter: Paths.filter};
 
-    var JSONRoads = L.geoJSON(Paths);
-    var MainRoutes = {crs: Paths.crs, features: [], type: "FeatureCollection", filter: Paths.filter};
-    var WardenRoutes = {crs: Paths.crs, features: [], type: "FeatureCollection", filter: Paths.filter};
-    var ColonialRoutes = {crs: Paths.crs, features: [], type: "FeatureCollection", filter: Paths.filter};
-
-    var Intersections = {};
-    var BorderCache = {};
-    var BorderCrossings = {};
-    var Garages = [];
-    var Refineries = [];
-    var Factories = [];
+    const Intersections = {};
+    const BorderCache = {};
+    const BorderCrossings = {};
+    const Garages = [];
+    const Refineries = [];
+    const Factories = [];
 
     var keys = Object.keys(JSONRoads._layers);
 
     for (var i = 0; i < Paths.features.length; i++) {
         var feature = Paths.features[i];
-        var scratch = {};
+        const scratch = {};
         for (var k = 0; k < feature.geometry.coordinates.length; k++) {
             var p = feature.geometry.coordinates[k];
             var hash = p[0].toFixed(3).concat("|").concat(p[1].toFixed(3));
@@ -55,19 +51,19 @@ module.exports.Create = function (mymap, API) {
             i--;
         }
     }
-   
+
     for (var i = 0; i < Paths.features.length; i++) {
         var feature = Paths.features[i];
-        var warden_features = new Array();
-        var colonial_features = new Array();
-        var all_features = new Array();
-        var last_ownership = "NONE";
-        var last_p = null;
+        let warden_features = new Array();
+        let colonial_features = new Array();
+        const all_features = new Array();
+        let last_ownership = "NONE";
+        let last_p = null;
 
         for (var k = 0; k < feature.geometry.coordinates.length; k++) {
             var p = feature.geometry.coordinates[k];
             var hash = p[0].toFixed(3).concat("|").concat(p[1].toFixed(3));
-            var increment = (k === 0 || k == feature.geometry.coordinates.length - 1) ? 1 : 2;
+            const increment = (k === 0 || k == feature.geometry.coordinates.length - 1) ? 1 : 2;
 
             Intersections[hash] = Intersections[hash] == null ? increment : (Intersections[hash] + increment);
 
@@ -86,9 +82,9 @@ module.exports.Create = function (mymap, API) {
 
             if (ownership != "OFFLINE" && ownership != "" && region in API.mapControl) {
 
-                var fso = ownership === "COLONIALS" ? colonial_features : warden_features;
+                const fso = ownership === "COLONIALS" ? colonial_features : warden_features;
                 if (k > 0 && last_ownership != ownership && ownership != "NONE") {
-                    var fs = last_ownership === "COLONIALS" ? colonial_features : warden_features;
+                    const fs = last_ownership === "COLONIALS" ? colonial_features : warden_features;
                     break_feature_set = fs.length > 0 && (last_p[0] != p[0] || last_p[1] != p[1]);
                 } else
                     break_feature_set = false;
@@ -125,7 +121,7 @@ module.exports.Create = function (mymap, API) {
             last_p = p;
             last_ownership = ownership;
         }
-        
+
         if (warden_features.length > 1)
             WardenRoutes.features.push({
                 type: "Feature",
@@ -144,25 +140,25 @@ module.exports.Create = function (mymap, API) {
                 properties: Paths.features[i].properties,
                 geometry: {type: "LineString", coordinates: all_features}
             });
-        
+
 
     }
 
-    var GridDepth = 7;
+    const GridDepth = 7;
 
-    var renderer = L.canvas({tolerance: .2}).addTo(mymap);
+    const renderer = L.canvas({tolerance: .2}).addTo(mymap);
 
-    var RegionLabels = VectorTextGrid.Create(8, [128, 128]);
-    var ControlLayer = VectorControlGrid.Create(7, 8, [128, 128], API, .30, .08 /* road width on map */, GridDepth);
+    const RegionLabels = VectorTextGrid.Create(8, [128, 128]);
+    const ControlLayer = VectorControlGrid.Create(7, 8, [128, 128], API, .30, .08 /* road width on map */, GridDepth);
 
-    var regions = API.regions;
+    const regions = API.regions;
 
-    var w = 256 / 7;
-    var h = w * Math.sqrt(3) / 2;
+    const w = 256 / 7;
+    const h = w * Math.sqrt(3) / 2;
 
     regions.forEach(region => ControlLayer.addHex(region.x, -region.y, w, h, !(region.name in API.mapControl)));
 
-    var resolveIcon = function (ic) {
+    const resolveIcon = function (ic) {
         if (ic.icon == null)
             return null;
 
@@ -207,7 +203,7 @@ module.exports.Create = function (mymap, API) {
         return icon.concat('.webp');
     };
 
-    var resolveResource = function (ic) {
+    const resolveResource = function (ic) {
         if (ic.icon == null)
             return null;
 
@@ -228,9 +224,9 @@ module.exports.Create = function (mymap, API) {
         if (ic.icon == 61)
             return 'MapIconCoal.webp';
         return null;
-    }
+    };
 
-    var rkeys = Object.keys(API.resources);
+    const rkeys = Object.keys(API.resources);
     var keys = Object.keys(API.mapControl);
 
     for (var t of Object.keys(API.resources)) {
@@ -284,13 +280,13 @@ module.exports.Create = function (mymap, API) {
         }
     }
 
-    var ks = Object.keys(towns);
+    const ks = Object.keys(towns);
     for (var t = 0; t < ks.length; t++) {
         var th = towns[ks[t]];
         if (th.major != 1) {
             var ownership = API.ownership(th.x + 128, th.y - 128, th.region).ownership;
             var control = ownership == "COLONIALS" ? 0 : (ownership == "WARDENS" ? 1 : 2);
-            RegionLabels.addText(Recase(owotranslate(th.name)), owotranslate(th.name), control, th.x, th.y, 5, 9, '#bbbbbb');
+            RegionLabels.addText(changeCase(owoTranslate(th.name)), owoTranslate(th.name), control, th.x, th.y, 5, 9, '#bbbbbb');
         }
     }
 
@@ -299,23 +295,23 @@ module.exports.Create = function (mymap, API) {
         if (th.major == 1) {
             var ownership = API.ownership(th.x + 128, th.y - 128, th.region).ownership;
             var control = ownership == "COLONIALS" ? 0 : (ownership == "WARDENS" ? 1 : 2);
-            RegionLabels.addText(Recase(owotranslate(th.name)), owotranslate(th.name), control, th.x, th.y, 4, 9, '#fff');
+            RegionLabels.addText(changeCase(owoTranslate(th.name)), owoTranslate(th.name), control, th.x, th.y, 4, 9, '#fff');
         }
     }
 
     for (var i = 0; i < API.regions.length; i++)
-        RegionLabels.addText(Recase(owotranslate(API.regions[i].realName)), owotranslate(API.regions[i].realName), 4, API.regions[i].x, API.regions[i].y, 0, 4, '#ffffff', 2.5);
+        RegionLabels.addText(changeCase(owoTranslate(API.regions[i].realName)), owoTranslate(API.regions[i].realName), 4, API.regions[i].x, API.regions[i].y, 0, 4, '#ffffff', 2.5);
 
 
-    for (var key in JSONRoads._layers) {
+    for (let key in JSONRoads._layers) {
         var layer = JSONRoads._layers[key];
         for (var k = 1; k < layer._latlngs.length; k++) {
             var region = layer.feature.properties.region;
             var lat = layer._latlngs[k - 1].lat;
             var lng = layer._latlngs[k - 1].lng;
-            var lat2 = layer._latlngs[k].lat;
-            var lng2 = layer._latlngs[k].lng;
-            var tier = layer.feature.properties.tier;
+            const lat2 = layer._latlngs[k].lat;
+            const lng2 = layer._latlngs[k].lng;
+            const tier = layer.feature.properties.tier;
             if (lat != null && lng != null && lat2 != null && lng2 != null) {
                 let control = layer._latlngs[k - 1].ownership;
                 ControlLayer.addRoad([[lat, lng], [lat2, lng2]], {
@@ -329,9 +325,9 @@ module.exports.Create = function (mymap, API) {
     ControlLayer.addTo(mymap);
     RegionLabels.addTo(mymap);
 
-    var highlighter = L.layerGroup().addTo(mymap);
+    const highlighter = L.layerGroup().addTo(mymap);
 
-    var copy_paste_canvas = document.createElement("canvas");
+    const copy_paste_canvas = document.createElement("canvas");
     copy_paste_canvas.id = "copy-paste";
     copy_paste_canvas.style.opacity = '0';
     copy_paste_canvas.style.position = "absolute";
@@ -364,7 +360,7 @@ module.exports.Create = function (mymap, API) {
 
 
         if (ControlLayer.loaded && RegionLabels.loaded) {
-            var parent_parent_transform = copy_paste_canvas.parentElement.parentElement.style.transform;
+            let parent_parent_transform = copy_paste_canvas.parentElement.parentElement.style.transform;
             let styles = [];
             while (parent_parent_transform != "") {
                 if (/^\s*scale\(.*\)/i.test(parent_parent_transform)) {
@@ -379,7 +375,7 @@ module.exports.Create = function (mymap, API) {
             }
             copy_paste_canvas.style.transform = styles.join(' ');
 
-            var scale = 1; // temporarily disabled: window.devicePixelRatio;
+            const scale = 1; // temporarily disabled: window.devicePixelRatio;
 
             copy_paste_canvas.width = (e.newSize.x - global.getPanelVisibleWidth()) * scale;
             copy_paste_canvas.height = (e.newSize.y - global.getPanelVisibleHeight()) * scale;
@@ -410,12 +406,12 @@ module.exports.Create = function (mymap, API) {
 
     mymap.on('moveend', (e) => resizer());
 
-    var playbutton = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/" x="0px" y="0px" width="32px" height="32px" viewBox="20 20 173.7 173.7" enable-background="new 0 0 213.7 213.7" xml:space="preserve"><polygon class="triangle" id="XMLID_18_" fill="none" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" points="73.5,62.5 148.5,105.8 73.5,149.1 "/></svg>'
+    const playbutton = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/" x="0px" y="0px" width="32px" height="32px" viewBox="20 20 173.7 173.7" enable-background="new 0 0 213.7 213.7" xml:space="preserve"><polygon class="triangle" id="XMLID_18_" fill="none" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" points="73.5,62.5 148.5,105.8 73.5,149.1 "/></svg>';
 
-    var speed = beta ? '<tr class="detailed-routeinfo"><td colspan="2"><span class="slow"></span><span class="slidecontainer"><input type="range" min="d /1" max="100" value="50" class="slider" oninput="updateSlider(this)"></span><span class="fast"></span></td></tr>' : '';
+    const speed = beta ? '<tr class="detailed-routeinfo"><td colspan="2"><span class="slow"></span><span class="slidecontainer"><input type="range" min="d /1" max="100" value="50" class="slider" oninput="updateSlider(this)"></span><span class="fast"></span></td></tr>' : '';
 
     var FoxholeRouter = {
-        summaryTemplate: '<table class="route-summary"><tr class="route-summary-header"><td><img src=\'{name}.webp\' /><span>{name}</span><span style=\'font-weight: bold; margin-left: 1em\' class=\'summary-routeinfo\'>{distance}</span>'
+        summaryTemplate: '<table class="route-summary"><tr class="route-summary-header"><td><img src=\'{icon}.webp\' /><span>{name}</span><span style=\'font-weight: bold; margin-left: 1em\' class=\'summary-routeinfo\'>{distance}</span>'
             .concat(!window.beta ? "" : '<div class="audio-controls detailed-routeinfo"><button class="play-button" style="pointer-events: auto" onclick="window.narrateDirections()">'.concat(playbutton).concat('</button></div>')).concat('</td></tr>').concat(speed).concat('<tr><td class="no-click">{time}</td></tr></table>'),
         TownHalls: L.layerGroup().addTo(mymap),
         RegionLabels: RegionLabels,
@@ -470,8 +466,8 @@ module.exports.Create = function (mymap, API) {
         pathFinder: new PathFinder(MainRoutes, {
             compact: null,
             weightFn: function (a, b, props) {
-                var dx = a[0] - b[0];
-                var dy = a[1] - b[1];
+                const dx = a[0] - b[0];
+                const dy = a[1] - b[1];
                 return Math.sqrt(dx * dx + dy * dy);
             }
         }),
@@ -483,8 +479,8 @@ module.exports.Create = function (mymap, API) {
         wardenPathFinder: WardenRoutes != null && WardenRoutes.features != null && WardenRoutes.features.length > 0 ? new PathFinder(WardenRoutes, {
             compact: null,
             weightFn: function (a, b, props) {
-                var dx = a[0] - b[0];
-                var dy = a[1] - b[1];
+                const dx = a[0] - b[0];
+                const dy = a[1] - b[1];
                 return Math.sqrt(dx * dx + dy * dy);
             }
         }) : null,
@@ -492,8 +488,8 @@ module.exports.Create = function (mymap, API) {
         colonialPathFinder: ColonialRoutes != null && ColonialRoutes.features != null && ColonialRoutes.features.length > 0 ? new PathFinder(ColonialRoutes, {
             compact: null,
             weightFn: function (a, b, props) {
-                var dx = a[0] - b[0];
-                var dy = a[1] - b[1];
+                const dx = a[0] - b[0];
+                const dy = a[1] - b[1];
                 return Math.sqrt(dx * dx + dy * dy);
             }
         }) : null,
@@ -692,7 +688,7 @@ module.exports.Create = function (mymap, API) {
 
         screenshot: function () {
             let c = document.createElement("canvas");
-            var pixelScale = 1; // temporarily disabled: window.devicePixelRatio;
+            const pixelScale = 1; // temporarily disabled: window.devicePixelRatio;
             c.width = pixelScale * (window.innerWidth - getPanelWidth());
             c.height = pixelScale * (window.innerHeight - getPanelHeight());
             c.setAttribute("crossorigin", "Anonymous");
@@ -705,7 +701,7 @@ module.exports.Create = function (mymap, API) {
 
         copy: function () {
             let c = document.createElement("canvas");
-            var pixelScale = 1; // temporarily disabled: window.devicePixelRatio;
+            const pixelScale = 1; // temporarily disabled: window.devicePixelRatio;
             c.width = pixelScale * (window.innerWidth - getPanelWidth());
             c.height = pixelScale * (window.innerHeight - getPanelHeight());
             c.setAttribute("crossorigin", "Anonymous");
@@ -804,7 +800,7 @@ module.exports.Create = function (mymap, API) {
 
             let u = this.Control.getWaypoints();
 
-            var waypoint_count = 0;
+            let waypoint_count = 0;
             if (u != null)
                 for (let m of u)
                     if (m != null && m.latLng != null)
@@ -812,7 +808,7 @@ module.exports.Create = function (mymap, API) {
 
             if (this.Control.routeSelected != null && waypoint_count > 1) {
                 ctx.save();
-                var pixelScale = 1; // temporarily disabled: window.devicePixelRatio;
+                const pixelScale = 1; // temporarily disabled: window.devicePixelRatio;
                 ctx.scale(pixelScale, pixelScale);
                 for (let style of [
                     {color: 'black', opacity: 0.15, weight: 9},
@@ -900,16 +896,16 @@ module.exports.Create = function (mymap, API) {
             highlighter.clearLayers();
             // modify new waypoints to find closest ones
             for (var i = 0; i < waypoints.length; i++) {
-                var closestPoint = null;
-                var distance = 0.0;
-                for (var key in FoxholeRouter.Roads._layers) {
-                    var layer = FoxholeRouter.Roads._layers[key];
+                let closestPoint = null;
+                let distance = 0.0;
+                for (let key in FoxholeRouter.Roads._layers) {
+                    const layer = FoxholeRouter.Roads._layers[key];
                     for (var k = 0; k < layer._latlngs.length; k++) {
-                        var lat = layer._latlngs[k].lat;
-                        var wplat = waypoints[i].latLng.lat;
-                        var lng = layer._latlngs[k].lng;
-                        var wplng = waypoints[i].latLng.lng;
-                        var distance_squared = (lat - wplat) * (lat - wplat) + (lng - wplng) * (lng - wplng);
+                        const lat = layer._latlngs[k].lat;
+                        const wplat = waypoints[i].latLng.lat;
+                        const lng = layer._latlngs[k].lng;
+                        const wplng = waypoints[i].latLng.lng;
+                        const distance_squared = (lat - wplat) * (lat - wplat) + (lng - wplng) * (lng - wplng);
                         if (!closestPoint || distance_squared < distance) {
                             distance = distance_squared;
                             closestPoint = L.latLng(lat, lng);
@@ -919,15 +915,15 @@ module.exports.Create = function (mymap, API) {
                 waypoints[i].latLng = closestPoint;
             }
 
-            var path = null;
-            var wardenPath = null;
-            var colonialPath = null;
-            var no_warden_path = false;
-            var no_colonial_path = false;
+            let path = null;
+            let wardenPath = null;
+            let colonialPath = null;
+            let no_warden_path = false;
+            let no_colonial_path = false;
 
             for (var i = 0; i < waypoints.length - 1; i++) {
-                var start = waypoints[i].latLng;
-                var finish = waypoints[i + 1].latLng;
+                const start = waypoints[i].latLng;
+                const finish = waypoints[i + 1].latLng;
                 if (path == null)
                     path = FoxholeRouter.pathFinder.findPath({
                         name: "path",
@@ -999,24 +995,24 @@ module.exports.Create = function (mymap, API) {
                 wardenPath = null;
 
             let call = callback.bind(context);
-            var route_builder = function (name, opath, wp) {
-                var coordinates = [];
-                var instructions = [];
-                var accumulated_distance = 0.0;
-                var crossroads = [];
-                var last_region = null;
+            const route_builder = function (name, opath, wp) {
+                const coordinates = [];
+                const instructions = [];
+                let accumulated_distance = 0.0;
+                const crossroads = [];
+                let last_region = null;
                 for (var i = 0; i < opath.path.length; i++) {
                     coordinates[i] = L.latLng(opath.path[i][1], opath.path[i][0]);
                     if (i > 0) {
-                        var dy = opath.path[i][0] - opath.path[i - 1][0];
-                        var dx = opath.path[i][1] - opath.path[i - 1][1];
+                        const dy = opath.path[i][0] - opath.path[i - 1][0];
+                        const dx = opath.path[i][1] - opath.path[i - 1][1];
 
                         var distance = (Math.sqrt(dx * dx + dy * dy) / 256.0) * 12012.0;
-                        var hash = opath.path[i][0].toFixed(3).concat("|").concat(opath.path[i][1].toFixed(3));
-                        var lastHash = opath.path[i - 1][0].toFixed(3).concat("|").concat(opath.path[i - 1][1].toFixed(3));
-                        var borderStart = BorderCrossings[lastHash] === 1;
-                        var borderEnd = BorderCrossings[hash] === 1;
-                        var intersection = Intersections[hash] > 2 || i == 1 || i == opath.path.length - 1;
+                        const hash = opath.path[i][0].toFixed(3).concat("|").concat(opath.path[i][1].toFixed(3));
+                        const lastHash = opath.path[i - 1][0].toFixed(3).concat("|").concat(opath.path[i - 1][1].toFixed(3));
+                        const borderStart = BorderCrossings[lastHash] === 1;
+                        const borderEnd = BorderCrossings[hash] === 1;
+                        const intersection = Intersections[hash] > 2 || i == 1 || i == opath.path.length - 1;
 
                         if (intersection || borderStart) { /* if this is an intersection or border */
                             var region = opath.path[i][2];
@@ -1036,7 +1032,7 @@ module.exports.Create = function (mymap, API) {
                     }
                 }
 
-                var turns = {
+                const turns = {
                     0: 'Continue',
                     1: 'Veer left',
                     2: 'Turn left',
@@ -1056,14 +1052,14 @@ module.exports.Create = function (mymap, API) {
 
 
                 for (var i = 0; i < crossroads.length - 1; i++) {
-                    var j = crossroads[i];
+                    const j = crossroads[i];
                     {
-                        var direction = FoxholeRouter.angleToDirection(j.angleOut);
-                        var jangleIn = parseInt(Math.round((j.angleIn / (Math.PI * 2)) * 8)) % 8;
-                        var jangleOut = parseInt(Math.round((j.angleOut / (Math.PI * 2)) * 8)) % 8;
-                        var border = i < crossroads.length - 1 && (i < crossroads.length - 1 && crossroads[i + 1].border) ? 1 : 0;
-                        var region_change = i == 0 || crossroads[i].regionChange;
-                        var turnicon = turns[jangleOut - jangleIn];
+                        const direction = FoxholeRouter.angleToDirection(j.angleOut);
+                        const jangleIn = parseInt(Math.round((j.angleIn / (Math.PI * 2)) * 8)) % 8;
+                        const jangleOut = parseInt(Math.round((j.angleOut / (Math.PI * 2)) * 8)) % 8;
+                        const border = i < crossroads.length - 1 && (i < crossroads.length - 1 && crossroads[i + 1].border) ? 1 : 0;
+                        const region_change = i == 0 || crossroads[i].regionChange;
+                        const turnicon = turns[jangleOut - jangleIn];
                         if (jangleIn == jangleOut)
                             var text = "Continue ".concat(direction).concat(" ").concat(i < crossroads.length - 1 ? crossroads[i + 1].distanceFromLast.toFixed().toString().concat(" meters") : '');
                         else {
@@ -1106,7 +1102,8 @@ module.exports.Create = function (mymap, API) {
                     inputWaypoints: wp,
                     waypoints: wp,
                     instructions: instructions,
-                    coordinates: coordinates
+                    coordinates: coordinates,
+                    icon: name.replace(" ", "")
                 }
             };
 
@@ -1156,18 +1153,18 @@ module.exports.Create = function (mymap, API) {
 
             // modify new waypoints (structures) to find closest roads (round an exact location to the nearest road)
             for (var i = 0; i < waypoints.length; i++) {
-                var closestPoint = null;
-                var distance = 0.0;
-                for (var key in FoxholeRouter.Roads._layers) {
-                    var layer = FoxholeRouter.Roads._layers[key];
-                    for (var k = 0; k < layer._latlngs.length; k++) {
+                let closestPoint = null;
+                let distance = 0.0;
+                for (let key in FoxholeRouter.Roads._layers) {
+                    const layer = FoxholeRouter.Roads._layers[key];
+                    for (let k = 0; k < layer._latlngs.length; k++) {
 
-                        var wplat = waypoints[i].lat;
-                        var wplng = waypoints[i].lng;
+                        const wplat = waypoints[i].lat;
+                        const wplng = waypoints[i].lng;
 
-                        var lat = layer._latlngs[k].lat;
-                        var lng = layer._latlngs[k].lng;
-                        var distance_squared = (lat - wplat) * (lat - wplat) + (lng - wplng) * (lng - wplng);
+                        const lat = layer._latlngs[k].lat;
+                        const lng = layer._latlngs[k].lng;
+                        const distance_squared = (lat - wplat) * (lat - wplat) + (lng - wplng) * (lng - wplng);
                         if (!closestPoint || distance_squared < distance) {
                             distance = distance_squared;
                             closestPoint = L.latLng(lat, lng);
@@ -1177,14 +1174,14 @@ module.exports.Create = function (mymap, API) {
                 waypoints[i].latLng = closestPoint;
             }
 
-            var Path = null;
+            let Path = null;
             let pathfinder = currentOwnership === "COLONIALS" ? FoxholeRouter.colonialPathFinder : FoxholeRouter.wardenPathFinder;
-            var bestStructure = null;
+            let bestStructure = null;
 
             if (pathfinder != null && waypoints.length > 0) {
-                var start = waypoints[0].latLng;
+                const start = waypoints[0].latLng;
                 for (var i = 1; i < waypoints.length; i++) {
-                    var finish = waypoints[i].latLng;
+                    const finish = waypoints[i].latLng;
 
                     if (Path == null) {
                         Path = pathfinder.findPath(
@@ -1192,7 +1189,7 @@ module.exports.Create = function (mymap, API) {
                             {geometry: {coordinates: [finish.lng, finish.lat]}});
                         bestStructure = finish;
                     } else {
-                        var p = pathfinder.findPath(
+                        const p = pathfinder.findPath(
                             {name: "path", geometry: {coordinates: [start.lng, start.lat]}},
                             {geometry: {coordinates: [finish.lng, finish.lat]}});
 

@@ -1,4 +1,3 @@
 {
     "extends": "@parcel/config-webextension",
-    "reporters":  ["...", "parcel-reporter-static-files-copy"]
 }
