@@ -64,6 +64,7 @@ async function APIQuery(URL): Promise<any> {
     return await (await fetch(URL)).json();
 }
 
+// TODO: convert this to a class and make it the default export (ES6 module)
 
 exports.API = {
     regions: regions,
@@ -73,9 +74,7 @@ exports.API = {
     calculateRegion: function (x, y) {
         for (let i = 0; i < regions.length; i++) {
             const region = regions[i];
-
-
-            if (pip([x - region.x - 128, -region.y + y + 128], regionPolygon))//, 0, regions.length))
+            if (pip([x - region.x - 128, -region.y + y + 128], regionPolygon, 0, regionPolygon.length))
                 return region.name;
         }
         return null;
@@ -152,7 +151,6 @@ exports.API = {
                 const py = j.y;
                 const distanceCalculation = (x - px) * (x - px) + (y - py) * (y - py);
                 if (distanceSquared < 0 || distanceCalculation < distanceSquared) {
-                    // control = j.control;
                     icon = j.mapIcon;
                     distanceSquared = distanceCalculation;
                 }
@@ -180,11 +178,11 @@ exports.API = {
             shard = 'war-service-live';
 
         try {
-            const war = await APIQuery("https://".concat(shard).concat(".foxholeservices.com/api/worldconquest/war"));
+            const war = await APIQuery(`https://${shard}.foxholeservices.com/api/worldconquest/war`);
             exports.API.war = war;
 
             //alert(war);
-            const maps = await APIQuery("https://".concat(shard).concat(".foxholeservices.com/api/worldconquest/maps"));
+            const maps = await APIQuery(`https://${shard}.foxholeservices.com/api/worldconquest/maps`);
             // iterate here on the maps and collect status
             let complete = maps.length;
             const p_x = [], p_y = [], p_t = [];
@@ -194,7 +192,7 @@ exports.API = {
 
             for (let i = 0; i < maps.length; i++) {
                 const mapName = maps[i];
-                const mapData = await APIQuery("https://".concat(shard).concat(".foxholeservices.com/api/worldconquest/maps/").concat(maps[i]).concat("/dynamic/public"));
+                const mapData = await APIQuery(`https://${shard}.foxholeservices.com/api/worldconquest/maps/${maps[i]}/dynamic/public`);
                 if (mapData.mapItems.length > 0) {
                     exports.API.mapControl[mapName] = {};
                     exports.API.resources[mapName] = {};

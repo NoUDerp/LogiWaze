@@ -127,9 +127,10 @@ class VectorControlGridPrototype extends L.GridLayer {
             const label_w = j.size.width * zoom + shadow * 2;
             const label_h = j.size.height * zoom + shadow * 2;
             const label_x = j.x * zoom - coords.x * tile.width / t.pixelScale - label_w - shadow;// / t.pixelScale    const
-            label_y = j.y * zoom - coords.y * tile.height / t.pixelScale - label_h - shadow;
+            const label_y = j.y * zoom - coords.y * tile.height / t.pixelScale - label_h - shadow;
 
-            if (intersects.boxBox(0, 0, tile.width, tile.height, label_x, label_y, label_w, label_h)) t.fillHex(tile, ctx, label_x + label_w * .5, label_y + label_h * .5, label_w * .5, label_h * .5, lineWidth);
+            if (intersects.boxBox(0, 0, tile.width, tile.height, label_x, label_y, label_w, label_h))
+                await t.fillHex(tile, ctx, label_x + label_w * .5, label_y + label_h * .5, label_w * .5, label_h * .5, lineWidth);
         }
 
         ctx.restore();
@@ -256,7 +257,7 @@ class VectorControlGridPrototype extends L.GridLayer {
     // This is too intense for now: window.devicePixelRatio,
     build: "";
 
-    renderer2(c): any {
+    renderer(c): any {
         c.tile = L.DomUtil.create('canvas', 'leaflet-tile');
         const size = c.t.getTileSize();
         c.tile.width = size.x * c.t.pixelScale;
@@ -315,10 +316,7 @@ class VectorControlGridPrototype extends L.GridLayer {
                 c.temp_canvas = L.DomUtil.create('canvas', '');
                 c.temp_canvas.width = 2 + c.tile.width / c.t.pixelScale / c.hd_ratio;
                 c.temp_canvas.height = 2 + c.tile.height / c.t.pixelScale / c.hd_ratio;
-                c.temp_ctx = c.temp_canvas.getContext('2d', {
-                    alpha: false
-                });
-
+                c.temp_ctx = c.temp_canvas.getContext('2d', {alpha: false});
                 let x = 0;
                 let y = 0;
                 let i = 0;
@@ -344,17 +342,33 @@ class VectorControlGridPrototype extends L.GridLayer {
                             {
                                 v++;
                                 d.data[i++] = Math.floor(255 * (v * (1.0 - colors[0].r) + colors[0].r));
-                                d.data[i++] = Math.floor(255 * (v * (.4 - colors[0].g) + colors[0].g));
-                                d.data[i] = Math.floor(255 * (v * (.2666 - colors[0].b) + colors[0].b));
+                                d.data[i++] = Math.floor(255 * (v * (-colors[0].g) + colors[0].g));
+                                d.data[i] = Math.floor(255 * (v * (-colors[0].b) + colors[0].b));
                                 i += 2;
                             } else if (v > 0) // fade from colonial
                             {
                                 v = 1 - v;
                                 d.data[i++] = Math.floor(255 * (v * (1.0 - colors[1].r) + colors[1].r));
-                                d.data[i++] = Math.floor(255 * (v * (.4 - colors[1].g) + colors[1].g));
-                                d.data[i] = Math.floor(255 * (v * (.2666 - colors[1].b) + colors[1].b));
+                                d.data[i++] = Math.floor(255 * (v * (-colors[1].g) + colors[1].g));
+                                d.data[i] = Math.floor(255 * (v * (-colors[1].b) + colors[1].b));
                                 i += 2;
                             }
+
+                            // if (v < 0) // fade from warden
+                            // {
+                            //     v++;
+                            //     d.data[i++] = Math.floor(255 * (v * (1.0 - colors[0].r) + colors[0].r));
+                            //     d.data[i++] = Math.floor(255 * (v * (.4 - colors[0].g) + colors[0].g));
+                            //     d.data[i] = Math.floor(255 * (v * (.2666 - colors[0].b) + colors[0].b));
+                            //     i += 2;
+                            // } else if (v > 0) // fade from colonial
+                            // {
+                            //     v = 1 - v;
+                            //     d.data[i++] = Math.floor(255 * (v * (1.0 - colors[1].r) + colors[1].r));
+                            //     d.data[i++] = Math.floor(255 * (v * (.4 - colors[1].g) + colors[1].g));
+                            //     d.data[i] = Math.floor(255 * (v * (.2666 - colors[1].b) + colors[1].b));
+                            //     i += 2;
+                            // }
                         }
 
                         c.temp_ctx.putImageData(d, 0, 0);
@@ -384,8 +398,8 @@ class VectorControlGridPrototype extends L.GridLayer {
                             c.t.drawValidRegions(overlay, overlay_ctx, c.coords, c.t);
                             overlay_ctx.restore();
                             overlay_ctx.save();
-                            overlay_ctx.globalCompositeOperation = 'source-atop';
-                            overlay_ctx.imageSmoothingQuality = 'low';
+                            overlay_ctx.globalCompositeOperation = 'source-atop'; // mask the alpha to overlay the control layer, copy it to temporary storage
+                            overlay_ctx.imageSmoothingQuality = 'low'; // highest performance possible for a copy, no smoothing needed
                             overlay_ctx.drawImage(c.temp_canvas, 1, 1, c.temp_canvas.width - 2, c.temp_canvas.height - 2, 0, 0, c.tile.width, c.tile.height);
                             overlay_ctx.restore();
                             overlay_ctx.save();
@@ -508,43 +522,40 @@ class VectorControlGridPrototype extends L.GridLayer {
             //     i = 0;
             // }
 
-            //if (step == 2) 
-            {
-                ctx.lineWidth = innerWidth;
-                const colors = ['#516C4B', '#235683', '#303030', '#CCCC44'];
 
-                for (; y <= end_y; y++, x = start_x)
-                    for (; x <= end_x; x++, i = 0)
-                        if (x >= 0 && y >= 0 && x < grid_x_size && y < grid_y_size) {
-                            for (; i < sources[x][y].length; i++) {
-                                const j = sources[x][y][i];
-                                if (controls[0 /*j.options.control*/]) {
-                                    ctx.strokeStyle = colors[j.options.control];
-                                    ctx.beginPath();
-                                    const coordsx = coords.x * tile.width / pixelScale;
-                                    const coordsy = coords.y * tile.height / pixelScale;
-                                    const x1 = (j.points[0][1] + offset[0]) * depth_inverse - coordsx;
-                                    const y1 = (j.points[0][0] + offset[1]) * depth_inverse - coordsy;
-                                    const x2 = (j.points[1][1] + offset[0]) * depth_inverse - coordsx;
-                                    const y2 = (j.points[1][0] + offset[1]) * depth_inverse - coordsy;
-                                    ctx.moveTo(x1, y1);
-                                    ctx.lineTo(x2, y2);
-                                    ctx.stroke();
-                                }
-                                if (Date.now() - startTime > 3) {
-                                    setTimeout(() => draw(i, start_x, start_y, end_x, end_y, x, y, step), 0);
-                                    return;
-                                }
+            ctx.lineWidth = innerWidth;
+            const colors = ['#516C4B', '#235683', '#303030', '#CCCC44'];
+
+            for (; y <= end_y; y++, x = start_x)
+                for (; x <= end_x; x++, i = 0)
+                    if (x >= 0 && y >= 0 && x < grid_x_size && y < grid_y_size) {
+                        for (; i < sources[x][y].length; i++) {
+                            const j = sources[x][y][i];
+                            if (controls[0]) {
+                                ctx.strokeStyle = colors[j.options.control];
+                                ctx.beginPath();
+                                const coordsx = coords.x * tile.width / pixelScale;
+                                const coordsy = coords.y * tile.height / pixelScale;
+                                const x1 = (j.points[0][1] + offset[0]) * depth_inverse - coordsx;
+                                const y1 = (j.points[0][0] + offset[1]) * depth_inverse - coordsy;
+                                const x2 = (j.points[1][1] + offset[0]) * depth_inverse - coordsx;
+                                const y2 = (j.points[1][0] + offset[1]) * depth_inverse - coordsy;
+                                ctx.moveTo(x1, y1);
+                                ctx.lineTo(x2, y2);
+                                ctx.stroke();
                             }
                             if (Date.now() - startTime > 3) {
                                 setTimeout(() => draw(i, start_x, start_y, end_x, end_y, x, y, step), 0);
                                 return;
                             }
-
                         }
-                //c.t.yield(c, 6);
-                return;
-            }
+                        if (Date.now() - startTime > 3) {
+                            setTimeout(() => draw(i, start_x, start_y, end_x, end_y, x, y, step), 0);
+                            return;
+                        }
+
+                    }
+            return;
         }
 
         draw(0, start_x, start_y, end_x, end_y, start_x, start_y, 1);
@@ -555,46 +566,40 @@ class VectorControlGridPrototype extends L.GridLayer {
         const start = Date.now();
         const max = Math.pow(2, c.t.max_zoom - c.coords.z);
         const zoom = Math.pow(2, c.coords.z);
-        const hdrz = c.hd_ratio / zoom;
+        const hdRatio = c.hd_ratio / zoom;
         const grid = {x: c.coords.x * max, y: c.coords.y * max};
-        const
-            colors = [{
-                r: 0.1372549019607843,
-                g: 0.3372549019607843,
-                b: 0.5137254901960784
-            }, {r: 0.3176470588235294, g: 0.4235294117647059, b: 0.2941176470588235}];
+        const colors = [
+            {r: 0.1372549019607843, g: 0.3372549019607843, b: 0.5137254901960784}, // warden
+            {r: 0.3176470588235294, g: 0.4235294117647059, b: 0.2941176470588235} // colonial
+        ];
 
-        for (let counter = 0; c.y < c.temp_canvas.height; c.y++, c.x = 0) for (; c.x < c
-            .temp_canvas
-            .width; c.x++, counter++) {
+        for (let counter = 0; c.y < c.temp_canvas.height; c.y++, c.x = 0) for (; c.x < c.temp_canvas.width; c.x++, counter++) {
             if (counter > 16 && Date.now() - start > 3) {
                 setTimeout(() => c.t.calculateControl(c), 0);
                 return;
             }
-            const scale = {x: grid.x + (c.x - 1) * hdrz, y: -(grid.y + (c.y - 1) * hdrz)};
+            const scale = {x: grid.x + (c.x - 1) * hdRatio, y: -(grid.y + (c.y - 1) * hdRatio)};
             let v = c.t.API.control(scale.x, scale.y);
 
             if (v < 0) // fade from warden
             {
                 v++;
                 c.d.data[c.i++] = Math.floor(255 * (v * (1.0 - colors[0].r) + colors[0].r));
-                c.d.data[c.i++] = Math.floor(255 * (v * (.1 - colors[0].g) + colors[0].g));
-                c.d.data[c.i] = Math.floor(255 * (v * (.1 - colors[0].b) + colors[0].b));
+                c.d.data[c.i++] = Math.floor(255 * (v * -colors[0].g + colors[0].g));
+                c.d.data[c.i] = Math.floor(255 * (v * -colors[0].b + colors[0].b));
                 c.i += 2;
             } else if (v > 0) // fade from colonial
             {
                 v = 1 - v;
                 c.d.data[c.i++] = Math.floor(255 * (v * (1.0 - colors[1].r) + colors[1].r));
-                c.d.data[c.i++] = Math.floor(255 * (v * (.1 - colors[1].g) + colors[1].g));
-                c.d.data[c.i] = Math.floor(255 * (v * (.1 - colors[1].b) + colors[1].b));
+                c.d.data[c.i++] = Math.floor(255 * (v * -colors[1].g + colors[1].g));
+                c.d.data[c.i] = Math.floor(255 * (v * -colors[1].b + colors[1].b));
                 c.i += 2;
             }
         }
 
         c.temp_ctx.putImageData(c.d, 0, 0);
         delete c.d;
-
-        c.phase_3_complete = true;
     }
 
     override createTile(coords, done): HTMLElement {
@@ -610,7 +615,7 @@ class VectorControlGridPrototype extends L.GridLayer {
         }
 
 
-        return this.renderer2({t: this, coords: coords, done: done});//, 1);
+        return this.renderer({t: this, coords: coords, done: done});//, 1);
     }
 
 }
