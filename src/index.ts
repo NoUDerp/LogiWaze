@@ -1,46 +1,77 @@
 //@ts-nocheck
 'use strict';
 
-export {default as L} from 'leaflet';
-export {default as $} from 'jquery';
+module.exports.L = require('leaflet');
 
-import * as IVectorControlGrid from './IVectorControlGrid';
-import * as IVectorTextGrid from './IVectorTextGrid';
-import * as IRouter from './IRouter';
-import { SAPI } from './API';
-import * as Geocoder from './IGeocoder';
-import * as IPanel from './Panel';
+module.exports.$ = require('jquery');
 
-export class VectorControlGrid {
-    Create(MaxNativeZoom, MaxZoom, Offset, API, RoadWidth, ControlWidth, GridDepth) {
-        return IVectorControlGrid.Create(MaxNativeZoom, MaxZoom, Offset, API, RoadWidth, ControlWidth, GridDepth);
-    }
-}
+module.exports.VectorControlGrid = {
+    Create: (MaxNativeZoom, MaxZoom, Offset, API, RoadWidth, ControlWidth, GridDepth) => require('./IVectorControlGrid.js').Create(MaxNativeZoom, MaxZoom, Offset, API, RoadWidth, ControlWidth, GridDepth)
+};
 
-export class VectorTextGrid {
-    Create(MaxZoom, Offset) {
-        return IVectorTextGrid.Create(MaxZoom, Offset);
-    }
-}
+module.exports.VectorTextGrid = {
+    Create: (MaxZoom, Offset) => require('./IVectorTextGrid.ts').Create(MaxZoom, Offset)
+};
 
-export class FoxholeRouter {
-    Create(mymap, API) {
-        return IRouter.Create(mymap, API);
-    }
-}
+module.exports.FoxholeRouter = {
+    Create: (mymap, API) => require('./IRouter.ts').Create(mymap, API)
+};
 
-export class API {
-    Create() {
-        return SAPI.Create();
-    }
-}
+module.exports.API = {
+    Create: () => require('./API.ts').API
+};
 
-export class FoxholeGeocoder {
-    Create(API){ return Geocoder.FoxholeGeocoder(API); }
-}
+module.exports.FoxholeGeocoder = {
+    Create: (API) => require('./IGeocoder.ts').FoxholeGeocoder(API)
+};
 
-export class Panel {
-    Create(APIManager, Router, Geocoder) { return IPanel.Create(APIManager, Router, Geocoder); }
+module.exports.Panel = {
+    Create: (APIManager, Router, Geocoder) => require('./Panel.ts').Create(APIManager, Router, Geocoder)
 }
 
 module.exports.Shards = require('../Shards.json');
+
+//
+// export {default as L} from 'leaflet';
+// export {default as $} from 'jquery';
+//
+// import * as IVectorControlGrid from './IVectorControlGrid';
+// import * as IVectorTextGrid from './IVectorTextGrid';
+// import * as IRouter from './IRouter';
+// import { SAPI } from './API';
+// import * as Geocoder from './IGeocoder';
+// import * as IPanel from './Panel';
+//
+// export class VectorControlGrid {
+//     Create(MaxNativeZoom, MaxZoom, Offset, API, RoadWidth, ControlWidth, GridDepth) {
+//         return IVectorControlGrid.Create(MaxNativeZoom, MaxZoom, Offset, API, RoadWidth, ControlWidth, GridDepth);
+//     }
+// }
+//
+// export class VectorTextGrid {
+//     Create(MaxZoom, Offset) {
+//         return IVectorTextGrid.Create(MaxZoom, Offset);
+//     }
+// }
+//
+// export class FoxholeRouter {
+//     Create(mymap, API) {
+//         return IRouter.Create(mymap, API);
+//     }
+// }
+//
+// export class API {
+//     Create() {
+//         return SAPI.Create();
+//     }
+// }
+//
+// export class FoxholeGeocoder {
+//     Create(API){ return Geocoder.FoxholeGeocoder(API); }
+// }
+//
+// export class Panel {
+//     Create(APIManager, Router, Geocoder) { return IPanel.Create(APIManager, Router, Geocoder); }
+// }
+//
+// module.exports.Shards = require('../Shards.json');
