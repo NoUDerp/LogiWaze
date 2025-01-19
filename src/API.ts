@@ -75,7 +75,7 @@ exports.API = {
             const region = regions[i];
 
 
-            if (pip([x - region.x - 128, -region.y + y + 128], regionPolygon, 0, regions.length))
+            if (pip([x - region.x - 128, -region.y + y + 128], regionPolygon))//, 0, regions.length))
                 return region.name;
         }
         return null;

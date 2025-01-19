@@ -2,6 +2,20 @@
 import * as L from 'leaflet';
 import * as intersects from 'intersects';
 
+class ImageCache {
+    private cache: Map<string, Promise<Image>> = new Map<string, Promise<Image>>()
+
+    public GetImage(name: string): Promise<Image> {
+        if (!this.cache.has(name))
+            this.cache.set(name, new Promise(resolve => {
+                const i = new Image();
+                i.onload = () => resolve(i);
+                i.src = name;
+            }));
+        return this.cache.get(name);
+    }
+}
+
 class VectorControlGridPrototype extends L.GridLayer {
     controls: [] = [true, true, true, true]
     quality: Boolean = true
@@ -10,13 +24,14 @@ class VectorControlGridPrototype extends L.GridLayer {
     shadowSize: number = 20
     pixelScale: number = 1
     disabledIcons: {} = {}
+    imageCache: ImageCache = new ImageCache()
 
     zoomScale(zoom): number {
         return .65 * (1 + this.max_zoom - zoom);
     }
 
     // temporarily disabled: window.devicePixelRatio,
-    drawHex(tile, ctx, x, y, w, h, scale) {
+    async drawHex(tile, ctx, x, y, w, h, scale) {
         ctx.lineWidth = scale;
         ctx.beginPath();
         ctx.moveTo(x + w, y);
@@ -30,7 +45,7 @@ class VectorControlGridPrototype extends L.GridLayer {
     }
 
 
-    fillHex(tile, ctx, x, y, w, h, scale) {
+    async fillHex(tile, ctx, x, y, w, h, scale) {
         ctx.beginPath();
         ctx.moveTo(x + w, y);
         ctx.lineTo(x + w * .5, y + h);
@@ -43,7 +58,7 @@ class VectorControlGridPrototype extends L.GridLayer {
         ctx.stroke();
     }
 
-    drawBorders(c) {
+    async drawBorders(c) {
         let coords = c.coords;
 
         let tile = c.tile;
@@ -79,7 +94,7 @@ class VectorControlGridPrototype extends L.GridLayer {
     }
 
 
-    drawValidRegions(tile, ctx, coords, t) {
+    async drawValidRegions(tile, ctx, coords, t) {
         const zoom = Math.pow(2, coords.z);
         const lineWidth = Math.pow(2, coords.z);
         const shadow = lineWidth * .5 / Math.pow(2, t.max_zoom);
@@ -101,7 +116,7 @@ class VectorControlGridPrototype extends L.GridLayer {
     }
 
 
-    drawInvalidRegions(tile, ctx, coords, t) {
+    async drawInvalidRegions(tile, ctx, coords, t) {
         const zoom = Math.pow(2, coords.z);
         const lineWidth = Math.pow(2, coords.z);
         const shadow = lineWidth * .5 / Math.pow(2, t.max_zoom);
@@ -132,46 +147,46 @@ class VectorControlGridPrototype extends L.GridLayer {
 
 
     async loadIcons(c): Promise<void> {
-        const raw_scale = c.t.zoomScale(c.coords.z);
-        const zoom = Math.pow(2, c.coords.z);
-        const max = Math.pow(2, c.t.max_zoom);
-        c.pendingLoad = 0;
-        const shadowSize = 20;
-        for (let j of c.t.icon_sources) {
-            if (c.coords.z >= j.zoomMin && c.coords.z < j.zoomMax && j.icon != null && !(j.icon in c.t.disabledIcons)) {
-                const scale = raw_scale;
-                let shadow = j.glow ? shadowSize * scale * zoom / max : 0;
-                const label_w = j.size.width * zoom * scale;
-                const label_h = j.size.height * zoom * scale;
-                const label_x = j.x * zoom - c.coords.x * c.tile.width - label_w * .5;
-                const label_y = j.y * zoom - c.coords.y * c.tile.height - label_h * .5;
-                if (intersects.boxBox(0, 0, c.tile.width, c.tile.height, label_x - 2.0 * shadow, label_y - 2.0 * shadow, label_w + 4.0 * shadow, label_h + 4.0 * shadow)) {
-                    if (!(j.icon in c.t.imageCache)) {
-                        await new Promise(resolve => {
-                            c.pendingLoad++;
-                            const img = {image: new Image()};
-                            c.t.imageCache[j.icon] = img;
-                            img.image.onload = function () {
-                                --c.pendingLoad;
-                                resolve();
-                            };
-                            img.image.src = 'MapIcons/'.concat(j.icon);
-                        });
-                    }
-                }
-            }
-        }
+        // const raw_scale = c.t.zoomScale(c.coords.z);
+        // const zoom = Math.pow(2, c.coords.z);
+        // const max = Math.pow(2, c.t.max_zoom);
+        // c.pendingLoad = 0;
+        // const shadowSize = 20;
+        // for (let j of c.t.icon_sources) {
+        //     if (c.coords.z >= j.zoomMin && c.coords.z < j.zoomMax && j.icon != null && !(j.icon in c.t.disabledIcons)) {
+        //         const scale = raw_scale;
+        //         let shadow = j.glow ? shadowSize * scale * zoom / max : 0;
+        //         const label_w = j.size.width * zoom * scale;
+        //         const label_h = j.size.height * zoom * scale;
+        //         const label_x = j.x * zoom - c.coords.x * c.tile.width - label_w * .5;
+        //         const label_y = j.y * zoom - c.coords.y * c.tile.height - label_h * .5;
+        //         if (intersects.boxBox(0, 0, c.tile.width, c.tile.height, label_x - 2.0 * shadow, label_y - 2.0 * shadow, label_w + 4.0 * shadow, label_h + 4.0 * shadow)) {
+        //             if (!(j.icon in c.t.imageCache)) {
+        //                 await new Promise(resolve => {
+        //                     c.pendingLoad++;
+        //                     const img = {image: new Image()};
+        //                     c.t.imageCache[j.icon] = img;
+        //                     img.image.onload = function () {
+        //                         --c.pendingLoad;
+        //                         resolve();
+        //                     };
+        //                     img.image.src = 'MapIcons/'.concat(j.icon);
+        //                 });
+        //             }
+        //         }
+        //     }
+        // }
     }
 
-    drawIcons(c): void {
+    async drawIcons(c): Promise<void> {
 
-        function makeOnLoadCallback(icon, u) {
-            return function () {
-                const callbacks = u.imageCache[icon].callbacks;
-                for (let i = 0; i < callbacks.length; i++)
-                    callbacks[i]();
-            };
-        }
+        // function makeOnLoadCallback(icon, u) {
+        //     return function () {
+        //         const callbacks = u.imageCache[icon].callbacks;
+        //         for (let i = 0; i < callbacks.length; i++)
+        //             callbacks[i]();
+        //     };
+        // }
 
         function makeRenderCallback(u, icon, ctx, img, lx, ly, lw, lh, tile, glow, shadow) {
             return function () {
@@ -204,37 +219,37 @@ class VectorControlGridPrototype extends L.GridLayer {
                 const label_x = j.x * zoom - c.coords.x * c.tile.width / c.t.pixelScale - label_w * .5;
                 const label_y = j.y * zoom - c.coords.y * c.tile.height / c.t.pixelScale - label_h * .5;
                 if (intersects.boxBox(0, 0, c.tile.width / c.t.pixelScale, c.tile.height / c.t.pixelScale, label_x - 2.0 * shadow, label_y - 2.0 * shadow, label_w + 4.0 * shadow, label_h + 4.0 * shadow)) {
-                    var icon = j.icon;
-                    var lx = label_x, ly = label_y, lw = label_w, lh = label_h;
-                    if (icon in c.t.imageCache) {
-                        var img = c.t.imageCache[icon];
-                        if (img.image.complete) {
-                            if (j.glow) {
-                                c.ctx.save();
-                                c.ctx.filter = "brightness(0.5) sepia(1) hue-rotate(296deg) saturate(10000%) blur(".concat(shadow).concat("px)"); // blur(10px)              
-                                c.ctx.drawImage(img.image, lx, ly, lw, lh);
-                                c.ctx.drawImage(img.image, lx, ly, lw, lh);
-                                c.ctx.drawImage(img.image, lx, ly, lw, lh);
-                                c.ctx
-                                    .restore();
-                            } else c.ctx.drawImage(img.image, lx, ly, lw, lh);
-                        } else {
-                            img.callbacks.push(makeRenderCallback(c.t, icon, c.ctx, img, lx, ly, lw, lh, c.tile, j.glow, shadow));
-                            c.tile.pendingLoad++;
-                        }
-                    } else {
-                        c.tile.pendingLoad++;
-                        var img = {image: new Image()};
-                        img.callbacks = [makeRenderCallback(c.t, icon, c.ctx, img, lx, ly, lw, lh, c.tile, j.glow, shadow)];
-                        c.t.imageCache[icon] = img;
-                        img.image.src = 'MapIcons/'.concat(j.icon);
-                        img.image.onload = makeOnLoadCallback(icon, c.t);
-                    }
+                    const lx = label_x, ly = label_y, lw = label_w, lh = label_h;
+                    const img = await this.imageCache.GetImage(`MapIcons/${j.icon}`);
+                    // if (icon in c.t.imageCache) {
+                    //var img = c.t.imageCache[icon];
+                    // if (img.image.complete) {
+                    if (j.glow) {
+                        c.ctx.save();
+                        c.ctx.filter = "brightness(0.5) sepia(1) hue-rotate(296deg) saturate(10000%) blur(".concat(shadow).concat("px)"); // blur(10px)              
+                        c.ctx.drawImage(img, lx, ly, lw, lh);
+                        c.ctx.drawImage(img, lx, ly, lw, lh);
+                        c.ctx.drawImage(img, lx, ly, lw, lh);
+                        c.ctx
+                            .restore();
+                    } else c.ctx.drawImage(img, lx, ly, lw, lh);
+                    // } else {
+                    //     img.callbacks.push(makeRenderCallback(c.t, icon, c.ctx, img, lx, ly, lw, lh, c.tile, j.glow, shadow));
+                    //     c.tile.pendingLoad++;
+                    // }
+                    // } else {
+                    //     c.tile.pendingLoad++;
+                    //     var img = {image: new Image()};
+                    //     img.callbacks = [makeRenderCallback(c.t, icon, c.ctx, img, lx, ly, lw, lh, c.tile, j.glow, shadow)];
+                    //     c.t.imageCache[icon] = img;
+                    //     img.image.src = 'MapIcons/'.concat(j.icon);
+                    //     img.image.onload = makeOnLoadCallback(icon, c.t);
+                    // }
                 }
             }
         }
         //if (c.tile.pendingLoad == 0)
-          //  c.t.yield(c, 8);
+        //  c.t.yield(c, 8);
     }
 
 
@@ -397,25 +412,24 @@ class VectorControlGridPrototype extends L.GridLayer {
 
     async renderer2phase5(c) {
         return new Promise((resolve, reject) => {
-            setTimeout(() => {
+            setTimeout(async () => {
                 try {
                     c.ctx.save();
                     c.ctx.scale(c.t.pixelScale, c.t.pixelScale);
-                    c.t.drawRoads(c);
+                    await c.t.drawRoads(c);
 
-                    setTimeout(() => {
+                    setTimeout(async () => {
                         c.ctx.restore();
-                        c.t.drawBorders(c);
+                        await c.t.drawBorders(c);
 
-                        setTimeout(() => {
+                        setTimeout(async () => {
                             c.ctx.save();
                             c.ctx.scale(c.t.pixelScale, c.t.pixelScale);
-                            c.t.drawIcons(c);
-                        });
-
-                        setTimeout(() => {
-                            c.ctx.restore();
-                            resolve();
+                            await c.t.drawIcons(c);
+                            setTimeout(() => {
+                                c.ctx.restore();
+                                resolve();
+                            });
                         });
                     })
                 } catch (error) {
@@ -425,128 +439,7 @@ class VectorControlGridPrototype extends L.GridLayer {
         });
     }
 
-    // renderer(c, phase): HTMLCanvasElement {
-    //     let scale;
-    //     switch (phase) {
-    //         case 1: {
-    //             c.tile = L.DomUtil.create('canvas', 'leaflet-tile') as HTMLCanvasElement;
-    //             //c.tile.crossorigin = "Anonymous";
-    //             //c.tile.setAttribute("crossorigin", "Anonymous");
-    //             let size = c.t.getTileSize();
-    //             c.tile.width = size.x * c.t.pixelScale;
-    //             c.tile.height = size.y * c.t.pixelScale;
-    //             c.tile.style.width = c.tile.width.toString().concat('px');
-    //             c.tile.style.height = c.tile.height.toString().concat('px');
-    //             c.ctx = c.tile.getContext('2d');
-    //             c.t.loadIcons(c);
-    //             c.img = new Image();
-    //             scale = Math.pow(2, Math.max(0, c.coords.z - c.t.max_native_zoom));
-    //             c.img.src = 'Tiles/'.concat(Math.min(c.coords.z, c.t.max_native_zoom)).concat('_').concat(Math.floor(c.coords.x / scale)).concat('_').concat(Math.floor(c.coords.y / scale)).concat('.webp').concat(c.t.build);
-    //             c.phase_2_complete = false;
-    //             c.phase_3_complete = false;
-    //             c.img.onload = () => c.t.yield(c, 2);
-    //             c.t.yield(c, 3);
-    //             return c.tile;
-    //         }
-    //         case            2            : {
-    //             scale = Math.pow(2, Math.max(0, c.coords.z - c.t.max_native_zoom));
-    //             const ox = c.coords.x % scale;
-    //             const oy = c.coords.y % scale;
-    //             const bx = (c.img.width / scale);
-    //             const by = (c.img.height / scale);
-    //             c.ctx.drawImage(c.img, bx * ox, by * oy, bx, by, 0, 0, c.tile.width, c.tile.height);
-    //             delete c.img;
-    //             c.phase_2_complete = true;
-    //             if (c.phase_3_complete)
-    //                 c.t.yield(c, 4);
-    //             break;
-    //         }
-    //         case            3            : {
-    //             c.hd_ratio = (c.coords.z < 2 ? 8 : 16);
-    //             if (!c.t.draw) {
-    //                 c.phase_3_complete = true;
-    //                 if (c.phase_2_complete)
-    //                     c.t.yield(c, 4);
-    //                 return;
-    //             }
-    //             c.temp_canvas = L.DomUtil.create('canvas', '');
-    //             c.temp_canvas.width = 2 + c.tile.width / c.t.pixelScale / c.hd_ratio;
-    //             c.temp_canvas.height = 2 + c.tile.height / c.t.pixelScale / c.hd_ratio;
-    //             c.temp_ctx = c.temp_canvas.getContext('2d', {alpha: false});
-    //             c.x = 0;
-    //             c.y = 0;
-    //             c.i = 0;
-    //             c.d = c.temp_ctx.getImageData(0, 0, c.temp_canvas.width, c.temp_canvas.height);
-    //
-    //             c.t.calculateControl(c);
-    //             break;
-    //         }
-    //         case            4            : {
-    //             if (c.temp_canvas != null) {
-    //                 let overlay = document.createElement("canvas");
-    //                 overlay.width = c.tile.width;
-    //                 overlay.height = c.tile.height;
-    //
-    //                 let overlay_ctx = overlay.getContext('2d');
-    //
-    //                 overlay_ctx.save();
-    //                 c.t.drawValidRegions(overlay, overlay_ctx, c.coords, c.t);
-    //                 overlay_ctx.restore();
-    //
-    //                 overlay_ctx.save();
-    //                 overlay_ctx.globalCompositeOperation = 'source-atop';
-    //                 overlay_ctx.imageSmoothingQuality = 'low';
-    //                 overlay_ctx.drawImage(c.temp_canvas, 1, 1, c.temp_canvas.width - 2, c.temp_canvas.height - 2, 0, 0, c.tile.width, c.tile.height);
-    //                 overlay_ctx.restore();
-    //
-    //                 overlay_ctx.save();
-    //                 overlay_ctx.scale(c.t.pixelScale, c.t.pixelScale);
-    //                 c.t.drawInvalidRegions(overlay, overlay_ctx, c.coords, c.t);
-    //                 overlay_ctx.restore();
-    //
-    //                 c.ctx.save();
-    //                 c.ctx.globalCompositeOperation = 'source-atop';
-    //                 c.ctx.globalAlpha = .5;
-    //                 c.ctx.drawImage(overlay, 0, 0);
-    //                 c.ctx.restore();
-    //
-    //                 //c.temp_ctx.clearRect(0, 0, c.temp_canvas.width, c.temp_canvas.height);
-    //
-    //                 //delete overlay_ctx;
-    //                 //delete overlay;
-    //                 delete c.temp_canvas;
-    //             }
-    //             c.t.yield(c, 5);
-    //             break;
-    //         }
-    //         case            5            : {
-    //             c.ctx.save();
-    //             c.ctx.scale(c.t.pixelScale, c.t.pixelScale);
-    //             c.t.drawRoads(c);
-    //             break;
-    //         }
-    //         case            6            : {
-    //             c.ctx.restore();
-    //             c.t.drawBorders(c);
-    //             c.t.yield(c, 7);
-    //             break;
-    //         }
-    //         case            7            : {
-    //             c.ctx.save();
-    //             c.ctx.scale(c.t.pixelScale, c.t.pixelScale);
-    //             c.t.drawIcons(c);
-    //             break;
-    //         }
-    //         case            8            : {
-    //             c.ctx.restore();
-    //             setTimeout(() => c.done(null, c.tile), 0);
-    //             break;
-    //         }
-    //     }
-    // }
-
-
-    drawRoads(c) {
+    async drawRoads(c) {
         const coords = c.coords;
         let tile = c.tile;
         let ctx = c.ctx;
@@ -569,54 +462,54 @@ class VectorControlGridPrototype extends L.GridLayer {
         const grid_x_size = c.t.grid_x_size;
         const grid_y_size = c.t.grid_y_size;
         const controls = c.t.controls;
-        //var quality = c.t.quality;
         let pixelScale = c.t.pixelScale;
 
         function draw(i, start_x, start_y, end_x, end_y, x, y, step) {
             const startTime = Date.now();
-            if (step == 1) {
-                /*if (quality) {
-                    var tiers = ['', '#957458', '#94954e', '#5a9565'];
-                    ctx.lineWidth = outerWidth;
-                    for (; y < end_y; y++, x = start_x)
-                        for (; x < end_x; x++, i = 0) {
-    
-                            if (x >= 0 && y >= 0 && x < grid_x_size && y < grid_y_size) {
-                                for (; i < sources[x][y].length; i++) {
-    
-                                    var j = sources[x][y][i];
-                                    ctx.strokeStyle = tiers[j.options.tier];
-                                    ctx.beginPath();
-                                    var coordsx = coords.x * tile.width / pixelScale;
-                                    var coordsy = coords.y * tile.height / pixelScale;
-                                    var x1 = (j.points[0][1] + offset[0]) * depth_inverse - coordsx;
-                                    var y1 = (j.points[0][0] + offset[1]) * depth_inverse - coordsy;
-                                    var x2 = (j.points[1][1] + offset[0]) * depth_inverse - coordsx;
-                                    var y2 = (j.points[1][0] + offset[1]) * depth_inverse - coordsy;
-                                    ctx.moveTo(x1, y1);
-                                    ctx.lineTo(x2, y2);
-                                    ctx.stroke();
-                                    if (Date.now() - startTime > 3) {
-                                        setTimeout(() => draw(i, start_x, start_y, end_x, end_y, x, y, step), 0);
-                                        return;
-                                    }
-                                }
-                            }
-                            if (Date.now() - startTime > 3) {
-                                setTimeout(() => draw(i, start_x, start_y, end_x, end_y, x, y, step), 0);
-                                return;
-                            }
-                        }
-    
-                }*/
-                // move to step 2, reset all starting values (only once)
-                step = 2;
-                x = start_x;
-                y = start_y;
-                i = 0;
-            }
+            // if (step == 1) {
+            //     /*if (quality) {
+            //         var tiers = ['', '#957458', '#94954e', '#5a9565'];
+            //         ctx.lineWidth = outerWidth;
+            //         for (; y < end_y; y++, x = start_x)
+            //             for (; x < end_x; x++, i = 0) {
+            //
+            //                 if (x >= 0 && y >= 0 && x < grid_x_size && y < grid_y_size) {
+            //                     for (; i < sources[x][y].length; i++) {
+            //
+            //                         var j = sources[x][y][i];
+            //                         ctx.strokeStyle = tiers[j.options.tier];
+            //                         ctx.beginPath();
+            //                         var coordsx = coords.x * tile.width / pixelScale;
+            //                         var coordsy = coords.y * tile.height / pixelScale;
+            //                         var x1 = (j.points[0][1] + offset[0]) * depth_inverse - coordsx;
+            //                         var y1 = (j.points[0][0] + offset[1]) * depth_inverse - coordsy;
+            //                         var x2 = (j.points[1][1] + offset[0]) * depth_inverse - coordsx;
+            //                         var y2 = (j.points[1][0] + offset[1]) * depth_inverse - coordsy;
+            //                         ctx.moveTo(x1, y1);
+            //                         ctx.lineTo(x2, y2);
+            //                         ctx.stroke();
+            //                         if (Date.now() - startTime > 3) {
+            //                             setTimeout(() => draw(i, start_x, start_y, end_x, end_y, x, y, step), 0);
+            //                             return;
+            //                         }
+            //                     }
+            //                 }
+            //                 if (Date.now() - startTime > 3) {
+            //                     setTimeout(() => draw(i, start_x, start_y, end_x, end_y, x, y, step), 0);
+            //                     return;
+            //                 }
+            //             }
+            //
+            //     }*/
+            //     // move to step 2, reset all starting values (only once)
+            //     step = 2;
+            //     x = start_x;
+            //     y = start_y;
+            //     i = 0;
+            // }
 
-            if (step == 2) {
+            //if (step == 2) 
+            {
                 ctx.lineWidth = innerWidth;
                 const colors = ['#516C4B', '#235683', '#303030', '#CCCC44'];
 
@@ -685,15 +578,15 @@ class VectorControlGridPrototype extends L.GridLayer {
             {
                 v++;
                 c.d.data[c.i++] = Math.floor(255 * (v * (1.0 - colors[0].r) + colors[0].r));
-                c.d.data[c.i++] = Math.floor(255 * (v * (.4 - colors[0].g) + colors[0].g));
-                c.d.data[c.i] = Math.floor(255 * (v * (.2666 - colors[0].b) + colors[0].b));
+                c.d.data[c.i++] = Math.floor(255 * (v * (.1 - colors[0].g) + colors[0].g));
+                c.d.data[c.i] = Math.floor(255 * (v * (.1 - colors[0].b) + colors[0].b));
                 c.i += 2;
             } else if (v > 0) // fade from colonial
             {
                 v = 1 - v;
                 c.d.data[c.i++] = Math.floor(255 * (v * (1.0 - colors[1].r) + colors[1].r));
-                c.d.data[c.i++] = Math.floor(255 * (v * (.4 - colors[1].g) + colors[1].g));
-                c.d.data[c.i] = Math.floor(255 * (v * (.2666 - colors[1].b) + colors[1].b));
+                c.d.data[c.i++] = Math.floor(255 * (v * (.1 - colors[1].g) + colors[1].g));
+                c.d.data[c.i] = Math.floor(255 * (v * (.1 - colors[1].b) + colors[1].b));
                 c.i += 2;
             }
         }
@@ -702,17 +595,7 @@ class VectorControlGridPrototype extends L.GridLayer {
         delete c.d;
 
         c.phase_3_complete = true;
-        // if (c.phase_2_complete) {
-        //     c.t.yield(c, 4);
-        // }
     }
-
-
-    // yield(c, phase) {
-    //     setTimeout(() => {
-    //         c.t.renderer(c, phase);
-    //     }, 0);
-    // }
 
     override createTile(coords, done): HTMLElement {
         let scale = Math.pow(2, coords.z);
@@ -819,7 +702,9 @@ let createFn = (MaxNativeZoom, MaxZoom, Offset, API, RoadWidth, ControlWidth, Gr
     u.icon_grid_x_width = u.pixelScale * size.x / u.grid_x_size;
     u.icon_grid_y_size = Math.pow(2, MaxZoom);
     u.icon_grid_y_height = u.pixelScale * size.y / u.grid_y_size;
-    u.imageCache = {};
+
+    //u.imageCache = {};
+
     u.addIcon = (icon, x, y, glow, zoomMin, zoomMax) => {
         u.icon_sources.push(
             {
