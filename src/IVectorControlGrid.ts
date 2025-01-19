@@ -131,7 +131,7 @@ class VectorControlGridPrototype extends L.GridLayer {
     }
 
 
-    loadIcons(c): void {
+    async loadIcons(c): Promise<void> {
         const raw_scale = c.t.zoomScale(c.coords.z);
         const zoom = Math.pow(2, c.coords.z);
         const max = Math.pow(2, c.t.max_zoom);
@@ -147,13 +147,16 @@ class VectorControlGridPrototype extends L.GridLayer {
                 const label_y = j.y * zoom - c.coords.y * c.tile.height - label_h * .5;
                 if (intersects.boxBox(0, 0, c.tile.width, c.tile.height, label_x - 2.0 * shadow, label_y - 2.0 * shadow, label_w + 4.0 * shadow, label_h + 4.0 * shadow)) {
                     if (!(j.icon in c.t.imageCache)) {
-                        c.pendingLoad++;
-                        const img = {image: new Image()};
-                        c.t.imageCache[j.icon] = img;
-                        img.image.src = 'MapIcons/'.concat(j.icon);
-                        img.image.onload = function () {
-                            --c.pendingLoad;
-                        };
+                        await new Promise(resolve => {
+                            c.pendingLoad++;
+                            const img = {image: new Image()};
+                            c.t.imageCache[j.icon] = img;
+                            img.image.onload = function () {
+                                --c.pendingLoad;
+                                resolve();
+                            };
+                            img.image.src = 'MapIcons/'.concat(j.icon);
+                        });
                     }
                 }
             }
@@ -181,7 +184,7 @@ class VectorControlGridPrototype extends L.GridLayer {
                 } else
                     ctx.drawImage(img.image, lx, ly, lw, lh);
                 if (--tile.pendingLoad == 0) {
-                    c.t.yield(c, 8);
+                    //c.t.yield(c, 8);
                     delete img.callbacks;
                 }
             };
@@ -230,133 +233,317 @@ class VectorControlGridPrototype extends L.GridLayer {
                 }
             }
         }
-        if (c.tile.pendingLoad == 0)
-            c.t.yield(c, 8);
+        //if (c.tile.pendingLoad == 0)
+          //  c.t.yield(c, 8);
     }
 
 
     // This is too intense for now: window.devicePixelRatio,
     build: "";
 
-    renderer(c, phase) : HTMLCanvasElement {
-        let scale;
-        switch (phase) {
-            case            1            : {
-                c.tile = L.DomUtil.create('canvas', 'leaflet-tile') as HTMLCanvasElement;
-                //c.tile.crossorigin = "Anonymous";
-                //c.tile.setAttribute("crossorigin", "Anonymous");
-                let size = c.t.getTileSize();
-                c.tile.width = size.x * c.t.pixelScale;
-                c.tile.height = size.y * c.t.pixelScale;
-                c.tile.style.width = c.tile.width.toString().concat('px');
-                c.tile.style.height = c.tile.height.toString().concat('px');
-                c.ctx = c.tile.getContext('2d');
-                c.t.loadIcons(c);
-                c.img = new Image();
-                scale = Math.pow(2, Math.max(0, c.coords.z - c.t.max_native_zoom));
-                c.img.src = 'Tiles/'.concat(Math.min(c.coords.z, c.t.max_native_zoom)).concat('_').concat(Math.floor(c.coords.x / scale)).concat('_').concat(Math.floor(c.coords.y / scale)).concat('.webp').concat(c.t.build);
-                c.phase_2_complete = false;
-                c.phase_3_complete = false;
-                c.img.onload = () => c.t.yield(c, 2);
-                c.t.yield(c, 3);
-                return c.tile;
-            }
-            case            2            : {
-                scale = Math.pow(2, Math.max(0, c.coords.z - c.t.max_native_zoom));
+    renderer2(c): any {
+        c.tile = L.DomUtil.create('canvas', 'leaflet-tile');
+        const size = c.t.getTileSize();
+        c.tile.width = size.x * c.t.pixelScale;
+        c.tile.height = size.y * c.t.pixelScale;
+        c.tile.style.width = c.tile.width.toString().concat('px');
+        c.tile.style.height = c.tile.height.toString().concat('px');
+        setTimeout(async () => {
+            await this.render(c);
+            c.done(null, c.tile);
+        });
+        return c.tile;
+    }
+
+    async render(c) {
+        await this.renderer2phase1creation(c);
+        await this.renderer2phase2(c);
+        await this.renderer2phase3(c);
+        await this.renderer2phase4(c);
+        await this.renderer2phase5(c);
+    }
+
+    async renderer2phase1creation(c) {
+        c.ctx = c.tile.getContext('2d');
+        await c.t.loadIcons(c);
+        return new Promise((resolve, reject) => {
+            c.img = new Image();
+            const scale = Math.pow(2, Math.max(0, c.coords.z - c.t.max_native_zoom));
+            c.img.onload = () => resolve();
+            c.img.src = `Tiles/${Math.min(c.coords.z, c.t.max_native_zoom)}_${Math.floor(c.coords.x / scale)}_${Math.floor(c.coords.y / scale)}.webp${c.t.build}`;
+        });
+    }
+
+    async renderer2phase2(c) {
+        return new Promise((resolve, reject) => {
+            try {
+                const scale = Math.pow(2, Math.max(0, c.coords.z - c.t.max_native_zoom));
                 const ox = c.coords.x % scale;
                 const oy = c.coords.y % scale;
-                const bx = (c.img.width / scale);
-                const by = (c.img.height / scale);
-                c.ctx.drawImage(c.img, bx * ox, by * oy, bx, by, 0, 0, c.tile.width, c.tile.height);
-                delete c.img;
-                c.phase_2_complete = true;
-                if (c.phase_3_complete)
-                    c.t.yield(c, 4);
-                break;
+                const bx = c.img.width / scale;
+                const by = c.img.height / scale;
+                setTimeout(() => {
+                    c.ctx.drawImage(c.img, bx * ox, by * oy, bx, by, 0, 0, c.tile.width, c.tile.height);
+                    delete c.img;
+                    resolve();
+                });
+            } catch (error) {
+                reject(error);
             }
-            case            3            : {
-                c.hd_ratio = (c.coords.z < 2 ? 8 : 16);
-                if (!c.t.draw) {
-                    c.phase_3_complete = true;
-                    if (c.phase_2_complete)
-                        c.t.yield(c, 4);
-                    return;
-                }
+        });
+    }
+
+    async renderer2phase3(c) {
+        return new Promise((resolve, reject) => {
+            try {
+                c.hd_ratio = c.coords.z < 2 ? 8 : 16;
                 c.temp_canvas = L.DomUtil.create('canvas', '');
                 c.temp_canvas.width = 2 + c.tile.width / c.t.pixelScale / c.hd_ratio;
                 c.temp_canvas.height = 2 + c.tile.height / c.t.pixelScale / c.hd_ratio;
-                c.temp_ctx = c.temp_canvas.getContext('2d', {alpha: false});
-                c.x = 0;
-                c.y = 0;
-                c.i = 0;
-                c.d = c.temp_ctx.getImageData(0, 0, c.temp_canvas.width, c.temp_canvas.height);
+                c.temp_ctx = c.temp_canvas.getContext('2d', {
+                    alpha: false
+                });
 
-                c.t.calculateControl(c);
-                break;
+                let x = 0;
+                let y = 0;
+                let i = 0;
+                setTimeout(() => {
+                    try {
+                        let d = c.temp_ctx.getImageData(0, 0, c.temp_canvas.width, c.temp_canvas.height);
+                        const max = Math.pow(2, c.t.max_zoom - c.coords.z);
+                        const zoom = Math.pow(2, c.coords.z);
+                        const hdRatio = c.hd_ratio / zoom;
+                        const grid = {x: c.coords.x * max, y: c.coords.y * max};
+                        const
+                            colors = [{
+                                r: 0.1372549019607843,
+                                g: 0.3372549019607843,
+                                b: 0.5137254901960784
+                            }, {r: 0.3176470588235294, g: 0.4235294117647059, b: 0.2941176470588235}];
+
+                        for (let counter = 0; y < c.temp_canvas.height; y++, x = 0) for (; x < c.temp_canvas.width; x++, counter++) {
+                            const scale = {x: grid.x + (x - 1) * hdRatio, y: -(grid.y + (y - 1) * hdRatio)};
+                            let v = c.t.API.control(scale.x, scale.y);
+
+                            if (v < 0) // fade from warden
+                            {
+                                v++;
+                                d.data[i++] = Math.floor(255 * (v * (1.0 - colors[0].r) + colors[0].r));
+                                d.data[i++] = Math.floor(255 * (v * (.4 - colors[0].g) + colors[0].g));
+                                d.data[i] = Math.floor(255 * (v * (.2666 - colors[0].b) + colors[0].b));
+                                i += 2;
+                            } else if (v > 0) // fade from colonial
+                            {
+                                v = 1 - v;
+                                d.data[i++] = Math.floor(255 * (v * (1.0 - colors[1].r) + colors[1].r));
+                                d.data[i++] = Math.floor(255 * (v * (.4 - colors[1].g) + colors[1].g));
+                                d.data[i] = Math.floor(255 * (v * (.2666 - colors[1].b) + colors[1].b));
+                                i += 2;
+                            }
+                        }
+
+                        c.temp_ctx.putImageData(d, 0, 0);
+
+                        resolve();
+                    } catch (error) {
+                        reject(error);
+                    }
+                }, 0);
+            } catch (error) {
+                reject(error);
             }
-            case            4            : {
-                if (c.temp_canvas != null) {
+        });
+    }
+
+    async renderer2phase4(c) {
+        return new Promise((resolve, reject) => {
+            if (c.temp_canvas != null) {
+                try {
                     let overlay = document.createElement("canvas");
                     overlay.width = c.tile.width;
                     overlay.height = c.tile.height;
-
-                    let overlay_ctx = overlay.getContext('2d');
-
-                    overlay_ctx.save();
-                    c.t.drawValidRegions(overlay, overlay_ctx, c.coords, c.t);
-                    overlay_ctx.restore();
-
-                    overlay_ctx.save();
-                    overlay_ctx.globalCompositeOperation = 'source-atop';
-                    overlay_ctx.imageSmoothingQuality = 'low';
-                    overlay_ctx.drawImage(c.temp_canvas, 1, 1, c.temp_canvas.width - 2, c.temp_canvas.height - 2, 0, 0, c.tile.width, c.tile.height);
-                    overlay_ctx.restore();
-
-                    overlay_ctx.save();
-                    overlay_ctx.scale(c.t.pixelScale, c.t.pixelScale);
-                    c.t.drawInvalidRegions(overlay, overlay_ctx, c.coords, c.t);
-                    overlay_ctx.restore();
-
-                    c.ctx.save();
-                    c.ctx.globalCompositeOperation = 'source-atop';
-                    c.ctx.globalAlpha = .5;
-                    c.ctx.drawImage(overlay, 0, 0);
-                    c.ctx.restore();
-
-                    //c.temp_ctx.clearRect(0, 0, c.temp_canvas.width, c.temp_canvas.height);
-
-                    //delete overlay_ctx;
-                    //delete overlay;
-                    delete c.temp_canvas;
+                    setTimeout(() => {
+                        try {
+                            let overlay_ctx = overlay.getContext('2d');
+                            overlay_ctx.save();
+                            c.t.drawValidRegions(overlay, overlay_ctx, c.coords, c.t);
+                            overlay_ctx.restore();
+                            overlay_ctx.save();
+                            overlay_ctx.globalCompositeOperation = 'source-atop';
+                            overlay_ctx.imageSmoothingQuality = 'low';
+                            overlay_ctx.drawImage(c.temp_canvas, 1, 1, c.temp_canvas.width - 2, c.temp_canvas.height - 2, 0, 0, c.tile.width, c.tile.height);
+                            overlay_ctx.restore();
+                            overlay_ctx.save();
+                            overlay_ctx.scale(c.t.pixelScale, c.t.pixelScale);
+                            c.t.drawInvalidRegions(overlay, overlay_ctx, c.coords, c.t);
+                            overlay_ctx.restore();
+                            c.ctx.save();
+                            c.ctx.globalCompositeOperation = 'source-atop';
+                            c.ctx.globalAlpha = .5;
+                            c.ctx.drawImage(overlay, 0, 0);
+                            c.ctx.restore();
+                            delete c.temp_canvas;
+                            resolve();
+                        } catch (error) {
+                            reject(error);
+                        }
+                    }, 0);
+                } catch (error) {
+                    reject(error);
                 }
-                c.t.yield(c, 5);
-                break;
-            }
-            case            5            : {
-                c.ctx.save();
-                c.ctx.scale(c.t.pixelScale, c.t.pixelScale);
-                c.t.drawRoads(c);
-                break;
-            }
-            case            6            : {
-                c.ctx.restore();
-                c.t.drawBorders(c);
-                c.t.yield(c, 7);
-                break;
-            }
-            case            7            : {
-                c.ctx.save();
-                c.ctx.scale(c.t.pixelScale, c.t.pixelScale);
-                c.t.drawIcons(c);
-                break;
-            }
-            case            8            : {
-                c.ctx.restore();
-                setTimeout(() => c.done(null, c.tile), 0);
-                break;
-            }
-        }
+            } else resolve();
+        });
     }
+
+    async renderer2phase5(c) {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                try {
+                    c.ctx.save();
+                    c.ctx.scale(c.t.pixelScale, c.t.pixelScale);
+                    c.t.drawRoads(c);
+
+                    setTimeout(() => {
+                        c.ctx.restore();
+                        c.t.drawBorders(c);
+
+                        setTimeout(() => {
+                            c.ctx.save();
+                            c.ctx.scale(c.t.pixelScale, c.t.pixelScale);
+                            c.t.drawIcons(c);
+                        });
+
+                        setTimeout(() => {
+                            c.ctx.restore();
+                            resolve();
+                        });
+                    })
+                } catch (error) {
+                    reject(error);
+                }
+            });
+        });
+    }
+
+    // renderer(c, phase): HTMLCanvasElement {
+    //     let scale;
+    //     switch (phase) {
+    //         case 1: {
+    //             c.tile = L.DomUtil.create('canvas', 'leaflet-tile') as HTMLCanvasElement;
+    //             //c.tile.crossorigin = "Anonymous";
+    //             //c.tile.setAttribute("crossorigin", "Anonymous");
+    //             let size = c.t.getTileSize();
+    //             c.tile.width = size.x * c.t.pixelScale;
+    //             c.tile.height = size.y * c.t.pixelScale;
+    //             c.tile.style.width = c.tile.width.toString().concat('px');
+    //             c.tile.style.height = c.tile.height.toString().concat('px');
+    //             c.ctx = c.tile.getContext('2d');
+    //             c.t.loadIcons(c);
+    //             c.img = new Image();
+    //             scale = Math.pow(2, Math.max(0, c.coords.z - c.t.max_native_zoom));
+    //             c.img.src = 'Tiles/'.concat(Math.min(c.coords.z, c.t.max_native_zoom)).concat('_').concat(Math.floor(c.coords.x / scale)).concat('_').concat(Math.floor(c.coords.y / scale)).concat('.webp').concat(c.t.build);
+    //             c.phase_2_complete = false;
+    //             c.phase_3_complete = false;
+    //             c.img.onload = () => c.t.yield(c, 2);
+    //             c.t.yield(c, 3);
+    //             return c.tile;
+    //         }
+    //         case            2            : {
+    //             scale = Math.pow(2, Math.max(0, c.coords.z - c.t.max_native_zoom));
+    //             const ox = c.coords.x % scale;
+    //             const oy = c.coords.y % scale;
+    //             const bx = (c.img.width / scale);
+    //             const by = (c.img.height / scale);
+    //             c.ctx.drawImage(c.img, bx * ox, by * oy, bx, by, 0, 0, c.tile.width, c.tile.height);
+    //             delete c.img;
+    //             c.phase_2_complete = true;
+    //             if (c.phase_3_complete)
+    //                 c.t.yield(c, 4);
+    //             break;
+    //         }
+    //         case            3            : {
+    //             c.hd_ratio = (c.coords.z < 2 ? 8 : 16);
+    //             if (!c.t.draw) {
+    //                 c.phase_3_complete = true;
+    //                 if (c.phase_2_complete)
+    //                     c.t.yield(c, 4);
+    //                 return;
+    //             }
+    //             c.temp_canvas = L.DomUtil.create('canvas', '');
+    //             c.temp_canvas.width = 2 + c.tile.width / c.t.pixelScale / c.hd_ratio;
+    //             c.temp_canvas.height = 2 + c.tile.height / c.t.pixelScale / c.hd_ratio;
+    //             c.temp_ctx = c.temp_canvas.getContext('2d', {alpha: false});
+    //             c.x = 0;
+    //             c.y = 0;
+    //             c.i = 0;
+    //             c.d = c.temp_ctx.getImageData(0, 0, c.temp_canvas.width, c.temp_canvas.height);
+    //
+    //             c.t.calculateControl(c);
+    //             break;
+    //         }
+    //         case            4            : {
+    //             if (c.temp_canvas != null) {
+    //                 let overlay = document.createElement("canvas");
+    //                 overlay.width = c.tile.width;
+    //                 overlay.height = c.tile.height;
+    //
+    //                 let overlay_ctx = overlay.getContext('2d');
+    //
+    //                 overlay_ctx.save();
+    //                 c.t.drawValidRegions(overlay, overlay_ctx, c.coords, c.t);
+    //                 overlay_ctx.restore();
+    //
+    //                 overlay_ctx.save();
+    //                 overlay_ctx.globalCompositeOperation = 'source-atop';
+    //                 overlay_ctx.imageSmoothingQuality = 'low';
+    //                 overlay_ctx.drawImage(c.temp_canvas, 1, 1, c.temp_canvas.width - 2, c.temp_canvas.height - 2, 0, 0, c.tile.width, c.tile.height);
+    //                 overlay_ctx.restore();
+    //
+    //                 overlay_ctx.save();
+    //                 overlay_ctx.scale(c.t.pixelScale, c.t.pixelScale);
+    //                 c.t.drawInvalidRegions(overlay, overlay_ctx, c.coords, c.t);
+    //                 overlay_ctx.restore();
+    //
+    //                 c.ctx.save();
+    //                 c.ctx.globalCompositeOperation = 'source-atop';
+    //                 c.ctx.globalAlpha = .5;
+    //                 c.ctx.drawImage(overlay, 0, 0);
+    //                 c.ctx.restore();
+    //
+    //                 //c.temp_ctx.clearRect(0, 0, c.temp_canvas.width, c.temp_canvas.height);
+    //
+    //                 //delete overlay_ctx;
+    //                 //delete overlay;
+    //                 delete c.temp_canvas;
+    //             }
+    //             c.t.yield(c, 5);
+    //             break;
+    //         }
+    //         case            5            : {
+    //             c.ctx.save();
+    //             c.ctx.scale(c.t.pixelScale, c.t.pixelScale);
+    //             c.t.drawRoads(c);
+    //             break;
+    //         }
+    //         case            6            : {
+    //             c.ctx.restore();
+    //             c.t.drawBorders(c);
+    //             c.t.yield(c, 7);
+    //             break;
+    //         }
+    //         case            7            : {
+    //             c.ctx.save();
+    //             c.ctx.scale(c.t.pixelScale, c.t.pixelScale);
+    //             c.t.drawIcons(c);
+    //             break;
+    //         }
+    //         case            8            : {
+    //             c.ctx.restore();
+    //             setTimeout(() => c.done(null, c.tile), 0);
+    //             break;
+    //         }
+    //     }
+    // }
 
 
     drawRoads(c) {
@@ -462,7 +649,7 @@ class VectorControlGridPrototype extends L.GridLayer {
                             }
 
                         }
-                c.t.yield(c, 6);
+                //c.t.yield(c, 6);
                 return;
             }
         }
@@ -472,17 +659,11 @@ class VectorControlGridPrototype extends L.GridLayer {
 
 
     calculateControl(c) {
-
-        const
-            start = Date.now();
-        const
-            max = Math.pow(2, c.t.max_zoom - c.coords.z);
-        const
-            zoom = Math.pow(2, c.coords.z);
-        const
-            hdrz = c.hd_ratio / zoom;
-        const
-            grid = {x: c.coords.x * max, y: c.coords.y * max};
+        const start = Date.now();
+        const max = Math.pow(2, c.t.max_zoom - c.coords.z);
+        const zoom = Math.pow(2, c.coords.z);
+        const hdrz = c.hd_ratio / zoom;
+        const grid = {x: c.coords.x * max, y: c.coords.y * max};
         const
             colors = [{
                 r: 0.1372549019607843,
@@ -521,19 +702,19 @@ class VectorControlGridPrototype extends L.GridLayer {
         delete c.d;
 
         c.phase_3_complete = true;
-        if (c.phase_2_complete) {
-            c.t.yield(c, 4);
-        }
+        // if (c.phase_2_complete) {
+        //     c.t.yield(c, 4);
+        // }
     }
 
 
-    yield(c, phase) {
-        setTimeout(() => {
-            c.t.renderer(c, phase);
-        }, 0);
-    }
+    // yield(c, phase) {
+    //     setTimeout(() => {
+    //         c.t.renderer(c, phase);
+    //     }, 0);
+    // }
 
-    override createTile(coords, done) : Element {
+    override createTile(coords, done): HTMLElement {
         let scale = Math.pow(2, coords.z);
         if (coords.x < 0 || coords.x >= scale || coords.y < 0 || coords.y >= scale || coords.z < 0) {
             let t = L.DomUtil.create('canvas', 'leaflet-tile');
@@ -545,7 +726,8 @@ class VectorControlGridPrototype extends L.GridLayer {
             return t;
         }
 
-        return this.renderer({t: this, coords: coords, done: done}, 1);
+
+        return this.renderer2({t: this, coords: coords, done: done});//, 1);
     }
 
 }
