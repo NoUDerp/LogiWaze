@@ -10,7 +10,7 @@
     "start": "rimraf .parcel-cache dist && mkdir dist && parcel build && mkdirp dist/Tiles && ncp Tiles/ dist/Tiles && mkdirp dist/MapIcons && ncp MapIcons/ dist/MapIcons && ncp Background.webp dist/Background.webp && ncp layers-2x.png dist/layers-2x.png && ncp font.svg dist/font.svg && ncp download-file.svg dist/download-file.svg && ncp copy.svg dist/copy.svg && ncp marker-icon.png dist/marker-icon.3f7d3721.png && ncp marker-icon-2x.png dist/marker-icon-2x.png && ncp ShortestRoute.webp dist/ShortestRoute.webp && ncp ray-start-arrow.svg dist/ray-start-arrow.svg && ncp ray-end.svg dist/ray-end.svg && ncp bug.svg dist/bug.svg && ncp HTD.webp dist/HTD.webp && ncp bug.svg dist/bug.svg && ncp download-file.svg dist/download-file.svg && ncp ColonialRoute.webp dist/ColonialRoute.webp && ncp marker-shadow.png dist/marker-shadow.png && ncp marker-icon.png dist/marker-icon-2x.png && ncp marker-icon-2x.png dist/marker-icon-2x.png && ncp favicon192.png dist/favicon192.e9ac555f.png && ncp Truck.webp dist/Truck.webp && ncp Flatbed.webp dist/Flatbed.webp && parcel",
     "build": "parcel build",
     "tiles": "rimraf Tiles && mkdirp Tiles && git submodule update --init Tiler && dotnet run --project Tiler -input map.webp -zoom 7 -filename \"Tiles/{z}_{x}_{y}.webp\"",
-    "map": "dotnet run --project MapStitcher MapStitcher/map.xml > map.webp"
+    "map": "dotnet run --project MapStitcher MapStitcher/map.xml map.webp"    
   },
   "source": "./src/index.html",
   "author": "Derp",
