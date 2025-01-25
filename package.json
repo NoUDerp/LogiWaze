@@ -6,11 +6,11 @@
   "homepage": "https://www.logiwaze.com/",
   "directories": {},
   "scripts": {
-    "clean": "rimraf .parcel-cache dist/*",
+    "clean": "rimraf .parcel-cache dist/* Tiles",
     "start": "rimraf .parcel-cache dist && mkdir dist && parcel build && mkdirp dist/Tiles && ncp Tiles/ dist/Tiles && mkdirp dist/MapIcons && ncp MapIcons/ dist/MapIcons && ncp Background.webp dist/Background.webp && ncp layers-2x.png dist/layers-2x.png && ncp font.svg dist/font.svg && ncp download-file.svg dist/download-file.svg && ncp copy.svg dist/copy.svg && ncp marker-icon.png dist/marker-icon.3f7d3721.png && ncp marker-icon-2x.png dist/marker-icon-2x.png && ncp ShortestRoute.webp dist/ShortestRoute.webp && ncp ray-start-arrow.svg dist/ray-start-arrow.svg && ncp ray-end.svg dist/ray-end.svg && ncp bug.svg dist/bug.svg && ncp HTD.webp dist/HTD.webp && ncp bug.svg dist/bug.svg && ncp download-file.svg dist/download-file.svg && ncp ColonialRoute.webp dist/ColonialRoute.webp && ncp marker-shadow.png dist/marker-shadow.png && ncp marker-icon.png dist/marker-icon-2x.png && ncp marker-icon-2x.png dist/marker-icon-2x.png && ncp favicon192.png dist/favicon192.e9ac555f.png && ncp Truck.webp dist/Truck.webp && ncp Flatbed.webp dist/Flatbed.webp && parcel",
     "build": "parcel build",
-    "tiles": "rimraf Tiles && mkdirp Tiles && git submodule update --init Tiler && dotnet run --project Tiler -input map.png -zoom 7 -filename \"Tiles/{z}_{x}_{y}.webp\"",
-    "map": "dotnet run --project MapStitcher MapStitcher/map.xml map.png"    
+    "debug": "parcel",
+    "map": "node scripts/export_roads_svg.js > Roads.svg && dotnet run --project MapStitcher MapStitcher/map.xml map.png && node scripts/export_roads_overlay.js Roads.svg map.png composite.png && rimraf Tiles && mkdirp Tiles && dotnet run --project Tiler -input composite.png -zoom 7 -filename \"Tiles/{z}_{x}_{y}.webp\""
   },
   "source": "./src/index.html",
   "author": "Derp",
@@ -59,11 +59,12 @@
     "bash": "^0.0.1",
     "cp": "^0.2.0",
     "dotnet": "^1.1.4",
+    "fs": "^0.0.1-security",
     "git": "^0.1.5",
     "jq": "*",
     "make": "*",
     "ncp": "^2.0.0",
-    "sharp": "^0.32.4",
+    "sharp": "^0.33.5",
     "svgo": "^3.3.2",
     "webpack": "5.94.0",
     "webpack-cli": "^4.0.0"
