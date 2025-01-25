@@ -1,4 +1,4 @@
-<map width="9" height="7" force-height="1776" force-width="2048">
+<map width="7" height="7" force-height="1776" force-width="2048">
 	<map x="-1.5" y="0">file:///MapHexes/MapKingsCageHex.png</map>
 	<map x="-2.25" y="-.5">file:///MapHexes/MapWestgateHex.png</map>
 	<map x="-2.25" y=".5">file:///MapHexes/MapFarranacCoastHex.png</map>
