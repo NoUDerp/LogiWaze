@@ -1,8 +1,8 @@
-require.extensions['.geojson'] = require.extensions['.json'];
-const geojson = require('../Roads.json');
+import * as fs from "node:fs";  
+
+const geojson = JSON.parse(fs.readFileSync('Roads.json', 'utf8'));
 
 // set the line width
-const zoom = 7;
 const width = .3;
 
 const features = geojson.features;
