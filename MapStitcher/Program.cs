@@ -17,6 +17,9 @@ namespace Stitcher
         static async Task Main(string[] args)
         {
             var model = XDocument.Load(File.OpenRead(args[0]));
+            
+            if (model.Root == null) throw new Exception("Map configuration input not valid");
+            
             float? forcewidth = model.Root.Attribute("force-width") != null ? (float)model.Root.Attribute("force-width")! : null;
             float? forceheight = model.Root.Attribute("force-height") != null ? (float)model.Root.Attribute("force-height")! : null;
             float? forcex = model.Root.Attribute("force-x") != null ? (float)model.Root.Attribute("force-x")! : null;
