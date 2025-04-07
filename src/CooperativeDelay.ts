@@ -2,7 +2,7 @@ export default class CooperativeDelay {
     startTime: number;
     maxRunTime: number;
 
-    constructor(maxRunTime: number = 3) {
+    constructor(maxRunTime: number = 10) {
         this.startTime = Date.now();
         this.maxRunTime = maxRunTime;
     }
