@@ -1,6 +1,7 @@
 //@ts-nocheck
 import * as L from 'leaflet';
 import * as intersects from 'intersects';
+import {default as CooperativeDelay} from './CooperativeDelay'
 
 class ImageCache {
     private cache: Map<string, Promise<Image>> = new Map<string, Promise<Image>>()
@@ -310,78 +311,53 @@ class VectorControlGridPrototype extends L.GridLayer {
     }
 
     async renderer2phase3(c) {
-        return new Promise((resolve, reject) => {
-            try {
-                c.hd_ratio = c.coords.z < 2 ? 8 : 16;
-                c.temp_canvas = L.DomUtil.create('canvas', '');
-                c.temp_canvas.width = 2 + c.tile.width / c.t.pixelScale / c.hd_ratio;
-                c.temp_canvas.height = 2 + c.tile.height / c.t.pixelScale / c.hd_ratio;
-                c.temp_ctx = c.temp_canvas.getContext('2d', {alpha: false});
-                let x = 0;
-                let y = 0;
-                let i = 0;
-                setTimeout(() => {
-                    try {
-                        let d = c.temp_ctx.getImageData(0, 0, c.temp_canvas.width, c.temp_canvas.height);
-                        const max = Math.pow(2, c.t.max_zoom - c.coords.z);
-                        const zoom = Math.pow(2, c.coords.z);
-                        const hdRatio = c.hd_ratio / zoom;
-                        const grid = {x: c.coords.x * max, y: c.coords.y * max};
-                        const
-                            colors = [{
-                                r: 0.1372549019607843,
-                                g: 0.3372549019607843,
-                                b: 0.5137254901960784
-                            }, {r: 0.3176470588235294, g: 0.4235294117647059, b: 0.2941176470588235}];
+        const delay = new CooperativeDelay();
+        
+        c.hd_ratio = c.coords.z < 2 ? 8 : 16;
+        c.temp_canvas = L.DomUtil.create('canvas', '');
+        c.temp_canvas.width = 2 + c.tile.width / c.t.pixelScale / c.hd_ratio;
+        c.temp_canvas.height = 2 + c.tile.height / c.t.pixelScale / c.hd_ratio;
+        c.temp_ctx = c.temp_canvas.getContext('2d', {alpha: false});
+        let x = 0;
+        let y = 0;
+        let i = 0;
+        let d = c.temp_ctx.getImageData(0, 0, c.temp_canvas.width, c.temp_canvas.height);
+        const max = Math.pow(2, c.t.max_zoom - c.coords.z);
+        const zoom = Math.pow(2, c.coords.z);
+        const hdRatio = c.hd_ratio / zoom;
+        const grid = {x: c.coords.x * max, y: c.coords.y * max};
+        const
+            colors = [{
+                r: 0.1372549019607843,
+                g: 0.3372549019607843,
+                b: 0.5137254901960784
+            }, {r: 0.3176470588235294, g: 0.4235294117647059, b: 0.2941176470588235}];
 
-                        for (let counter = 0; y < c.temp_canvas.height; y++, x = 0) for (; x < c.temp_canvas.width; x++, counter++) {
-                            const scale = {x: grid.x + (x - 1) * hdRatio, y: -(grid.y + (y - 1) * hdRatio)};
-                            let v = c.t.API.control(scale.x, scale.y);
+        for (let counter = 0; y < c.temp_canvas.height; y++, x = 0) {
+            for (; x < c.temp_canvas.width; x++, counter++) {
+                const scale = {x: grid.x + (x - 1) * hdRatio, y: -(grid.y + (y - 1) * hdRatio)};
+                let v = c.t.API.control(scale.x, scale.y);
 
-                            if (v < 0) // fade from warden
-                            {
-                                v++;
-                                d.data[i++] = Math.floor(255 * (v * (1.0 - colors[0].r) + colors[0].r));
-                                d.data[i++] = Math.floor(255 * (v * (-colors[0].g) + colors[0].g));
-                                d.data[i] = Math.floor(255 * (v * (-colors[0].b) + colors[0].b));
-                                i += 2;
-                            } else if (v > 0) // fade from colonial
-                            {
-                                v = 1 - v;
-                                d.data[i++] = Math.floor(255 * (v * (1.0 - colors[1].r) + colors[1].r));
-                                d.data[i++] = Math.floor(255 * (v * (-colors[1].g) + colors[1].g));
-                                d.data[i] = Math.floor(255 * (v * (-colors[1].b) + colors[1].b));
-                                i += 2;
-                            }
-
-                            // if (v < 0) // fade from warden
-                            // {
-                            //     v++;
-                            //     d.data[i++] = Math.floor(255 * (v * (1.0 - colors[0].r) + colors[0].r));
-                            //     d.data[i++] = Math.floor(255 * (v * (.4 - colors[0].g) + colors[0].g));
-                            //     d.data[i] = Math.floor(255 * (v * (.2666 - colors[0].b) + colors[0].b));
-                            //     i += 2;
-                            // } else if (v > 0) // fade from colonial
-                            // {
-                            //     v = 1 - v;
-                            //     d.data[i++] = Math.floor(255 * (v * (1.0 - colors[1].r) + colors[1].r));
-                            //     d.data[i++] = Math.floor(255 * (v * (.4 - colors[1].g) + colors[1].g));
-                            //     d.data[i] = Math.floor(255 * (v * (.2666 - colors[1].b) + colors[1].b));
-                            //     i += 2;
-                            // }
-                        }
-
-                        c.temp_ctx.putImageData(d, 0, 0);
-
-                        resolve();
-                    } catch (error) {
-                        reject(error);
-                    }
-                }, 0);
-            } catch (error) {
-                reject(error);
+                if (v < 0) // fade from warden
+                {
+                    v++;
+                    d.data[i++] = Math.floor(255 * (v * (1.0 - colors[0].r) + colors[0].r));
+                    d.data[i++] = Math.floor(255 * (v * (-colors[0].g) + colors[0].g));
+                    d.data[i] = Math.floor(255 * (v * (-colors[0].b) + colors[0].b));
+                    i += 2;
+                } else if (v > 0) // fade from colonial
+                {
+                    v = 1 - v;
+                    d.data[i++] = Math.floor(255 * (v * (1.0 - colors[1].r) + colors[1].r));
+                    d.data[i++] = Math.floor(255 * (v * (-colors[1].g) + colors[1].g));
+                    d.data[i] = Math.floor(255 * (v * (-colors[1].b) + colors[1].b));
+                    i += 2;
+                }
             }
-        });
+            await delay.cooperate();
+        }
+
+        c.temp_ctx.putImageData(d, 0, 0);
     }
 
     async renderer2phase4(c) {
