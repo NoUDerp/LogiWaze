@@ -52,6 +52,7 @@ module.exports.Create = function (mymap, API) {
         }
     }
 
+    let break_feature_set;
     for (var i = 0; i < Paths.features.length; i++) {
         var feature = Paths.features[i];
         let warden_features = new Array();
