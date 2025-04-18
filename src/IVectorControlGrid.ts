@@ -4,6 +4,7 @@ import * as intersects from 'intersects';
 import {default as CooperativeDelay} from './CooperativeDelay'
 import {JSONfn} from 'jsonfn';
 import Semaphore from 'semaphore-async-await';
+import Queue from "./Queue";
 
 class ImageCache {
     private cache: Map<string, Promise<Image>> = new Map<string, Promise<Image>>()
@@ -27,7 +28,7 @@ class VectorControlGridPrototype extends L.GridLayer {
     shadowSize: number = 20
     pixelScale: number = 1
     disabledIcons: {} = {}
-    semaphore: Semaphore  = new Semaphore(navigator.hardwareConcurrency) // Math.min(8, 
+    semaphore: Queue<Worker> = new Queue<Worker>()
     imageCache: ImageCache = new ImageCache()
 
     zoomScale(zoom): number {
@@ -315,7 +316,7 @@ class VectorControlGridPrototype extends L.GridLayer {
 
     async renderer2phase3(c) {
         const delay = new CooperativeDelay();
-        
+
         c.hd_ratio = c.coords.z < 2 ? 8 : 16;
         c.temp_canvas = L.DomUtil.create('canvas', '');
         c.temp_canvas.width = 2 + c.tile.width / c.t.pixelScale / c.hd_ratio;
@@ -358,35 +359,33 @@ class VectorControlGridPrototype extends L.GridLayer {
         //     }
         //     await delay.cooperate();
         // }
-        
-        await this.semaphore.acquire();
-        let data:number[];
-        let d = c.temp_ctx.getImageData(0, 0, c.temp_canvas.width, c.temp_canvas.height);
-        try {
 
-            const p = new Promise<ArrayBuffer>((resolve, reject) => {
-                const w = new Worker(new URL('control.ts', import.meta.url), {type: 'module'});
-                w.postMessage([
-                    [c.t.API.variogram.t, c.t.API.variogram.x, c.t.API.variogram.y, c.t.API.variogram.nugget, c.t.API.variogram.range, c.t.API.variogram.sill, c.t.API.variogram.A, c.t.API.variogram.n, c.t.API.variogram.K, c.t.API.variogram.M], 
-                    c.temp_canvas.width, c.temp_canvas.height, hdRatio, grid.x, grid.y]);
+        let data: number[];
+        let d = c.temp_ctx.getImageData(0, 0, c.temp_canvas.width, c.temp_canvas.height);
+        const w = await this.semaphore.dequeue();
+        if (w == undefined)
+            throw "worked is undefined and can't be re-queued - threading error";
+        try {
+            data = await new Promise<ArrayBuffer>((resolve, reject) => {
                 w.onmessage = async e => {
+                    this.semaphore.enqueue(w);
                     resolve(e.data);
                 };
+                w.postMessage([c.temp_canvas.width, c.temp_canvas.height, hdRatio, grid.x, grid.y]);
             });
-            data = await p;
-            //const r = (await p) as Array<number>;
-            //data = new Uint8ClampedArray(r);
-        }
-        finally
-        {
-            this.semaphore.release();
+        } catch (error) {
+            if (w == undefined)
+                throw "worked is undefined and can't be re-queued - threading error";
+            this.semaphore.enqueue(w);
         }
 
-        for (let i=0;i<d.data.length;i+=4) {
+        for (let i = 0; i < d.data.length; i += 4) {
             d.data[i] = data[i];
-            d.data[i+1] = data[i+1];
-            d.data[i+2] = data[i+2];
+            d.data[i + 1] = data[i + 1];
+            d.data[i + 2] = data[i + 2];
+            d.data[i + 3] = 128;
         }
+
         c.temp_ctx.putImageData(d, 0, 0);
     }
 
@@ -632,6 +631,14 @@ let createFn = (MaxNativeZoom, MaxZoom, Offset, API, RoadWidth, ControlWidth, Gr
     u.noWrap = true;
     u.maxZoom = MaxZoom;
     u.minZoom = 0;
+
+    // queue workers for processing control, it will also act as a semaphore
+    for (let i = 0; i < navigator.hardwareConcurrency; i++) {
+        const w = new Worker(new URL('control.ts', import.meta.url), {type: 'module'});
+        // initialize the worker data
+        w.postMessage([API.variogram.t, API.variogram.x, API.variogram.y, API.variogram.nugget, API.variogram.range, API.variogram.sill, API.variogram.A, API.variogram.n, API.variogram.K, API.variogram.M]);
+        u.semaphore.enqueue(w);
+    }
 
     const size = u.getTileSize();
 
