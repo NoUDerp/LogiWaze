@@ -2,6 +2,8 @@
 import * as L from 'leaflet';
 import * as intersects from 'intersects';
 import {default as CooperativeDelay} from './CooperativeDelay'
+import {JSONfn} from 'jsonfn';
+import Semaphore from 'semaphore-async-await';
 
 class ImageCache {
     private cache: Map<string, Promise<Image>> = new Map<string, Promise<Image>>()
@@ -25,6 +27,7 @@ class VectorControlGridPrototype extends L.GridLayer {
     shadowSize: number = 20
     pixelScale: number = 1
     disabledIcons: {} = {}
+    semaphore: Semaphore  = new Semaphore(navigator.hardwareConcurrency) // Math.min(8, 
     imageCache: ImageCache = new ImageCache()
 
     zoomScale(zoom): number {
@@ -321,42 +324,69 @@ class VectorControlGridPrototype extends L.GridLayer {
         let x = 0;
         let y = 0;
         let i = 0;
-        let d = c.temp_ctx.getImageData(0, 0, c.temp_canvas.width, c.temp_canvas.height);
         const max = Math.pow(2, c.t.max_zoom - c.coords.z);
         const zoom = Math.pow(2, c.coords.z);
         const hdRatio = c.hd_ratio / zoom;
         const grid = {x: c.coords.x * max, y: c.coords.y * max};
-        const
-            colors = [{
-                r: 0.1372549019607843,
-                g: 0.3372549019607843,
-                b: 0.5137254901960784
-            }, {r: 0.3176470588235294, g: 0.4235294117647059, b: 0.2941176470588235}];
+        // const
+        //     colors = [{
+        //         r: 0.1372549019607843,
+        //         g: 0.3372549019607843,
+        //         b: 0.5137254901960784
+        //     }, {r: 0.3176470588235294, g: 0.4235294117647059, b: 0.2941176470588235}];
+        //
+        // for (let counter = 0; y < c.temp_canvas.height; y++, x = 0) {
+        //     for (; x < c.temp_canvas.width; x++, counter++) {
+        //         const scale = {x: grid.x + (x - 1) * hdRatio, y: -(grid.y + (y - 1) * hdRatio)};
+        //         let v = c.t.API.control(scale.x, scale.y);
+        //
+        //         if (v < 0) // fade from warden
+        //         {
+        //             v++;
+        //             d.data[i++] = Math.floor(255 * (v * (1.0 - colors[0].r) + colors[0].r));
+        //             d.data[i++] = Math.floor(255 * (v * (-colors[0].g) + colors[0].g));
+        //             d.data[i] = Math.floor(255 * (v * (-colors[0].b) + colors[0].b));
+        //             i += 2;
+        //         } else if (v > 0) // fade from colonial
+        //         {
+        //             v = 1 - v;
+        //             d.data[i++] = Math.floor(255 * (v * (1.0 - colors[1].r) + colors[1].r));
+        //             d.data[i++] = Math.floor(255 * (v * (-colors[1].g) + colors[1].g));
+        //             d.data[i] = Math.floor(255 * (v * (-colors[1].b) + colors[1].b));
+        //             i += 2;
+        //         }
+        //     }
+        //     await delay.cooperate();
+        // }
+        
+        await this.semaphore.acquire();
+        let data:number[];
+        let d = c.temp_ctx.getImageData(0, 0, c.temp_canvas.width, c.temp_canvas.height);
+        try {
 
-        for (let counter = 0; y < c.temp_canvas.height; y++, x = 0) {
-            for (; x < c.temp_canvas.width; x++, counter++) {
-                const scale = {x: grid.x + (x - 1) * hdRatio, y: -(grid.y + (y - 1) * hdRatio)};
-                let v = c.t.API.control(scale.x, scale.y);
-
-                if (v < 0) // fade from warden
-                {
-                    v++;
-                    d.data[i++] = Math.floor(255 * (v * (1.0 - colors[0].r) + colors[0].r));
-                    d.data[i++] = Math.floor(255 * (v * (-colors[0].g) + colors[0].g));
-                    d.data[i] = Math.floor(255 * (v * (-colors[0].b) + colors[0].b));
-                    i += 2;
-                } else if (v > 0) // fade from colonial
-                {
-                    v = 1 - v;
-                    d.data[i++] = Math.floor(255 * (v * (1.0 - colors[1].r) + colors[1].r));
-                    d.data[i++] = Math.floor(255 * (v * (-colors[1].g) + colors[1].g));
-                    d.data[i] = Math.floor(255 * (v * (-colors[1].b) + colors[1].b));
-                    i += 2;
-                }
-            }
-            await delay.cooperate();
+            const p = new Promise<ArrayBuffer>((resolve, reject) => {
+                const w = new Worker(new URL('control.ts', import.meta.url), {type: 'module'});
+                w.postMessage([
+                    [c.t.API.variogram.t, c.t.API.variogram.x, c.t.API.variogram.y, c.t.API.variogram.nugget, c.t.API.variogram.range, c.t.API.variogram.sill, c.t.API.variogram.A, c.t.API.variogram.n, c.t.API.variogram.K, c.t.API.variogram.M], 
+                    c.temp_canvas.width, c.temp_canvas.height, hdRatio, grid.x, grid.y]);
+                w.onmessage = async e => {
+                    resolve(e.data);
+                };
+            });
+            data = await p;
+            //const r = (await p) as Array<number>;
+            //data = new Uint8ClampedArray(r);
+        }
+        finally
+        {
+            this.semaphore.release();
         }
 
+        for (let i=0;i<d.data.length;i+=4) {
+            d.data[i] = data[i];
+            d.data[i+1] = data[i+1];
+            d.data[i+2] = data[i+2];
+        }
         c.temp_ctx.putImageData(d, 0, 0);
     }
 
