@@ -1,6 +1,8 @@
 //@ts-nocheck
 'use strict';
 
+import API from "./API";
+
 module.exports.L = require('leaflet');
 
 module.exports.$ = require('jquery');
@@ -17,8 +19,9 @@ module.exports.FoxholeRouter = {
     Create: (mymap, API) => require('./IRouter.ts').Create(mymap, API)
 };
 
+const api = require('./API.ts');
 module.exports.API = {
-    Create: () => require('./API.ts').API
+    Create: () => new api.API()
 };
 
 module.exports.FoxholeGeocoder = {
