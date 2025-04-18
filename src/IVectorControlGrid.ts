@@ -2,8 +2,6 @@
 import * as L from 'leaflet';
 import * as intersects from 'intersects';
 import {default as CooperativeDelay} from './CooperativeDelay'
-import {JSONfn} from 'jsonfn';
-import Semaphore from 'semaphore-async-await';
 import Queue from "./Queue";
 
 class ImageCache {
@@ -594,7 +592,7 @@ let createFn = (MaxNativeZoom, MaxZoom, Offset, API, RoadWidth, ControlWidth, Gr
 
     // queue workers for processing control, it will also act as a semaphore
     for (let i = 0; i < navigator.hardwareConcurrency; i++) {
-        const w = new Worker(new URL('control.ts', import.meta.url), {type: 'module'});
+        const w = new Worker(new URL('ControlLayerThreadWorker.ts', import.meta.url), {type: 'module'});
         // initialize the worker data
         w.postMessage([API.variogram.t, API.variogram.x, API.variogram.y, API.variogram.nugget, API.variogram.range, API.variogram.sill, API.variogram.A, API.variogram.n, API.variogram.K, API.variogram.M]);
         u.semaphore.enqueue(w);
