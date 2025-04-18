@@ -35,7 +35,7 @@ onmessage = (e) => {
             b: 0.5137254901960784
         }, {r: 0.3176470588235294, g: 0.4235294117647059, b: 0.2941176470588235}];
 
-        const data = new Array<number>(width * height * 3);
+        const data = new Uint8ClampedArray(width * height * 4);
 
         let i = 0;
         for (let y = 0; y < height; y++) {
@@ -49,15 +49,17 @@ onmessage = (e) => {
                     data[i++] = Math.floor(255 * (v * (1.0 - colors[0].r) + colors[0].r));
                     data[i++] = Math.floor(255 * (v * (-colors[0].g) + colors[0].g));
                     data[i++] = Math.floor(255 * (v * (-colors[0].b) + colors[0].b));
+                    data[i++] = 255;
                 } else if (v > 0) // fade from colonial
                 {
                     v = 1 - v;
                     data[i++] = Math.floor(255 * (v * (1.0 - colors[1].r) + colors[1].r));
                     data[i++] = Math.floor(255 * (v * (-colors[1].g) + colors[1].g));
                     data[i++] = Math.floor(255 * (v * (-colors[1].b) + colors[1].b));
+                    data[i++] = 255;
                 }
             }
         }
-        postMessage(data);
+        postMessage(data.buffer, null, [data.buffer]);
     }
 };
