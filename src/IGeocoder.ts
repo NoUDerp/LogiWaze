@@ -130,7 +130,7 @@ module.exports.FoxholeGeocoder =  function (API) {
                     for (var i = 0; i < townlist.length; i++) {
                         var townname = towns[townlist[i]].name.toLowerCase();
                           if (townname.indexOf(query) >= 0) {
-                            var d = FoxholeGeocoder.levinshtein(query, townname);
+                            var d = this.levinshtein(query, townname);
                               results.push({ key: townlist[i], name: towns[townlist[i]].name.concat(towns[townlist[i]].major == 0 ? " (area)" : ""), distance: d });
                         }
                     }
