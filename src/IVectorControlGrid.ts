@@ -1,10 +1,8 @@
 //@ts-nocheck
 import * as L from 'leaflet';
 import * as intersects from 'intersects';
-import {default as CooperativeDelay} from './CooperativeDelay'
 import Queue from "./Queue";
 import API from "./API";
-import {variogramExponential} from "@sakitam-gis/kriging/src/utils";
 
 class ImageCache {
     private cache: Map<string, Promise<Image>> = new Map<string, Promise<Image>>()
@@ -64,23 +62,19 @@ export default class VectorControlGridPrototype extends L.GridLayer {
         ctx.stroke();
     }
 
-    drawBorders(c) {
+    drawBorders(c, ctx) {
         let coords = c.coords;
 
         let tile = c.tile;
 
-        if (!c.t.drawHexes)
-            return
-
         const zoom = Math.pow(2, coords.z);
-        const u = this;
         const lineWidth = .2 * Math.pow(2, coords.z);
         const shadow = lineWidth * .5 / Math.pow(2, c.t.max_zoom);
 
-        c.ctx.save();
-        c.ctx.strokeStyle = '#303030';
-        c.ctx.opacity = .8;
-        c.ctx.scale(c.t.pixelScale, c.t.pixelScale);
+        ctx.save();
+        ctx.strokeStyle = '#303030';
+        ctx.opacity = .8;
+        ctx.scale(c.t.pixelScale, c.t.pixelScale);
 
         for (let j of c.t.hex_sources) {
             const label_w = j.size.width * zoom + shadow * 2;
@@ -96,7 +90,7 @@ export default class VectorControlGridPrototype extends L.GridLayer {
                 );
         }
 
-        c.ctx.restore();
+        ctx.restore();
     }
 
 
@@ -222,12 +216,8 @@ export default class VectorControlGridPrototype extends L.GridLayer {
     }
 
     async render(c) {
-        let tile: HTMLImageElement;
-        await Promise.all([this.loadTile(c).then(i => {
-            tile = i;
-            this.drawTileToContext(c, i, c.ctx);
-        }), this.renderControlToTempCanvas(c)]);
-        this.drawValidAndInvalidRegionsAndControlLayer(c, tile);
+        const i = await this.loadTile(c);
+        this.drawTileToContext(c, i, c.ctx);
         await this.renderRoads(c);
     }
 
@@ -317,7 +307,8 @@ export default class VectorControlGridPrototype extends L.GridLayer {
         data.close();
     }
 
-    drawValidAndInvalidRegionsAndControlLayer(c, i: HTMLImageElement) {
+    async renderRoads(c) {
+        await this.renderControlToTempCanvas(c);
         if (c.temp_canvas != null) {
             let overlay = document.createElement("canvas");
             overlay.width = c.tile.width;
@@ -342,9 +333,7 @@ export default class VectorControlGridPrototype extends L.GridLayer {
             c.ctx.restore();
             delete c.temp_canvas;
         }
-    }
 
-    async renderRoads(c) {
         const u = this;
         return new Promise((resolve, reject) => {
             setTimeout(async () => {
@@ -354,7 +343,8 @@ export default class VectorControlGridPrototype extends L.GridLayer {
                     await c.t.drawRoads(c);
 
                     c.ctx.restore();
-                    u.drawBorders(c);
+                    if (c.t.drawHexes)
+                        u.drawBorders(c, c.ctx);
 
                     c.ctx.save();
                     c.ctx.scale(c.t.pixelScale, c.t.pixelScale);
