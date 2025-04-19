@@ -322,6 +322,7 @@ module.exports.Create = function (mymap, API) {
             }
         }
     }
+    ControlLayer.roadsReady();
 
     ControlLayer.addTo(mymap);
     RegionLabels.addTo(mymap);

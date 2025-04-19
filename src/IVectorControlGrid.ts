@@ -28,6 +28,7 @@ export default class VectorControlGridPrototype extends L.GridLayer {
     pixelScale: number = 1
     disabledIcons: {} = {}
     semaphore: Queue<Worker> = new Queue<Worker>()
+    renderers: Queue<Worker> = new Queue<Worker>()
     imageCache: ImageCache = new ImageCache()
 
     zoomScale(zoom): number {
@@ -362,112 +363,67 @@ export default class VectorControlGridPrototype extends L.GridLayer {
         });
     }
 
+
     async drawRoads(c) {
-        const coords = c.coords;
-        let tile = c.tile;
-        let ctx = c.ctx;
+        await this.waitForRoadInitialization;
 
-        ctx.lineJoin = 'miter';
-        ctx.lineCap = 'round';
+        const w = await this.renderers.dequeue();
 
-        const scale = Math.pow(2, c.t.grid_depth - coords.z);
-        const start_x = Math.floor(coords.x * scale);
-        const start_y = Math.floor(coords.y * scale);
+        const args = {
+            coords: c.coords,
+            grid_depth: c.t.grid_depth,
+            offset: c.t.offset,
+            roadWidth: c.t.RoadWidth,
+            controlWidth: c.t.ControlWidth,
+            grid_x_size: c.t.grid_x_size,
+            grid_y_size: c.t.grid_y_size,
+            controls: c.t.controls,
+            pixelScale: c.t.pixelScale,
+            width: c.tile.width,
+            height: c.tile.height
+        };
 
-        const end_x = Math.ceil((coords.x + 1) * scale);
-        const end_y = Math.ceil((coords.y + 1) * scale);
+        function logImageBitmap(imageBitmap) {
+            // Create a canvas
+            const canvas = document.createElement('canvas');
+            canvas.width = imageBitmap.width;
+            canvas.height = imageBitmap.height;
 
-        const depth_inverse = Math.pow(2, coords.z);
-        const sources = c.t.road_sources;
-        const offset = c.t.offset;
-        const outerWidth = c.t.RoadWidth * depth_inverse;
-        const innerWidth = c.t.ControlWidth * depth_inverse;
-        const grid_x_size = c.t.grid_x_size;
-        const grid_y_size = c.t.grid_y_size;
-        const controls = c.t.controls;
-        let pixelScale = c.t.pixelScale;
+            // Draw the ImageBitmap
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(imageBitmap, 0, 0);
 
-        function draw(i, start_x, start_y, end_x, end_y, x, y, step) {
-            const startTime = Date.now();
-            // if (step == 1) {
-            //     /*if (quality) {
-            //         var tiers = ['', '#957458', '#94954e', '#5a9565'];
-            //         ctx.lineWidth = outerWidth;
-            //         for (; y < end_y; y++, x = start_x)
-            //             for (; x < end_x; x++, i = 0) {
-            //
-            //                 if (x >= 0 && y >= 0 && x < grid_x_size && y < grid_y_size) {
-            //                     for (; i < sources[x][y].length; i++) {
-            //
-            //                         var j = sources[x][y][i];
-            //                         ctx.strokeStyle = tiers[j.options.tier];
-            //                         ctx.beginPath();
-            //                         var coordsx = coords.x * tile.width / pixelScale;
-            //                         var coordsy = coords.y * tile.height / pixelScale;
-            //                         var x1 = (j.points[0][1] + offset[0]) * depth_inverse - coordsx;
-            //                         var y1 = (j.points[0][0] + offset[1]) * depth_inverse - coordsy;
-            //                         var x2 = (j.points[1][1] + offset[0]) * depth_inverse - coordsx;
-            //                         var y2 = (j.points[1][0] + offset[1]) * depth_inverse - coordsy;
-            //                         ctx.moveTo(x1, y1);
-            //                         ctx.lineTo(x2, y2);
-            //                         ctx.stroke();
-            //                         if (Date.now() - startTime > 3) {
-            //                             setTimeout(() => draw(i, start_x, start_y, end_x, end_y, x, y, step), 0);
-            //                             return;
-            //                         }
-            //                     }
-            //                 }
-            //                 if (Date.now() - startTime > 3) {
-            //                     setTimeout(() => draw(i, start_x, start_y, end_x, end_y, x, y, step), 0);
-            //                     return;
-            //                 }
-            //             }
-            //
-            //     }*/
-            //     // move to step 2, reset all starting values (only once)
-            //     step = 2;
-            //     x = start_x;
-            //     y = start_y;
-            //     i = 0;
-            // }
+            // Get data URL
+            const dataURL = canvas.toDataURL('image/png');
+            console.log(dataURL);
 
+            // // For browsers that support displaying images in console
+            // console.log('%c ', `
+            //     font-size: 1px;
+            //     padding: ${imageBitmap.height}px ${imageBitmap.width}px;
+            //     background: url(${dataURL}) no-repeat;
+            //     background-size: contain;
+            //   `);
 
-            ctx.lineWidth = innerWidth;
-            const colors = ['#516C4B', '#235683', '#303030', '#CCCC44'];
-
-            for (; y <= end_y; y++, x = start_x)
-                for (; x <= end_x; x++, i = 0)
-                    if (x >= 0 && y >= 0 && x < grid_x_size && y < grid_y_size) {
-                        for (; i < sources[x][y].length; i++) {
-                            const j = sources[x][y][i];
-                            if (controls[0]) {
-                                ctx.strokeStyle = colors[j.options.control];
-                                ctx.beginPath();
-                                const coordsx = coords.x * tile.width / pixelScale;
-                                const coordsy = coords.y * tile.height / pixelScale;
-                                const x1 = (j.points[0][1] + offset[0]) * depth_inverse - coordsx;
-                                const y1 = (j.points[0][0] + offset[1]) * depth_inverse - coordsy;
-                                const x2 = (j.points[1][1] + offset[0]) * depth_inverse - coordsx;
-                                const y2 = (j.points[1][0] + offset[1]) * depth_inverse - coordsy;
-                                ctx.moveTo(x1, y1);
-                                ctx.lineTo(x2, y2);
-                                ctx.stroke();
-                            }
-                            if (Date.now() - startTime > 3) {
-                                setTimeout(() => draw(i, start_x, start_y, end_x, end_y, x, y, step), 0);
-                                return;
-                            }
-                        }
-                        if (Date.now() - startTime > 3) {
-                            setTimeout(() => draw(i, start_x, start_y, end_x, end_y, x, y, step), 0);
-                            return;
-                        }
-
-                    }
-            return;
+            return dataURL;
         }
 
-        draw(0, start_x, start_y, end_x, end_y, start_x, start_y, 1);
+        w.onmessage = async e => {
+            this.renderers.enqueue(w);
+            const bitmap = e.data.bitmap as ImageBitmap;
+            const ctx = c.ctx as CanvasRenderingContext2D;
+
+            ctx.save();
+            ctx.globalCompositeOperation = 'source-atop'; // mask the alpha to overlay the control layer, copy it to temporary storage
+            ctx.imageSmoothingQuality = 'low'; // highest performance possible for a copy, no smoothing needed
+            //overlay_ctx.drawImage(c.temp_canvas, 1, 1, c.temp_canvas.width - 2, c.temp_canvas.height - 2, 0, 0, c.tile.width, c.tile.height);
+            ctx.drawImage(bitmap, 0, 0);
+            //c.t.drawInvalidRegions(overlay, overlay_ctx, c.coords, c.t);
+            //logImageBitmap(bitmap);
+            ctx.restore();
+        };
+
+        w.postMessage({operation: "roads", arguments: args});
     }
 
 
@@ -527,6 +483,8 @@ export default class VectorControlGridPrototype extends L.GridLayer {
         return this.renderer({t: this, coords: coords, done: done});//, 1);
     }
 
+    road_sources:any[] = []
+
     constructor(MaxNativeZoom: number, MaxZoom: number, Offset, API: API, RoadWidth: number, ControlWidth: number, GridDepth: number) {
         super(MaxNativeZoom);
         this.updateWhenZooming = false;
@@ -542,11 +500,11 @@ export default class VectorControlGridPrototype extends L.GridLayer {
             this.semaphore.enqueue(w);
         }
 
+
         const size = this.getTileSize();
 
         this.RoadWidth = RoadWidth;
         this.ControlWidth = ControlWidth;
-        this.road_sources = [];
         this.max_zoom = MaxZoom;
         this.grid_depth = GridDepth;
         this.offset = Offset;
@@ -560,9 +518,9 @@ export default class VectorControlGridPrototype extends L.GridLayer {
 
         const margin = max_road_width * max;
 
-        for (var x = 0; x < this.grid_x_size; x++) {
+        for (let x = 0; x < this.grid_x_size; x++) {
             this.road_sources.push([]);
-            for (var y = 0; y < this.grid_y_size; y++)
+            for (let y = 0; y < this.grid_y_size; y++)
                 this.road_sources[x].push([]);
         }
 
@@ -608,9 +566,22 @@ export default class VectorControlGridPrototype extends L.GridLayer {
             for (let x = start_tile_x; x <= end_tile_x; x++)
                 for (let y = start_tile_y; y <= end_tile_y; y++)
                     if (intersects.lineBox(x1, y1, x2, y2, x * this.grid_x_width - marginx, y * this.grid_y_height - marginy, width, height))
-                        addLine(x, y, p, options, this.Offset);
+                        addLine(x, y, p, options, this, this.Offset);
 
         };
+
+        this.waitForRoadInitialization  = new Promise<void>((resolve) => {
+            this.roadsReady = () => {
+                // queue workers for processing control, it will also act as a semaphore
+                for (let i = 0; i < navigator.hardwareConcurrency; i++) {
+                    const w = new Worker(new URL('TileRenderWorker.ts', import.meta.url), {type: 'module'});
+                    // initialize the worker data
+                    w.postMessage({operation: "initialize", arguments: {roads: this.road_sources}});
+                    this.renderers.enqueue(w);
+                }
+                resolve();
+            }
+        });
 
         this.max_native_zoom = MaxNativeZoom;
         this.offset = Offset;
