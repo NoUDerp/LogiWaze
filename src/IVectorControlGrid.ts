@@ -4,6 +4,7 @@ import * as intersects from 'intersects';
 import {default as CooperativeDelay} from './CooperativeDelay'
 import Queue from "./Queue";
 import API from "./API";
+import {variogramExponential} from "@sakitam-gis/kriging/src/utils";
 
 class ImageCache {
     private cache: Map<string, Promise<Image>> = new Map<string, Promise<Image>>()
@@ -27,7 +28,7 @@ export default class VectorControlGridPrototype extends L.GridLayer {
     shadowSize: number = 20
     pixelScale: number = 1
     disabledIcons: {} = {}
-    semaphore: Queue<Worker> = new Queue<Worker>()
+    //semaphore: Queue<Worker> = new Queue<Worker>()
     renderers: Queue<Worker> = new Queue<Worker>()
     imageCache: ImageCache = new ImageCache()
 
@@ -36,7 +37,7 @@ export default class VectorControlGridPrototype extends L.GridLayer {
     }
 
     // temporarily disabled: window.devicePixelRatio,
-    async drawHex(tile, ctx, x, y, w, h, scale) {
+    static drawHex(tile, ctx, x, y, w, h, scale) {
         ctx.lineWidth = scale;
         ctx.beginPath();
         ctx.moveTo(x + w, y);
@@ -50,7 +51,7 @@ export default class VectorControlGridPrototype extends L.GridLayer {
     }
 
 
-    async fillHex(tile, ctx, x, y, w, h, scale) {
+    static fillHex(tile, ctx, x, y, w, h) {
         ctx.beginPath();
         ctx.moveTo(x + w, y);
         ctx.lineTo(x + w * .5, y + h);
@@ -63,7 +64,7 @@ export default class VectorControlGridPrototype extends L.GridLayer {
         ctx.stroke();
     }
 
-    async drawBorders(c) {
+    drawBorders(c) {
         let coords = c.coords;
 
         let tile = c.tile;
@@ -87,7 +88,7 @@ export default class VectorControlGridPrototype extends L.GridLayer {
             const label_x = j.x * zoom - coords.x * tile.width / c.t.pixelScale - label_w - shadow;
             const label_y = j.y * zoom - coords.y * tile.height / c.t.pixelScale - label_h - shadow;
             if (intersects.boxBox(0, 0, tile.width, tile.height, label_x, label_y, label_w, label_h))
-                c.t.drawHex(c.tile, c.ctx, label_x + label_w * .5,
+                VectorControlGridPrototype.drawHex(c.tile, c.ctx, label_x + label_w * .5,
                     label_y + label_h * .5,
                     label_w * .5,
                     label_h * .5,
@@ -99,43 +100,42 @@ export default class VectorControlGridPrototype extends L.GridLayer {
     }
 
 
-    async drawValidRegions(tile, ctx, coords, t) {
+    drawValidRegions(tile: HTMLImageElement, ctx: CanvasRenderingContext2D, coords, pixelScale: number, max_zoom: number, hex_sources) {
         const zoom = Math.pow(2, coords.z);
         const lineWidth = Math.pow(2, coords.z);
-        const shadow = lineWidth * .5 / Math.pow(2, t.max_zoom);
+        const shadow = lineWidth * .5 / Math.pow(2, max_zoom);
         ctx.save();
         ctx.fillStyle = '#FFFFFFFF';
         ctx.strokeStyle = '#FFFFFFFF';
-        ctx.scale(t.pixelScale, t.pixelScale);
-        for (let j of t.hex_sources) {
+        ctx.scale(pixelScale, pixelScale);
+        for (let j of hex_sources) {
             if (!j.offline) {
                 const label_w = j.size.width * zoom + shadow * 2;
                 const label_h = j.size.height * zoom + shadow * 2;
-                const label_x = j.x * zoom - coords.x * tile.width / t.pixelScale - label_w - shadow;
-                const label_y = j.y * zoom - coords.y * tile.height / t.pixelScale - label_h - shadow;
+                const label_x = j.x * zoom - coords.x * tile.width / pixelScale - label_w - shadow;
+                const label_y = j.y * zoom - coords.y * tile.height / pixelScale - label_h - shadow;
                 if (intersects.boxBox(0, 0, tile.width, tile.height, label_x, label_y, label_w, label_h))
-                    t.fillHex(tile, ctx, label_x + label_w * .5, label_y + label_h * .5, label_w * .5, label_h * .5, lineWidth);
+                    VectorControlGridPrototype.fillHex(tile, ctx, label_x + label_w * .5, label_y + label_h * .5, label_w * .5, label_h * .5, lineWidth);
             }
         }
         ctx.restore();
     }
 
-
-    async drawInvalidRegions(tile, ctx, coords, t) {
+    drawInvalidRegions(tile: HTMLImageElement, ctx, coords, pixelScale: number, max_zoom: number, hex_sources) {
         const zoom = Math.pow(2, coords.z);
         const lineWidth = Math.pow(2, coords.z);
-        const shadow = lineWidth * .5 / Math.pow(2, t.max_zoom);
+        const shadow = lineWidth * .5 / Math.pow(2, max_zoom);
         ctx.save();
         ctx.fillStyle = '#000000FF';
         ctx.strokeStyle = '#000000FF';
-        for (let j of t.hex_sources) if (j.offline) {
+        for (let j of hex_sources) if (j.offline) {
             const label_w = j.size.width * zoom + shadow * 2;
             const label_h = j.size.height * zoom + shadow * 2;
-            const label_x = j.x * zoom - coords.x * tile.width / t.pixelScale - label_w - shadow;// / t.pixelScale    const
-            const label_y = j.y * zoom - coords.y * tile.height / t.pixelScale - label_h - shadow;
+            const label_x = j.x * zoom - coords.x * tile.width / pixelScale - label_w - shadow;// / t.pixelScale    const
+            const label_y = j.y * zoom - coords.y * tile.height / pixelScale - label_h - shadow;
 
             if (intersects.boxBox(0, 0, tile.width, tile.height, label_x, label_y, label_w, label_h))
-                await t.fillHex(tile, ctx, label_x + label_w * .5, label_y + label_h * .5, label_w * .5, label_h * .5, lineWidth);
+                VectorControlGridPrototype.fillHex(tile, ctx, label_x + label_w * .5, label_y + label_h * .5, label_w * .5, label_h * .5, lineWidth);
         }
 
         ctx.restore();
@@ -222,46 +222,67 @@ export default class VectorControlGridPrototype extends L.GridLayer {
     }
 
     async render(c) {
-        await this.renderer2phase1creation(c);
-        await this.renderer2phase2(c);
-        await this.renderer2phase3(c);
-        await this.renderer2phase4(c);
-        await this.renderer2phase5(c);
+        let tile: HTMLImageElement;
+        await Promise.all([this.loadTile(c).then(i => {
+            tile = i;
+            this.drawTileToContext(c, i, c.ctx);
+        }), this.renderControlToTempCanvas(c)]);
+        this.drawValidAndInvalidRegionsAndControlLayer(c, tile);
+        await this.renderRoads(c);
     }
 
-    async renderer2phase1creation(c) {
+    async loadTile(c): Promise<ImageBitmap> {
         c.ctx = c.tile.getContext('2d');
         await c.t.loadIcons(c);
-        return new Promise((resolve, reject) => {
-            c.img = new Image();
-            const scale = Math.pow(2, Math.max(0, c.coords.z - c.t.max_native_zoom));
-            c.img.onload = () => resolve();
-            c.img.src = `Tiles/${Math.min(c.coords.z, c.t.max_native_zoom)}_${Math.floor(c.coords.x / scale)}_${Math.floor(c.coords.y / scale)}.webp${c.t.build}`;
-        });
+
+        const scale = Math.pow(2, Math.max(0, c.coords.z - c.t.max_native_zoom));
+        const response = await fetch(`Tiles/${Math.min(c.coords.z, c.t.max_native_zoom)}_${Math.floor(c.coords.x / scale)}_${Math.floor(c.coords.y / scale)}.webp${c.t.build}`);
+        const imageBlob = await response.blob();
+        return await createImageBitmap(imageBlob);
+        //
+        // return new Promise((resolve, reject) => {
+        //
+        //     async function fetchImageBitmap(url) {
+        //         try {
+        //             // Fetch the image from the URL
+        //             const response = await fetch(url);
+        //
+        //             // Check if the fetch was successful
+        //             if (!response.ok) {
+        //                 throw new Error(`Failed to fetch image: ${response.status} ${response.statusText}`);
+        //             }
+        //
+        //             // Get the image data as a blob
+        //             const imageBlob = await response.blob();
+        //
+        //             // Convert the blob to an ImageBitmap
+        //             const imageBitmap = await createImageBitmap(imageBlob);
+        //
+        //             return imageBitmap;
+        //         } catch (error) {
+        //             console.error('Error fetching image:', error);
+        //             throw error;
+        //         }
+        //     }
+        //
+        //     const img = new Image();
+        //     const scale = Math.pow(2, Math.max(0, c.coords.z - c.t.max_native_zoom));
+        //     img.onload = () => resolve(img);
+        //     img.src = `Tiles/${Math.min(c.coords.z, c.t.max_native_zoom)}_${Math.floor(c.coords.x / scale)}_${Math.floor(c.coords.y / scale)}.webp${c.t.build}`;
+        // });
     }
 
-    async renderer2phase2(c) {
-        return new Promise((resolve, reject) => {
-            try {
-                const scale = Math.pow(2, Math.max(0, c.coords.z - c.t.max_native_zoom));
-                const ox = c.coords.x % scale;
-                const oy = c.coords.y % scale;
-                const bx = c.img.width / scale;
-                const by = c.img.height / scale;
-                setTimeout(() => {
-                    c.ctx.drawImage(c.img, bx * ox, by * oy, bx, by, 0, 0, c.tile.width, c.tile.height);
-                    delete c.img;
-                    resolve();
-                });
-            } catch (error) {
-                reject(error);
-            }
-        });
+    drawTileToContext(c, img: ImageBitmap, ctx) {
+        const scale = Math.pow(2, Math.max(0, c.coords.z - c.t.max_native_zoom));
+        const ox = c.coords.x % scale;
+        const oy = c.coords.y % scale;
+        const bx = img.width / scale;
+        const by = img.height / scale;
+        ctx.drawImage(img, bx * ox, by * oy, bx, by, 0, 0, c.tile.width, c.tile.height);
+        img.close();
     }
 
-    async renderer2phase3(c) {
-        const delay = new CooperativeDelay();
-
+    async renderControlToTempCanvas(c) {
         c.hd_ratio = 8; // c.coords.z < 2 ? 8 : 16;
         c.temp_canvas = L.DomUtil.create('canvas', '');
         c.temp_canvas.width = 2 + c.tile.width / c.t.pixelScale / c.hd_ratio;
@@ -275,66 +296,56 @@ export default class VectorControlGridPrototype extends L.GridLayer {
         const hdRatio = c.hd_ratio / zoom;
         const grid = {x: c.coords.x * max, y: c.coords.y * max};
 
-        let data: number[];
-        let d = c.temp_ctx.getImageData(0, 0, c.temp_canvas.width, c.temp_canvas.height);
-        const w = await this.semaphore.dequeue();
+        let data: ImageBitmap;
+        const w = await this.renderers.dequeue();
         try {
-            data = await new Promise<ArrayBuffer>((resolve, reject) => {
+            data = await new Promise<ImageBitmap>((resolve, reject) => {
                 w.onmessage = async e => {
-                    this.semaphore.enqueue(w);
+                    this.renderers.enqueue(w);
                     resolve(e.data);
                 };
-                w.postMessage([c.temp_canvas.width, c.temp_canvas.height, hdRatio, grid.x, grid.y]);
+                w.postMessage({
+                    operation: "control",
+                    arguments: [c.temp_canvas.width, c.temp_canvas.height, hdRatio, grid.x, grid.y]
+                });
             });
         } catch (error) {
-            this.semaphore.enqueue(w);
+            this.renderers.enqueue(w);
         }
-
-        d.data.set(new Uint8ClampedArray(data), 0);
-        c.temp_ctx.putImageData(d, 0, 0);
+        const tempctx = c.temp_ctx as CanvasRenderingContext2D;
+        tempctx.drawImage(data, 0, 0);
+        data.close();
     }
 
-    async renderer2phase4(c) {
-        return new Promise((resolve, reject) => {
-            if (c.temp_canvas != null) {
-                try {
-                    let overlay = document.createElement("canvas");
-                    overlay.width = c.tile.width;
-                    overlay.height = c.tile.height;
-                    setTimeout(() => {
-                        try {
-                            let overlay_ctx = overlay.getContext('2d');
-                            overlay_ctx.save();
-                            c.t.drawValidRegions(overlay, overlay_ctx, c.coords, c.t);
-                            overlay_ctx.restore();
-                            overlay_ctx.save();
-                            overlay_ctx.globalCompositeOperation = 'source-atop'; // mask the alpha to overlay the control layer, copy it to temporary storage
-                            overlay_ctx.imageSmoothingQuality = 'low'; // highest performance possible for a copy, no smoothing needed
-                            overlay_ctx.drawImage(c.temp_canvas, 1, 1, c.temp_canvas.width - 2, c.temp_canvas.height - 2, 0, 0, c.tile.width, c.tile.height);
-                            overlay_ctx.restore();
-                            overlay_ctx.save();
-                            overlay_ctx.scale(c.t.pixelScale, c.t.pixelScale);
-                            c.t.drawInvalidRegions(overlay, overlay_ctx, c.coords, c.t);
-                            overlay_ctx.restore();
-                            c.ctx.save();
-                            c.ctx.globalCompositeOperation = 'source-atop';
-                            c.ctx.globalAlpha = .5;
-                            c.ctx.drawImage(overlay, 0, 0);
-                            c.ctx.restore();
-                            delete c.temp_canvas;
-                            resolve();
-                        } catch (error) {
-                            reject(error);
-                        }
-                    }, 0);
-                } catch (error) {
-                    reject(error);
-                }
-            } else resolve();
-        });
+    drawValidAndInvalidRegionsAndControlLayer(c, i: HTMLImageElement) {
+        if (c.temp_canvas != null) {
+            let overlay = document.createElement("canvas");
+            overlay.width = c.tile.width;
+            overlay.height = c.tile.height;
+            let overlay_ctx = overlay.getContext('2d');
+            overlay_ctx.save();
+            c.t.drawValidRegions(overlay, overlay_ctx, c.coords, c.t.pixelScale, c.t.max_zoom, c.t.hex_sources);
+            overlay_ctx.restore();
+            overlay_ctx.save();
+            overlay_ctx.globalCompositeOperation = 'source-atop'; // mask the alpha to overlay the control layer, copy it to temporary storage
+            overlay_ctx.imageSmoothingQuality = 'low'; // highest performance possible for a copy, no smoothing needed
+            overlay_ctx.drawImage(c.temp_canvas, 1, 1, c.temp_canvas.width - 2, c.temp_canvas.height - 2, 0, 0, c.tile.width, c.tile.height);
+            overlay_ctx.restore();
+            overlay_ctx.save();
+            overlay_ctx.scale(c.t.pixelScale, c.t.pixelScale);
+            c.t.drawInvalidRegions(overlay, overlay_ctx, c.coords, c.t.pixelScale, c.t.max_zoom, c.t.hex_sources);
+            overlay_ctx.restore();
+            c.ctx.save();
+            c.ctx.globalCompositeOperation = 'source-atop';
+            c.ctx.globalAlpha = .5;
+            c.ctx.drawImage(overlay, 0, 0);
+            c.ctx.restore();
+            delete c.temp_canvas;
+        }
     }
 
-    async renderer2phase5(c) {
+    async renderRoads(c) {
+        const u = this;
         return new Promise((resolve, reject) => {
             setTimeout(async () => {
                 try {
@@ -342,20 +353,16 @@ export default class VectorControlGridPrototype extends L.GridLayer {
                     c.ctx.scale(c.t.pixelScale, c.t.pixelScale);
                     await c.t.drawRoads(c);
 
-                    setTimeout(async () => {
-                        c.ctx.restore();
-                        await c.t.drawBorders(c);
+                    c.ctx.restore();
+                    u.drawBorders(c);
 
-                        setTimeout(async () => {
-                            c.ctx.save();
-                            c.ctx.scale(c.t.pixelScale, c.t.pixelScale);
-                            await c.t.drawIcons(c);
-                            setTimeout(() => {
-                                c.ctx.restore();
-                                resolve();
-                            });
-                        });
-                    })
+                    c.ctx.save();
+                    c.ctx.scale(c.t.pixelScale, c.t.pixelScale);
+
+                    await c.t.drawIcons(c);
+                    c.ctx.restore();
+                    resolve();
+
                 } catch (error) {
                     reject(error);
                 }
@@ -412,59 +419,15 @@ export default class VectorControlGridPrototype extends L.GridLayer {
             this.renderers.enqueue(w);
             const bitmap = e.data.bitmap as ImageBitmap;
             const ctx = c.ctx as CanvasRenderingContext2D;
-
             ctx.save();
             ctx.globalCompositeOperation = 'source-atop'; // mask the alpha to overlay the control layer, copy it to temporary storage
             ctx.imageSmoothingQuality = 'low'; // highest performance possible for a copy, no smoothing needed
-            //overlay_ctx.drawImage(c.temp_canvas, 1, 1, c.temp_canvas.width - 2, c.temp_canvas.height - 2, 0, 0, c.tile.width, c.tile.height);
             ctx.drawImage(bitmap, 0, 0);
-            //c.t.drawInvalidRegions(overlay, overlay_ctx, c.coords, c.t);
-            //logImageBitmap(bitmap);
+            bitmap.close();
             ctx.restore();
         };
 
         w.postMessage({operation: "roads", arguments: args});
-    }
-
-
-    public calculateControl(c) {
-        const start = Date.now();
-        const max = Math.pow(2, c.t.max_zoom - c.coords.z);
-        const zoom = Math.pow(2, c.coords.z);
-        const hdRatio = c.hd_ratio / zoom;
-        const grid = {x: c.coords.x * max, y: c.coords.y * max};
-        const colors = [
-            {r: 0.1372549019607843, g: 0.3372549019607843, b: 0.5137254901960784}, // warden
-            {r: 0.3176470588235294, g: 0.4235294117647059, b: 0.2941176470588235} // colonial
-        ];
-
-        for (let counter = 0; c.y < c.temp_canvas.height; c.y++, c.x = 0) for (; c.x < c.temp_canvas.width; c.x++, counter++) {
-            if (counter > 16 && Date.now() - start > 3) {
-                setTimeout(() => c.t.calculateControl(c), 0);
-                return;
-            }
-            const scale = {x: grid.x + (c.x - 1) * hdRatio, y: -(grid.y + (c.y - 1) * hdRatio)};
-            let v = c.t.API.control(scale.x, scale.y);
-
-            if (v < 0) // fade from warden
-            {
-                v++;
-                c.d.data[c.i++] = Math.floor(255 * (v * (1.0 - colors[0].r) + colors[0].r));
-                c.d.data[c.i++] = Math.floor(255 * (v * -colors[0].g + colors[0].g));
-                c.d.data[c.i] = Math.floor(255 * (v * -colors[0].b + colors[0].b));
-                c.i += 2;
-            } else if (v > 0) // fade from colonial
-            {
-                v = 1 - v;
-                c.d.data[c.i++] = Math.floor(255 * (v * (1.0 - colors[1].r) + colors[1].r));
-                c.d.data[c.i++] = Math.floor(255 * (v * -colors[1].g + colors[1].g));
-                c.d.data[c.i] = Math.floor(255 * (v * -colors[1].b + colors[1].b));
-                c.i += 2;
-            }
-        }
-
-        c.temp_ctx.putImageData(c.d, 0, 0);
-        delete c.d;
     }
 
     override createTile(coords, done): HTMLElement {
@@ -483,7 +446,7 @@ export default class VectorControlGridPrototype extends L.GridLayer {
         return this.renderer({t: this, coords: coords, done: done});//, 1);
     }
 
-    road_sources:any[] = []
+    road_sources: any[] = []
 
     constructor(MaxNativeZoom: number, MaxZoom: number, Offset, API: API, RoadWidth: number, ControlWidth: number, GridDepth: number) {
         super(MaxNativeZoom);
@@ -491,15 +454,6 @@ export default class VectorControlGridPrototype extends L.GridLayer {
         this.noWrap = true;
         this.maxZoom = MaxZoom;
         this.minZoom = 0;
-
-        // queue workers for processing control, it will also act as a semaphore
-        for (let i = 0; i < navigator.hardwareConcurrency; i++) {
-            const w = new Worker(new URL('ControlLayerThreadWorker.ts', import.meta.url), {type: 'module'});
-            // initialize the worker data
-            w.postMessage([API.variogram.t, API.variogram.x, API.variogram.y, API.variogram.nugget, API.variogram.range, API.variogram.sill, API.variogram.A, API.variogram.n, API.variogram.K, API.variogram.M]);
-            this.semaphore.enqueue(w);
-        }
-
 
         const size = this.getTileSize();
 
@@ -570,13 +524,30 @@ export default class VectorControlGridPrototype extends L.GridLayer {
 
         };
 
-        this.waitForRoadInitialization  = new Promise<void>((resolve) => {
+        this.waitForRoadInitialization = new Promise<void>((resolve) => {
             this.roadsReady = () => {
                 // queue workers for processing control, it will also act as a semaphore
                 for (let i = 0; i < navigator.hardwareConcurrency; i++) {
                     const w = new Worker(new URL('TileRenderWorker.ts', import.meta.url), {type: 'module'});
                     // initialize the worker data
-                    w.postMessage({operation: "initialize", arguments: {roads: this.road_sources}});
+                    w.postMessage({
+                        operation: "initialize", arguments: {
+                            roads: this.road_sources,
+                            variogram:
+                                {
+                                    t: API.variogram.t,
+                                    x: API.variogram.x,
+                                    y: API.variogram.y,
+                                    nugget: API.variogram.nugget,
+                                    range: API.variogram.range,
+                                    sill: API.variogram.sill,
+                                    A: API.variogram.A,
+                                    n: API.variogram.n,
+                                    K: API.variogram.K,
+                                    M: API.variogram.M,
+                                }
+                        }
+                    });
                     this.renderers.enqueue(w);
                 }
                 resolve();
