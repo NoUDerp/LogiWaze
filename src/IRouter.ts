@@ -8,7 +8,8 @@ let towns = require('../towns.json');
 let shards = require('../Shards.json');
 let owo = require('@zuzak/owo');
 let VectorTextGrid = require('./IVectorTextGrid');
-let VectorControlGrid = require('./IVectorControlGrid');
+
+import VectorControlGrid from './IVectorControlGrid';
 
 function owoTranslate(text) {
     return text;
@@ -149,7 +150,7 @@ module.exports.Create = function (mymap, API) {
     const renderer = L.canvas({tolerance: .2}).addTo(mymap);
 
     const RegionLabels = VectorTextGrid.Create(8, [128, 128]);
-    const ControlLayer = VectorControlGrid.Create(7, 8, [128, 128], API, .30, .08 /* road width on map */, GridDepth);
+    const ControlLayer = new VectorControlGrid(7, 8, [128, 128], API, .30, .08 /* road width on map */, GridDepth);
 
     const regions = API.regions;
 

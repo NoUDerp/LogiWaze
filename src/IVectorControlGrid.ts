@@ -3,6 +3,7 @@ import * as L from 'leaflet';
 import * as intersects from 'intersects';
 import {default as CooperativeDelay} from './CooperativeDelay'
 import Queue from "./Queue";
+import API from "./API";
 
 class ImageCache {
     private cache: Map<string, Promise<Image>> = new Map<string, Promise<Image>>()
@@ -18,7 +19,7 @@ class ImageCache {
     }
 }
 
-class VectorControlGridPrototype extends L.GridLayer {
+export default class VectorControlGridPrototype extends L.GridLayer {
     controls: [] = [true, true, true, true]
     quality: Boolean = true
     draw: Boolean = true
@@ -151,46 +152,9 @@ class VectorControlGridPrototype extends L.GridLayer {
 
 
     async loadIcons(c): Promise<void> {
-        // const raw_scale = c.t.zoomScale(c.coords.z);
-        // const zoom = Math.pow(2, c.coords.z);
-        // const max = Math.pow(2, c.t.max_zoom);
-        // c.pendingLoad = 0;
-        // const shadowSize = 20;
-        // for (let j of c.t.icon_sources) {
-        //     if (c.coords.z >= j.zoomMin && c.coords.z < j.zoomMax && j.icon != null && !(j.icon in c.t.disabledIcons)) {
-        //         const scale = raw_scale;
-        //         let shadow = j.glow ? shadowSize * scale * zoom / max : 0;
-        //         const label_w = j.size.width * zoom * scale;
-        //         const label_h = j.size.height * zoom * scale;
-        //         const label_x = j.x * zoom - c.coords.x * c.tile.width - label_w * .5;
-        //         const label_y = j.y * zoom - c.coords.y * c.tile.height - label_h * .5;
-        //         if (intersects.boxBox(0, 0, c.tile.width, c.tile.height, label_x - 2.0 * shadow, label_y - 2.0 * shadow, label_w + 4.0 * shadow, label_h + 4.0 * shadow)) {
-        //             if (!(j.icon in c.t.imageCache)) {
-        //                 await new Promise(resolve => {
-        //                     c.pendingLoad++;
-        //                     const img = {image: new Image()};
-        //                     c.t.imageCache[j.icon] = img;
-        //                     img.image.onload = function () {
-        //                         --c.pendingLoad;
-        //                         resolve();
-        //                     };
-        //                     img.image.src = 'MapIcons/'.concat(j.icon);
-        //                 });
-        //             }
-        //         }
-        //     }
-        // }
     }
 
     async drawIcons(c): Promise<void> {
-
-        // function makeOnLoadCallback(icon, u) {
-        //     return function () {
-        //         const callbacks = u.imageCache[icon].callbacks;
-        //         for (let i = 0; i < callbacks.length; i++)
-        //             callbacks[i]();
-        //     };
-        // }
 
         function makeRenderCallback(u, icon, ctx, img, lx, ly, lw, lh, tile, glow, shadow) {
             return function () {
@@ -203,7 +167,6 @@ class VectorControlGridPrototype extends L.GridLayer {
                 } else
                     ctx.drawImage(img.image, lx, ly, lw, lh);
                 if (--tile.pendingLoad == 0) {
-                    //c.t.yield(c, 8);
                     delete img.callbacks;
                 }
             };
@@ -225,9 +188,6 @@ class VectorControlGridPrototype extends L.GridLayer {
                 if (intersects.boxBox(0, 0, c.tile.width / c.t.pixelScale, c.tile.height / c.t.pixelScale, label_x - 2.0 * shadow, label_y - 2.0 * shadow, label_w + 4.0 * shadow, label_h + 4.0 * shadow)) {
                     const lx = label_x, ly = label_y, lw = label_w, lh = label_h;
                     const img = await this.imageCache.GetImage(`MapIcons/${j.icon}`);
-                    // if (icon in c.t.imageCache) {
-                    //var img = c.t.imageCache[icon];
-                    // if (img.image.complete) {
                     if (j.glow) {
                         c.ctx.save();
                         c.ctx.filter = "brightness(0.5) sepia(1) hue-rotate(296deg) saturate(10000%) blur(".concat(shadow).concat("px)"); // blur(10px)              
@@ -237,23 +197,9 @@ class VectorControlGridPrototype extends L.GridLayer {
                         c.ctx
                             .restore();
                     } else c.ctx.drawImage(img, lx, ly, lw, lh);
-                    // } else {
-                    //     img.callbacks.push(makeRenderCallback(c.t, icon, c.ctx, img, lx, ly, lw, lh, c.tile, j.glow, shadow));
-                    //     c.tile.pendingLoad++;
-                    // }
-                    // } else {
-                    //     c.tile.pendingLoad++;
-                    //     var img = {image: new Image()};
-                    //     img.callbacks = [makeRenderCallback(c.t, icon, c.ctx, img, lx, ly, lw, lh, c.tile, j.glow, shadow)];
-                    //     c.t.imageCache[icon] = img;
-                    //     img.image.src = 'MapIcons/'.concat(j.icon);
-                    //     img.image.onload = makeOnLoadCallback(icon, c.t);
-                    // }
                 }
             }
         }
-        //if (c.tile.pendingLoad == 0)
-        //  c.t.yield(c, 8);
     }
 
 
@@ -525,7 +471,7 @@ class VectorControlGridPrototype extends L.GridLayer {
     }
 
 
-    calculateControl(c) {
+    public calculateControl(c) {
         const start = Date.now();
         const max = Math.pow(2, c.t.max_zoom - c.coords.z);
         const zoom = Math.pow(2, c.coords.z);
@@ -581,157 +527,153 @@ class VectorControlGridPrototype extends L.GridLayer {
         return this.renderer({t: this, coords: coords, done: done});//, 1);
     }
 
-}
+    constructor(MaxNativeZoom: number, MaxZoom: number, Offset, API: API, RoadWidth: number, ControlWidth: number, GridDepth: number) {
+        super(MaxNativeZoom);
+        this.updateWhenZooming = false;
+        this.noWrap = true;
+        this.maxZoom = MaxZoom;
+        this.minZoom = 0;
 
-let createFn = (MaxNativeZoom, MaxZoom, Offset, API, RoadWidth, ControlWidth, GridDepth) => {
-    const u = new VectorControlGridPrototype();
-    u.updateWhenZooming = false;
-    u.noWrap = true;
-    u.maxZoom = MaxZoom;
-    u.minZoom = 0;
-
-    // queue workers for processing control, it will also act as a semaphore
-    for (let i = 0; i < navigator.hardwareConcurrency; i++) {
-        const w = new Worker(new URL('ControlLayerThreadWorker.ts', import.meta.url), {type: 'module'});
-        // initialize the worker data
-        w.postMessage([API.variogram.t, API.variogram.x, API.variogram.y, API.variogram.nugget, API.variogram.range, API.variogram.sill, API.variogram.A, API.variogram.n, API.variogram.K, API.variogram.M]);
-        u.semaphore.enqueue(w);
-    }
-
-    const size = u.getTileSize();
-
-    u.RoadWidth = RoadWidth;
-    u.ControlWidth = ControlWidth;
-    u.road_sources = [];
-    u.max_zoom = MaxZoom;
-    u.grid_depth = GridDepth;
-    u.offset = Offset;
-    const max = Math.pow(2, GridDepth);
-    u.grid_x_size = max;
-    u.grid_x_width = (size.x / u.grid_x_size);
-    u.grid_y_size = max;
-    u.grid_y_height = (size.y / u.grid_y_size);
-
-    const max_road_width = Math.max(RoadWidth, ControlWidth);
-
-    const margin = max_road_width * max;
-
-    for (var x = 0; x < u.grid_x_size; x++) {
-        u.road_sources.push([]);
-        for (var y = 0; y < u.grid_y_size; y++)
-            u.road_sources[x].push([]);
-    }
-
-    const marginx = margin / u.grid_x_size;
-    const marginy = margin / u.grid_y_size;
-
-    const addLine = (x, y, p, options, u, Offset) => {
-        if (x >= 0 && y >= 0 && x < u.grid_x_size && y < u.grid_y_size)
-            u.road_sources[x][y].push({points: p, options: options});
-    };
-
-    const gx = 1.0 / u.grid_x_width;
-    const gy = 1.0 / u.grid_y_height;
-
-    u.addRoad = (points, options) => {
-
-        const c = [[-points[0][0] - Offset[1], points[0][1] - Offset[0]], [-points[1][0] - Offset[1], points[1][1] - Offset[0]]];
-        const p = [[c[0][0], c[0][1]], [c[1][0], c[1][1]]];
-
-        let x1 = c[0][1] + Offset[0];
-        let y1 = c[0][0] + Offset[1];
-        let x2 = c[1][1] + Offset[0];
-        let y2 = c[1][0] + Offset[1];
-
-        const angle = Math.atan2(y2 - y1, x2 - x1);
-        const ext_x = Math.cos(angle);
-        const ext_y = Math.sin(angle);
-
-        x1 -= ext_x * marginx;
-        y1 -= ext_y * marginy;
-        x2 += ext_x * marginx;
-        y2 += ext_y * marginy;
-
-        const start_tile_x = Math.floor(Math.min(x1, x2) * gx - marginx);
-        const start_tile_y = Math.floor(Math.min(y1, y2) * gy - marginy);
-
-        const end_tile_x = Math.floor(Math.max(x2, x1) * gx + marginx);
-        const end_tile_y = Math.floor(Math.max(y2, y1) * gy + marginy);
-
-        const width = u.grid_x_width + marginx * 2.0;
-        const height = u.grid_y_height + marginy * 2.0;
-
-        for (let x = start_tile_x; x <= end_tile_x; x++)
-            for (let y = start_tile_y; y <= end_tile_y; y++)
-                if (intersects.lineBox(x1, y1, x2, y2, x * u.grid_x_width - marginx, y * u.grid_y_height - marginy, width, height))
-                    addLine(x, y, p, options, u, Offset);
-
-    };
-
-    u.max_native_zoom = MaxNativeZoom;
-    u.offset = Offset;
-    u.Offset = Offset;
-    u.API = API;
-
-    u.icon_sources = [];
-    u.icon_grid_x_size = Math.pow(2, MaxZoom);
-    u.icon_grid_x_width = u.pixelScale * size.x / u.grid_x_size;
-    u.icon_grid_y_size = Math.pow(2, MaxZoom);
-    u.icon_grid_y_height = u.pixelScale * size.y / u.grid_y_size;
-
-    //u.imageCache = {};
-
-    u.addIcon = (icon, x, y, glow, zoomMin, zoomMax) => {
-        u.icon_sources.push(
-            {
-                size: {
-                    width: .5,
-                    height: .5
-                },
-                x: x + Offset[0],
-                y: -(y + Offset[1]) + 256,
-                icon: icon,
-                zoomMin: zoomMin,
-                glow: glow,
-                zoomMax: zoomMax,
-                pendingLoad: 0
-            });
-    };
-
-
-    u.hex_sources = [];
-    u.addHex = (x, y, width, height, offline) => {
-        u.hex_sources.push(
-            {
-                size: {
-                    width: width,
-                    height: height
-                },
-                x: x + Offset[0] + width * .5,
-                y: y + Offset[1] + height * .5,
-                offline: offline
-            });
-    };
-
-    const loaded_events = [];
-    const unloaded_events = [];
-    u.when = function (event_name, event_action) {
-        switch (event_name) {
-            case 'loaded':
-                loaded_events.push(event_action);
-                break;
-            case 'unloaded':
-                unloaded_events.push(event_action);
-                break;
+        // queue workers for processing control, it will also act as a semaphore
+        for (let i = 0; i < navigator.hardwareConcurrency; i++) {
+            const w = new Worker(new URL('ControlLayerThreadWorker.ts', import.meta.url), {type: 'module'});
+            // initialize the worker data
+            w.postMessage([API.variogram.t, API.variogram.x, API.variogram.y, API.variogram.nugget, API.variogram.range, API.variogram.sill, API.variogram.A, API.variogram.n, API.variogram.K, API.variogram.M]);
+            this.semaphore.enqueue(w);
         }
-    };
-    u.on('loading', () => {
-        for (let i of unloaded_events) i();
-    });
-    u.on('load', () => {
-        for (let i of loaded_events) i();
-    });
-    return u;
-};
 
-module.exports.Create = createFn;
+        const size = this.getTileSize();
+
+        this.RoadWidth = RoadWidth;
+        this.ControlWidth = ControlWidth;
+        this.road_sources = [];
+        this.max_zoom = MaxZoom;
+        this.grid_depth = GridDepth;
+        this.offset = Offset;
+        const max = Math.pow(2, GridDepth);
+        this.grid_x_size = max;
+        this.grid_x_width = (size.x / this.grid_x_size);
+        this.grid_y_size = max;
+        this.grid_y_height = (size.y / this.grid_y_size);
+
+        const max_road_width = Math.max(RoadWidth, ControlWidth);
+
+        const margin = max_road_width * max;
+
+        for (var x = 0; x < this.grid_x_size; x++) {
+            this.road_sources.push([]);
+            for (var y = 0; y < this.grid_y_size; y++)
+                this.road_sources[x].push([]);
+        }
+
+        const marginx = margin / this.grid_x_size;
+        const marginy = margin / this.grid_y_size;
+
+        const addLine = (x, y, p, options, u, Offset) => {
+            if (x >= 0 && y >= 0 && x < u.grid_x_size && y < u.grid_y_size)
+                u.road_sources[x][y].push({points: p, options: options});
+        };
+
+        const gx = 1.0 / this.grid_x_width;
+        const gy = 1.0 / this.grid_y_height;
+
+        this.addRoad = (points, options) => {
+
+            const c = [[-points[0][0] - Offset[1], points[0][1] - Offset[0]], [-points[1][0] - Offset[1], points[1][1] - Offset[0]]];
+            const p = [[c[0][0], c[0][1]], [c[1][0], c[1][1]]];
+
+            let x1 = c[0][1] + Offset[0];
+            let y1 = c[0][0] + Offset[1];
+            let x2 = c[1][1] + Offset[0];
+            let y2 = c[1][0] + Offset[1];
+
+            const angle = Math.atan2(y2 - y1, x2 - x1);
+            const ext_x = Math.cos(angle);
+            const ext_y = Math.sin(angle);
+
+            x1 -= ext_x * marginx;
+            y1 -= ext_y * marginy;
+            x2 += ext_x * marginx;
+            y2 += ext_y * marginy;
+
+            const start_tile_x = Math.floor(Math.min(x1, x2) * gx - marginx);
+            const start_tile_y = Math.floor(Math.min(y1, y2) * gy - marginy);
+
+            const end_tile_x = Math.floor(Math.max(x2, x1) * gx + marginx);
+            const end_tile_y = Math.floor(Math.max(y2, y1) * gy + marginy);
+
+            const width = this.grid_x_width + marginx * 2.0;
+            const height = this.grid_y_height + marginy * 2.0;
+
+            for (let x = start_tile_x; x <= end_tile_x; x++)
+                for (let y = start_tile_y; y <= end_tile_y; y++)
+                    if (intersects.lineBox(x1, y1, x2, y2, x * this.grid_x_width - marginx, y * this.grid_y_height - marginy, width, height))
+                        addLine(x, y, p, options, this.Offset);
+
+        };
+
+        this.max_native_zoom = MaxNativeZoom;
+        this.offset = Offset;
+        this.Offset = Offset;
+        this.API = API;
+
+        this.icon_sources = [];
+        this.icon_grid_x_size = Math.pow(2, MaxZoom);
+        this.icon_grid_x_width = this.pixelScale * size.x / this.grid_x_size;
+        this.icon_grid_y_size = Math.pow(2, MaxZoom);
+        this.icon_grid_y_height = this.pixelScale * size.y / this.grid_y_size;
+
+        //u.imageCache = {};
+
+        this.addIcon = (icon, x, y, glow, zoomMin, zoomMax) => {
+            this.icon_sources.push(
+                {
+                    size: {
+                        width: .5,
+                        height: .5
+                    },
+                    x: x + Offset[0],
+                    y: -(y + Offset[1]) + 256,
+                    icon: icon,
+                    zoomMin: zoomMin,
+                    glow: glow,
+                    zoomMax: zoomMax,
+                    pendingLoad: 0
+                });
+        };
+
+
+        this.hex_sources = [];
+        this.addHex = (x, y, width, height, offline) => {
+            this.hex_sources.push(
+                {
+                    size: {
+                        width: width,
+                        height: height
+                    },
+                    x: x + Offset[0] + width * .5,
+                    y: y + Offset[1] + height * .5,
+                    offline: offline
+                });
+        };
+
+        const loaded_events = [];
+        const unloaded_events = [];
+        this.when = function (event_name, event_action) {
+            switch (event_name) {
+                case 'loaded':
+                    loaded_events.push(event_action);
+                    break;
+                case 'unloaded':
+                    unloaded_events.push(event_action);
+                    break;
+            }
+        };
+        this.on('loading', () => {
+            for (let i of unloaded_events) i();
+        });
+        this.on('load', () => {
+            for (let i of loaded_events) i();
+        });
+    }
+}

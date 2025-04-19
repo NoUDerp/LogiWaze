@@ -3,13 +3,15 @@
 
 import API from "./API";
 import FoxholeGeocoder from "./IGeocoder";
+import VectorControlGrid from "./IVectorControlGrid";
 
 module.exports.L = require('leaflet');
 
 module.exports.$ = require('jquery');
 
 module.exports.VectorControlGrid = {
-    Create: (MaxNativeZoom, MaxZoom, Offset, API, RoadWidth, ControlWidth, GridDepth) => require('./IVectorControlGrid.js').Create(MaxNativeZoom, MaxZoom, Offset, API, RoadWidth, ControlWidth, GridDepth)
+    Create: (MaxNativeZoom, MaxZoom, Offset, API, RoadWidth, ControlWidth, GridDepth) => 
+        new VectorControlGrid(MaxNativeZoom, MaxZoom, Offset, API, RoadWidth, ControlWidth, GridDepth)
 };
 
 module.exports.VectorTextGrid = {
