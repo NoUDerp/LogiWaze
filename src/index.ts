@@ -2,6 +2,7 @@
 'use strict';
 
 import API from "./API";
+import FoxholeGeocoder from "./IGeocoder";
 
 module.exports.L = require('leaflet');
 
@@ -19,13 +20,12 @@ module.exports.FoxholeRouter = {
     Create: (mymap, API) => require('./IRouter.ts').Create(mymap, API)
 };
 
-const api = require('./API.ts');
 module.exports.API = {
-    Create: () => new api.API()
+    Create: () => new API()
 };
 
 module.exports.FoxholeGeocoder = {
-    Create: (API) => require('./IGeocoder.ts').FoxholeGeocoder(API)
+    Create: (API) => new FoxholeGeocoder(API) // (require('./IGeocoder.ts')).
 };
 
 module.exports.Panel = {

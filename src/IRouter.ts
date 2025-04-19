@@ -9,7 +9,6 @@ let shards = require('../Shards.json');
 let owo = require('@zuzak/owo');
 let VectorTextGrid = require('./IVectorTextGrid');
 let VectorControlGrid = require('./IVectorControlGrid');
-let API = require('./API');
 
 function owoTranslate(text) {
     return text;
