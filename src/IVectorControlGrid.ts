@@ -265,7 +265,22 @@ export default class VectorControlGridPrototype extends L.GridLayer {
                 };
                 w.postMessage({
                     operation: "control",
-                    arguments: [c.temp_canvas.width, c.temp_canvas.height, hdRatio, grid.x, grid.y]
+                    arguments: [c.temp_canvas.width, c.temp_canvas.height, hdRatio, grid.x, grid.y,
+                    {
+                        coords: c.coords,
+                        grid_depth: c.t.grid_depth,
+                        offset: c.t.offset,
+                        roadWidth: c.t.RoadWidth,
+                        controlWidth: c.t.ControlWidth,
+                        grid_x_size: c.t.grid_x_size,
+                        grid_y_size: c.t.grid_y_size,
+                        controls: c.t.controls,
+                        pixelScale: c.t.pixelScale,
+                        width: c.tile.width,
+                        height: c.tile.height,
+                        max_zoom: c.t.max_zoom,
+                        hex_sources: c.hex_sources,
+                    }]
                 });
             });
         } catch (error) {
@@ -549,7 +564,7 @@ export default class VectorControlGridPrototype extends L.GridLayer {
             this.hex_sources.push(
                 {
                     size: {
-                        width: width,
+                        wnidth: width,
                         height: height
                     },
                     x: x + Offset[0] + width * .5,

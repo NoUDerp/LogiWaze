@@ -35,7 +35,7 @@ onmessage = (e) => {
                 height: number
             };
 
-            function drawRoads(args:{
+            function drawRoads(args: {
                 coords: { x: number, y: number, z: number },
                 grid_depth: number,
                 offset,
@@ -96,6 +96,7 @@ onmessage = (e) => {
                 draw(start_x, start_y, end_x, end_y);
                 return canvas.transferToImageBitmap();
             }
+
             const bitmap = drawRoads(args);
             postMessage({bitmap}, null, [bitmap]);
             break;
@@ -124,13 +125,22 @@ onmessage = (e) => {
             const hdRatio = context.arguments[2];
             const gridX = context.arguments[3];
             const gridY = context.arguments[4];
-            const tileWidth = context.arguments[5];
-            const tileHeight = context.arguments[6];
-            const pixelScale = context.arguments[7];
-            const coords = context.arguments[8];
-            const max_zoom = context.arguments[9];
-            const hex_sources = context.arguments[10];
-
+            const args = context.arguments[5] as {
+                coords: { x: number, y: number, z: number },
+                grid_depth: number,
+                offset,
+                roadWidth,
+                controlWidth,
+                grid_x_size,
+                grid_y_size,
+                controls,
+                pixelScale,
+                width: number,
+                height: number,
+                max_zoom: number,
+                hex_sources: any
+            };
+            
             const colors = [{
                 r: 0.1372549019607843,
                 g: 0.3372549019607843,
@@ -193,7 +203,7 @@ onmessage = (e) => {
                         const label_x = j.x * zoom - coords.x * tile.width / pixelScale - label_w - shadow;
                         const label_y = j.y * zoom - coords.y * tile.height / pixelScale - label_h - shadow;
                         if (intersects.boxBox(0, 0, tile.width, tile.height, label_x, label_y, label_w, label_h))
-                            fillHex(tile, ctx, label_x + label_w * .5, label_y + label_h * .5, label_w * .5, label_h * .5, lineWidth);
+                            fillHex(tile, ctx, label_x + label_w * .5, label_y + label_h * .5, label_w * .5, label_h * .5);//, lineWidth);
                     }
                 }
                 ctx.restore();
@@ -209,10 +219,10 @@ onmessage = (e) => {
                 for (let j of hex_sources) if (j.offline) {
                     const label_w = j.size.width * zoom + shadow * 2;
                     const label_h = j.size.height * zoom + shadow * 2;
-                    const label_x = j.x * zoom - coords.x * tileWidth / pixelScale - label_w - shadow;// / t.pixelScale    const
-                    const label_y = j.y * zoom - coords.y * tileHeight / pixelScale - label_h - shadow;
+                    const label_x = j.x * zoom - coords.x * args.width / pixelScale - label_w - shadow;// / t.pixelScale    const
+                    const label_y = j.y * zoom - coords.y * args.height / pixelScale - label_h - shadow;
 
-                    if (intersects.boxBox(0, 0, tileWidth, tileHeight, label_x, label_y, label_w, label_h))
+                    if (intersects.boxBox(0, 0, args.width, args.height, label_x, label_y, label_w, label_h))
                         fillHex(tile, ctx, label_x + label_w * .5, label_y + label_h * .5, label_w * .5, label_h * .5);//, lineWidth);
                 }
 
@@ -220,23 +230,23 @@ onmessage = (e) => {
             }
 
             // draw control layer to transparent canvas
-            const overlay = new OffscreenCanvas(tileWidth, tileHeight);
+            const overlay = new OffscreenCanvas(args.width, args.height);
             const overlayContext = overlay.getContext('2d');
             overlayContext.save();
             // clear
             overlayContext.fillStyle = '#00000000';
-            overlayContext.fillRect(0, 0, tileWidth, tileHeight);
-            drawValidRegions(overlay, overlayContext, coords, pixelScale, max_zoom, hex_sources);
+            overlayContext.fillRect(0, 0, args.width, args.height);
+            drawValidRegions(overlay, overlayContext, args.coords, args.pixelScale, args.max_zoom, args.hex_sources);
             overlayContext.restore();
             overlayContext.save();
             overlayContext.globalCompositeOperation = 'source-atop'; // mask the alpha to overlay the control layer, copy it to temporary storage
             overlayContext.imageSmoothingQuality = 'low'; // highest performance possible for a copy, no smoothing needed
             // scale up control layer
-            overlayContext.drawImage(controlCanvas, 1, 1, controlCanvas.width - 2, controlCanvas.height - 2, 0, 0, tileWidth, tileHeight);
+            overlayContext.drawImage(controlCanvas, 1, 1, controlCanvas.width - 2, controlCanvas.height - 2, 0, 0, args.width, args.height);
             overlayContext.restore();
             overlayContext.save();
-            overlayContext.scale(pixelScale, pixelScale);
-            drawInvalidRegions(overlay, overlayContext, coords, pixelScale, max_zoom, hex_sources);
+            overlayContext.scale(args.pixelScale, args.pixelScale);
+            drawInvalidRegions(overlay, overlayContext, args.coords, args.pixelScale, args.max_zoom, args.hex_sources);
             overlayContext.restore();
 
             // TODO:
