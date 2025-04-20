@@ -229,37 +229,6 @@ export default class VectorControlGridPrototype extends L.GridLayer {
         const response = await fetch(`Tiles/${Math.min(c.coords.z, c.t.max_native_zoom)}_${Math.floor(c.coords.x / scale)}_${Math.floor(c.coords.y / scale)}.webp${c.t.build}`);
         const imageBlob = await response.blob();
         return await createImageBitmap(imageBlob);
-        //
-        // return new Promise((resolve, reject) => {
-        //
-        //     async function fetchImageBitmap(url) {
-        //         try {
-        //             // Fetch the image from the URL
-        //             const response = await fetch(url);
-        //
-        //             // Check if the fetch was successful
-        //             if (!response.ok) {
-        //                 throw new Error(`Failed to fetch image: ${response.status} ${response.statusText}`);
-        //             }
-        //
-        //             // Get the image data as a blob
-        //             const imageBlob = await response.blob();
-        //
-        //             // Convert the blob to an ImageBitmap
-        //             const imageBitmap = await createImageBitmap(imageBlob);
-        //
-        //             return imageBitmap;
-        //         } catch (error) {
-        //             console.error('Error fetching image:', error);
-        //             throw error;
-        //         }
-        //     }
-        //
-        //     const img = new Image();
-        //     const scale = Math.pow(2, Math.max(0, c.coords.z - c.t.max_native_zoom));
-        //     img.onload = () => resolve(img);
-        //     img.src = `Tiles/${Math.min(c.coords.z, c.t.max_native_zoom)}_${Math.floor(c.coords.x / scale)}_${Math.floor(c.coords.y / scale)}.webp${c.t.build}`;
-        // });
     }
 
     drawTileToContext(c, img: ImageBitmap, ctx) {

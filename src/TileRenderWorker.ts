@@ -35,57 +35,69 @@ onmessage = (e) => {
                 height: number
             };
 
-            const canvas = new OffscreenCanvas(args.width, args.height);
-            const ctx = canvas.getContext("2d") as OffscreenCanvasRenderingContext2D;
+            function drawRoads(args:{
+                coords: { x: number, y: number, z: number },
+                grid_depth: number,
+                offset,
+                roadWidth,
+                controlWidth,
+                grid_x_size,
+                grid_y_size,
+                controls,
+                pixelScale,
+                width: number,
+                height: number
+            }) {
+                const canvas = new OffscreenCanvas(args.width, args.height);
+                const ctx = canvas.getContext("2d") as OffscreenCanvasRenderingContext2D;
 
-            ctx.fillStyle = "#FFFFFF00";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = "#FFFFFF00";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            ctx.lineJoin = 'miter';
-            ctx.lineCap = 'round';
+                ctx.lineJoin = 'miter';
+                ctx.lineCap = 'round';
 
-            const scale = Math.pow(2, args.grid_depth - args.coords.z);
-            const start_x = Math.floor(args.coords.x * scale);
-            const start_y = Math.floor(args.coords.y * scale);
+                const scale = Math.pow(2, args.grid_depth - args.coords.z);
+                const start_x = Math.floor(args.coords.x * scale);
+                const start_y = Math.floor(args.coords.y * scale);
 
-            const end_x = Math.ceil((args.coords.x + 1) * scale);
-            const end_y = Math.ceil((args.coords.y + 1) * scale);
+                const end_x = Math.ceil((args.coords.x + 1) * scale);
+                const end_y = Math.ceil((args.coords.y + 1) * scale);
 
-            const depth_inverse = Math.pow(2, args.coords.z);
-            const innerWidth = args.controlWidth * depth_inverse;
+                const depth_inverse = Math.pow(2, args.coords.z);
+                const innerWidth = args.controlWidth * depth_inverse;
 
-            function draw(start_x: number, start_y: number, end_x: number, end_y: number) {
-                ctx.lineWidth = innerWidth;
-                const colors = ['#516C4B', '#235683', '#303030', '#CCCC44'];
+                function draw(start_x: number, start_y: number, end_x: number, end_y: number) {
+                    ctx.lineWidth = innerWidth;
+                    const colors = ['#516C4B', '#235683', '#303030', '#CCCC44'];
 
-                for (let y = start_y; y <= end_y; y++)
-                    for (let x = start_x; x <= end_x; x++)
-                        if (x >= 0 && y >= 0 && x < args.grid_x_size && y < args.grid_y_size) {
-                            for (let i = 0; i < road_sources[x][y].length; i++) {
-                                const j = road_sources[x][y][i];
-                                if (args.controls[0]) {
-                                    ctx.strokeStyle = colors[j.options.control];
-                                    ctx.beginPath();
-                                    const coordsx = args.coords.x * args.width / args.pixelScale;
-                                    const coordsy = args.coords.y * args.height / args.pixelScale;
-                                    const x1 = (j.points[0][1] + args.offset[0]) * depth_inverse - coordsx;
-                                    const y1 = (j.points[0][0] + args.offset[1]) * depth_inverse - coordsy;
-                                    const x2 = (j.points[1][1] + args.offset[0]) * depth_inverse - coordsx;
-                                    const y2 = (j.points[1][0] + args.offset[1]) * depth_inverse - coordsy;
-                                    ctx.moveTo(x1, y1);
-                                    ctx.lineTo(x2, y2);
-                                    ctx.stroke();
+                    for (let y = start_y; y <= end_y; y++)
+                        for (let x = start_x; x <= end_x; x++)
+                            if (x >= 0 && y >= 0 && x < args.grid_x_size && y < args.grid_y_size) {
+                                for (let i = 0; i < road_sources[x][y].length; i++) {
+                                    const j = road_sources[x][y][i];
+                                    if (args.controls[0]) {
+                                        ctx.strokeStyle = colors[j.options.control];
+                                        ctx.beginPath();
+                                        const coordsx = args.coords.x * args.width / args.pixelScale;
+                                        const coordsy = args.coords.y * args.height / args.pixelScale;
+                                        const x1 = (j.points[0][1] + args.offset[0]) * depth_inverse - coordsx;
+                                        const y1 = (j.points[0][0] + args.offset[1]) * depth_inverse - coordsy;
+                                        const x2 = (j.points[1][1] + args.offset[0]) * depth_inverse - coordsx;
+                                        const y2 = (j.points[1][0] + args.offset[1]) * depth_inverse - coordsy;
+                                        ctx.moveTo(x1, y1);
+                                        ctx.lineTo(x2, y2);
+                                        ctx.stroke();
+                                    }
                                 }
                             }
-                        }
+                }
+
+                draw(start_x, start_y, end_x, end_y);
+                return canvas.transferToImageBitmap();
             }
-
-            draw(start_x, start_y, end_x, end_y);
-
-            const bitmap = canvas.transferToImageBitmap();
+            const bitmap = drawRoads(args);
             postMessage({bitmap}, null, [bitmap]);
-
-
             break;
         }
         case "initialize": {
@@ -107,11 +119,17 @@ onmessage = (e) => {
             break;
         }
         case "control": {
-            const width = context.arguments[0];
-            const height = context.arguments[1];
+            const controlWidth = context.arguments[0];
+            const controlHeight = context.arguments[1];
             const hdRatio = context.arguments[2];
             const gridX = context.arguments[3];
             const gridY = context.arguments[4];
+            const tileWidth = context.arguments[5];
+            const tileHeight = context.arguments[6];
+            const pixelScale = context.arguments[7];
+            const coords = context.arguments[8];
+            const max_zoom = context.arguments[9];
+            const hex_sources = context.arguments[10];
 
             const colors = [{
                 r: 0.1372549019607843,
@@ -119,12 +137,12 @@ onmessage = (e) => {
                 b: 0.5137254901960784
             }, {r: 0.3176470588235294, g: 0.4235294117647059, b: 0.2941176470588235}];
 
-            const canvas = new OffscreenCanvas(width, height);
-            const ctx = canvas.getContext('2d');
-            const d = new ImageData(width, height);
+            const controlCanvas = new OffscreenCanvas(controlWidth, controlHeight);
+            const controlContext = controlCanvas.getContext('2d');
+            const d = new ImageData(controlWidth, controlHeight);
             let i = 0;
-            for (let y = 0; y < height; y++) {
-                for (let x = 0; x < width; x++) {
+            for (let y = 0; y < controlHeight; y++) {
+                for (let x = 0; x < controlWidth; x++) {
                     const scale = {x: gridX + (x - 1) * hdRatio, y: -(gridY + (y - 1) * hdRatio)};
                     let v = kriging.predict(scale.x - 128, scale.y + 128, variogram);
 
@@ -145,8 +163,98 @@ onmessage = (e) => {
                     }
                 }
             }
-            ctx.putImageData(d, 0, 0);
-            const bitmap = canvas.transferToImageBitmap();
+            controlContext.putImageData(d, 0, 0);
+
+            function fillHex(tile, ctx, x, y, w, h) {
+                ctx.beginPath();
+                ctx.moveTo(x + w, y);
+                ctx.lineTo(x + w * .5, y + h);
+                ctx.lineTo(x - w * .5, y + h);
+                ctx.lineTo(x - w, y);
+                ctx.lineTo(x - .5 * w, y - h);
+                ctx.lineTo(x + .5 * w, y - h);
+                ctx.lineTo(x + w, y);
+                ctx.fill();
+                ctx.stroke();
+            }
+
+            function drawValidRegions(tile: OffscreenCanvas, ctx: OffscreenCanvasRenderingContext2D, coords, pixelScale: number, max_zoom: number, hex_sources) {
+                const zoom = Math.pow(2, coords.z);
+                const lineWidth = Math.pow(2, coords.z);
+                const shadow = lineWidth * .5 / Math.pow(2, max_zoom);
+                ctx.save();
+                ctx.fillStyle = '#FFFFFFFF';
+                ctx.strokeStyle = '#FFFFFFFF';
+                ctx.scale(pixelScale, pixelScale);
+                for (let j of hex_sources) {
+                    if (!j.offline) {
+                        const label_w = j.size.width * zoom + shadow * 2;
+                        const label_h = j.size.height * zoom + shadow * 2;
+                        const label_x = j.x * zoom - coords.x * tile.width / pixelScale - label_w - shadow;
+                        const label_y = j.y * zoom - coords.y * tile.height / pixelScale - label_h - shadow;
+                        if (intersects.boxBox(0, 0, tile.width, tile.height, label_x, label_y, label_w, label_h))
+                            fillHex(tile, ctx, label_x + label_w * .5, label_y + label_h * .5, label_w * .5, label_h * .5, lineWidth);
+                    }
+                }
+                ctx.restore();
+            }
+
+            function drawInvalidRegions(tile: OffscreenCanvas, ctx, coords, pixelScale: number, max_zoom: number, hex_sources) {
+                const zoom = Math.pow(2, coords.z);
+                const lineWidth = Math.pow(2, coords.z);
+                const shadow = lineWidth * .5 / Math.pow(2, max_zoom);
+                ctx.save();
+                ctx.fillStyle = '#000000FF';
+                ctx.strokeStyle = '#000000FF';
+                for (let j of hex_sources) if (j.offline) {
+                    const label_w = j.size.width * zoom + shadow * 2;
+                    const label_h = j.size.height * zoom + shadow * 2;
+                    const label_x = j.x * zoom - coords.x * tileWidth / pixelScale - label_w - shadow;// / t.pixelScale    const
+                    const label_y = j.y * zoom - coords.y * tileHeight / pixelScale - label_h - shadow;
+
+                    if (intersects.boxBox(0, 0, tileWidth, tileHeight, label_x, label_y, label_w, label_h))
+                        fillHex(tile, ctx, label_x + label_w * .5, label_y + label_h * .5, label_w * .5, label_h * .5);//, lineWidth);
+                }
+
+                ctx.restore();
+            }
+
+            // draw control layer to transparent canvas
+            const overlay = new OffscreenCanvas(tileWidth, tileHeight);
+            const overlayContext = overlay.getContext('2d');
+            overlayContext.save();
+            // clear
+            overlayContext.fillStyle = '#00000000';
+            overlayContext.fillRect(0, 0, tileWidth, tileHeight);
+            drawValidRegions(overlay, overlayContext, coords, pixelScale, max_zoom, hex_sources);
+            overlayContext.restore();
+            overlayContext.save();
+            overlayContext.globalCompositeOperation = 'source-atop'; // mask the alpha to overlay the control layer, copy it to temporary storage
+            overlayContext.imageSmoothingQuality = 'low'; // highest performance possible for a copy, no smoothing needed
+            // scale up control layer
+            overlayContext.drawImage(controlCanvas, 1, 1, controlCanvas.width - 2, controlCanvas.height - 2, 0, 0, tileWidth, tileHeight);
+            overlayContext.restore();
+            overlayContext.save();
+            overlayContext.scale(pixelScale, pixelScale);
+            drawInvalidRegions(overlay, overlayContext, coords, pixelScale, max_zoom, hex_sources);
+            overlayContext.restore();
+
+            // TODO:
+            // c.ctx.save();
+            // c.ctx.scale(c.t.pixelScale, c.t.pixelScale);
+            // await c.t.drawRoads(c);
+            //
+            // c.ctx.restore();
+            // if (c.t.drawHexes)
+            //     u.drawBorders(c, c.ctx);
+            //
+            // c.ctx.save();
+            // c.ctx.scale(c.t.pixelScale, c.t.pixelScale);
+            //
+            // await c.t.drawIcons(c);
+            // c.ctx.restore();
+
+            const bitmap = overlay.transferToImageBitmap();
             postMessage(bitmap, null, [bitmap]);
             break;
         }
