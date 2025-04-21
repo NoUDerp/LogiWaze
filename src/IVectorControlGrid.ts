@@ -146,62 +146,270 @@ export default class VectorControlGridPrototype extends L.GridLayer {
     }
 
 
-    async loadIcons(c): Promise<void> {
-    }
+    //async loadIcons(c): Promise<void> {
+    //}
 
-    async drawIcons(c): Promise<void> {
+    async prepareIcons(icon_sources): Promise<Map<string, Promise<{
+        data: SharedArrayBuffer,
+        width: number,
+        height: number
+    }>>> {
+        const m = new Map<string, Promise<{
+            data: SharedArrayBuffer,
+            width: number,
+            height: number
+        }>>();
 
-        function makeRenderCallback(u, icon, ctx, img, lx, ly, lw, lh, tile, glow, shadow) {
-            return function () {
-                if (glow) {
-                    ctx.filter = "brightness(0.5) sepia(1) hue-rotate(296deg) saturate(10000%) blur(".concat(shadow).concat("px)"); // blur(10px)
-                    ctx.drawImage(img.image, lx, ly, lw, lh);
-                    ctx.drawImage(img.image, lx, ly, lw, lh);
-                    ctx.drawImage(img.image, lx, ly, lw, lh);
-                    ctx.filter = "none";
-                } else
-                    ctx.drawImage(img.image, lx, ly, lw, lh);
-                if (--tile.pendingLoad == 0) {
-                    delete img.callbacks;
-                }
-            };
+        async function downloadImageToSharedArrayBuffer(imageUrl) {
+            const response = await fetch(imageUrl);
+            if (!response.ok)
+                throw new Error(`Failed to fetch image: ${response.statusText}`);
+            const blob = await response.blob();
+            const imageBitmap = await createImageBitmap(blob);
+            const {width, height} = imageBitmap;
+
+            // Create an OffscreenCanvas to draw the image
+            const canvas = new OffscreenCanvas(width, height);
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(imageBitmap, 0, 0);
+
+            // Get the image data
+            const imageData = ctx.getImageData(0, 0, width, height);
+            const pixelData = imageData.data;
+
+            // Create SharedArrayBuffer with enough space for RGBA data
+            const buffer = new SharedArrayBuffer(width * height * 4);
+            const sharedArray = new Uint8ClampedArray(buffer);
+
+            // Copy pixel data to SharedArrayBuffer
+            sharedArray.set(pixelData);
+            return {data: buffer, width, height};
         }
 
-        const raw_scale = c.t.zoomScale(c.coords.z);
-        const zoom = Math.pow(2, c.coords.z);
-        const max = Math.pow(2, c.t.max_zoom);
-        c.tile.pendingLoad = 0;
-        const shadowSize = 20;
-        for (let j of c.t.icon_sources) {
-            if (c.coords.z >= j.zoomMin && c.coords.z < j.zoomMax && j.icon != null && !(j.icon in c.t.disabledIcons)) {
-                const scale = raw_scale;
-                let shadow = j.glow ? shadowSize * scale * zoom / max : 0;
-                const label_w = j.size.width * zoom * scale;
-                const label_h = j.size.height * zoom * scale;
-                const label_x = j.x * zoom - c.coords.x * c.tile.width / c.t.pixelScale - label_w * .5;
-                const label_y = j.y * zoom - c.coords.y * c.tile.height / c.t.pixelScale - label_h * .5;
-                if (intersects.boxBox(0, 0, c.tile.width / c.t.pixelScale, c.tile.height / c.t.pixelScale, label_x - 2.0 * shadow, label_y - 2.0 * shadow, label_w + 4.0 * shadow, label_h + 4.0 * shadow)) {
-                    const lx = label_x, ly = label_y, lw = label_w, lh = label_h;
-                    const img = await this.imageCache.GetImage(`MapIcons/${j.icon}`);
-                    if (j.glow) {
-                        c.ctx.save();
-                        c.ctx.filter = "brightness(0.5) sepia(1) hue-rotate(296deg) saturate(10000%) blur(".concat(shadow).concat("px)"); // blur(10px)              
-                        c.ctx.drawImage(img, lx, ly, lw, lh);
-                        c.ctx.drawImage(img, lx, ly, lw, lh);
-                        c.ctx.drawImage(img, lx, ly, lw, lh);
-                        c.ctx
-                            .restore();
-                    } else c.ctx.drawImage(img, lx, ly, lw, lh);
-                }
+        for (let j of icon_sources)
+            if (j.icon != null && !(j.icon in c.t.disabledIcons)) {
+                const filename = `MapIcons/${j.icon}`;
+                if (!m.has(filename))
+                    m.set(filename, downloadImageToSharedArrayBuffer(filename));
             }
-        }
+
+        await Promise.all(Array.from(m.values()));
     }
 
+    // function makeRenderCallback(u, icon, ctx, img, lx, ly, lw, lh, tile, glow, shadow) {
+    //     return function () {
+    //         if (glow) {
+    //             ctx.filter = "brightness(0.5) sepia(1) hue-rotate(296deg) saturate(10000%) blur(".concat(shadow).concat("px)"); // blur(10px)
+    //             ctx.drawImage(img.image, lx, ly, lw, lh);
+    //             ctx.drawImage(img.image, lx, ly, lw, lh);
+    //             ctx.drawImage(img.image, lx, ly, lw, lh);
+    //             ctx.filter = "none";
+    //         } else
+    //             ctx.drawImage(img.image, lx, ly, lw, lh);
+    //         if (--tile.pendingLoad == 0) {
+    //             delete img.callbacks;
+    //         }
+    //     };
+    // }
+//
+//     const
+//     raw_scale = c.t.zoomScale(c.coords.z);
+//     const
+//     zoom = Math.pow(2, c.coords.z);
+//     const
+//     max = Math.pow(2, c.t.max_zoom);
+//     c
+// .
+//     tile
+// .
+//     pendingLoad = 0;
+//     const
+//     shadowSize = 20;
+//
+//     for(let     j    of    c.    t.    icon_sources
+// ) {
+//     if(c
+//
+// .
+//     coords
+// .
+//     z
+// >=
+//     j
+// .
+//     zoomMin
+// &&
+//     c
+// .
+//     coords
+// .
+//
+//     z < j
+//
+// .
+//     zoomMax
+// &&
+//     j
+// .
+//     icon
+// !=
+//     null
+// && !(
+//     j
+// .
+//     icon
+//     in
+//     c
+// .
+//     t
+// .
+//     disabledIcons
+// )) {
+//     const
+//     scale = raw_scale;
+//     let
+//     shadow = j.glow ? shadowSize * scale * zoom / max : 0;
+//     const
+//     label_w = j.size.width * zoom * scale;
+//     const
+//     label_h = j.size.height * zoom * scale;
+//     const
+//     label_x = j.x * zoom - c.coords.x * c.tile.width / c.t.pixelScale - label_w * .5;
+//     const
+//     label_y = j.y * zoom - c.coords.y * c.tile.height / c.t.pixelScale - label_h * .5;
+//
+//     if(intersects
+//
+// .
+//
+//     boxBox(
+//
+//     0
+// ,
+//     0
+// ,
+//     c
+// .
+//     tile
+// .
+//     width
+// /
+//     c
+// .
+//     t
+// .
+//     pixelScale
+// ,
+//     c
+// .
+//     tile
+// .
+//     height
+// /
+//     c
+// .
+//     t
+// .
+//     pixelScale
+// ,
+//     label_x
+// -
+//     2.0
+//
+//     * shadow
+//
+// ,
+//     label_y
+// -
+//     2.0
+//
+//     * shadow
+//
+// ,
+//     label_w
+// +
+//     4.0
+//
+//     * shadow
+//
+// ,
+//     label_h
+// +
+//     4.0
+//
+//     * shadow
+//
+// )) {
+//     const
+//     lx = label_x
+// ,
+//     ly = label_y
+// ,
+//     lw = label_w
+// ,
+//     lh = label_h;
+//     const
+//     img = await this.imageCache.GetImage(`MapIcons/${j.icon}`);
+//
+//     if(j
+//
+// .
+//     glow
+// ) {
+//     c
+// .
+//     ctx
+// .
+//
+//     save();
+//
+//     c
+// .
+//     ctx
+// .
+//     filter = "brightness(0.5) sepia(1) hue-rotate(296deg) saturate(10000%) blur(".concat(shadow).concat("px)"); // blur(10px)              
+//     c
+// .
+//     ctx
+// .
+//
+//     drawImage(img, lx, ly, lw, lh);
+//
+//     c
+// .
+//     ctx
+// .
+//
+//     drawImage(img, lx, ly, lw, lh);
+//
+//     c
+// .
+//     ctx
+// .
+//
+//     drawImage(img, lx, ly, lw, lh);
+//
+//     c
+// .
+//     ctx
+// .
+//
+//     restore();
+// }
+// else
+// c.ctx.drawImage(img, lx, ly, lw, lh);
+// }
+// }
+// }
+//}
 
-    // This is too intense for now: window.devicePixelRatio,
+
+// This is too intense for now: window.devicePixelRatio,
     build: "";
 
-    renderer(c): any {
+    renderer(c)
+        :
+        any {
         c.tile = L.DomUtil.create('canvas', 'leaflet-tile');
         const size = c.t.getTileSize();
         c.tile.width = size.x * c.t.pixelScale;
@@ -218,12 +426,14 @@ export default class VectorControlGridPrototype extends L.GridLayer {
     async render(c) {
         const i = await this.loadTile(c);
         this.drawTileToContext(c, i, c.ctx);
-        await this.renderRoads(c);
+        await this.renderOverlay(c);
     }
 
-    async loadTile(c): Promise<ImageBitmap> {
+    async loadTile(c)
+        :
+        Promise<ImageBitmap> {
         c.ctx = c.tile.getContext('2d');
-        await c.t.loadIcons(c);
+        //await c.t.loadIcons(c);
 
         const scale = Math.pow(2, Math.max(0, c.coords.z - c.t.max_native_zoom));
         const response = await fetch(`Tiles/${Math.min(c.coords.z, c.t.max_native_zoom)}_${Math.floor(c.coords.x / scale)}_${Math.floor(c.coords.y / scale)}.webp${c.t.build}`);
@@ -231,7 +441,10 @@ export default class VectorControlGridPrototype extends L.GridLayer {
         return await createImageBitmap(imageBlob);
     }
 
-    drawTileToContext(c, img: ImageBitmap, ctx) {
+    drawTileToContext(c, img
+                      :
+                      ImageBitmap, ctx
+    ) {
         const scale = Math.pow(2, Math.max(0, c.coords.z - c.t.max_native_zoom));
         const ox = c.coords.x % scale;
         const oy = c.coords.y % scale;
@@ -278,54 +491,27 @@ export default class VectorControlGridPrototype extends L.GridLayer {
         });
         const tileContext = c.ctx;
         const image = await data;
-        //this.logImageBitmap(image);
         tileContext.drawImage(image, 0, 0);
         image.close();
     }
 
-    async renderRoads(c) {
+    async renderOverlay(c) {
         await this.renderControlToTempCanvas(c);
-        if (c.temp_canvas != null) {
-            let overlay = document.createElement("canvas");
-            overlay.width = c.tile.width;
-            overlay.height = c.tile.height;
-            let overlay_ctx = overlay.getContext('2d');
-            overlay_ctx.save();
-            c.t.drawValidRegions(overlay, overlay_ctx, c.coords, c.t.pixelScale, c.t.max_zoom, c.t.hex_sources);
-            overlay_ctx.restore();
-            overlay_ctx.save();
-            overlay_ctx.globalCompositeOperation = 'source-atop'; // mask the alpha to overlay the control layer, copy it to temporary storage
-            overlay_ctx.imageSmoothingQuality = 'low'; // highest performance possible for a copy, no smoothing needed
-            overlay_ctx.drawImage(c.temp_canvas, 1, 1, c.temp_canvas.width - 2, c.temp_canvas.height - 2, 0, 0, c.tile.width, c.tile.height);
-            overlay_ctx.restore();
-            overlay_ctx.save();
-            overlay_ctx.scale(c.t.pixelScale, c.t.pixelScale);
-            c.t.drawInvalidRegions(overlay, overlay_ctx, c.coords, c.t.pixelScale, c.t.max_zoom, c.t.hex_sources);
-            overlay_ctx.restore();
-            c.ctx.save();
-            c.ctx.globalCompositeOperation = 'source-atop';
-            c.ctx.globalAlpha = .5;
-            c.ctx.drawImage(overlay, 0, 0);
-            c.ctx.restore();
-            delete c.temp_canvas;
-        }
-
         const u = this;
         return new Promise((resolve, reject) => {
             setTimeout(async () => {
                 try {
+                    // c.ctx.save();
+                    // c.ctx.scale(c.t.pixelScale, c.t.pixelScale);
+                    // await c.t.drawRoads(c);
+                    //
+                    // c.ctx.restore();
+                    // if (c.t.drawHexes)
+                    //     u.drawBorders(c, c.ctx);
+
                     c.ctx.save();
                     c.ctx.scale(c.t.pixelScale, c.t.pixelScale);
-                    await c.t.drawRoads(c);
-
-                    c.ctx.restore();
-                    if (c.t.drawHexes)
-                        u.drawBorders(c, c.ctx);
-
-                    c.ctx.save();
-                    c.ctx.scale(c.t.pixelScale, c.t.pixelScale);
-
-                    await c.t.drawIcons(c);
+                    //await c.t.drawIcons(c);
                     c.ctx.restore();
                     resolve();
 
@@ -361,43 +547,11 @@ export default class VectorControlGridPrototype extends L.GridLayer {
         return dataURL;
     }
 
-    async drawRoads(c) {
-        await this.waitForRoadInitialization;
+    override
 
-        const w = await this.renderers.dequeue();
-
-        const args = {
-            coords: c.coords,
-            grid_depth: c.t.grid_depth,
-            offset: c.t.offset,
-            roadWidth: c.t.RoadWidth,
-            controlWidth: c.t.ControlWidth,
-            grid_x_size: c.t.grid_x_size,
-            grid_y_size: c.t.grid_y_size,
-            controls: c.t.controls,
-            pixelScale: c.t.pixelScale,
-            width: c.tile.width,
-            height: c.tile.height
-        };
-
-        
-
-        w.onmessage = async e => {
-            this.renderers.enqueue(w);
-            const bitmap = e.data.bitmap as ImageBitmap;
-            const ctx = c.ctx as CanvasRenderingContext2D;
-            ctx.save();
-            ctx.globalCompositeOperation = 'source-atop'; // mask the alpha to overlay the control layer, copy it to temporary storage
-            ctx.imageSmoothingQuality = 'low'; // highest performance possible for a copy, no smoothing needed
-            ctx.drawImage(bitmap, 0, 0);
-            bitmap.close();
-            ctx.restore();
-        };
-
-        w.postMessage({operation: "roads", arguments: args});
-    }
-
-    override createTile(coords, done): HTMLElement {
+    createTile(coords, done)
+        :
+        HTMLElement {
         let scale = Math.pow(2, coords.z);
         if (coords.x < 0 || coords.x >= scale || coords.y < 0 || coords.y >= scale || coords.z < 0) {
             let t = L.DomUtil.create('canvas', 'leaflet-tile');
@@ -415,7 +569,20 @@ export default class VectorControlGridPrototype extends L.GridLayer {
 
     road_sources: any[] = []
 
-    constructor(MaxNativeZoom: number, MaxZoom: number, Offset, API: API, RoadWidth: number, ControlWidth: number, GridDepth: number) {
+    constructor(MaxNativeZoom
+                :
+                number, MaxZoom
+                :
+                number, Offset, API
+                :
+                API, RoadWidth
+                :
+                number, ControlWidth
+                :
+                number, GridDepth
+                :
+                number
+    ) {
         super(MaxNativeZoom);
         this.updateWhenZooming = false;
         this.noWrap = true;

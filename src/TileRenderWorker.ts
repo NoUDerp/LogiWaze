@@ -20,88 +20,6 @@ let variogram: {
 onmessage = (e) => {
     const context = e.data as { operation: string, arguments: any };
     switch (context.operation) {
-        case "roads": // draw roads
-        {
-            const args = context.arguments as {
-                coords: { x: number, y: number, z: number },
-                grid_depth: number,
-                offset,
-                roadWidth,
-                controlWidth,
-                grid_x_size,
-                grid_y_size,
-                controls,
-                pixelScale,
-                width: number,
-                height: number
-            };
-
-            function drawRoads(args: {
-                coords: { x: number, y: number, z: number },
-                grid_depth: number,
-                offset,
-                roadWidth,
-                controlWidth,
-                grid_x_size,
-                grid_y_size,
-                controls,
-                pixelScale,
-                width: number,
-                height: number
-            }) {
-                const canvas = new OffscreenCanvas(args.width, args.height);
-                const ctx = canvas.getContext("2d") as OffscreenCanvasRenderingContext2D;
-
-                ctx.fillStyle = "#FFFFFF00";
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-                ctx.lineJoin = 'miter';
-                ctx.lineCap = 'round';
-
-                const scale = Math.pow(2, args.grid_depth - args.coords.z);
-                const start_x = Math.floor(args.coords.x * scale);
-                const start_y = Math.floor(args.coords.y * scale);
-
-                const end_x = Math.ceil((args.coords.x + 1) * scale);
-                const end_y = Math.ceil((args.coords.y + 1) * scale);
-
-                const depth_inverse = Math.pow(2, args.coords.z);
-                const innerWidth = args.controlWidth * depth_inverse;
-
-                function draw(start_x: number, start_y: number, end_x: number, end_y: number) {
-                    ctx.lineWidth = innerWidth;
-                    const colors = ['#516C4B', '#235683', '#303030', '#CCCC44'];
-
-                    for (let y = start_y; y <= end_y; y++)
-                        for (let x = start_x; x <= end_x; x++)
-                            if (x >= 0 && y >= 0 && x < args.grid_x_size && y < args.grid_y_size) {
-                                for (let i = 0; i < road_sources[x][y].length; i++) {
-                                    const j = road_sources[x][y][i];
-                                    if (args.controls[0]) {
-                                        ctx.strokeStyle = colors[j.options.control];
-                                        ctx.beginPath();
-                                        const coordsx = args.coords.x * args.width / args.pixelScale;
-                                        const coordsy = args.coords.y * args.height / args.pixelScale;
-                                        const x1 = (j.points[0][1] + args.offset[0]) * depth_inverse - coordsx;
-                                        const y1 = (j.points[0][0] + args.offset[1]) * depth_inverse - coordsy;
-                                        const x2 = (j.points[1][1] + args.offset[0]) * depth_inverse - coordsx;
-                                        const y2 = (j.points[1][0] + args.offset[1]) * depth_inverse - coordsy;
-                                        ctx.moveTo(x1, y1);
-                                        ctx.lineTo(x2, y2);
-                                        ctx.stroke();
-                                    }
-                                }
-                            }
-                }
-
-                draw(start_x, start_y, end_x, end_y);
-                return canvas.transferToImageBitmap();
-            }
-
-            const bitmap = drawRoads(args);
-            postMessage({bitmap}, null, [bitmap]);
-            break;
-        }
         case "initialize": {
             road_sources = context.arguments.roads;
             variogram =
@@ -297,14 +215,12 @@ onmessage = (e) => {
             overlayContext.fillStyle = '#00000000';
             overlayContext.fillRect(0, 0, args.width, args.height);
             overlayContext.restore();
-            //overlayContext.globalAlpha = .75;
             drawValidRegions(overlay, overlayContext, args.coords, args.pixelScale, args.max_zoom, args.hex_sources);
             //overlayContext.restore();
             overlayContext.save();
             overlayContext.globalCompositeOperation = 'source-atop'; // mask the alpha to overlay the control layer, copy it to temporary storage
-            //overlayContext.imageSmoothingQuality = 'low'; // highest performance possible for a copy, no smoothing needed
+            overlayContext.imageSmoothingQuality = 'low'; // highest performance possible for a copy, no smoothing needed
             // scale up control layer
-            //overlayContext.globalAlpha = .5;
 
             overlayContext.drawImage(controlCanvas, 1, 1, controlCanvas.width - 2, controlCanvas.height - 2, 0, 0, args.width, args.height);
             overlayContext.restore();
@@ -313,16 +229,101 @@ onmessage = (e) => {
             drawInvalidRegions(overlay, overlayContext, args.coords, args.pixelScale, args.max_zoom, args.hex_sources);
             overlayContext.restore();
 
-            // TODO:
             overlayContext.save();
             overlayContext.scale(args.pixelScale, args.pixelScale);
             drawRoads(overlayContext, args);
-            // await c.t.drawRoads(c);
-            //
             overlayContext.restore();
-            // if (c.t.drawHexes)
-            //     u.drawBorders(c, c.ctx);
-            //
+
+            function drawBorders(coords, ctx: OffscreenCanvasRenderingContext2D, width: number, height: number, max_zoom: number, pixelScale: number, hex_sources) {
+                function drawHex(ctx: OffscreenCanvasRenderingContext2D, x, y, w, h, scale) {
+                    ctx.lineWidth = scale;
+                    ctx.beginPath();
+                    ctx.moveTo(x + w, y);
+                    ctx.lineTo(x + w * .5, y + h);
+                    ctx.lineTo(x - w * .5, y + h);
+                    ctx.lineTo(x - w, y);
+                    ctx.lineTo(x - .5 * w, y - h);
+                    ctx.lineTo(x + .5 * w, y - h);
+                    ctx.lineTo(x + w, y);
+                    ctx.stroke();
+                }
+
+                const zoom = Math.pow(2, coords.z);
+                const lineWidth = .2 * Math.pow(2, coords.z);
+                const shadow = lineWidth * .5 / Math.pow(2, max_zoom);
+
+                ctx.save();
+                ctx.strokeStyle = '#303030';
+                ctx.globalAlpha = .8;
+                //ctx.opacity = .8;
+                ctx.scale(pixelScale, pixelScale);
+
+                for (let j of hex_sources) {
+                    const label_w = j.size.width * zoom + shadow * 2;
+                    const label_h = j.size.height * zoom + shadow * 2;
+                    const label_x = j.x * zoom - coords.x * width / pixelScale - label_w - shadow;
+                    const label_y = j.y * zoom - coords.y * height / pixelScale - label_h - shadow;
+                    if (intersects.boxBox(0, 0, width, height, label_x, label_y, label_w, label_h))
+                        drawHex(ctx, label_x + label_w * .5,
+                            label_y + label_h * .5,
+                            label_w * .5,
+                            label_h * .5,
+                            lineWidth
+                        );
+                }
+                ctx.restore();
+            }
+
+            drawBorders(args.coords, overlayContext, args.width, args.height, args.max_zoom, args.pixelScale, args.hex_sources);
+
+            function drawIcons(c) {
+
+                function makeRenderCallback(u, icon, ctx: OffscreenCanvasRenderingContext2D, img, lx, ly, lw, lh, tile, glow, shadow) {
+                    return function () {
+                        if (glow) {
+                            ctx.filter = "brightness(0.5) sepia(1) hue-rotate(296deg) saturate(10000%) blur(".concat(shadow).concat("px)"); // blur(10px)
+                            ctx.drawImage(img.image, lx, ly, lw, lh);
+                            ctx.drawImage(img.image, lx, ly, lw, lh);
+                            ctx.drawImage(img.image, lx, ly, lw, lh);
+                            ctx.filter = "none";
+                        } else
+                            ctx.drawImage(img.image, lx, ly, lw, lh);
+                        if (--tile.pendingLoad == 0) {
+                            delete img.callbacks;
+                        }
+                    };
+                }
+
+                const raw_scale = c.t.zoomScale(c.coords.z);
+                const zoom = Math.pow(2, c.coords.z);
+                const max = Math.pow(2, c.t.max_zoom);
+                c.tile.pendingLoad = 0;
+                const shadowSize = 20;
+                for (let j of c.t.icon_sources) {
+                    if (c.coords.z >= j.zoomMin && c.coords.z < j.zoomMax && j.icon != null && !(j.icon in c.t.disabledIcons)) {
+                        const scale = raw_scale;
+                        let shadow = j.glow ? shadowSize * scale * zoom / max : 0;
+                        const label_w = j.size.width * zoom * scale;
+                        const label_h = j.size.height * zoom * scale;
+                        const label_x = j.x * zoom - c.coords.x * c.tile.width / c.t.pixelScale - label_w * .5;
+                        const label_y = j.y * zoom - c.coords.y * c.tile.height / c.t.pixelScale - label_h * .5;
+                        if (intersects.boxBox(0, 0, c.tile.width / c.t.pixelScale, c.tile.height / c.t.pixelScale, label_x - 2.0 * shadow, label_y - 2.0 * shadow, label_w + 4.0 * shadow, label_h + 4.0 * shadow)) {
+                            const lx = label_x, ly = label_y, lw = label_w, lh = label_h;
+                            // const img = await this.imageCache.GetImage(`MapIcons/${j.icon}`);
+                            // if (j.glow) {
+                            //     c.ctx.save();
+                            //     c.ctx.filter = "brightness(0.5) sepia(1) hue-rotate(296deg) saturate(10000%) blur(".concat(shadow).concat("px)"); // blur(10px)              
+                            //     c.ctx.drawImage(img, lx, ly, lw, lh);
+                            //     c.ctx.drawImage(img, lx, ly, lw, lh);
+                            //     c.ctx.drawImage(img, lx, ly, lw, lh);
+                            //     c.ctx
+                            //         .restore();
+                            // } else c.ctx.drawImage(img, lx, ly, lw, lh);
+                        }
+                    }
+                }
+            }
+        
             // c.ctx.save();
             // c.ctx.scale(c.t.pixelScale, c.t.pixelScale);
             //
