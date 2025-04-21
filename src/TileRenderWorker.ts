@@ -1,5 +1,6 @@
 import {variogramExponential} from "@sakitam-gis/kriging/src/utils";
 import * as kriging from "@sakitam-gis/kriging";
+import * as intersects from 'intersects';
 
 let road_sources;
 let variogram: {
@@ -140,7 +141,7 @@ onmessage = (e) => {
                 max_zoom: number,
                 hex_sources: any
             };
-            
+
             const colors = [{
                 r: 0.1372549019607843,
                 g: 0.3372549019607843,
@@ -175,7 +176,7 @@ onmessage = (e) => {
             }
             controlContext.putImageData(d, 0, 0);
 
-            function fillHex(tile, ctx, x, y, w, h) {
+            function fillHex(ctx, x, y, w, h) {
                 ctx.beginPath();
                 ctx.moveTo(x + w, y);
                 ctx.lineTo(x + w * .5, y + h);
@@ -193,8 +194,8 @@ onmessage = (e) => {
                 const lineWidth = Math.pow(2, coords.z);
                 const shadow = lineWidth * .5 / Math.pow(2, max_zoom);
                 ctx.save();
-                ctx.fillStyle = '#FFFFFFFF';
-                ctx.strokeStyle = '#FFFFFFFF';
+                const color = '#FFFFFF88';
+                ctx.fillStyle = ctx.strokeStyle = color;
                 ctx.scale(pixelScale, pixelScale);
                 for (let j of hex_sources) {
                     if (!j.offline) {
@@ -203,7 +204,7 @@ onmessage = (e) => {
                         const label_x = j.x * zoom - coords.x * tile.width / pixelScale - label_w - shadow;
                         const label_y = j.y * zoom - coords.y * tile.height / pixelScale - label_h - shadow;
                         if (intersects.boxBox(0, 0, tile.width, tile.height, label_x, label_y, label_w, label_h))
-                            fillHex(tile, ctx, label_x + label_w * .5, label_y + label_h * .5, label_w * .5, label_h * .5);//, lineWidth);
+                            fillHex(ctx, label_x + label_w * .5, label_y + label_h * .5, label_w * .5, label_h * .5);//, lineWidth);
                     }
                 }
                 ctx.restore();
@@ -223,10 +224,69 @@ onmessage = (e) => {
                     const label_y = j.y * zoom - coords.y * args.height / pixelScale - label_h - shadow;
 
                     if (intersects.boxBox(0, 0, args.width, args.height, label_x, label_y, label_w, label_h))
-                        fillHex(tile, ctx, label_x + label_w * .5, label_y + label_h * .5, label_w * .5, label_h * .5);//, lineWidth);
+                        fillHex(ctx, label_x + label_w * .5, label_y + label_h * .5, label_w * .5, label_h * .5);//, lineWidth);
                 }
 
                 ctx.restore();
+            }
+
+            function drawRoads(ctx: OffscreenCanvasRenderingContext2D, args: {
+                coords: { x: number, y: number, z: number },
+                grid_depth: number,
+                offset,
+                roadWidth,
+                controlWidth,
+                grid_x_size,
+                grid_y_size,
+                controls,
+                pixelScale,
+                width: number,
+                height: number
+            }) {
+                ctx.fillStyle = "#FFFFFF00";
+                ctx.fillRect(0, 0, args.width, args.height);
+
+                ctx.lineJoin = 'miter';
+                ctx.lineCap = 'round';
+
+                const scale = Math.pow(2, args.grid_depth - args.coords.z);
+                const start_x = Math.floor(args.coords.x * scale);
+                const start_y = Math.floor(args.coords.y * scale);
+
+                const end_x = Math.ceil((args.coords.x + 1) * scale);
+                const end_y = Math.ceil((args.coords.y + 1) * scale);
+
+                const depth_inverse = Math.pow(2, args.coords.z);
+                const innerWidth = args.controlWidth * depth_inverse;
+
+                function draw(start_x: number, start_y: number, end_x: number, end_y: number) {
+                    ctx.lineWidth = innerWidth;
+                    const colors = ['#516C4B', '#235683', '#303030', '#CCCC44'];
+
+                    for (let y = start_y; y <= end_y; y++)
+                        for (let x = start_x; x <= end_x; x++)
+                            if (x >= 0 && y >= 0 && x < args.grid_x_size && y < args.grid_y_size) {
+                                for (let i = 0; i < road_sources[x][y].length; i++) {
+                                    const j = road_sources[x][y][i];
+                                    if (args.controls[0]) {
+                                        ctx.strokeStyle = colors[j.options.control];
+                                        ctx.beginPath();
+                                        const coordsx = args.coords.x * args.width / args.pixelScale;
+                                        const coordsy = args.coords.y * args.height / args.pixelScale;
+                                        const x1 = (j.points[0][1] + args.offset[0]) * depth_inverse - coordsx;
+                                        const y1 = (j.points[0][0] + args.offset[1]) * depth_inverse - coordsy;
+                                        const x2 = (j.points[1][1] + args.offset[0]) * depth_inverse - coordsx;
+                                        const y2 = (j.points[1][0] + args.offset[1]) * depth_inverse - coordsy;
+                                        ctx.moveTo(x1, y1);
+                                        ctx.lineTo(x2, y2);
+                                        ctx.stroke();
+                                    }
+                                }
+                            }
+                }
+
+                draw(start_x, start_y, end_x, end_y);
+                //return canvas.transferToImageBitmap();
             }
 
             // draw control layer to transparent canvas
@@ -236,12 +296,16 @@ onmessage = (e) => {
             // clear
             overlayContext.fillStyle = '#00000000';
             overlayContext.fillRect(0, 0, args.width, args.height);
-            drawValidRegions(overlay, overlayContext, args.coords, args.pixelScale, args.max_zoom, args.hex_sources);
             overlayContext.restore();
+            //overlayContext.globalAlpha = .75;
+            drawValidRegions(overlay, overlayContext, args.coords, args.pixelScale, args.max_zoom, args.hex_sources);
+            //overlayContext.restore();
             overlayContext.save();
             overlayContext.globalCompositeOperation = 'source-atop'; // mask the alpha to overlay the control layer, copy it to temporary storage
-            overlayContext.imageSmoothingQuality = 'low'; // highest performance possible for a copy, no smoothing needed
+            //overlayContext.imageSmoothingQuality = 'low'; // highest performance possible for a copy, no smoothing needed
             // scale up control layer
+            //overlayContext.globalAlpha = .5;
+
             overlayContext.drawImage(controlCanvas, 1, 1, controlCanvas.width - 2, controlCanvas.height - 2, 0, 0, args.width, args.height);
             overlayContext.restore();
             overlayContext.save();
@@ -250,11 +314,12 @@ onmessage = (e) => {
             overlayContext.restore();
 
             // TODO:
-            // c.ctx.save();
-            // c.ctx.scale(c.t.pixelScale, c.t.pixelScale);
+            overlayContext.save();
+            overlayContext.scale(args.pixelScale, args.pixelScale);
+            drawRoads(overlayContext, args);
             // await c.t.drawRoads(c);
             //
-            // c.ctx.restore();
+            overlayContext.restore();
             // if (c.t.drawHexes)
             //     u.drawBorders(c, c.ctx);
             //

@@ -243,29 +243,22 @@ export default class VectorControlGridPrototype extends L.GridLayer {
 
     async renderControlToTempCanvas(c) {
         c.hd_ratio = 8; // c.coords.z < 2 ? 8 : 16;
-        c.temp_canvas = L.DomUtil.create('canvas', '');
-        c.temp_canvas.width = 2 + c.tile.width / c.t.pixelScale / c.hd_ratio;
-        c.temp_canvas.height = 2 + c.tile.height / c.t.pixelScale / c.hd_ratio;
-        c.temp_ctx = c.temp_canvas.getContext('2d', {alpha: false});
-        let x = 0;
-        let y = 0;
-        let i = 0;
+        const cTempCanvasWidth = 2 + c.tile.width / c.t.pixelScale / c.hd_ratio;
+        const cTempCanvasHeight = 2 + c.tile.height / c.t.pixelScale / c.hd_ratio;
         const max = Math.pow(2, c.t.max_zoom - c.coords.z);
         const zoom = Math.pow(2, c.coords.z);
         const hdRatio = c.hd_ratio / zoom;
         const grid = {x: c.coords.x * max, y: c.coords.y * max};
 
-        let data: ImageBitmap;
         const w = await this.renderers.dequeue();
-        try {
-            data = await new Promise<ImageBitmap>((resolve, reject) => {
-                w.onmessage = async e => {
-                    this.renderers.enqueue(w);
-                    resolve(e.data);
-                };
-                w.postMessage({
-                    operation: "control",
-                    arguments: [c.temp_canvas.width, c.temp_canvas.height, hdRatio, grid.x, grid.y,
+        const data = new Promise<ImageBitmap>((resolve) => {
+            w.onmessage = async e => {
+                this.renderers.enqueue(w);
+                resolve(e.data);
+            };
+            w.postMessage({
+                operation: "control",
+                arguments: [cTempCanvasWidth, cTempCanvasHeight, hdRatio, grid.x, grid.y,
                     {
                         coords: c.coords,
                         grid_depth: c.t.grid_depth,
@@ -279,16 +272,15 @@ export default class VectorControlGridPrototype extends L.GridLayer {
                         width: c.tile.width,
                         height: c.tile.height,
                         max_zoom: c.t.max_zoom,
-                        hex_sources: c.hex_sources,
+                        hex_sources: c.t.hex_sources,
                     }]
-                });
             });
-        } catch (error) {
-            this.renderers.enqueue(w);
-        }
-        const tempctx = c.temp_ctx as CanvasRenderingContext2D;
-        tempctx.drawImage(data, 0, 0);
-        data.close();
+        });
+        const tileContext = c.ctx;
+        const image = await data;
+        //this.logImageBitmap(image);
+        tileContext.drawImage(image, 0, 0);
+        image.close();
     }
 
     async renderRoads(c) {
@@ -344,6 +336,30 @@ export default class VectorControlGridPrototype extends L.GridLayer {
         });
     }
 
+    logImageBitmap(imageBitmap) {
+        // Create a canvas
+        const canvas = document.createElement('canvas');
+        canvas.width = imageBitmap.width;
+        canvas.height = imageBitmap.height;
+
+        // Draw the ImageBitmap
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(imageBitmap, 0, 0);
+
+        // Get data URL
+        const dataURL = canvas.toDataURL('image/png');
+        console.log(dataURL);
+
+        // // For browsers that support displaying images in console
+        // console.log('%c ', `
+        //     font-size: 1px;
+        //     padding: ${imageBitmap.height}px ${imageBitmap.width}px;
+        //     background: url(${dataURL}) no-repeat;
+        //     background-size: contain;
+        //   `);
+
+        return dataURL;
+    }
 
     async drawRoads(c) {
         await this.waitForRoadInitialization;
@@ -364,30 +380,7 @@ export default class VectorControlGridPrototype extends L.GridLayer {
             height: c.tile.height
         };
 
-        function logImageBitmap(imageBitmap) {
-            // Create a canvas
-            const canvas = document.createElement('canvas');
-            canvas.width = imageBitmap.width;
-            canvas.height = imageBitmap.height;
-
-            // Draw the ImageBitmap
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(imageBitmap, 0, 0);
-
-            // Get data URL
-            const dataURL = canvas.toDataURL('image/png');
-            console.log(dataURL);
-
-            // // For browsers that support displaying images in console
-            // console.log('%c ', `
-            //     font-size: 1px;
-            //     padding: ${imageBitmap.height}px ${imageBitmap.width}px;
-            //     background: url(${dataURL}) no-repeat;
-            //     background-size: contain;
-            //   `);
-
-            return dataURL;
-        }
+        
 
         w.onmessage = async e => {
             this.renderers.enqueue(w);
@@ -564,7 +557,7 @@ export default class VectorControlGridPrototype extends L.GridLayer {
             this.hex_sources.push(
                 {
                     size: {
-                        wnidth: width,
+                        width: width,
                         height: height
                     },
                     x: x + Offset[0] + width * .5,
