@@ -149,15 +149,17 @@ export default class VectorControlGridPrototype extends L.GridLayer {
     //async loadIcons(c): Promise<void> {
     //}
 
-    async prepareIcons(icon_sources): Promise<Map<string, Promise<{
+    async prepareIcons(icon_sources): Promise<{
         data: SharedArrayBuffer,
         width: number,
-        height: number
-    }>>> {
+        height: number,
+        name: string
+    }[]> {
         const m = new Map<string, Promise<{
             data: SharedArrayBuffer,
             width: number,
             height: number
+            name: string
         }>>();
 
         async function downloadImageToSharedArrayBuffer(imageUrl) {
@@ -183,7 +185,7 @@ export default class VectorControlGridPrototype extends L.GridLayer {
 
             // Copy pixel data to SharedArrayBuffer
             sharedArray.set(pixelData);
-            return {data: buffer, width, height};
+            return {data: buffer, width, height, name: imageUrl};
         }
 
         for (let j of icon_sources)
@@ -192,8 +194,9 @@ export default class VectorControlGridPrototype extends L.GridLayer {
                 if (!m.has(filename))
                     m.set(filename, downloadImageToSharedArrayBuffer(filename));
             }
-
-        await Promise.all(Array.from(m.values()));
+        const r = Array.from(m.values());
+        await Promise.all(r);
+        return r;
     }
 
     // function makeRenderCallback(u, icon, ctx, img, lx, ly, lw, lh, tile, glow, shadow) {
@@ -569,20 +572,127 @@ export default class VectorControlGridPrototype extends L.GridLayer {
 
     road_sources: any[] = []
 
-    constructor(MaxNativeZoom
-                :
-                number, MaxZoom
-                :
-                number, Offset, API
-                :
-                API, RoadWidth
-                :
-                number, ControlWidth
-                :
-                number, GridDepth
-                :
-                number
-    ) {
+    async roadsReady() {
+        const icons = await this.prepareIcons(this.icon_sources);
+        // queue workers for processing control, it will also act as a semaphore
+        for (let i = 0; i < navigator.hardwareConcurrency; i++) {
+            const w = new Worker(new URL('TileRenderWorker.ts', import.meta.url), {type: 'module'});
+            // initialize the worker data
+            w.postMessage({
+                operation: "initialize", arguments: {
+                    roads: this.road_sources,
+                    variogram:
+                        {
+                            t: API.variogram.t,
+                            x: API.variogram.x,
+                            y: API.variogram.y,
+                            nugget: API.variogram.nugget,
+                            range: API.variogram.range,
+                            sill: API.variogram.sill,
+                            A: API.variogram.A,
+                            n: API.variogram.n,
+                            K: API.variogram.K,
+                            M: API.variogram.M,
+                        },
+                    icons: icons
+                }
+            });
+            this.renderers.enqueue(w);
+        }
+        resolve();
+    }
+
+    addIcon(icon, x, y, glow, zoomMin, zoomMax) {
+        this.icon_sources.push(
+            {
+                size: {
+                    width: .5,
+                    height: .5
+                },
+                x: x + this.offset[0],
+                y: -(y + this.offset[1]) + 256,
+                icon: icon,
+                zoomMin: zoomMin,
+                glow: glow,
+                zoomMax: zoomMax,
+                pendingLoad: 0
+            });
+    }
+
+    addRoad = (points, options) => {
+        const max_road_width = Math.max(this.RoadWidth, this.ControlWidth);
+        const max = Math.pow(2, this.GridDepth);
+        const margin = max_road_width * max;
+        
+        const gx = 1.0 / this.grid_x_width;
+        const gy = 1.0 / this.grid_y_height;
+        const marginx = margin / this.grid_x_size;
+        const marginy = margin / this.grid_y_size;
+
+        const addLine = (x, y, p, options, u, Offset) => {
+            if (x >= 0 && y >= 0 && x < u.grid_x_size && y < u.grid_y_size)
+                u.road_sources[x][y].push({points: p, options: options});
+        };
+
+        const c = [[-points[0][0] - this.offset[1], points[0][1] - this.offset[0]], [-points[1][0] - this.offset[1], points[1][1] - this.offset[0]]];
+        const p = [[c[0][0], c[0][1]], [c[1][0], c[1][1]]];
+
+        let x1 = c[0][1] + this.offset[0];
+        let y1 = c[0][0] + this.offset[1];
+        let x2 = c[1][1] + this.offset[0];
+        let y2 = c[1][0] + this.offset[1];
+
+        const angle = Math.atan2(y2 - y1, x2 - x1);
+        const ext_x = Math.cos(angle);
+        const ext_y = Math.sin(angle);
+
+        x1 -= ext_x * marginx;
+        y1 -= ext_y * marginy;
+        x2 += ext_x * marginx;
+        y2 += ext_y * marginy;
+
+        const start_tile_x = Math.floor(Math.min(x1, x2) * gx - marginx);
+        const start_tile_y = Math.floor(Math.min(y1, y2) * gy - marginy);
+
+        const end_tile_x = Math.floor(Math.max(x2, x1) * gx + marginx);
+        const end_tile_y = Math.floor(Math.max(y2, y1) * gy + marginy);
+
+        const width = this.grid_x_width + marginx * 2.0;
+        const height = this.grid_y_height + marginy * 2.0;
+
+        for (let x = start_tile_x; x <= end_tile_x; x++)
+            for (let y = start_tile_y; y <= end_tile_y; y++)
+                if (intersects.lineBox(x1, y1, x2, y2, x * this.grid_x_width - marginx, y * this.grid_y_height - marginy, width, height))
+                    addLine(x, y, p, options, this, this.offset);
+
+    }
+
+    addHex(x, y, width, height, offline) {
+        
+        this.hex_sources.push(
+            {
+                size: {
+                    width: width,
+                    height: height
+                },
+                x: x + this.offset[0] + width * .5,
+                y: y + this.offset[1] + height * .5,
+                offline: offline
+            });
+    }
+
+    when (event_name, event_action) {
+        switch (event_name) {
+            case 'loaded':
+                this.loaded_events.push(event_action);
+                break;
+            case 'unloaded':
+                this.unloaded_events.push(event_action);
+                break;
+        }
+    }
+    
+    constructor(MaxNativeZoom: number, MaxZoom: number, Offset, API: API, RoadWidth: number, ControlWidth: number, GridDepth: number) {
         super(MaxNativeZoom);
         this.updateWhenZooming = false;
         this.noWrap = true;
@@ -602,9 +712,6 @@ export default class VectorControlGridPrototype extends L.GridLayer {
         this.grid_y_size = max;
         this.grid_y_height = (size.y / this.grid_y_size);
 
-        const max_road_width = Math.max(RoadWidth, ControlWidth);
-
-        const margin = max_road_width * max;
 
         for (let x = 0; x < this.grid_x_size; x++) {
             this.road_sources.push([]);
@@ -612,85 +719,8 @@ export default class VectorControlGridPrototype extends L.GridLayer {
                 this.road_sources[x].push([]);
         }
 
-        const marginx = margin / this.grid_x_size;
-        const marginy = margin / this.grid_y_size;
-
-        const addLine = (x, y, p, options, u, Offset) => {
-            if (x >= 0 && y >= 0 && x < u.grid_x_size && y < u.grid_y_size)
-                u.road_sources[x][y].push({points: p, options: options});
-        };
-
-        const gx = 1.0 / this.grid_x_width;
-        const gy = 1.0 / this.grid_y_height;
-
-        this.addRoad = (points, options) => {
-
-            const c = [[-points[0][0] - Offset[1], points[0][1] - Offset[0]], [-points[1][0] - Offset[1], points[1][1] - Offset[0]]];
-            const p = [[c[0][0], c[0][1]], [c[1][0], c[1][1]]];
-
-            let x1 = c[0][1] + Offset[0];
-            let y1 = c[0][0] + Offset[1];
-            let x2 = c[1][1] + Offset[0];
-            let y2 = c[1][0] + Offset[1];
-
-            const angle = Math.atan2(y2 - y1, x2 - x1);
-            const ext_x = Math.cos(angle);
-            const ext_y = Math.sin(angle);
-
-            x1 -= ext_x * marginx;
-            y1 -= ext_y * marginy;
-            x2 += ext_x * marginx;
-            y2 += ext_y * marginy;
-
-            const start_tile_x = Math.floor(Math.min(x1, x2) * gx - marginx);
-            const start_tile_y = Math.floor(Math.min(y1, y2) * gy - marginy);
-
-            const end_tile_x = Math.floor(Math.max(x2, x1) * gx + marginx);
-            const end_tile_y = Math.floor(Math.max(y2, y1) * gy + marginy);
-
-            const width = this.grid_x_width + marginx * 2.0;
-            const height = this.grid_y_height + marginy * 2.0;
-
-            for (let x = start_tile_x; x <= end_tile_x; x++)
-                for (let y = start_tile_y; y <= end_tile_y; y++)
-                    if (intersects.lineBox(x1, y1, x2, y2, x * this.grid_x_width - marginx, y * this.grid_y_height - marginy, width, height))
-                        addLine(x, y, p, options, this, this.Offset);
-
-        };
-
-        this.waitForRoadInitialization = new Promise<void>((resolve) => {
-            this.roadsReady = () => {
-                // queue workers for processing control, it will also act as a semaphore
-                for (let i = 0; i < navigator.hardwareConcurrency; i++) {
-                    const w = new Worker(new URL('TileRenderWorker.ts', import.meta.url), {type: 'module'});
-                    // initialize the worker data
-                    w.postMessage({
-                        operation: "initialize", arguments: {
-                            roads: this.road_sources,
-                            variogram:
-                                {
-                                    t: API.variogram.t,
-                                    x: API.variogram.x,
-                                    y: API.variogram.y,
-                                    nugget: API.variogram.nugget,
-                                    range: API.variogram.range,
-                                    sill: API.variogram.sill,
-                                    A: API.variogram.A,
-                                    n: API.variogram.n,
-                                    K: API.variogram.K,
-                                    M: API.variogram.M,
-                                }
-                        }
-                    });
-                    this.renderers.enqueue(w);
-                }
-                resolve();
-            }
-        });
-
         this.max_native_zoom = MaxNativeZoom;
         this.offset = Offset;
-        this.Offset = Offset;
         this.API = API;
 
         this.icon_sources = [];
@@ -699,57 +729,17 @@ export default class VectorControlGridPrototype extends L.GridLayer {
         this.icon_grid_y_size = Math.pow(2, MaxZoom);
         this.icon_grid_y_height = this.pixelScale * size.y / this.grid_y_size;
 
-        //u.imageCache = {};
-
-        this.addIcon = (icon, x, y, glow, zoomMin, zoomMax) => {
-            this.icon_sources.push(
-                {
-                    size: {
-                        width: .5,
-                        height: .5
-                    },
-                    x: x + Offset[0],
-                    y: -(y + Offset[1]) + 256,
-                    icon: icon,
-                    zoomMin: zoomMin,
-                    glow: glow,
-                    zoomMax: zoomMax,
-                    pendingLoad: 0
-                });
-        };
-
-
         this.hex_sources = [];
-        this.addHex = (x, y, width, height, offline) => {
-            this.hex_sources.push(
-                {
-                    size: {
-                        width: width,
-                        height: height
-                    },
-                    x: x + Offset[0] + width * .5,
-                    y: y + Offset[1] + height * .5,
-                    offline: offline
-                });
-        };
 
-        const loaded_events = [];
-        const unloaded_events = [];
-        this.when = function (event_name, event_action) {
-            switch (event_name) {
-                case 'loaded':
-                    loaded_events.push(event_action);
-                    break;
-                case 'unloaded':
-                    unloaded_events.push(event_action);
-                    break;
-            }
-        };
+        this.loaded_events = [];
+        this.unloaded_events = [];
+        
         this.on('loading', () => {
-            for (let i of unloaded_events) i();
+            for (let i of this.unloaded_events) i();
         });
+
         this.on('load', () => {
-            for (let i of loaded_events) i();
+            for (let i of this.loaded_events) i();
         });
     }
 }
