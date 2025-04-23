@@ -9,17 +9,17 @@ module.exports.L = require('leaflet');
 
 module.exports.$ = require('jquery');
 
-module.exports.VectorControlGrid = {
-    Create: (MaxNativeZoom, MaxZoom, Offset, API, RoadWidth, ControlWidth, GridDepth) => 
-        new VectorControlGrid(MaxNativeZoom, MaxZoom, Offset, API, RoadWidth, ControlWidth, GridDepth)
-};
+// module.exports.VectorControlGrid = {
+//     Create: (MaxNativeZoom, MaxZoom, Offset, API, RoadWidth, ControlWidth, GridDepth) =>
+//         new VectorControlGrid(MaxNativeZoom, MaxZoom, Offset, API, RoadWidth, ControlWidth, GridDepth)
+// };
 
 module.exports.VectorTextGrid = {
     Create: (MaxZoom, Offset) => require('./IVectorTextGrid.ts').Create(MaxZoom, Offset)
 };
 
 module.exports.FoxholeRouter = {
-    Create: (mymap, API) => require('./IRouter.ts').Create(mymap, API)
+    Create: async (mymap, API) => await (require('./IRouter.ts')).Create(mymap, API)
 };
 
 module.exports.API = {

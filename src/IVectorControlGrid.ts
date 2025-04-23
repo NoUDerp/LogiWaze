@@ -150,52 +150,91 @@ export default class VectorControlGridPrototype extends L.GridLayer {
     //}
 
     async prepareIcons(icon_sources): Promise<{
-        data: SharedArrayBuffer,
+        data: ImageBitmap,
         width: number,
         height: number,
         name: string
     }[]> {
         const m = new Map<string, Promise<{
-            data: SharedArrayBuffer,
+            data: Uint8ClampedArray,
             width: number,
             height: number
             name: string
         }>>();
 
-        async function downloadImageToSharedArrayBuffer(imageUrl) {
-            const response = await fetch(imageUrl);
-            if (!response.ok)
-                throw new Error(`Failed to fetch image: ${response.statusText}`);
-            const blob = await response.blob();
-            const imageBitmap = await createImageBitmap(blob);
-            const {width, height} = imageBitmap;
+        // async function downloadImage(imageUrl) {
+        //     const response = await fetch(imageUrl);
+        //     if (!response.ok)
+        //         throw new Error(`Failed to fetch image: ${response.statusText}`);
+        //     const blob = await response.blob();
+        //     const imageBitmap = await createImageBitmap(blob);
+        //     const {width, height} = imageBitmap;
+        //     const canvas = new OffscreenCanvas(width, height);
+        //     const ctx = canvas.getContext('2d');
+        //     ctx.drawImage(imageBitmap, 0, 0);
+        //     const imageData = ctx.getImageData(0, 0, width, height);
+        //     return {data: imageData.data, width, height, name: imageUrl};
+        // }
 
-            // Create an OffscreenCanvas to draw the image
-            const canvas = new OffscreenCanvas(width, height);
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(imageBitmap, 0, 0);
+        async function downloadImage(imageUrl) {
+            try {
+                // Fetch the image as an ArrayBuffer
+                const response = await fetch(imageUrl);
 
-            // Get the image data
-            const imageData = ctx.getImageData(0, 0, width, height);
-            const pixelData = imageData.data;
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch image: ${response.status} ${response.statusText}`);
+                }
 
-            // Create SharedArrayBuffer with enough space for RGBA data
-            const buffer = new SharedArrayBuffer(width * height * 4);
-            const sharedArray = new Uint8ClampedArray(buffer);
+                // Get the array buffer from the response
+                const arrayBuffer = await response.arrayBuffer();
 
-            // Copy pixel data to SharedArrayBuffer
-            sharedArray.set(pixelData);
-            return {data: buffer, width, height, name: imageUrl};
+                // Create a blob from the array buffer
+                const blob = new Blob([arrayBuffer]);
+
+                // Create an object URL from the blob
+                const objectUrl = URL.createObjectURL(blob);
+
+                // Create an image element to get dimensions
+                const img = new Image();
+
+                // Create a promise to handle image loading
+                const imageLoaded = new Promise((resolve, reject) => {
+                    img.onload = () => resolve();
+                    img.onerror = () => reject(new Error('Failed to decode image'));
+                });
+
+                // Set the image source to the object URL
+                img.src = objectUrl;
+
+                // Wait for the image to load
+                await imageLoaded;
+
+                if (img && img.src.startsWith('blob:'))
+                    URL.revokeObjectURL(img.src);
+
+                // Return object with all requested data
+                return {
+                    data: arrayBuffer,
+                    width: img.width,
+                    height: img.height,
+                    name: imageUrl
+                };
+            } catch (error) {
+                console.error('Error fetching image:', error);
+                throw error;
+            }
         }
 
         for (let j of icon_sources)
-            if (j.icon != null && !(j.icon in c.t.disabledIcons)) {
+            if (j.icon != null && !(j.icon in this.disabledIcons)) {
                 const filename = `MapIcons/${j.icon}`;
                 if (!m.has(filename))
-                    m.set(filename, downloadImageToSharedArrayBuffer(filename));
+                    m.set(filename, downloadImage(filename));
             }
-        const r = Array.from(m.values());
-        await Promise.all(r);
+
+        const r = [];
+        await Promise.all(m.values());
+        for (const s of m.values()) r.push(await s);
         return r;
     }
 
@@ -571,13 +610,35 @@ export default class VectorControlGridPrototype extends L.GridLayer {
     }
 
     road_sources: any[] = []
+    icon_sources: any[] = []
 
-    async roadsReady() {
+    copyImageBitmap(originalBitmap: ArrayBuffer, width: number, height: number) {
+        // Create a canvas with the same dimensions
+        const canvas = new OffscreenCanvas(
+            width,
+            height
+        );
+
+        const b = new Uint8ClampedArray(originalBitmap.byteLength);
+        b.set(originalBitmap);
+        return b;
+    }
+
+    async prepare(API: API) {
         const icons = await this.prepareIcons(this.icon_sources);
         // queue workers for processing control, it will also act as a semaphore
         for (let i = 0; i < navigator.hardwareConcurrency; i++) {
             const w = new Worker(new URL('TileRenderWorker.ts', import.meta.url), {type: 'module'});
+
             // initialize the worker data
+            const workerIcons = icons.map(j => (
+                {
+                    data: this.copyImageBitmap(j.data, j.width, j.height).buffer,
+                    name: j.name,
+                    width: j.width,
+                    height: j.height
+                }));
+
             w.postMessage({
                 operation: "initialize", arguments: {
                     roads: this.road_sources,
@@ -594,12 +655,11 @@ export default class VectorControlGridPrototype extends L.GridLayer {
                             K: API.variogram.K,
                             M: API.variogram.M,
                         },
-                    icons: icons
+                    icons: workerIcons
                 }
-            });
+            }, Array.from(workerIcons.map(i => i.data)));
             this.renderers.enqueue(w);
         }
-        resolve();
     }
 
     addIcon(icon, x, y, glow, zoomMin, zoomMax) {
@@ -623,7 +683,7 @@ export default class VectorControlGridPrototype extends L.GridLayer {
         const max_road_width = Math.max(this.RoadWidth, this.ControlWidth);
         const max = Math.pow(2, this.GridDepth);
         const margin = max_road_width * max;
-        
+
         const gx = 1.0 / this.grid_x_width;
         const gy = 1.0 / this.grid_y_height;
         const marginx = margin / this.grid_x_size;
@@ -668,7 +728,7 @@ export default class VectorControlGridPrototype extends L.GridLayer {
     }
 
     addHex(x, y, width, height, offline) {
-        
+
         this.hex_sources.push(
             {
                 size: {
@@ -681,7 +741,7 @@ export default class VectorControlGridPrototype extends L.GridLayer {
             });
     }
 
-    when (event_name, event_action) {
+    when(event_name, event_action) {
         switch (event_name) {
             case 'loaded':
                 this.loaded_events.push(event_action);
@@ -691,7 +751,7 @@ export default class VectorControlGridPrototype extends L.GridLayer {
                 break;
         }
     }
-    
+
     constructor(MaxNativeZoom: number, MaxZoom: number, Offset, API: API, RoadWidth: number, ControlWidth: number, GridDepth: number) {
         super(MaxNativeZoom);
         this.updateWhenZooming = false;
@@ -723,7 +783,6 @@ export default class VectorControlGridPrototype extends L.GridLayer {
         this.offset = Offset;
         this.API = API;
 
-        this.icon_sources = [];
         this.icon_grid_x_size = Math.pow(2, MaxZoom);
         this.icon_grid_x_width = this.pixelScale * size.x / this.grid_x_size;
         this.icon_grid_y_size = Math.pow(2, MaxZoom);
@@ -733,7 +792,7 @@ export default class VectorControlGridPrototype extends L.GridLayer {
 
         this.loaded_events = [];
         this.unloaded_events = [];
-        
+
         this.on('loading', () => {
             for (let i of this.unloaded_events) i();
         });

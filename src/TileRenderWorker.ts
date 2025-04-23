@@ -16,7 +16,7 @@ let variogram: {
     K: any,
     M: number[],
 };
-let icons = new Map<string, ImageBitmap>();
+let icons;// = new Map<string, ImageBitmap>();
 
 onmessage = (e) => {
     const context = e.data as { operation: string, arguments: any };
@@ -37,26 +37,27 @@ onmessage = (e) => {
                     K: context.arguments.variogram.K,
                     M: context.arguments.variogram.M
                 };
+            icons = new Map<string, ImageBitmap>();
+
             for (const i of context.arguments.icons as {
-                data: SharedArrayBuffer,
+                data: ArrayBuffer,
                 width: number,
                 height: number,
                 name: string
             }[]) {
-                // Create a Uint8ClampedArray view of the SharedArrayBuffer
-                const pixelData = new Uint8ClampedArray(i.data);
-
-                // Create ImageData from the array
-                const imageData = new ImageData(pixelData, i.width, i.height);
-
-                // Draw to temporary canvas
-                const canvas = new OffscreenCanvas(i.width, i.height);
-                const ctx = canvas.getContext('2d');
-                ctx.putImageData(imageData, 0, 0);
-                // Create and return ImageBitmap
-                icons.set(i.name, canvas.transferToImageBitmap());
+                    // Create a Uint8ClampedArray view of the SharedArrayBuffer
+                    //const pixelData = new Uint8ClampedArray(i.data);
+                    icons.set(i.name, createImageBitmap(new Blob([i.data])));
+                    // Draw to temporary canvas
+                    //  const canvas = new OffscreenCanvas(i.width, i.height);
+                    //  const ctx = canvas.getContext('2d');
+                    // //
+                    //  ctx.putImageData(new ImageData(new Uint8ClampedArray(i.data), i.width, i.height), 0, 0);
+                    //
+                    // // Create and return ImageBitmap
+                    // icons.set(i.name, canvas.transferToImageBitmap());
             }
-        
+
             break;
         }
         case

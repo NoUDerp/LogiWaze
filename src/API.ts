@@ -127,7 +127,7 @@ export default class API {
 
     public war: any
 
-    public async update(completionCallback, shard, retryer) {
+    public async update(completionCallback:  { (): Promise<void> }, shard, retryer) {
 
         let key;
         let y: number;
@@ -193,7 +193,7 @@ export default class API {
 
                         if (--complete == 0) {
                             this.variogram = kriging.train(p_t, p_x, p_y, 'exponential', 0, 100);
-                            completionCallback();
+                            await completionCallback();
                             resolve();
                         }
                     }, 0);

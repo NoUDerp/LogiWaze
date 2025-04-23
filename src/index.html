@@ -1699,11 +1699,11 @@
     global.getPanelVisibleHeight = getPanelVisibleHeight;
 
     update_error_loop: {
-        APIManager.update(function () {
+        APIManager.update(async function () {
 
-            var Geocoder = FoxholeGeocoder.Create(APIManager);
-            
-            var Router = FoxholeRouter.Create(mymap, APIManager);
+            const Geocoder = FoxholeGeocoder.Create(APIManager);
+
+            const Router = await FoxholeRouter.Create(mymap, APIManager);
 
 
             //Router.VectorControlGrid.build = "";//"?".concat(build);
