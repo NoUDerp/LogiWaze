@@ -612,53 +612,53 @@ export default class VectorControlGridPrototype extends L.GridLayer {
     road_sources: any[] = []
     icon_sources: any[] = []
 
-    copyImageBitmap(originalBitmap: ArrayBuffer, width: number, height: number) {
-        // Create a canvas with the same dimensions
-        const canvas = new OffscreenCanvas(
-            width,
-            height
-        );
-
-        const b = new Uint8ClampedArray(originalBitmap.byteLength);
-        b.set(originalBitmap);
-        return b;
+    copyImageDataBuffer(originalBitmap: ArrayBuffer, width: number, height: number): ArrayBuffer {
+        const buffer = new Uint8ClampedArray(originalBitmap.byteLength);
+        buffer.set(originalBitmap);
+        return buffer.buffer;
     }
 
     async prepare(API: API) {
         const icons = await this.prepareIcons(this.icon_sources);
         // queue workers for processing control, it will also act as a semaphore
         for (let i = 0; i < navigator.hardwareConcurrency; i++) {
-            const w = new Worker(new URL('TileRenderWorker.ts', import.meta.url), {type: 'module'});
+            setTimeout(async ()=> {
+                const w = new Worker(new URL('TileRenderWorker.ts', import.meta.url), {type: 'module'});
 
-            // initialize the worker data
-            const workerIcons = icons.map(j => (
-                {
-                    data: this.copyImageBitmap(j.data, j.width, j.height).buffer,
-                    name: j.name,
-                    width: j.width,
-                    height: j.height
-                }));
+                // initialize the worker data
+                const workerIcons = icons.map(j => (
+                    {
+                        data: this.copyImageDataBuffer(j.data, j.width, j.height),
+                        name: j.name,
+                        width: j.width,
+                        height: j.height
+                    }));
 
-            w.postMessage({
-                operation: "initialize", arguments: {
-                    roads: this.road_sources,
-                    variogram:
-                        {
-                            t: API.variogram.t,
-                            x: API.variogram.x,
-                            y: API.variogram.y,
-                            nugget: API.variogram.nugget,
-                            range: API.variogram.range,
-                            sill: API.variogram.sill,
-                            A: API.variogram.A,
-                            n: API.variogram.n,
-                            K: API.variogram.K,
-                            M: API.variogram.M,
-                        },
-                    icons: workerIcons
-                }
-            }, Array.from(workerIcons.map(i => i.data)));
-            this.renderers.enqueue(w);
+                w.onmessage = async e => {
+                    if (e.data === "ok") this.renderers.enqueue(w);
+                    else throw "Error loading worker";
+                };
+
+                w.postMessage({
+                    operation: "initialize", arguments: {
+                        roads: this.road_sources,
+                        variogram:
+                            {
+                                t: API.variogram.t,
+                                x: API.variogram.x,
+                                y: API.variogram.y,
+                                nugget: API.variogram.nugget,
+                                range: API.variogram.range,
+                                sill: API.variogram.sill,
+                                A: API.variogram.A,
+                                n: API.variogram.n,
+                                K: API.variogram.K,
+                                M: API.variogram.M,
+                            },
+                        icons: workerIcons
+                    }
+                }, Array.from(workerIcons.map(i => i.data)));
+            }, 0);
         }
     }
 
