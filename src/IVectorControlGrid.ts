@@ -149,80 +149,14 @@ export default class VectorControlGridPrototype extends L.GridLayer {
     //async loadIcons(c): Promise<void> {
     //}
 
-    async prepareIcons(icon_sources): Promise<{
-        data: ImageBitmap,
-        width: number,
-        height: number,
-        name: string
-    }[]> {
-        const m = new Map<string, Promise<{
-            data: Uint8ClampedArray,
-            width: number,
-            height: number
-            name: string
-        }>>();
-
-        // async function downloadImage(imageUrl) {
-        //     const response = await fetch(imageUrl);
-        //     if (!response.ok)
-        //         throw new Error(`Failed to fetch image: ${response.statusText}`);
-        //     const blob = await response.blob();
-        //     const imageBitmap = await createImageBitmap(blob);
-        //     const {width, height} = imageBitmap;
-        //     const canvas = new OffscreenCanvas(width, height);
-        //     const ctx = canvas.getContext('2d');
-        //     ctx.drawImage(imageBitmap, 0, 0);
-        //     const imageData = ctx.getImageData(0, 0, width, height);
-        //     return {data: imageData.data, width, height, name: imageUrl};
-        // }
+    async prepareIcons(icon_sources): Map<string, Promise<ArrayBuffer>> {
+        const m = new Map<string, Promise<ArrayBuffer>>();
 
         async function downloadImage(imageUrl) {
-            try {
-                // Fetch the image as an ArrayBuffer
-                const response = await fetch(imageUrl);
-
-                if (!response.ok) {
-                    throw new Error(`Failed to fetch image: ${response.status} ${response.statusText}`);
-                }
-
-                // Get the array buffer from the response
-                const arrayBuffer = await response.arrayBuffer();
-
-                // Create a blob from the array buffer
-                const blob = new Blob([arrayBuffer]);
-
-                // Create an object URL from the blob
-                const objectUrl = URL.createObjectURL(blob);
-
-                // Create an image element to get dimensions
-                const img = new Image();
-
-                // Create a promise to handle image loading
-                const imageLoaded = new Promise((resolve, reject) => {
-                    img.onload = () => resolve();
-                    img.onerror = () => reject(new Error('Failed to decode image'));
-                });
-
-                // Set the image source to the object URL
-                img.src = objectUrl;
-
-                // Wait for the image to load
-                await imageLoaded;
-
-                if (img && img.src.startsWith('blob:'))
-                    URL.revokeObjectURL(img.src);
-
-                // Return object with all requested data
-                return {
-                    data: arrayBuffer,
-                    width: img.width,
-                    height: img.height,
-                    name: imageUrl
-                };
-            } catch (error) {
-                console.error('Error fetching image:', error);
-                throw error;
-            }
+            const response = await fetch(imageUrl);
+            if (!response.ok)
+                throw new Error(`Failed to fetch image (${imageUrl}): ${response.status} ${response.statusText}`);
+            return await response.arrayBuffer();
         }
 
         for (let j of icon_sources)
@@ -232,10 +166,8 @@ export default class VectorControlGridPrototype extends L.GridLayer {
                     m.set(filename, downloadImage(filename));
             }
 
-        const r = [];
         await Promise.all(m.values());
-        for (const s of m.values()) r.push(await s);
-        return r;
+        return m;
     }
 
     // function makeRenderCallback(u, icon, ctx, img, lx, ly, lw, lh, tile, glow, shadow) {
@@ -612,7 +544,7 @@ export default class VectorControlGridPrototype extends L.GridLayer {
     road_sources: any[] = []
     icon_sources: any[] = []
 
-    copyImageDataBuffer(originalBitmap: ArrayBuffer, width: number, height: number): ArrayBuffer {
+    copyImageDataBuffer(originalBitmap: ArrayBuffer): ArrayBuffer {
         const buffer = new Uint8ClampedArray(originalBitmap.byteLength);
         buffer.set(originalBitmap);
         return buffer.buffer;
@@ -622,17 +554,17 @@ export default class VectorControlGridPrototype extends L.GridLayer {
         const icons = await this.prepareIcons(this.icon_sources);
         // queue workers for processing control, it will also act as a semaphore
         for (let i = 0; i < navigator.hardwareConcurrency; i++) {
-            setTimeout(async ()=> {
+            setTimeout(async () => {
                 const w = new Worker(new URL('TileRenderWorker.ts', import.meta.url), {type: 'module'});
 
                 // initialize the worker data
-                const workerIcons = icons.map(j => (
-                    {
-                        data: this.copyImageDataBuffer(j.data, j.width, j.height),
-                        name: j.name,
-                        width: j.width,
-                        height: j.height
-                    }));
+                const workerIcons = [];
+                for (const [name, data] of icons)
+                    workerIcons.push(
+                        {
+                            data: this.copyImageDataBuffer(data),
+                            name: name,
+                        });
 
                 w.onmessage = async e => {
                     if (e.data === "ok") this.renderers.enqueue(w);

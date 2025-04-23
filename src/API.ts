@@ -127,7 +127,7 @@ export default class API {
 
     public war: any
 
-    public async update(completionCallback:  { (): Promise<void> }, shard, retryer) {
+    public async update(completionCallback: { (): Promise<void> }, shard, retryer) {
 
         let key;
         let y: number;
@@ -139,69 +139,61 @@ export default class API {
 
         const maps = await APIQuery(`https://${shard}.foxholeservices.com/api/worldconquest/maps`);
 
-        await new Promise<void>(resolve => {
-            try {
+        // iterate here on the maps and collect status
+        const p_x = [], p_y = [], p_t = [];
 
-                // iterate here on the maps and collect status
-                let complete = maps.length;
-                const p_x = [], p_y = [], p_t = [];
+        const xf = 256 / 7;
+        const yf = xf * Math.sqrt(3) / 2;
+        const tasks: Array<Promise<void>> = [];
 
-                const xf = 256 / 7;
-                const yf = xf * Math.sqrt(3) / 2;
-
-                for (let i = 0; i < maps.length; i++) {
-                    const mapName = maps[i];
-                    setTimeout(async () => {
-                        const mapData = await APIQuery(`https://${shard}.foxholeservices.com/api/worldconquest/maps/${maps[i]}/dynamic/public`);
-                        if (mapData.mapItems.length > 0) {
-                            this.mapControl[mapName] = {};
-                            this.resources[mapName] = {};
-                            const offset = this.remapXY(mapName);
-                            for (let j = 0; j < mapData.mapItems.length; j++) {
-                                const icon = mapData.mapItems[j].iconType;
-                                x = mapData.mapItems[j].x;
-                                y = mapData.mapItems[j].y;
-                                x = (((x * xf) + offset.x) - xf * .5);
-                                y = ((((1 - y) * yf) + offset.y) - yf * .5);
-                                key = x.toFixed(3).toString().concat('|').concat(y.toFixed(3).toString());
-                                if (this.townHallIcons.includes(icon)) {
-                                    const control = mapData.mapItems[j].teamId;
-                                    this.mapControl[mapName][key] = {
-                                        x: x,
-                                        y: y,
-                                        control: control,
-                                        mapIcon: icon,
-                                        nuked: (mapData.mapItems[j].flags & 0x10) != 0,
-                                        town: this.krigingControlPointIcons.includes(icon)
-                                    };
-                                    if ((mapData.mapItems[j].flags & 0x10) == 0 && control != "OFFLINE" && this.krigingControlPointIcons.includes(icon)) {
-                                        p_x.push(x);
-                                        p_y.push(y);
-                                        p_t.push(control == "WARDENS" ? -1 : (control == "COLONIALS" ? 1 : 0));
-                                    }
-                                } else {
-                                    this.resources[mapName][key] = {
-                                        x: x,
-                                        y: y,
-                                        control: mapData.mapItems[j].teamId,
-                                        mapIcon: icon,
-                                        nuked: (mapData.mapItems[j].flags & 0x10) != 0
-                                    };
-                                }
-                            }
+        const u = this;
+        async function downloadMapData(mapName: string, i: number, mapControl, resources) {
+            const mapData = await APIQuery(`https://${shard}.foxholeservices.com/api/worldconquest/maps/${maps[i]}/dynamic/public`);
+            if (mapData.mapItems.length > 0) {
+                mapControl[mapName] = {};
+                resources[mapName] = {};
+                const offset = u.remapXY(mapName);
+                for (let j = 0; j < mapData.mapItems.length; j++) {
+                    const icon = mapData.mapItems[j].iconType;
+                    x = mapData.mapItems[j].x;
+                    y = mapData.mapItems[j].y;
+                    x = (((x * xf) + offset.x) - xf * .5);
+                    y = ((((1 - y) * yf) + offset.y) - yf * .5);
+                    key = x.toFixed(3).toString().concat('|').concat(y.toFixed(3).toString());
+                    if (u.townHallIcons.includes(icon)) {
+                        const control = mapData.mapItems[j].teamId;
+                        mapControl[mapName][key] = {
+                            x: x,
+                            y: y,
+                            control: control,
+                            mapIcon: icon,
+                            nuked: (mapData.mapItems[j].flags & 0x10) != 0,
+                            town: u.krigingControlPointIcons.includes(icon)
+                        };
+                        if ((mapData.mapItems[j].flags & 0x10) == 0 && control != "OFFLINE" && u.krigingControlPointIcons.includes(icon)) {
+                            p_x.push(x);
+                            p_y.push(y);
+                            p_t.push(control == "WARDENS" ? -1 : (control == "COLONIALS" ? 1 : 0));
                         }
-
-                        if (--complete == 0) {
-                            this.variogram = kriging.train(p_t, p_x, p_y, 'exponential', 0, 100);
-                            await completionCallback();
-                            resolve();
-                        }
-                    }, 0);
+                    } else {
+                        resources[mapName][key] = {
+                            x: x,
+                            y: y,
+                            control: mapData.mapItems[j].teamId,
+                            mapIcon: icon,
+                            nuked: (mapData.mapItems[j].flags & 0x10) != 0
+                        };
+                    }
                 }
-            } catch (error) {
-                retryer(error);
             }
-        });
+        }
+
+        for (let i = 0; i < maps.length; i++) 
+            tasks.push(downloadMapData(maps[i], i, this.mapControl, this.resources));
+        await Promise.all(tasks);
+
+        this.variogram = kriging.train(p_t, p_x, p_y, 'exponential', 0, 100);
+        await completionCallback();
     }
 
     public variogram: any
