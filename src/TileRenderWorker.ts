@@ -1,6 +1,7 @@
 import {variogramExponential} from "@sakitam-gis/kriging/src/utils";
 import * as kriging from "@sakitam-gis/kriging";
 import * as intersects from 'intersects';
+import {predict} from "@sakitam-gis/kriging";
 
 let road_sources;
 let variogram: {
@@ -43,6 +44,7 @@ onmessage = async (e) => {
             icons = new Map<string, ImageBitmap>();
             icon_sources = context.arguments.icon_sources;
 
+            // not sure if these should be loaded to the window or for each separate web worker context
             fontMap.set('Celtic', new FontFace('Celtic', context.arguments.fonts.Celtic as ArrayBuffer));
             fontMap.set('Roman', new FontFace('Roman', context.arguments.fonts.Roman as ArrayBuffer));
             fontMap.set('Italic', new FontFace('Italic', context.arguments.fonts.Italic as ArrayBuffer));
@@ -61,6 +63,27 @@ onmessage = async (e) => {
             }[])
                 icons.set(i.name, await createImageBitmap(new Blob([i.data], {type: 'image/webp'})));
             postMessage("ok");
+            break;
+        }
+        case "predict": {
+            const variogram =
+                {
+                    t: context.arguments.variogram.t,
+                    x: context.arguments.variogram.x,
+                    y: context.arguments.variogram.y,
+                    nugget: context.arguments.variogram.nugget,
+                    range: context.arguments.variogram.range,
+                    sill: context.arguments.variogram.sill,
+                    A: context.arguments.variogram.A,
+                    n: context.arguments.variogram.n,
+                    model: variogramExponential,
+                    K: context.arguments.variogram.K,
+                    M: context.arguments.variogram.M
+                };
+            const output = [];
+            for (const v of context.arguments.tests)
+                output.push(predict(v.x, v.y, variogram));
+            postMessage(output);
             break;
         }
         case "control": {
@@ -402,7 +425,7 @@ onmessage = async (e) => {
                     }
             }
 
-            function draw(boring:boolean, ctx : OffscreenCanvasRenderingContext2D) {
+            function draw(boring: boolean, ctx: OffscreenCanvasRenderingContext2D) {
                 for (let i = 0; i < sources.length; i++) {
                     let j = sources[i];
                     if (args.coords.z >= j.zoomMin && args.coords.z < j.zoomMax) {

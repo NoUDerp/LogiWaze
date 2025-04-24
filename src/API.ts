@@ -117,6 +117,32 @@ export default class API {
         return {ownership: c < -.25 ? "WARDENS" : (c > .25 ? "COLONIALS" : "NONE"), icon: icon};
     }
 
+    public batchOwnership(worker: Worker, tests: { x: number, y: number }[], region: string): Promise<string[]> {
+        if (!(region in this.mapControl))
+            return Promise.resolve(Array(tests.length).fill("OFFLINE"));
+
+        const thi = this;
+        return new Promise<string[]>(resolve => {
+                worker.onmessage = async (d) => resolve(d.data);
+
+                worker.postMessage({
+                    tests: tests, variogram:
+                        {
+                            t: thi.variogram.t,
+                            x: thi.variogram.x,
+                            y: thi.variogram.y,
+                            nugget: thi.variogram.nugget,
+                            range: thi.variogram.range,
+                            sill: thi.variogram.sill,
+                            A: thi.variogram.A,
+                            n: thi.variogram.n,
+                            K: thi.variogram.K,
+                            M: thi.variogram.M,
+                        }
+                });
+            });
+    }
+
     public control(x: number, y: number): number {
         return kriging.predict(x - 128, y + 128, this.variogram)
     }
@@ -147,6 +173,7 @@ export default class API {
         const tasks: Array<Promise<void>> = [];
 
         const u = this;
+
         async function downloadMapData(mapName: string, i: number, mapControl, resources) {
             const mapData = await APIQuery(`https://${shard}.foxholeservices.com/api/worldconquest/maps/${maps[i]}/dynamic/public`);
             if (mapData.mapItems.length > 0) {
@@ -188,7 +215,7 @@ export default class API {
             }
         }
 
-        for (let i = 0; i < maps.length; i++) 
+        for (let i = 0; i < maps.length; i++)
             tasks.push(downloadMapData(maps[i], i, this.mapControl, this.resources));
         await Promise.all(tasks);
 
