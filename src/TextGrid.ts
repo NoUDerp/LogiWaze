@@ -79,6 +79,12 @@ class TextGrid extends L.GridLayer {
         tile.style.width = (size.x * hd_ratio).toString().concat("px");
         tile.style.height = (size.y * hd_ratio).toString().concat("px");
 
+        if(!this.draw)
+        {
+            setTimeout(()=> done());
+            return tile;
+        }
+
         setTimeout(async() => {
             const w = await this.renderers.dequeue();
             const data = new Promise<ImageBitmap>((resolve) => {
@@ -122,12 +128,12 @@ export function Create(MaxZoom, Offset, controlLayer : ControlGrid) {
     u.grid_y_size = Math.pow(2, MaxZoom);
     u.grid_y_height = size.y / u.grid_y_size;
     u.Offset = Offset;
-    var canvas = L.DomUtil.create('canvas', 'leaflet-tile');
-    ctx = canvas.getContext('2d');
+    const canvas = L.DomUtil.create('canvas', 'leaflet-tile');
+    const ctx = canvas.getContext('2d');
     u.Offset = Offset;
     u.addText = (text, original_text, control, x, y, zoomMin, zoomMax, color, scale) => {
         controlToFont(control, ctx, u.boring);
-        var size = ctx.measureText(u.boring ? original_text : text);
+        const size = ctx.measureText(u.boring ? original_text : text);
         u.sources.push(
             {
                 size: {

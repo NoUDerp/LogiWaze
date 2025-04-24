@@ -62,84 +62,9 @@ export default class ControlGrid extends L.GridLayer {
         ctx.stroke();
     }
 
-    drawBorders(c, ctx) {
-        let coords = c.coords;
-
-        let tile = c.tile;
-
-        const zoom = Math.pow(2, coords.z);
-        const lineWidth = .2 * Math.pow(2, coords.z);
-        const shadow = lineWidth * .5 / Math.pow(2, c.t.max_zoom);
-
-        ctx.save();
-        ctx.strokeStyle = '#303030';
-        ctx.opacity = .8;
-        ctx.scale(c.t.pixelScale, c.t.pixelScale);
-
-        for (let j of c.t.hex_sources) {
-            const label_w = j.size.width * zoom + shadow * 2;
-            const label_h = j.size.height * zoom + shadow * 2;
-            const label_x = j.x * zoom - coords.x * tile.width / c.t.pixelScale - label_w - shadow;
-            const label_y = j.y * zoom - coords.y * tile.height / c.t.pixelScale - label_h - shadow;
-            if (intersects.boxBox(0, 0, tile.width, tile.height, label_x, label_y, label_w, label_h))
-                ControlGrid.drawHex(c.tile, c.ctx, label_x + label_w * .5,
-                    label_y + label_h * .5,
-                    label_w * .5,
-                    label_h * .5,
-                    lineWidth
-                );
-        }
-
-        ctx.restore();
-    }
-
-
-    drawValidRegions(tile: HTMLImageElement, ctx: CanvasRenderingContext2D, coords, pixelScale: number, max_zoom: number, hex_sources) {
-        const zoom = Math.pow(2, coords.z);
-        const lineWidth = Math.pow(2, coords.z);
-        const shadow = lineWidth * .5 / Math.pow(2, max_zoom);
-        ctx.save();
-        ctx.fillStyle = '#FFFFFFFF';
-        ctx.strokeStyle = '#FFFFFFFF';
-        ctx.scale(pixelScale, pixelScale);
-        for (let j of hex_sources) {
-            if (!j.offline) {
-                const label_w = j.size.width * zoom + shadow * 2;
-                const label_h = j.size.height * zoom + shadow * 2;
-                const label_x = j.x * zoom - coords.x * tile.width / pixelScale - label_w - shadow;
-                const label_y = j.y * zoom - coords.y * tile.height / pixelScale - label_h - shadow;
-                if (intersects.boxBox(0, 0, tile.width, tile.height, label_x, label_y, label_w, label_h))
-                    ControlGrid.fillHex(tile, ctx, label_x + label_w * .5, label_y + label_h * .5, label_w * .5, label_h * .5, lineWidth);
-            }
-        }
-        ctx.restore();
-    }
-
-    drawInvalidRegions(tile: HTMLImageElement, ctx, coords, pixelScale: number, max_zoom: number, hex_sources) {
-        const zoom = Math.pow(2, coords.z);
-        const lineWidth = Math.pow(2, coords.z);
-        const shadow = lineWidth * .5 / Math.pow(2, max_zoom);
-        ctx.save();
-        ctx.fillStyle = '#000000FF';
-        ctx.strokeStyle = '#000000FF';
-        for (let j of hex_sources) if (j.offline) {
-            const label_w = j.size.width * zoom + shadow * 2;
-            const label_h = j.size.height * zoom + shadow * 2;
-            const label_x = j.x * zoom - coords.x * tile.width / pixelScale - label_w - shadow;// / t.pixelScale    const
-            const label_y = j.y * zoom - coords.y * tile.height / pixelScale - label_h - shadow;
-
-            if (intersects.boxBox(0, 0, tile.width, tile.height, label_x, label_y, label_w, label_h))
-                ControlGrid.fillHex(tile, ctx, label_x + label_w * .5, label_y + label_h * .5, label_w * .5, label_h * .5, lineWidth);
-        }
-
-        ctx.restore();
-    }
-
-
     disableIcons(icons) {
         for (let i of icons) this.disabledIcons[i] = true;
     }
-
 
     enableIcons(icons) {
         for (let i of icons) delete this.disabledIcons[i];
@@ -172,55 +97,57 @@ export default class ControlGrid extends L.GridLayer {
     renderer(c)
         :
         any {
-        c.tile = L.DomUtil.create('canvas', 'leaflet-tile');
+        const tile = L.DomUtil.create('canvas', 'leaflet-tile');
         const size = c.t.getTileSize();
-        c.tile.width = size.x * c.t.pixelScale;
-        c.tile.height = size.y * c.t.pixelScale;
-        c.tile.style.width = c.tile.width.toString().concat('px');
-        c.tile.style.height = c.tile.height.toString().concat('px');
+        tile.width = size.x * c.t.pixelScale;
+        tile.height = size.y * c.t.pixelScale;
+        tile.style.width = tile.width.toString().concat('px');
+        tile.style.height = tile.height.toString().concat('px');
         setTimeout(async () => {
-            await this.render(c);
-            c.done(null, c.tile);
+            await this.render(c, tile);
+            try {
+                c.done(null, tile);
+            } catch (e) {
+                console.error(e);
+            }
         });
-        return c.tile;
+        return tile;
     }
 
-    async render(c) {
-        const i = await this.loadTile(c);
-        this.drawTileToContext(c, i, c.ctx);
-        await this.renderOverlay(c);
+    async render(c,tile: HTMLCanvasElement) {
+        const i = await this.loadTile(c, tile);
+        this.drawTileToContext(tile, c.coords, c.t.max_native_zoom, i, c.ctx);
+        await this.renderControlToTempCanvas(c, tile);
     }
 
-    async loadTile(c)
+    async loadTile(c, tile: HTMLCanvasElement)
         :
         Promise<ImageBitmap> {
-        c.ctx = c.tile.getContext('2d');
+        c.ctx = tile.getContext('2d');
         //await c.t.loadIcons(c);
 
         const scale = Math.pow(2, Math.max(0, c.coords.z - c.t.max_native_zoom));
-        const filename = `Tiles/${Math.min(c.coords.z, c.t.max_native_zoom)}_${Math.floor(c.coords.x / scale)}_${Math.floor(c.coords.y / scale)}.webp`;
+        const filename = `Tiles/${Math.round(Math.min(c.coords.z, c.t.max_native_zoom))}_${Math.floor(c.coords.x / scale)}_${Math.floor(c.coords.y / scale)}.webp`;
         const response = await fetch(filename);
         const imageBlob = await response.blob();
         return await createImageBitmap(imageBlob);
     }
 
-    drawTileToContext(c, img
-                      :
-                      ImageBitmap, ctx
+    drawTileToContext(tile: HTMLCanvasElement, coords, max_native_zoom: number, img: ImageBitmap, ctx: CanvasRenderingContext2D
     ) {
-        const scale = Math.pow(2, Math.max(0, c.coords.z - c.t.max_native_zoom));
-        const ox = c.coords.x % scale;
-        const oy = c.coords.y % scale;
+        const scale = Math.pow(2, Math.max(0, coords.z - max_native_zoom));
+        const ox = coords.x % scale;
+        const oy = coords.y % scale;
         const bx = img.width / scale;
         const by = img.height / scale;
-        ctx.drawImage(img, bx * ox, by * oy, bx, by, 0, 0, c.tile.width, c.tile.height);
+        ctx.drawImage(img, bx * ox, by * oy, bx, by, 0, 0, tile.width, tile.height);
         img.close();
     }
 
-    async renderControlToTempCanvas(c) {
+    async renderControlToTempCanvas(c, tile: HTMLCanvasElement) {
         c.hd_ratio = 8; // c.coords.z < 2 ? 8 : 16;
-        const cTempCanvasWidth = 2 + c.tile.width / c.t.pixelScale / c.hd_ratio;
-        const cTempCanvasHeight = 2 + c.tile.height / c.t.pixelScale / c.hd_ratio;
+        const cTempCanvasWidth = 2 + tile.width / c.t.pixelScale / c.hd_ratio;
+        const cTempCanvasHeight = 2 + tile.height / c.t.pixelScale / c.hd_ratio;
         const max = Math.pow(2, c.t.max_zoom - c.coords.z);
         const zoom = Math.pow(2, c.coords.z);
         const hdRatio = c.hd_ratio / zoom;
@@ -245,8 +172,8 @@ export default class ControlGrid extends L.GridLayer {
                         grid_y_size: c.t.grid_y_size,
                         controls: c.t.controls,
                         pixelScale: c.t.pixelScale,
-                        width: c.tile.width,
-                        height: c.tile.height,
+                        width: tile.width,
+                        height: tile.height,
                         max_zoom: c.t.max_zoom,
                         hex_sources: c.t.hex_sources,
                         disabled_icons: this.disabledIcons,
@@ -260,33 +187,6 @@ export default class ControlGrid extends L.GridLayer {
         const image = await data;
         tileContext.drawImage(image, 0, 0);
         image.close();
-    }
-
-    async renderOverlay(c) {
-        await this.renderControlToTempCanvas(c);
-        const u = this;
-        return new Promise((resolve, reject) => {
-            setTimeout(async () => {
-                try {
-                    // c.ctx.save();
-                    // c.ctx.scale(c.t.pixelScale, c.t.pixelScale);
-                    // await c.t.drawRoads(c);
-                    //
-                    // c.ctx.restore();
-                    // if (c.t.drawHexes)
-                    //     u.drawBorders(c, c.ctx);
-
-                    c.ctx.save();
-                    c.ctx.scale(c.t.pixelScale, c.t.pixelScale);
-                    //await c.t.drawIcons(c);
-                    c.ctx.restore();
-                    resolve();
-
-                } catch (error) {
-                    reject(error);
-                }
-            });
-        });
     }
 
     logImageBitmap(imageBitmap) {
