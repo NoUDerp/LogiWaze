@@ -117,30 +117,29 @@ export default class API {
         return {ownership: c < -.25 ? "WARDENS" : (c > .25 ? "COLONIALS" : "NONE"), icon: icon};
     }
 
-    public batchOwnership(worker: Worker, tests: { x: number, y: number }[], region: string): Promise<string[]> {
-        if (!(region in this.mapControl))
-            return Promise.resolve(Array(tests.length).fill("OFFLINE"));
-
+    public batchOwnership(worker: Worker, tests: { x: number, y: number, region: string }[]): Promise<string[]> {
         const thi = this;
         return new Promise<string[]>(resolve => {
-                worker.onmessage = async (d) => resolve(d.data);
+            worker.onmessage = async (d) => resolve(d.data);
 
-                worker.postMessage({
-                    tests: tests, variogram:
-                        {
-                            t: thi.variogram.t,
-                            x: thi.variogram.x,
-                            y: thi.variogram.y,
-                            nugget: thi.variogram.nugget,
-                            range: thi.variogram.range,
-                            sill: thi.variogram.sill,
-                            A: thi.variogram.A,
-                            n: thi.variogram.n,
-                            K: thi.variogram.K,
-                            M: thi.variogram.M,
-                        }
-                });
+            worker.postMessage({
+                tests: tests,
+                mapControl: this.mapControl,
+                variogram:
+                    {
+                        t: thi.variogram.t,
+                        x: thi.variogram.x,
+                        y: thi.variogram.y,
+                        nugget: thi.variogram.nugget,
+                        range: thi.variogram.range,
+                        sill: thi.variogram.sill,
+                        A: thi.variogram.A,
+                        n: thi.variogram.n,
+                        K: thi.variogram.K,
+                        M: thi.variogram.M,
+                    }
             });
+        });
     }
 
     public control(x: number, y: number): number {

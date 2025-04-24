@@ -15,6 +15,8 @@ function owoTranslate(text) {
 
 module.exports.Create = async function (mymap, API) {
 
+    let feature;
+    let p;
     let k;
     let i;
     let changeCase = (x) => x.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
@@ -34,10 +36,10 @@ module.exports.Create = async function (mymap, API) {
     var keys = Object.keys(JSONRoads._layers);
 
     for (i = 0; i < Paths.features.length; i++) {
-        var feature = Paths.features[i];
+        feature = Paths.features[i];
         const scratch = {};
         for (k = 0; k < feature.geometry.coordinates.length; k++) {
-            var p = feature.geometry.coordinates[k];
+            p = feature.geometry.coordinates[k];
             var hash = p[0].toFixed(3).concat("|").concat(p[1].toFixed(3));
             if (scratch[hash] === true) {
                 feature.geometry.coordinates.splice(k, 1);
@@ -53,16 +55,51 @@ module.exports.Create = async function (mymap, API) {
     }
 
     let break_feature_set;
+
+    const ownershipMatrixIndex = [];
+    const matrixSegments = Array(navigator.hardwareConcurrency);
+    let j = 0;
+    let index = 0;
+    for (i = 0; i < navigator.hardwareConcurrency; i++)
+        matrixSegments[i] = [];
+
     for (i = 0; i < Paths.features.length; i++) {
-        var feature = Paths.features[i];
+        const feature = Paths.features[i];
+        ownershipMatrixIndex.push(index);
+        for (k = 0; k < feature.geometry.coordinates.length; k++) {
+            const p = feature.geometry.coordinates[k];
+            matrixSegments[(j++) % navigator.hardwareConcurrency].push({
+                x: p[0],
+                y: p[1],
+                region: Paths.features[i].properties.region
+            });
+        }
+        index += feature.geometry.coordinates.length;
+    }
+
+    const segments = Array.from(matrixSegments.map(s => API.batchOwnership(new Worker(new URL('PredictorWorker.ts', import.meta.url), {type: 'module'}), s)));
+    await Promise.all(segments);
+
+    const data = [];
+    for (const d of segments)
+        data.push(await d);
+
+    // const ownershipMatrix = [];
+    // for (let c = 0; c < j; c++)
+    //     ownershipMatrix.push(data[c / navigator.hardwareConcurrency][c % navigator.hardwareConcurrency]);
+
+    // calculate the ownership for the entirety of ownershipMatrix by splitting it into batches by hardware processors
+
+
+    for (i = 0; i < Paths.features.length; i++) {
+        feature = Paths.features[i];
         let warden_features = new Array();
         let colonial_features = new Array();
         const all_features = new Array();
         let last_ownership = "NONE";
         let last_p = null;
-
         for (k = 0; k < feature.geometry.coordinates.length; k++) {
-            var p = feature.geometry.coordinates[k];
+            const p = feature.geometry.coordinates[k];
             var hash = p[0].toFixed(3).concat("|").concat(p[1].toFixed(3));
             const increment = (k === 0 || k == feature.geometry.coordinates.length - 1) ? 1 : 2;
 
@@ -74,8 +111,11 @@ module.exports.Create = async function (mymap, API) {
             else if (BorderCache[hash] != feature.properties.region && feature.properties != null && feature.properties.region != null)
                 BorderCrossings[hash] = 1;
 
-            var region = Paths.features[i].properties.region;
-            var ownership = !(region in API.mapControl) ? "OFFLINE" : API.ownership(p[0], p[1], region).ownership;
+            const region = Paths.features[i].properties.region;
+            const index = ownershipMatrixIndex[i] + k;
+            const ownershipScore = data[index % navigator.hardwareConcurrency][index / navigator.hardwareConcurrency];// ownershipMatrix[ownershipMatrixIndex[i] + k];// (await this.API.batchOwnership(w, [{x: p[0], y: p[1]}]))[0];
+            const ownership = Number.isNaN(ownershipScore) ? "OFFLINE" : (ownershipScore < -.25 ? "WARDENS" : (ownershipScore > .25 ? "COLONIALS" : "NONE"));
+            // !(region in API.mapControl) ? "OFFLINE" : API.ownership(p[0], p[1], region).ownership;
             JSONRoads._layers[keys[i]]._latlngs[k].ownership = ownership;
 
             if (API.mapControl[feature.properties.region] != null && ownership != "OFFLINE" && region in API.mapControl)
@@ -226,47 +266,47 @@ module.exports.Create = async function (mymap, API) {
         return null;
     };
 
-    for (var t of Object.keys(API.resources)) {
-        var region = API.resources[t];
+    for (const t of Object.keys(API.resources)) {
+        const region = API.resources[t];
         for (k of Object.keys(region)) {
-            var th = region[k];
+            const th = region[k];
             if (th.nuked) {
-                var data = {ownership: th.control, icon: th.mapIcon};
-                var icon = resolveResource(data);
+                const data = {ownership: th.control, icon: th.mapIcon};
+                const icon = resolveResource(data);
                 ControlLayer.addIcon(icon, th.x, th.y, th.nuked, 0, 9);
             }
         }
     }
 
-    for (var t of Object.keys(API.mapControl)) {
-        var region = API.mapControl[t];
+    for (const t of Object.keys(API.mapControl)) {
+        const region = API.mapControl[t];
         for (k of Object.keys(region)) {
-            var th = region[k];
+            const th = region[k];
             if (th.nuked) {
-                var data = {ownership: th.control, icon: th.mapIcon};
-                var icon = resolveIcon(data);
+                const data = {ownership: th.control, icon: th.mapIcon};
+                const icon = resolveIcon(data);
                 ControlLayer.addIcon(icon, th.x, th.y, th.nuked, 0, 9);
             }
         }
     }
 
-    for (var t of Object.keys(API.resources)) {
-        var region = API.resources[t];
+    for (const t of Object.keys(API.resources)) {
+        const region = API.resources[t];
         for (k of Object.keys(region)) {
 
-            var th = region[k];
-            var data = {ownership: th.control, icon: th.mapIcon};
-            var icon = resolveResource(data);
+            const th = region[k];
+            const data = {ownership: th.control, icon: th.mapIcon};
+            const icon = resolveResource(data);
             ControlLayer.addIcon(icon, th.x, th.y, false, 0, 9);
         }
     }
 
-    for (var t of Object.keys(API.mapControl)) {
-        var region = API.mapControl[t];
+    for (const t of Object.keys(API.mapControl)) {
+        const region = API.mapControl[t];
         for (k of Object.keys(region)) {
-            var th = region[k];
-            var data = {ownership: th.control, icon: th.mapIcon};
-            var icon = resolveIcon(data);
+            const th = region[k];
+            const data = {ownership: th.control, icon: th.mapIcon};
+            const icon = resolveIcon(data);
             if (data.icon == 12) // vehicle factory
                 Garages.push({lng: th.x + 128, lat: th.y - 128, nuked: th.nuked, ownership: th.control});
             if (data.icon == 17) // refinery
@@ -278,20 +318,20 @@ module.exports.Create = async function (mymap, API) {
     }
 
     const ks = Object.keys(towns);
-    for (var t = 0; t < ks.length; t++) {
-        var th = towns[ks[t]];
+    for (let t = 0; t < ks.length; t++) {
+        const th = towns[ks[t]];
         if (th.major != 1) {
-            var ownership = API.ownership(th.x + 128, th.y - 128, th.region).ownership;
-            var control = ownership == "COLONIALS" ? 0 : (ownership == "WARDENS" ? 1 : 2);
+            const ownership = API.ownership(th.x + 128, th.y - 128, th.region).ownership;
+            const control = ownership == "COLONIALS" ? 0 : (ownership == "WARDENS" ? 1 : 2);
             RegionLabels.addText(changeCase(owoTranslate(th.name)), owoTranslate(th.name), control, th.x, th.y, 5, 9, '#bbbbbb');
         }
     }
 
-    for (var t = 0; t < ks.length; t++) {
-        var th = towns[ks[t]];
+    for (let t = 0; t < ks.length; t++) {
+        const th = towns[ks[t]];
         if (th.major == 1) {
-            var ownership = API.ownership(th.x + 128, th.y - 128, th.region).ownership;
-            var control = ownership == "COLONIALS" ? 0 : (ownership == "WARDENS" ? 1 : 2);
+            const ownership = API.ownership(th.x + 128, th.y - 128, th.region).ownership;
+            const control = ownership == "COLONIALS" ? 0 : (ownership == "WARDENS" ? 1 : 2);
             RegionLabels.addText(changeCase(owoTranslate(th.name)), owoTranslate(th.name), control, th.x, th.y, 4, 9, '#fff');
         }
     }
@@ -1201,4 +1241,5 @@ module.exports.Create = async function (mymap, API) {
         }
     };
     return FoxholeRouter;
-};
+}
+;

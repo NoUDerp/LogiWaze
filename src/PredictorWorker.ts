@@ -3,6 +3,7 @@ import {predict} from "@sakitam-gis/kriging";
 
 onmessage = async (e) => {
     const args = e.data;
+
     const variogram =
         {
             t: args.variogram.t,
@@ -19,6 +20,9 @@ onmessage = async (e) => {
         };
     const output = [];
     for (const v of args.tests)
-        output.push(predict(v.x - 128, v.y + 128, variogram));
+        if (!(v.region in args.mapControl))
+            output.push(NaN);
+        else
+            output.push(predict(v.x - 128, v.y + 128, variogram));
     postMessage(output);
 }
