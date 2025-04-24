@@ -96,25 +96,25 @@ export default class API {
         x -= 128;
         y += 128;
 
-        const u = this.mapControl[region];
-        let distanceSquared = -1;
-        let icon = -1;
-        const keys = Object.keys(u);
-        for (let key of keys) {
-            const j = u[key];
-            if (j.town) {
-                const px = j.x;
-                const py = j.y;
-                const distanceCalculation = (x - px) * (x - px) + (y - py) * (y - py);
-                if (distanceSquared < 0 || distanceCalculation < distanceSquared) {
-                    icon = j.mapIcon;
-                    distanceSquared = distanceCalculation;
-                }
-            }
-        }
+        // const u = this.mapControl[region];
+        // let distanceSquared = -1;
+        // let icon = -1;
+        // const keys = Object.keys(u);
+        // for (let key of keys) {
+        //     const j = u[key];
+        //     if (j.town) {
+        //         const px = j.x;
+        //         const py = j.y;
+        //         const distanceCalculation = (x - px) * (x - px) + (y - py) * (y - py);
+        //         if (distanceSquared < 0 || distanceCalculation < distanceSquared) {
+        //             icon = j.mapIcon;
+        //             distanceSquared = distanceCalculation;
+        //         }
+        //     }
+        // }
 
         const c = kriging.predict(x, y, this.variogram);
-        return {ownership: c < -.25 ? "WARDENS" : (c > .25 ? "COLONIALS" : "NONE"), icon: icon};
+        return {ownership: c < -.25 ? "WARDENS" : (c > .25 ? "COLONIALS" : "NONE")};//, icon: icon};
     }
 
     public batchOwnership(worker: Worker, tests: { x: number, y: number, region: string }[]): Promise<string[]> {
