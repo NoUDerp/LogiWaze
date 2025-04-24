@@ -18,6 +18,7 @@ let variogram: {
 };
 let icons;// = new Map<string, ImageBitmap>();
 let icon_sources;
+const fontMap = new Map<string, FontFace>();
 
 onmessage = async (e) => {
     const context = e.data as { operation: string, arguments: any };
@@ -41,6 +42,18 @@ onmessage = async (e) => {
 
             icons = new Map<string, ImageBitmap>();
             icon_sources = context.arguments.icon_sources;
+
+            fontMap.set('Celtic', new FontFace('Celtic', context.arguments.fonts.Celtic as ArrayBuffer));
+            fontMap.set('Roman', new FontFace('Roman', context.arguments.fonts.Roman as ArrayBuffer));
+            fontMap.set('Italic', new FontFace('Italic', context.arguments.fonts.Italic as ArrayBuffer));
+            fontMap.set('Renner', new FontFace('Renner', context.arguments.fonts.Renner as ArrayBuffer));
+
+            await Promise.all([fontMap.get('Celtic').load(), fontMap.get('Roman').load(), fontMap.get('Italic').load(), fontMap.get('Renner').load()]);
+
+            self.fonts.add(fontMap.get('Roman'));
+            self.fonts.add(fontMap.get('Celtic'));
+            self.fonts.add(fontMap.get('Renner'));
+            self.fonts.add(fontMap.get('Italic'));
 
             for (const i of context.arguments.icons as {
                 data: ArrayBuffer,
@@ -337,7 +350,7 @@ onmessage = async (e) => {
                 size: { x: number, y: number },
                 sources: any
                 shadowSize: number
-                boring: any
+                boring: boolean
             };
 
             function zoomScale(zoom, max_zoom): number {
@@ -363,32 +376,33 @@ onmessage = async (e) => {
                         case 1:
                         case 2:
                         case 3:
-                            ctx.font = '70px Renner';
+
+                            ctx.font = '70px "Renner"';
                             break;
                         case 4:
-                            ctx.font = '90px Renner';
+                            ctx.font = '90px "Renner"';
                             break;
                     }
 
                 } else
                     switch (control) {
                         case 0:
-                            ctx.font = '54px Roman';
+                            ctx.font = '54px "Roman"';
                             break;
                         case 1:
-                            ctx.font = '60px Celtic';
+                            ctx.font = '60px "Celtic"';
                             break;
                         case 2:
                         case 3:
-                            ctx.font = '50px Italic';
+                            ctx.font = '50px "Italic"';
                             break;
                         case 4:
-                            ctx.font = '80px Italic';
+                            ctx.font = '80px "Italic"';
                             break;
                     }
             }
 
-            function draw(boring) {
+            function draw(boring:boolean, ctx : OffscreenCanvasRenderingContext2D) {
                 for (let i = 0; i < sources.length; i++) {
                     let j = sources[i];
                     if (args.coords.z >= j.zoomMin && args.coords.z < j.zoomMax) {
@@ -423,7 +437,7 @@ onmessage = async (e) => {
                 }
             }
 
-            draw(args.boring);
+            draw(args.boring, ctx);
 
             const bm = tile.transferToImageBitmap();
             postMessage(bm, null, [bm]);

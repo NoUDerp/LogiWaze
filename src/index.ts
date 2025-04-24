@@ -3,7 +3,7 @@
 
 import API from "./API";
 import FoxholeGeocoder from "./IGeocoder";
-import VectorControlGrid from "./IVectorControlGrid";
+import VectorControlGrid from "./ControlGrid";
 
 module.exports.L = require('leaflet');
 
@@ -15,7 +15,7 @@ module.exports.$ = require('jquery');
 // };
 
 module.exports.VectorTextGrid = {
-    Create: (MaxZoom, Offset) => require('./IVectorTextGrid.ts').Create(MaxZoom, Offset)
+    Create: (MaxZoom, Offset) => require('./TextGrid.ts').Create(MaxZoom, Offset)
 };
 
 module.exports.FoxholeRouter = {

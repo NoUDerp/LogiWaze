@@ -1,7 +1,7 @@
 //@ts-nocheck
 import L from 'leaflet';
 import intersects from 'intersects';
-import ControlGrid from "./IVectorControlGrid";
+import ControlGrid from "./ControlGrid";
 
 function controlToFont(control, ctx, boring_font) {
     if (boring_font) {
@@ -41,11 +41,11 @@ class TextGrid extends L.GridLayer {
         return .65 * (1 + this.max_zoom - zoom);
     }
 
-    controlLayer : ControlGrid
-    constructor(options, controlLayer : ControlGrid)
+    renderers : Queue<Worker>
+    constructor(options, workers : ControlGrid)
     {
         super(options);
-        this.controlLayer = controlLayer;
+        this.renderers = workers;
     }
 
     shadowSize: number = 20
@@ -67,7 +67,6 @@ class TextGrid extends L.GridLayer {
     }
 
     public override createTile(coords, done) {
-        const raw_scale = this.zoomScale(coords.z);
         const hd_ratio = this.pixelScale;
         const size = this.getTileSize();
         let tile = null;
@@ -80,68 +79,41 @@ class TextGrid extends L.GridLayer {
         tile.style.width = (size.x * hd_ratio).toString().concat("px");
         tile.style.height = (size.y * hd_ratio).toString().concat("px");
 
-        if (!this.draw) {
-            setTimeout(() => done(null, tile), 0);
-            return tile;
-        }
-
-        let ctx = tile.getContext('2d');
-
-        let zoom = Math.pow(2, coords.z);
-        let max = Math.pow(2, this.max_zoom);
-        let sources = this.sources;
-        let shadowSize = this.shadowSize;
-
-        function draw(i, boring) {
-            const startTime = Date.now();
-            for (; i < sources.length; i++) {
-                let j = sources[i];
-                if (coords.z >= j.zoomMin && coords.z < j.zoomMax) {
-
-                    let scale = raw_scale * j.scale;
-                    let text_scale = hd_ratio * scale * zoom / max;
-                    let shadow = shadowSize * text_scale;
-                    let label_w = j.size.width * zoom * scale * hd_ratio + shadow * 2;
-                    let label_h = j.size.height * zoom * scale * hd_ratio + shadow * 2;
-                    let label_x = j.x * zoom * hd_ratio - coords.x * tile.width - label_w * .5 - shadow;
-                    let label_y = j.y * zoom * hd_ratio - coords.y * tile.height - label_h * .25 - shadow;
-
-                    if (intersects.boxBox(0, 0, tile.width, tile.height, label_x, label_y, label_w, label_h)) {
-                        ctx.setTransform(text_scale, 0, 0, text_scale, label_x + label_w * .5, label_y + label_h * .5);
-                        controlToFont(j.control, ctx, boring);
-                        ctx.shadowColor = "rgba(0, 0, 0, 1)";
-                        ctx.shadowBlur = shadow;
-                        ctx.fillStyle = j.color;
-                        ctx.strokeStyle = j.color;
-                        ctx.textAlign = 'center';
-                        ctx.textBaseline = 'middle';
-                        ctx.fillText(boring ? j.original_text : j.text, 0, 0);
-                        ctx.fillText(boring ? j.original_text : j.text, 0, 0);
-                        ctx.fillText(boring ? j.original_text : j.text, 0, 0);
-                        ctx.fillText(boring ? j.original_text : j.text, 0, 0);
-                        ctx.shadowColor = "rgba(0, 0, 0, 0)";
-                        ctx.shadowBlur = 0;
-                        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        setTimeout(async() => {
+            const w = await this.renderers.dequeue();
+            const data = new Promise<ImageBitmap>((resolve) => {
+                w.onmessage = async e => {
+                    this.renderers.enqueue(w);
+                    resolve(e.data);
+                };
+                w.postMessage({
+                    operation: "text",
+                    arguments: {
+                        coords: coords,
+                        max_zoom: this.max_zoom,
+                        pixelScale: this.pixelScale,
+                        size: size,
+                        sources: this.sources,
+                        shadowSize: this.shadowSize,
+                        boring: this.boring
                     }
-                }
+                });
+            });
+            const ctx = tile.getContext('2d');
+            const image = await data;
+            ctx.drawImage(image, 0, 0);
+            image.close();
 
-                if (Date.now() - startTime > 3) {
-                    setTimeout(() => draw(i, boring), 0);
-                    return;
-                }
+            done();
+        }, 0);
 
-            }
-            done(null, tile);
-        }
-
-        setTimeout(() => draw(0, this.boring), 0);
         return tile;
     }
 }
 
 export function Create(MaxZoom, Offset, controlLayer : ControlGrid) {
-    var u = new TextGrid({updateWhenZooming: false, noWrap: true}, controlLayer);
-    var size = u.getTileSize();
+    const u = new TextGrid({updateWhenZooming: false, noWrap: true}, controlLayer.renderers);
+    const size = u.getTileSize();
     u.sources = [];
     u.max_zoom = MaxZoom;
     u.offset = Offset;

@@ -145,27 +145,27 @@ export default class ControlGrid extends L.GridLayer {
         for (let i of icons) delete this.disabledIcons[i];
     }
 
+    async downloadImage(imageUrl): Promise<ArrayBuffer> {
+        const response = await fetch(imageUrl);
+        if (!response.ok)
+            throw new Error(`Failed to fetch image (${imageUrl}): ${response.status} ${response.statusText}`);
+        const length = response.headers.get('content-length');
+        const buffer = new Uint8ClampedArray(length);
+        buffer.set(new Uint8Array(await response.arrayBuffer()));
+        return buffer.buffer;
+        //const b = await response.arrayBuffer();
+        //const u = b as ArrayBufferData;
+        //return b;
+    }
+
     async prepareIcons(icon_sources): Map<string, Promise<ArrayBuffer>> {
         const m = new Map<string, Promise<ArrayBuffer>>();
-
-        async function downloadImage(imageUrl) : Promise<ArrayBuffer> {
-            const response = await fetch(imageUrl);
-            if (!response.ok)
-                throw new Error(`Failed to fetch image (${imageUrl}): ${response.status} ${response.statusText}`);
-            const length = response.headers.get('content-length');
-            const buffer = new Uint8ClampedArray(length);
-            buffer.set(new Uint8Array(await response.arrayBuffer()));
-            return buffer.buffer;
-            //const b = await response.arrayBuffer();
-            //const u = b as ArrayBufferData;
-            //return b;
-        }
 
         for (let j of icon_sources)
             if (j.icon != null && !(j.icon in this.disabledIcons)) {
                 const filename = `MapIcons/${j.icon}`;
                 if (!m.has(filename))
-                    m.set(filename, downloadImage(filename));
+                    m.set(filename, this.downloadImage(filename));
             }
 
         await Promise.all(m.values());
@@ -548,6 +548,7 @@ export default class ControlGrid extends L.GridLayer {
     road_sources: any[] = []
     icon_sources: any[] = []
 
+
     copyImageDataBuffer(originalBitmap: ArrayBuffer): ArrayBuffer {
         const buffer = new Uint8ClampedArray(originalBitmap.byteLength);
         buffer.set(new Uint8ClampedArray(originalBitmap));
@@ -555,7 +556,20 @@ export default class ControlGrid extends L.GridLayer {
     }
 
     async prepare(API: API) {
-        const icons = await this.prepareIcons(this.icon_sources);
+
+        const fonts = {
+            Celtic: this.downloadImage('./Celtic.woff2'),
+            Roman: this.downloadImage('./Roman.woff2'),
+            Italic: this.downloadImage('./Italic.woff2'),
+            Renner: this.downloadImage('./Renner.ttf')
+        };
+
+        const iconsTask = this.prepareIcons(this.icon_sources);
+        await Promise.all([fonts.Celtic, fonts.Roman, fonts.Italic, fonts.Renner, iconsTask]);
+        const icons = await iconsTask;
+
+
+
         // queue workers for processing control, it will also act as a semaphore
         for (let i = 0; i < navigator.hardwareConcurrency; i++) {
             setTimeout(async () => {
@@ -570,31 +584,42 @@ export default class ControlGrid extends L.GridLayer {
                             name: name,
                         });
 
+                const fontsCache = {
+                    Celtic: this.copyImageDataBuffer(await fonts.Celtic),
+                    Roman: this.copyImageDataBuffer(await fonts.Roman),
+                    Italic: this.copyImageDataBuffer(await fonts.Italic),
+                    Renner: this.copyImageDataBuffer(await fonts.Renner)
+                };
+
                 w.onmessage = async e => {
                     if (e.data === "ok") this.renderers.enqueue(w);
                     else throw "Error loading worker";
                 };
 
+                const transfers = [Array.from(workerIcons.map(i => i.data)), fontsCache.Celtic, fontsCache.Roman, fontsCache.Renner, fontsCache.Italic].flat();
+
                 w.postMessage({
-                    operation: "initialize", arguments: {
-                        roads: this.road_sources,
-                        variogram:
-                            {
-                                t: API.variogram.t,
-                                x: API.variogram.x,
-                                y: API.variogram.y,
-                                nugget: API.variogram.nugget,
-                                range: API.variogram.range,
-                                sill: API.variogram.sill,
-                                A: API.variogram.A,
-                                n: API.variogram.n,
-                                K: API.variogram.K,
-                                M: API.variogram.M,
-                            },
-                        icons: workerIcons,
-                        icon_sources: this.icon_sources
-                    }
-                }, Array.from(workerIcons.map(i => i.data)));
+                        operation: "initialize", arguments: {
+                            roads: this.road_sources,
+                            variogram:
+                                {
+                                    t: API.variogram.t,
+                                    x: API.variogram.x,
+                                    y: API.variogram.y,
+                                    nugget: API.variogram.nugget,
+                                    range: API.variogram.range,
+                                    sill: API.variogram.sill,
+                                    A: API.variogram.A,
+                                    n: API.variogram.n,
+                                    K: API.variogram.K,
+                                    M: API.variogram.M,
+                                },
+                            icons: workerIcons,
+                            icon_sources: this.icon_sources,
+                            fonts: fontsCache
+                        }
+                    },
+                    transfers);
             }, 0);
         }
     }
@@ -616,7 +641,7 @@ export default class ControlGrid extends L.GridLayer {
             });
     }
 
-    private addLine(x, y, p, options)  {
+    private addLine(x, y, p, options) {
         if (x >= 0 && y >= 0 && x < this.grid_x_size && y < this.grid_y_size)
             this.road_sources[x][y].push({points: p, options: options});
     }
@@ -630,7 +655,6 @@ export default class ControlGrid extends L.GridLayer {
         const gy = 1.0 / this.grid_y_height;
         const marginx = margin / this.grid_x_size;
         const marginy = margin / this.grid_y_size;
-
 
 
         const c = [[-points[0][0] - this.offset[1], points[0][1] - this.offset[0]], [-points[1][0] - this.offset[1], points[1][1] - this.offset[0]]];

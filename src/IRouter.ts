@@ -5,9 +5,9 @@ let Paths = require('../Roads.json'); //json-loader!
 let PathFinder = require('./geojson-path-finder/index.js');
 let towns = require('../towns.json');
 let shards = require('../Shards.json');
-let VectorTextGrid = require('./IVectorTextGrid');
+let VectorTextGrid = require('./TextGrid');
 
-import VectorControlGrid from './IVectorControlGrid';
+import VectorControlGrid from './ControlGrid';
 
 function owoTranslate(text) {
     return text;
@@ -148,8 +148,8 @@ module.exports.Create = async function (mymap, API) {
 
     const renderer = L.canvas({tolerance: .2}).addTo(mymap);
 
-    const RegionLabels = VectorTextGrid.Create(8, [128, 128]);
     const ControlLayer = new VectorControlGrid(7, 8, [128, 128], API, .30, .08 /* road width on map */, GridDepth);
+    const RegionLabels = VectorTextGrid.Create(8, [128, 128], ControlLayer);
 
     const regions = API.regions;
 
