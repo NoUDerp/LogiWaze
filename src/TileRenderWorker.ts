@@ -293,22 +293,6 @@ onmessage = async (e) => {
 
             function drawIcons(ctx: OffscreenCanvasRenderingContext2D, coords, width: number, height: number, pixelScale: number, max_zoom: number, disabledIcons) {
 
-                // function makeRenderCallback(ctx: OffscreenCanvasRenderingContext2D, img, lx, ly, lw, lh, tile, glow, shadow) {
-                //     return function () {
-                //         if (glow) {
-                //             ctx.filter = "brightness(0.5) sepia(1) hue-rotate(296deg) saturate(10000%) blur(".concat(shadow).concat("px)"); // blur(10px)
-                //             ctx.drawImage(img.image, lx, ly, lw, lh);
-                //             ctx.drawImage(img.image, lx, ly, lw, lh);
-                //             ctx.drawImage(img.image, lx, ly, lw, lh);
-                //             ctx.filter = "none";
-                //         } else
-                //             ctx.drawImage(img.image, lx, ly, lw, lh);
-                //         if (--tile.pendingLoad == 0) {
-                //             delete img.callbacks;
-                //         }
-                //     };
-                // }
-                //
                 function zoomScale(zoom, max_zoom): number {
                     return .65 * (1 + max_zoom - zoom);
                 }
@@ -329,24 +313,19 @@ onmessage = async (e) => {
                             const lx = label_x, ly = label_y, lw = label_w, lh = label_h;
                             const img = icons.get(`MapIcons/${j.icon}`);
                             if (j.glow) {
-                                ctx.save();
+                                const old_filter = ctx.filter;
                                 ctx.filter = `brightness(0.5) sepia(1) hue-rotate(296deg) saturate(10000%) blur(${shadow}px)`; // blur(10px)
                                 ctx.drawImage(img, lx, ly, lw, lh);
                                 ctx.drawImage(img, lx, ly, lw, lh);
                                 ctx.drawImage(img, lx, ly, lw, lh);
-                                ctx.restore();
+                                ctx.filter = old_filter;
                             } else ctx.drawImage(img, lx, ly, lw, lh);
                         }
                     }
                 }
             }
 
-
-            // c.ctx.save();
-            // c.ctx.scale(c.t.pixelScale, c.t.pixelScale);
-            //
             drawIcons(overlayContext, args.coords, args.width, args.height, args.pixelScale, args.max_zoom, args.disabled_icons);
-            // c.ctx.restore();
 
             const bitmap = overlay.transferToImageBitmap();
             postMessage(bitmap, null, [bitmap]);
