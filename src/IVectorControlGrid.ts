@@ -154,7 +154,7 @@ export default class VectorControlGridPrototype extends L.GridLayer {
                 throw new Error(`Failed to fetch image (${imageUrl}): ${response.status} ${response.statusText}`);
             const length = response.headers.get('content-length');
             const buffer = new Uint8ClampedArray(length);
-            buffer.set(new Uint8Array(buffer));
+            buffer.set(new Uint8Array(await response.arrayBuffer()));
             return buffer.buffer;
             //const b = await response.arrayBuffer();
             //const u = b as ArrayBufferData;
@@ -463,6 +463,7 @@ export default class VectorControlGridPrototype extends L.GridLayer {
                         height: c.tile.height,
                         max_zoom: c.t.max_zoom,
                         hex_sources: c.t.hex_sources,
+                        disabled_icons: this.disabledIcons
                     }]
             });
         });
@@ -549,7 +550,7 @@ export default class VectorControlGridPrototype extends L.GridLayer {
 
     copyImageDataBuffer(originalBitmap: ArrayBuffer): ArrayBuffer {
         const buffer = new Uint8ClampedArray(originalBitmap.byteLength);
-        buffer.set(originalBitmap);
+        buffer.set(new Uint8ClampedArray(originalBitmap));
         return buffer.buffer;
     }
 
@@ -590,7 +591,8 @@ export default class VectorControlGridPrototype extends L.GridLayer {
                                 K: API.variogram.K,
                                 M: API.variogram.M,
                             },
-                        icons: workerIcons
+                        icons: workerIcons,
+                        icon_sources: this.icon_sources
                     }
                 }, Array.from(workerIcons.map(i => i.data)));
             }, 0);

@@ -17,6 +17,7 @@ let variogram: {
     M: number[],
 };
 let icons;// = new Map<string, ImageBitmap>();
+let icon_sources;
 
 onmessage = async (e) => {
     const context = e.data as { operation: string, arguments: any };
@@ -37,26 +38,15 @@ onmessage = async (e) => {
                     K: context.arguments.variogram.K,
                     M: context.arguments.variogram.M
                 };
-            icons = new Map<string, ImageBitmap>();
 
-            // for (const i of context.arguments.icons as {
-            //     data: ArrayBuffer,
-            //     width: number,
-            //     height: number,
-            //     name: string
-            // }[]) {
-            //         // Create a Uint8ClampedArray view of the SharedArrayBuffer
-            //         //const pixelData = new Uint8ClampedArray(i.data);
-            //     icons.set(i.name, await createImageBitmap(new Blob([i.data])));
-            //         // Draw to temporary canvas
-            //         //  const canvas = new OffscreenCanvas(i.width, i.height);
-            //         //  const ctx = canvas.getContext('2d');
-            //         // //
-            //         //  ctx.putImageData(new ImageData(new Uint8ClampedArray(i.data), i.width, i.height), 0, 0);
-            //         //
-            //         // // Create and return ImageBitmap
-            //         // icons.set(i.name, canvas.transferToImageBitmap());
-            // }
+            icons = new Map<string, ImageBitmap>();
+            icon_sources = context.arguments.icon_sources;
+
+            for (const i of context.arguments.icons as {
+                data: ArrayBuffer,
+                name: string
+            }[])
+                icons.set(i.name, await createImageBitmap(new Blob([i.data], {type: 'image/webp'})));
             postMessage("ok");
             break;
         }
@@ -81,7 +71,8 @@ onmessage = async (e) => {
                 width: number,
                 height: number,
                 max_zoom: number,
-                hex_sources: any
+                hex_sources: any,
+                disabled_icons: any
             };
 
             const colors = [{
@@ -300,9 +291,9 @@ onmessage = async (e) => {
 
             drawBorders(args.coords, overlayContext, args.width, args.height, args.max_zoom, args.pixelScale, args.hex_sources);
 
-            function drawIcons(c) {
+            function drawIcons(ctx: OffscreenCanvasRenderingContext2D, coords, width: number, height: number, pixelScale: number, max_zoom: number, disabledIcons) {
 
-                // function makeRenderCallback(u, icon, ctx: OffscreenCanvasRenderingContext2D, img, lx, ly, lw, lh, tile, glow, shadow) {
+                // function makeRenderCallback(ctx: OffscreenCanvasRenderingContext2D, img, lx, ly, lw, lh, tile, glow, shadow) {
                 //     return function () {
                 //         if (glow) {
                 //             ctx.filter = "brightness(0.5) sepia(1) hue-rotate(296deg) saturate(10000%) blur(".concat(shadow).concat("px)"); // blur(10px)
@@ -318,40 +309,43 @@ onmessage = async (e) => {
                 //     };
                 // }
                 //
-                // const raw_scale = c.t.zoomScale(c.coords.z);
-                // const zoom = Math.pow(2, c.coords.z);
-                // const max = Math.pow(2, c.max_zoom);
-                // c.tile.pendingLoad = 0;
-                // const shadowSize = 20;
-                // for (let j of c.t.icon_sources) {
-                //     if (c.coords.z >= j.zoomMin && c.coords.z < j.zoomMax && j.icon != null && !(j.icon in c.t.disabledIcons)) {
-                //         const scale = raw_scale;
-                //         let shadow = j.glow ? shadowSize * scale * zoom / max : 0;
-                //         const label_w = j.size.width * zoom * scale;
-                //         const label_h = j.size.height * zoom * scale;
-                //         const label_x = j.x * zoom - c.coords.x * c.tile.width / c.t.pixelScale - label_w * .5;
-                //         const label_y = j.y * zoom - c.coords.y * c.tile.height / c.t.pixelScale - label_h * .5;
-                //         if (intersects.boxBox(0, 0, c.tile.width / args.pixelScale, c.tile.height / c.t.pixelScale, label_x - 2.0 * shadow, label_y - 2.0 * shadow, label_w + 4.0 * shadow, label_h + 4.0 * shadow)) {
-                //             const lx = label_x, ly = label_y, lw = label_w, lh = label_h;
-                //             // const img = await this.imageCache.GetImage(`MapIcons/${j.icon}`);
-                //             // if (j.glow) {
-                //             //     c.ctx.save();
-                //             //     c.ctx.filter = "brightness(0.5) sepia(1) hue-rotate(296deg) saturate(10000%) blur(".concat(shadow).concat("px)"); // blur(10px)              
-                //             //     c.ctx.drawImage(img, lx, ly, lw, lh);
-                //             //     c.ctx.drawImage(img, lx, ly, lw, lh);
-                //             //     c.ctx.drawImage(img, lx, ly, lw, lh);
-                //             //     c.ctx
-                //             //         .restore();
-                //             // } else c.ctx.drawImage(img, lx, ly, lw, lh);
-                //         }
-                //     }
-                // }
+                function zoomScale(zoom, max_zoom): number {
+                    return .65 * (1 + max_zoom - zoom);
+                }
+
+                const raw_scale = zoomScale(coords.z, max_zoom);
+                const zoom = Math.pow(2, coords.z);
+                const max = Math.pow(2, max_zoom);
+                const shadowSize = 20;
+                for (let j of icon_sources) {
+                    if (coords.z >= j.zoomMin && coords.z < j.zoomMax && j.icon != null && !(j.icon in disabledIcons)) {
+                        const scale = raw_scale;
+                        let shadow = j.glow ? shadowSize * scale * zoom / max : 0;
+                        const label_w = j.size.width * zoom * scale;
+                        const label_h = j.size.height * zoom * scale;
+                        const label_x = j.x * zoom - coords.x * width / pixelScale - label_w * .5;
+                        const label_y = j.y * zoom - coords.y * height / pixelScale - label_h * .5;
+                        if (intersects.boxBox(0, 0, width / args.pixelScale, height / pixelScale, label_x - 2.0 * shadow, label_y - 2.0 * shadow, label_w + 4.0 * shadow, label_h + 4.0 * shadow)) {
+                            const lx = label_x, ly = label_y, lw = label_w, lh = label_h;
+                            const img = icons.get(`MapIcons/${j.icon}`);
+                            if (j.glow) {
+                                ctx.save();
+                                ctx.filter = `brightness(0.5) sepia(1) hue-rotate(296deg) saturate(10000%) blur(${shadow}px)`; // blur(10px)
+                                ctx.drawImage(img, lx, ly, lw, lh);
+                                ctx.drawImage(img, lx, ly, lw, lh);
+                                ctx.drawImage(img, lx, ly, lw, lh);
+                                ctx.restore();
+                            } else ctx.drawImage(img, lx, ly, lw, lh);
+                        }
+                    }
+                }
             }
+
 
             // c.ctx.save();
             // c.ctx.scale(c.t.pixelScale, c.t.pixelScale);
             //
-            // await c.t.drawIcons(c);
+            drawIcons(overlayContext, args.coords, args.width, args.height, args.pixelScale, args.max_zoom, args.disabled_icons);
             // c.ctx.restore();
 
             const bitmap = overlay.transferToImageBitmap();
