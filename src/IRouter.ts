@@ -15,6 +15,7 @@ function owoTranslate(text) {
 
 module.exports.Create = async function (mymap, API) {
 
+    let k;
     let i;
     let changeCase = (x) => x.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
 
@@ -35,7 +36,7 @@ module.exports.Create = async function (mymap, API) {
     for (i = 0; i < Paths.features.length; i++) {
         var feature = Paths.features[i];
         const scratch = {};
-        for (var k = 0; k < feature.geometry.coordinates.length; k++) {
+        for (k = 0; k < feature.geometry.coordinates.length; k++) {
             var p = feature.geometry.coordinates[k];
             var hash = p[0].toFixed(3).concat("|").concat(p[1].toFixed(3));
             if (scratch[hash] === true) {
@@ -60,7 +61,7 @@ module.exports.Create = async function (mymap, API) {
         let last_ownership = "NONE";
         let last_p = null;
 
-        for (var k = 0; k < feature.geometry.coordinates.length; k++) {
+        for (k = 0; k < feature.geometry.coordinates.length; k++) {
             var p = feature.geometry.coordinates[k];
             var hash = p[0].toFixed(3).concat("|").concat(p[1].toFixed(3));
             const increment = (k === 0 || k == feature.geometry.coordinates.length - 1) ? 1 : 2;
@@ -227,7 +228,7 @@ module.exports.Create = async function (mymap, API) {
 
     for (var t of Object.keys(API.resources)) {
         var region = API.resources[t];
-        for (var k of Object.keys(region)) {
+        for (k of Object.keys(region)) {
             var th = region[k];
             if (th.nuked) {
                 var data = {ownership: th.control, icon: th.mapIcon};
@@ -239,7 +240,7 @@ module.exports.Create = async function (mymap, API) {
 
     for (var t of Object.keys(API.mapControl)) {
         var region = API.mapControl[t];
-        for (var k of Object.keys(region)) {
+        for (k of Object.keys(region)) {
             var th = region[k];
             if (th.nuked) {
                 var data = {ownership: th.control, icon: th.mapIcon};
@@ -251,7 +252,7 @@ module.exports.Create = async function (mymap, API) {
 
     for (var t of Object.keys(API.resources)) {
         var region = API.resources[t];
-        for (var k of Object.keys(region)) {
+        for (k of Object.keys(region)) {
 
             var th = region[k];
             var data = {ownership: th.control, icon: th.mapIcon};
@@ -262,7 +263,7 @@ module.exports.Create = async function (mymap, API) {
 
     for (var t of Object.keys(API.mapControl)) {
         var region = API.mapControl[t];
-        for (var k of Object.keys(region)) {
+        for (k of Object.keys(region)) {
             var th = region[k];
             var data = {ownership: th.control, icon: th.mapIcon};
             var icon = resolveIcon(data);
@@ -300,10 +301,10 @@ module.exports.Create = async function (mymap, API) {
 
 
     for (let key in JSONRoads._layers) {
-        var layer = JSONRoads._layers[key];
-        for (var k = 1; k < layer._latlngs.length; k++) {
-            var lat = layer._latlngs[k - 1].lat;
-            var lng = layer._latlngs[k - 1].lng;
+        const layer = JSONRoads._layers[key];
+        for (k = 1; k < layer._latlngs.length; k++) {
+            const lat = layer._latlngs[k - 1].lat;
+            const lng = layer._latlngs[k - 1].lng;
             const lat2 = layer._latlngs[k].lat;
             const lng2 = layer._latlngs[k].lng;
             const tier = layer.feature.properties.tier;

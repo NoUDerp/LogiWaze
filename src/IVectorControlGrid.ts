@@ -145,18 +145,20 @@ export default class VectorControlGridPrototype extends L.GridLayer {
         for (let i of icons) delete this.disabledIcons[i];
     }
 
-
-    //async loadIcons(c): Promise<void> {
-    //}
-
     async prepareIcons(icon_sources): Map<string, Promise<ArrayBuffer>> {
         const m = new Map<string, Promise<ArrayBuffer>>();
 
-        async function downloadImage(imageUrl) {
+        async function downloadImage(imageUrl) : Promise<ArrayBuffer> {
             const response = await fetch(imageUrl);
             if (!response.ok)
                 throw new Error(`Failed to fetch image (${imageUrl}): ${response.status} ${response.statusText}`);
-            return await response.arrayBuffer();
+            const length = response.headers.get('content-length');
+            const buffer = new Uint8ClampedArray(length);
+            buffer.set(new Uint8Array(buffer));
+            return buffer.buffer;
+            //const b = await response.arrayBuffer();
+            //const u = b as ArrayBufferData;
+            //return b;
         }
 
         for (let j of icon_sources)
@@ -410,7 +412,8 @@ export default class VectorControlGridPrototype extends L.GridLayer {
         //await c.t.loadIcons(c);
 
         const scale = Math.pow(2, Math.max(0, c.coords.z - c.t.max_native_zoom));
-        const response = await fetch(`Tiles/${Math.min(c.coords.z, c.t.max_native_zoom)}_${Math.floor(c.coords.x / scale)}_${Math.floor(c.coords.y / scale)}.webp${c.t.build}`);
+        const filename = `Tiles/${Math.min(c.coords.z, c.t.max_native_zoom)}_${Math.floor(c.coords.x / scale)}_${Math.floor(c.coords.y / scale)}.webp`;
+        const response = await fetch(filename);
         const imageBlob = await response.blob();
         return await createImageBitmap(imageBlob);
     }
@@ -562,7 +565,7 @@ export default class VectorControlGridPrototype extends L.GridLayer {
                 for (const [name, data] of icons)
                     workerIcons.push(
                         {
-                            data: this.copyImageDataBuffer(data),
+                            data: this.copyImageDataBuffer(await data),
                             name: name,
                         });
 
@@ -594,7 +597,7 @@ export default class VectorControlGridPrototype extends L.GridLayer {
         }
     }
 
-    addIcon(icon, x, y, glow, zoomMin, zoomMax) {
+    public addIcon(icon, x, y, glow, zoomMin, zoomMax) {
         this.icon_sources.push(
             {
                 size: {
@@ -611,9 +614,14 @@ export default class VectorControlGridPrototype extends L.GridLayer {
             });
     }
 
-    addRoad = (points, options) => {
+    private addLine(x, y, p, options)  {
+        if (x >= 0 && y >= 0 && x < this.grid_x_size && y < this.grid_y_size)
+            this.road_sources[x][y].push({points: p, options: options});
+    }
+
+    public addRoad = (points, options) => {
         const max_road_width = Math.max(this.RoadWidth, this.ControlWidth);
-        const max = Math.pow(2, this.GridDepth);
+        const max = Math.pow(2, this.grid_depth);
         const margin = max_road_width * max;
 
         const gx = 1.0 / this.grid_x_width;
@@ -621,10 +629,7 @@ export default class VectorControlGridPrototype extends L.GridLayer {
         const marginx = margin / this.grid_x_size;
         const marginy = margin / this.grid_y_size;
 
-        const addLine = (x, y, p, options, u, Offset) => {
-            if (x >= 0 && y >= 0 && x < u.grid_x_size && y < u.grid_y_size)
-                u.road_sources[x][y].push({points: p, options: options});
-        };
+
 
         const c = [[-points[0][0] - this.offset[1], points[0][1] - this.offset[0]], [-points[1][0] - this.offset[1], points[1][1] - this.offset[0]]];
         const p = [[c[0][0], c[0][1]], [c[1][0], c[1][1]]];
@@ -655,7 +660,7 @@ export default class VectorControlGridPrototype extends L.GridLayer {
         for (let x = start_tile_x; x <= end_tile_x; x++)
             for (let y = start_tile_y; y <= end_tile_y; y++)
                 if (intersects.lineBox(x1, y1, x2, y2, x * this.grid_x_width - marginx, y * this.grid_y_height - marginy, width, height))
-                    addLine(x, y, p, options, this, this.offset);
+                    this.addLine(x, y, p, options);
 
     }
 
