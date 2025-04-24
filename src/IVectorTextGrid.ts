@@ -1,6 +1,7 @@
 //@ts-nocheck
 import L from 'leaflet';
 import intersects from 'intersects';
+import ControlGrid from "./IVectorControlGrid";
 
 function controlToFont(control, ctx, boring_font) {
     if (boring_font) {
@@ -35,9 +36,16 @@ function controlToFont(control, ctx, boring_font) {
         }
 };
 
-class VectorGridPrototype extends L.GridLayer {
+class TextGrid extends L.GridLayer {
     zoomScale(zoom) {
         return .65 * (1 + this.max_zoom - zoom);
+    }
+
+    controlLayer : ControlGrid
+    constructor(options, controlLayer : ControlGrid)
+    {
+        super(options);
+        this.controlLayer = controlLayer;
     }
 
     shadowSize: number = 20
@@ -58,7 +66,7 @@ class VectorGridPrototype extends L.GridLayer {
         }
     }
 
-    createTile(coords, done) {
+    public override createTile(coords, done) {
         const raw_scale = this.zoomScale(coords.z);
         const hd_ratio = this.pixelScale;
         const size = this.getTileSize();
@@ -131,9 +139,9 @@ class VectorGridPrototype extends L.GridLayer {
     }
 }
 
-export function Create(MaxZoom, Offset) {
-    const u = new VectorGridPrototype({updateWhenZooming: false, noWrap: true});
-    const size = u.getTileSize();
+export function Create(MaxZoom, Offset, controlLayer : ControlGrid) {
+    var u = new TextGrid({updateWhenZooming: false, noWrap: true}, controlLayer);
+    var size = u.getTileSize();
     u.sources = [];
     u.max_zoom = MaxZoom;
     u.offset = Offset;
@@ -142,12 +150,12 @@ export function Create(MaxZoom, Offset) {
     u.grid_y_size = Math.pow(2, MaxZoom);
     u.grid_y_height = size.y / u.grid_y_size;
     u.Offset = Offset;
-    const canvas = L.DomUtil.create('canvas', 'leaflet-tile');
+    var canvas = L.DomUtil.create('canvas', 'leaflet-tile');
     ctx = canvas.getContext('2d');
     u.Offset = Offset;
     u.addText = (text, original_text, control, x, y, zoomMin, zoomMax, color, scale) => {
         controlToFont(control, ctx, u.boring);
-        const size = ctx.measureText(u.boring ? original_text : text);
+        var size = ctx.measureText(u.boring ? original_text : text);
         u.sources.push(
             {
                 size: {

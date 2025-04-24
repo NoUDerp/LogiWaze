@@ -18,7 +18,7 @@ class ImageCache {
     }
 }
 
-export default class VectorControlGridPrototype extends L.GridLayer {
+export default class ControlGrid extends L.GridLayer {
     controls: [] = [true, true, true, true]
     quality: Boolean = true
     draw: Boolean = true
@@ -27,7 +27,7 @@ export default class VectorControlGridPrototype extends L.GridLayer {
     pixelScale: number = 1
     disabledIcons: {} = {}
     //semaphore: Queue<Worker> = new Queue<Worker>()
-    renderers: Queue<Worker> = new Queue<Worker>()
+    public renderers: Queue<Worker> = new Queue<Worker>()
     imageCache: ImageCache = new ImageCache()
 
     zoomScale(zoom): number {
@@ -82,7 +82,7 @@ export default class VectorControlGridPrototype extends L.GridLayer {
             const label_x = j.x * zoom - coords.x * tile.width / c.t.pixelScale - label_w - shadow;
             const label_y = j.y * zoom - coords.y * tile.height / c.t.pixelScale - label_h - shadow;
             if (intersects.boxBox(0, 0, tile.width, tile.height, label_x, label_y, label_w, label_h))
-                VectorControlGridPrototype.drawHex(c.tile, c.ctx, label_x + label_w * .5,
+                ControlGrid.drawHex(c.tile, c.ctx, label_x + label_w * .5,
                     label_y + label_h * .5,
                     label_w * .5,
                     label_h * .5,
@@ -109,7 +109,7 @@ export default class VectorControlGridPrototype extends L.GridLayer {
                 const label_x = j.x * zoom - coords.x * tile.width / pixelScale - label_w - shadow;
                 const label_y = j.y * zoom - coords.y * tile.height / pixelScale - label_h - shadow;
                 if (intersects.boxBox(0, 0, tile.width, tile.height, label_x, label_y, label_w, label_h))
-                    VectorControlGridPrototype.fillHex(tile, ctx, label_x + label_w * .5, label_y + label_h * .5, label_w * .5, label_h * .5, lineWidth);
+                    ControlGrid.fillHex(tile, ctx, label_x + label_w * .5, label_y + label_h * .5, label_w * .5, label_h * .5, lineWidth);
             }
         }
         ctx.restore();
@@ -129,7 +129,7 @@ export default class VectorControlGridPrototype extends L.GridLayer {
             const label_y = j.y * zoom - coords.y * tile.height / pixelScale - label_h - shadow;
 
             if (intersects.boxBox(0, 0, tile.width, tile.height, label_x, label_y, label_w, label_h))
-                VectorControlGridPrototype.fillHex(tile, ctx, label_x + label_w * .5, label_y + label_h * .5, label_w * .5, label_h * .5, lineWidth);
+                ControlGrid.fillHex(tile, ctx, label_x + label_w * .5, label_y + label_h * .5, label_w * .5, label_h * .5, lineWidth);
         }
 
         ctx.restore();
