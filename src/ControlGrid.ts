@@ -153,9 +153,6 @@ export default class ControlGrid extends L.GridLayer {
         const buffer = new Uint8ClampedArray(length);
         buffer.set(new Uint8Array(await response.arrayBuffer()));
         return buffer.buffer;
-        //const b = await response.arrayBuffer();
-        //const u = b as ArrayBufferData;
-        //return b;
     }
 
     async prepareIcons(icon_sources): Map<string, Promise<ArrayBuffer>> {
@@ -171,217 +168,6 @@ export default class ControlGrid extends L.GridLayer {
         await Promise.all(m.values());
         return m;
     }
-
-    // function makeRenderCallback(u, icon, ctx, img, lx, ly, lw, lh, tile, glow, shadow) {
-    //     return function () {
-    //         if (glow) {
-    //             ctx.filter = "brightness(0.5) sepia(1) hue-rotate(296deg) saturate(10000%) blur(".concat(shadow).concat("px)"); // blur(10px)
-    //             ctx.drawImage(img.image, lx, ly, lw, lh);
-    //             ctx.drawImage(img.image, lx, ly, lw, lh);
-    //             ctx.drawImage(img.image, lx, ly, lw, lh);
-    //             ctx.filter = "none";
-    //         } else
-    //             ctx.drawImage(img.image, lx, ly, lw, lh);
-    //         if (--tile.pendingLoad == 0) {
-    //             delete img.callbacks;
-    //         }
-    //     };
-    // }
-//
-//     const
-//     raw_scale = c.t.zoomScale(c.coords.z);
-//     const
-//     zoom = Math.pow(2, c.coords.z);
-//     const
-//     max = Math.pow(2, c.t.max_zoom);
-//     c
-// .
-//     tile
-// .
-//     pendingLoad = 0;
-//     const
-//     shadowSize = 20;
-//
-//     for(let     j    of    c.    t.    icon_sources
-// ) {
-//     if(c
-//
-// .
-//     coords
-// .
-//     z
-// >=
-//     j
-// .
-//     zoomMin
-// &&
-//     c
-// .
-//     coords
-// .
-//
-//     z < j
-//
-// .
-//     zoomMax
-// &&
-//     j
-// .
-//     icon
-// !=
-//     null
-// && !(
-//     j
-// .
-//     icon
-//     in
-//     c
-// .
-//     t
-// .
-//     disabledIcons
-// )) {
-//     const
-//     scale = raw_scale;
-//     let
-//     shadow = j.glow ? shadowSize * scale * zoom / max : 0;
-//     const
-//     label_w = j.size.width * zoom * scale;
-//     const
-//     label_h = j.size.height * zoom * scale;
-//     const
-//     label_x = j.x * zoom - c.coords.x * c.tile.width / c.t.pixelScale - label_w * .5;
-//     const
-//     label_y = j.y * zoom - c.coords.y * c.tile.height / c.t.pixelScale - label_h * .5;
-//
-//     if(intersects
-//
-// .
-//
-//     boxBox(
-//
-//     0
-// ,
-//     0
-// ,
-//     c
-// .
-//     tile
-// .
-//     width
-// /
-//     c
-// .
-//     t
-// .
-//     pixelScale
-// ,
-//     c
-// .
-//     tile
-// .
-//     height
-// /
-//     c
-// .
-//     t
-// .
-//     pixelScale
-// ,
-//     label_x
-// -
-//     2.0
-//
-//     * shadow
-//
-// ,
-//     label_y
-// -
-//     2.0
-//
-//     * shadow
-//
-// ,
-//     label_w
-// +
-//     4.0
-//
-//     * shadow
-//
-// ,
-//     label_h
-// +
-//     4.0
-//
-//     * shadow
-//
-// )) {
-//     const
-//     lx = label_x
-// ,
-//     ly = label_y
-// ,
-//     lw = label_w
-// ,
-//     lh = label_h;
-//     const
-//     img = await this.imageCache.GetImage(`MapIcons/${j.icon}`);
-//
-//     if(j
-//
-// .
-//     glow
-// ) {
-//     c
-// .
-//     ctx
-// .
-//
-//     save();
-//
-//     c
-// .
-//     ctx
-// .
-//     filter = "brightness(0.5) sepia(1) hue-rotate(296deg) saturate(10000%) blur(".concat(shadow).concat("px)"); // blur(10px)              
-//     c
-// .
-//     ctx
-// .
-//
-//     drawImage(img, lx, ly, lw, lh);
-//
-//     c
-// .
-//     ctx
-// .
-//
-//     drawImage(img, lx, ly, lw, lh);
-//
-//     c
-// .
-//     ctx
-// .
-//
-//     drawImage(img, lx, ly, lw, lh);
-//
-//     c
-// .
-//     ctx
-// .
-//
-//     restore();
-// }
-// else
-// c.ctx.drawImage(img, lx, ly, lw, lh);
-// }
-// }
-// }
-//}
-
-
-// This is too intense for now: window.devicePixelRatio,
-    build: "";
 
     renderer(c)
         :
@@ -463,7 +249,10 @@ export default class ControlGrid extends L.GridLayer {
                         height: c.tile.height,
                         max_zoom: c.t.max_zoom,
                         hex_sources: c.t.hex_sources,
-                        disabled_icons: this.disabledIcons
+                        disabled_icons: this.disabledIcons,
+                        drawBorders: this.drawHexes,
+                        drawControl: this.draw,
+                        drawRoads: this.controls
                     }]
             });
         });
@@ -567,7 +356,6 @@ export default class ControlGrid extends L.GridLayer {
         const iconsTask = this.prepareIcons(this.icon_sources);
         await Promise.all([fonts.Celtic, fonts.Roman, fonts.Italic, fonts.Renner, iconsTask]);
         const icons = await iconsTask;
-
 
 
         // queue workers for processing control, it will also act as a semaphore

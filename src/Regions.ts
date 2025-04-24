@@ -24,7 +24,7 @@ const regions: Array<Region> = [
     {name: "SableportHex", realName: "Sableport", x: ox + -1.5 * width, y: oy + -1 * height},
     {name: "TempestIslandHex", realName: "Tempest Island", x: ox + 3 * width, y: oy},
     {name: "ReaversPassHex", realName: "Reaver's Pass", x: ox + 2.25 * width, y: oy + -1.5 * height},
-    {name: "TheFingersHex", realName: "The Fingers ", x: ox + 3 * width, y: oy + -1 * height},
+    {name: "TheFingersHex", realName: "The Fingers", x: ox + 3 * width, y: oy + -1 * height},
     {name: "ClahstraHex", realName: "The Clahstra", x: ox + 1.5 * width, y: oy},
     {name: "DeadLandsHex", realName: "Deadlands", x: ox, y: oy},
     {name: "CallahansPassageHex", realName: "Callahan's Passage", x: ox, y: oy + height},

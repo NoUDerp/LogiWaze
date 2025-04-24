@@ -106,7 +106,10 @@ onmessage = async (e) => {
                 height: number,
                 max_zoom: number,
                 hex_sources: any,
-                disabled_icons: any
+                disabled_icons: any,
+                drawBorders: boolean
+                drawControl: boolean,
+                drawRoads: any
             };
 
             const colors = [{
@@ -208,7 +211,10 @@ onmessage = async (e) => {
                 controls,
                 pixelScale,
                 width: number,
-                height: number
+                height: number,
+                drawBorders: boolean
+                drawControl: boolean,
+                drawRoads: any
             }) {
                 ctx.fillStyle = "#FFFFFF00";
                 ctx.fillRect(0, 0, args.width, args.height);
@@ -253,7 +259,6 @@ onmessage = async (e) => {
                 }
 
                 draw(start_x, start_y, end_x, end_y);
-                //return canvas.transferToImageBitmap();
             }
 
             // draw control layer to transparent canvas
@@ -265,23 +270,27 @@ onmessage = async (e) => {
             overlayContext.fillRect(0, 0, args.width, args.height);
             overlayContext.restore();
             drawValidRegions(overlay, overlayContext, args.coords, args.pixelScale, args.max_zoom, args.hex_sources);
-            //overlayContext.restore();
-            overlayContext.save();
-            overlayContext.globalCompositeOperation = 'source-atop'; // mask the alpha to overlay the control layer, copy it to temporary storage
-            overlayContext.imageSmoothingQuality = 'low'; // highest performance possible for a copy, no smoothing needed
-            // scale up control layer
 
-            overlayContext.drawImage(controlCanvas, 1, 1, controlCanvas.width - 2, controlCanvas.height - 2, 0, 0, args.width, args.height);
-            overlayContext.restore();
+            if (args.drawControl && controlCanvas != null) {
+                overlayContext.save();
+                overlayContext.globalCompositeOperation = 'source-atop'; // mask the alpha to overlay the control layer, copy it to temporary storage
+                overlayContext.imageSmoothingQuality = 'low'; // highest performance possible for a copy, no smoothing needed
+                // scale up control layer
+                overlayContext.drawImage(controlCanvas, 1, 1, controlCanvas.width - 2, controlCanvas.height - 2, 0, 0, args.width, args.height);
+                overlayContext.restore();
+            }
+
             overlayContext.save();
             overlayContext.scale(args.pixelScale, args.pixelScale);
             drawInvalidRegions(overlay, overlayContext, args.coords, args.pixelScale, args.max_zoom, args.hex_sources);
             overlayContext.restore();
 
-            overlayContext.save();
-            overlayContext.scale(args.pixelScale, args.pixelScale);
-            drawRoads(overlayContext, args);
-            overlayContext.restore();
+            if (args.drawRoads) {
+                overlayContext.save();
+                overlayContext.scale(args.pixelScale, args.pixelScale);
+                drawRoads(overlayContext, args);
+                overlayContext.restore();
+            }
 
             function drawBorders(coords, ctx: OffscreenCanvasRenderingContext2D, width: number, height: number, max_zoom: number, pixelScale: number, hex_sources) {
                 function drawHex(ctx: OffscreenCanvasRenderingContext2D, x, y, w, h, scale) {
@@ -304,7 +313,6 @@ onmessage = async (e) => {
                 ctx.save();
                 ctx.strokeStyle = '#303030';
                 ctx.globalAlpha = .8;
-                //ctx.opacity = .8;
                 ctx.scale(pixelScale, pixelScale);
 
                 for (let j of hex_sources) {
@@ -323,7 +331,8 @@ onmessage = async (e) => {
                 ctx.restore();
             }
 
-            drawBorders(args.coords, overlayContext, args.width, args.height, args.max_zoom, args.pixelScale, args.hex_sources);
+            if (args.drawBorders)
+                drawBorders(args.coords, overlayContext, args.width, args.height, args.max_zoom, args.pixelScale, args.hex_sources);
 
             function drawIcons(ctx: OffscreenCanvasRenderingContext2D, coords, width: number, height: number, pixelScale: number, max_zoom: number, disabledIcons) {
 
