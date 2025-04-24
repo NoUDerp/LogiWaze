@@ -113,9 +113,15 @@ module.exports.Create = async function (mymap, API) {
 
             const region = Paths.features[i].properties.region;
             const index = ownershipMatrixIndex[i] + k;
-            const ownershipScore = data[index % navigator.hardwareConcurrency][index / navigator.hardwareConcurrency];// ownershipMatrix[ownershipMatrixIndex[i] + k];// (await this.API.batchOwnership(w, [{x: p[0], y: p[1]}]))[0];
+            const ownershipScore = data[index % navigator.hardwareConcurrency][Math.floor(index / navigator.hardwareConcurrency)];// ownershipMatrix[ownershipMatrixIndex[i] + k];// (await this.API.batchOwnership(w, [{x: p[0], y: p[1]}]))[0];
             const ownership = Number.isNaN(ownershipScore) ? "OFFLINE" : (ownershipScore < -.25 ? "WARDENS" : (ownershipScore > .25 ? "COLONIALS" : "NONE"));
-            // !(region in API.mapControl) ? "OFFLINE" : API.ownership(p[0], p[1], region).ownership;
+            // const ownership2 = !(region in API.mapControl) ? "OFFLINE" : API.ownership(p[0], p[1], region).ownership;
+            
+            // if(ownership!=ownership2)
+            // {
+            //     ownership = ownership2;
+            // }
+            
             JSONRoads._layers[keys[i]]._latlngs[k].ownership = ownership;
 
             if (API.mapControl[feature.properties.region] != null && ownership != "OFFLINE" && region in API.mapControl)
