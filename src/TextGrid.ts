@@ -54,7 +54,7 @@ class TextGrid extends L.GridLayer {
 
     recalculateSizes() {
         const canvas = L.DomUtil.create('canvas', 'leaflet-tile');
-        ctx = canvas.getContext('2d');
+        const ctx = canvas.getContext('2d');
         for (let k of this.sources) {
             controlToFont(k.control, ctx, this.boring);
             const size = ctx.measureText(this.boring ? k.original_text : k.text);
