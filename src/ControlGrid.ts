@@ -95,15 +95,11 @@ export default class ControlGrid extends L.GridLayer {
         const size = c.t.getTileSize();
         tile.width = size.x * c.t.pixelScale;
         tile.height = size.y * c.t.pixelScale;
-        tile.style.width = tile.width.toString().concat('px');
-        tile.style.height = tile.height.toString().concat('px');
+        tile.style.width = `${tile.width}px`;
+        tile.style.height = `${tile.height}px`;
         setTimeout(async () => {
-            // try {
             await this.render(c, coords, tile);
             c.done(null, tile);
-            // } catch (e) {
-            //     console.error(e);
-            // }
         }, 0);
         return tile;
     }
@@ -215,13 +211,16 @@ export default class ControlGrid extends L.GridLayer {
 
     override
 
-    createTile(coords, done): HTMLElement {
+    public override createTile(coords, done): HTMLElement {
+
         let scale = Math.pow(2, coords.z);
         if (coords.x < 0 || coords.x >= scale || coords.y < 0 || coords.y >= scale || coords.z < 0) {
             let t = L.DomUtil.create('canvas', 'leaflet-tile');
             let size = this.getTileSize();
             t.width = this.pixelScale * size.x;
             t.height = this.pixelScale * size.y;
+            t.style.width = `${t.width}.5px`;
+            t.style.height = `${t.height}.5px`;
 
             setTimeout(() => done(null, t), 0);
             return t;

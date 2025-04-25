@@ -75,8 +75,8 @@ class TextGrid extends L.GridLayer {
 
         tile.width = size.x * hd_ratio;
         tile.height = size.y * hd_ratio;
-        tile.style.width = (size.x * hd_ratio).toString().concat("px");
-        tile.style.height = (size.y * hd_ratio).toString().concat("px");
+        tile.style.width = `${tile.width}`;
+        tile.style.height = `${tile.height}`;
 
         if(!this.draw)
         {
