@@ -77,7 +77,17 @@ module.exports.Create = async function (mymap, API) {
         index += feature.geometry.coordinates.length;
     }
 
-    const segments = Array.from(matrixSegments.map(s => API.batchOwnership(new Worker(new URL('PredictorWorker.ts', import.meta.url), {type: 'module'}), s)));
+    function loadPredictorWorker() : Worker | null
+    {
+        try {
+            return new Worker(new URL('PredictorWorker.ts', import.meta.url), {type: 'module'});
+        }
+        catch(error)
+        {
+            return null;
+        }
+    }
+    const segments = Array.from(matrixSegments.map(s => API.batchOwnership(loadPredictorWorker(), s)));
     await Promise.all(segments);
 
     const data = [];
@@ -207,7 +217,7 @@ module.exports.Create = async function (mymap, API) {
     const resolveIcon = function (ic) {
         if (ic.icon == null)
             return null;
-
+        let icon;
         if (ic.icon == 56 || ic.icon == 5)
             icon = 'MapIconStaticBase1';
         else if (ic.icon == 35)

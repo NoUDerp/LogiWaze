@@ -1,6 +1,7 @@
 import * as pip from 'point-in-polygon';
 import * as kriging from '@sakitam-gis/kriging';
 import {default as regions, Region} from "./Regions";
+import krig from './PredictorWorker';
 
 const width = 256 / 7;
 const height = width * Math.sqrt(3) / 2;
@@ -95,51 +96,58 @@ export default class API {
 
         x -= 128;
         y += 128;
-
-        // const u = this.mapControl[region];
-        // let distanceSquared = -1;
-        // let icon = -1;
-        // const keys = Object.keys(u);
-        // for (let key of keys) {
-        //     const j = u[key];
-        //     if (j.town) {
-        //         const px = j.x;
-        //         const py = j.y;
-        //         const distanceCalculation = (x - px) * (x - px) + (y - py) * (y - py);
-        //         if (distanceSquared < 0 || distanceCalculation < distanceSquared) {
-        //             icon = j.mapIcon;
-        //             distanceSquared = distanceCalculation;
-        //         }
-        //     }
-        // }
-
         const c = kriging.predict(x, y, this.variogram);
         return {ownership: c < -.25 ? "WARDENS" : (c > .25 ? "COLONIALS" : "NONE")};//, icon: icon};
     }
 
-    public batchOwnership(worker: Worker, tests: { x: number, y: number, region: string }[]): Promise<string[]> {
-        const thi = this;
-        return new Promise<string[]>(resolve => {
-            worker.onmessage = async (d) => resolve(d.data);
 
-            worker.postMessage({
-                tests: tests,
-                mapControl: this.mapControl,
-                variogram:
+    public batchOwnership(worker: Worker | null, tests: { x: number, y: number, region: string }[]): Promise<number[]> {
+        const thi = this;
+
+        if (worker == null) return new Promise<number[]>(resolve => {
+            setTimeout(() => {
+                resolve(krig(
                     {
-                        t: thi.variogram.t,
-                        x: thi.variogram.x,
-                        y: thi.variogram.y,
-                        nugget: thi.variogram.nugget,
-                        range: thi.variogram.range,
-                        sill: thi.variogram.sill,
-                        A: thi.variogram.A,
-                        n: thi.variogram.n,
-                        K: thi.variogram.K,
-                        M: thi.variogram.M,
-                    }
-            });
+                        tests: tests,
+                        mapControl: this.mapControl,
+                        variogram:
+                            {
+                                t: thi.variogram.t,
+                                x: thi.variogram.x,
+                                y: thi.variogram.y,
+                                nugget: thi.variogram.nugget,
+                                range: thi.variogram.range,
+                                sill: thi.variogram.sill,
+                                A: thi.variogram.A,
+                                n: thi.variogram.n,
+                                K: thi.variogram.K,
+                                M: thi.variogram.M,
+                            }
+                    }));
+            }, 0);
         });
+        else
+            return new Promise<number[]>(resolve => {
+                worker.onmessage = async (d) => resolve(d.data);
+
+                worker.postMessage({
+                    tests: tests,
+                    mapControl: this.mapControl,
+                    variogram:
+                        {
+                            t: thi.variogram.t,
+                            x: thi.variogram.x,
+                            y: thi.variogram.y,
+                            nugget: thi.variogram.nugget,
+                            range: thi.variogram.range,
+                            sill: thi.variogram.sill,
+                            A: thi.variogram.A,
+                            n: thi.variogram.n,
+                            K: thi.variogram.K,
+                            M: thi.variogram.M,
+                        }
+                });
+            });
     }
 
     public control(x: number, y: number): number {
