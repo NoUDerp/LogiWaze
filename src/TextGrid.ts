@@ -1,6 +1,5 @@
 //@ts-nocheck
 import L from 'leaflet';
-import intersects from 'intersects';
 import ControlGrid from "./ControlGrid";
 
 function controlToFont(control, ctx, boring_font) {

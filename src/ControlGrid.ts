@@ -28,11 +28,7 @@ export default class ControlGrid extends L.GridLayer {
     disabledIcons: {} = {}
     //semaphore: Queue<Worker> = new Queue<Worker>()
     public renderers: Queue<Worker> = new Queue<Worker>()
-    imageCache: ImageCache = new ImageCache()
 
-    zoomScale(zoom): number {
-        return .65 * (1 + this.max_zoom - zoom);
-    }
 
     // temporarily disabled: window.devicePixelRatio,
     static drawHex(tile, ctx, x, y, w, h, scale) {
@@ -94,9 +90,7 @@ export default class ControlGrid extends L.GridLayer {
         return m;
     }
 
-    renderer(c)
-        :
-        any {
+    renderer(c, coords): any {
         const tile = L.DomUtil.create('canvas', 'leaflet-tile');
         const size = c.t.getTileSize();
         tile.width = size.x * c.t.pixelScale;
@@ -104,30 +98,37 @@ export default class ControlGrid extends L.GridLayer {
         tile.style.width = tile.width.toString().concat('px');
         tile.style.height = tile.height.toString().concat('px');
         setTimeout(async () => {
-            await this.render(c, tile);
-            try {
-                c.done(null, tile);
-            } catch (e) {
-                console.error(e);
-            }
-        });
+            // try {
+            await this.render(c, coords, tile);
+            c.done(null, tile);
+            // } catch (e) {
+            //     console.error(e);
+            // }
+        }, 0);
         return tile;
     }
 
-    async render(c,tile: HTMLCanvasElement) {
-        const i = await this.loadTile(c, tile);
+    async render(c, coords, tile: HTMLCanvasElement) {
+        const loadTile = this.loadTile(c, coords, tile);
+        const renderOverlay = this.renderControlToTempCanvas(c, coords, tile);
+        await Promise.all([loadTile, renderOverlay]);
+
+        const i = await loadTile;
         this.drawTileToContext(tile, c.coords, c.t.max_native_zoom, i, c.ctx);
-        await this.renderControlToTempCanvas(c, tile);
+
+        const overlay = await renderOverlay;
+        const tileContext = c.ctx;
+        tileContext.drawImage(overlay, 0, 0);
+        overlay.close();
     }
 
-    async loadTile(c, tile: HTMLCanvasElement)
-        :
-        Promise<ImageBitmap> {
+    async loadTile(c, coords, tile: HTMLCanvasElement): Promise<ImageBitmap> {
         c.ctx = tile.getContext('2d');
-        //await c.t.loadIcons(c);
-
-        const scale = Math.pow(2, Math.max(0, c.coords.z - c.t.max_native_zoom));
-        const filename = `Tiles/${Math.round(Math.min(c.coords.z, c.t.max_native_zoom))}_${Math.floor(c.coords.x / scale)}_${Math.floor(c.coords.y / scale)}.webp`;
+        const z = coords.z;
+        const scale = Math.pow(2, Math.max(0, z - c.t.max_native_zoom));
+        if (z != Math.floor(z))
+            throw "Zoom is not a whole number";
+        const filename = `Tiles/${Math.min(z, c.t.max_native_zoom)}_${Math.floor(coords.x / scale)}_${Math.floor(coords.y / scale)}.webp`;
         const response = await fetch(filename);
         const imageBlob = await response.blob();
         return await createImageBitmap(imageBlob);
@@ -135,7 +136,8 @@ export default class ControlGrid extends L.GridLayer {
 
     drawTileToContext(tile: HTMLCanvasElement, coords, max_native_zoom: number, img: ImageBitmap, ctx: CanvasRenderingContext2D
     ) {
-        const scale = Math.pow(2, Math.max(0, coords.z - max_native_zoom));
+        const z = coords.z;
+        const scale = Math.pow(2, Math.max(0, z - max_native_zoom));
         const ox = coords.x % scale;
         const oy = coords.y % scale;
         const bx = img.width / scale;
@@ -144,7 +146,7 @@ export default class ControlGrid extends L.GridLayer {
         img.close();
     }
 
-    async renderControlToTempCanvas(c, tile: HTMLCanvasElement) {
+    async renderControlToTempCanvas(c, coords, tile: HTMLCanvasElement) {
         c.hd_ratio = 8; // c.coords.z < 2 ? 8 : 16;
         const cTempCanvasWidth = 2 + tile.width / c.t.pixelScale / c.hd_ratio;
         const cTempCanvasHeight = 2 + tile.height / c.t.pixelScale / c.hd_ratio;
@@ -163,7 +165,7 @@ export default class ControlGrid extends L.GridLayer {
                 operation: "control",
                 arguments: [cTempCanvasWidth, cTempCanvasHeight, hdRatio, grid.x, grid.y,
                     {
-                        coords: c.coords,
+                        coords: coords,
                         grid_depth: c.t.grid_depth,
                         offset: c.t.offset,
                         roadWidth: c.t.RoadWidth,
@@ -183,10 +185,7 @@ export default class ControlGrid extends L.GridLayer {
                     }]
             });
         });
-        const tileContext = c.ctx;
-        const image = await data;
-        tileContext.drawImage(image, 0, 0);
-        image.close();
+        return await data;
     }
 
     logImageBitmap(imageBitmap) {
@@ -216,9 +215,7 @@ export default class ControlGrid extends L.GridLayer {
 
     override
 
-    createTile(coords, done)
-        :
-        HTMLElement {
+    createTile(coords, done): HTMLElement {
         let scale = Math.pow(2, coords.z);
         if (coords.x < 0 || coords.x >= scale || coords.y < 0 || coords.y >= scale || coords.z < 0) {
             let t = L.DomUtil.create('canvas', 'leaflet-tile');
@@ -231,7 +228,7 @@ export default class ControlGrid extends L.GridLayer {
         }
 
 
-        return this.renderer({t: this, coords: coords, done: done});//, 1);
+        return this.renderer({t: this, coords: coords, done: done}, coords);//, 1);
     }
 
     road_sources: any[] = []

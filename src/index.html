@@ -1589,8 +1589,8 @@
 
     var mymap = L.map('mapid',
         {
-            zoomSnap: .25,
-            zoomDelta: .5,
+            zoomSnap: 1,//.25,
+            zoomDelta: 1,//.5,
             crs: L.CRS.Simple,
             noWrap: true,
             continuousWorld: true,
@@ -1996,8 +1996,8 @@
                                 destBtn = createButton('End here', container, 'ray-end.svg'),
                                 cgarageBtn = createButton('Find garage', container, 'MapIcons/MapIconVehicleColonial.webp'),
                                 wgarageBtn = createButton('Find garage', container, 'MapIcons/MapIconVehicleWarden.webp'),
-                                refineryBtn = createButton('Find refinery', container, 'MapIcons/MapIconManufacturing.webp');
-                            factoryBtn = createButton('Find factory', container, 'MapIcons/MapIconFactory.webp');
+                                refineryBtn = createButton('Find refinery', container, 'MapIcons/MapIconManufacturing.webp'),
+                                factoryBtn = createButton('Find factory', container, 'MapIcons/MapIconFactory.webp');
 
                             L.DomEvent.on(startBtn, 'click', function () {
                                 Router.Control.spliceWaypoints(0, 1, e.latlng);
