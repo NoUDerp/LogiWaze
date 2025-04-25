@@ -187,13 +187,14 @@ onmessage = async (e) => {
                     ctx.restore();
                 }
 
-                function drawInvalidRegions(tile: OffscreenCanvas, ctx, coords, pixelScale: number, max_zoom: number, hex_sources) {
+                function drawInvalidRegions(ctx : OffscreenCanvasRenderingContext2D, coords, pixelScale: number, max_zoom: number, hex_sources) {
                     const zoom = Math.pow(2, coords.z);
                     const lineWidth = Math.pow(2, coords.z);
                     const shadow = lineWidth * .5 / Math.pow(2, max_zoom);
                     ctx.save();
                     ctx.fillStyle = '#000000FF';
                     ctx.strokeStyle = '#000000FF';
+                    ctx.globalAlpha = .5;
                     for (let j of hex_sources) if (j.offline) {
                         const label_w = j.size.width * zoom + shadow * 2;
                         const label_h = j.size.height * zoom + shadow * 2;
@@ -290,7 +291,7 @@ onmessage = async (e) => {
 
                 overlayContext.save();
                 overlayContext.scale(args.pixelScale, args.pixelScale);
-                drawInvalidRegions(overlay, overlayContext, args.coords, args.pixelScale, args.max_zoom, args.hex_sources);
+                drawInvalidRegions(overlayContext, args.coords, args.pixelScale, args.max_zoom, args.hex_sources);
                 overlayContext.restore();
 
                 if (args.drawRoads) {
