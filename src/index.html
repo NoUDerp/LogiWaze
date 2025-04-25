@@ -1694,7 +1694,7 @@
 
         return element.offsetWidth;
     }
-    
+
     global.getPanelVisibleWidth = getPanelVisibleWidth;
     global.getPanelVisibleHeight = getPanelVisibleHeight;
 
@@ -1711,8 +1711,8 @@
             var Options = {
                 '<img src="MapIcons/MapIconStaticBase3.webp" class="layer-icon">Town Halls': Router.TownHalls,
                 '<img src="MapIcons/fencing.webp" class="layer-icon">Borders': Router.Borders,
-                '<img src="MapIcons/road-route.webp" class="layer-icon">Road Control': Router.ColonialRoads,
-                '<img src="ShortestRoute.webp" class="layer-icon">Uncontrolled Roads': Router.NeutralRoads,
+                '<img src="MapIcons/road-route.webp" class="layer-icon">Road Control': Router.Roads,
+                //'<img src="ShortestRoute.webp" class="layer-icon">Uncontrolled Roads': Router.NeutralRoads,
                 '<img src="MapIcons/MapIconManufacturing.webp" class="layer-icon">Refineries': Router.Refineries,
                 '<img src="MapIcons/MapIconFactory.webp" class="layer-icon">Factories': Router.Factories,
                 '<img src="MapIcons/MapIconStorageFacility.webp" class="layer-icon">Storage': Router.Storage,
@@ -1804,6 +1804,7 @@
                     this._section = L.DomUtil.create('div', 'credits', container);
                     this._section.innerHTML =
                         '<h2 style="text-align: center">LogiWaze</h2>' +
+                        '<h3><p>All media resources from the game "Foxhole" are owned by Siege Camp</p><p><a target="_blank" href="https://www.foxholegame.com">www.foxholegame.com</a></p><p>This content is unofficial</p></h3>' +
                         '<p>Map image thanks to Rust<br /><a target="_blank" href="https://rustard.itch.io/improved-map-mod">https://rustard.itch.io/improved-map-mod</a></p><hr>' +
                         '<p>Source code:<br /><a target="_blank" href="https://github.com/NoUDerp/LogiWaze">https://github.com/NoUDerp/LogiWaze</a></p><hr>' +
                         "<p><i>Special thanks to</i>:" +
@@ -2299,7 +2300,7 @@
                         Router.showSalvage();
                         break;
                     case "Road Control":
-                        Router.showColonial();
+                        Router.showRoads();
                         break;
                     case "Borders":
                         Router.showBorders();
@@ -2349,7 +2350,7 @@
                         Router.hideSalvage();
                         break;
                     case "Road Control":
-                        Router.hideColonial();
+                        Router.hideRoads();
                         break;
                     case "Borders":
                         Router.hideBorders();
@@ -2445,8 +2446,8 @@
                             Router.hideBorders();
                             break;
                         case "Road Control":
-                            Router.ColonialRoads.remove();
-                            Router.hideColonial();
+                            Router.Roads.remove();
+                            Router.hideRoads();
                             break;
                         case "Refineries":
                             Router.hideRefineries();
@@ -2481,8 +2482,8 @@
                             Router.hideCoal();
                             break;
                         case "Road Control":
-                            Router.ColonialRoads.remove();
-                            Router.hideColonial();
+                            Router.Roads.remove();
+                            Router.hideRoads();
                             break;
                         case "Labels":
                             Router.Labels.remove();

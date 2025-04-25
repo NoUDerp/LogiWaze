@@ -465,7 +465,7 @@ module.exports.Create = async function (mymap, API) {
         Coal: L.layerGroup().addTo(mymap),
         VectorControlGrid: ControlLayer,
         API: API,
-        Roads: JSONRoads,
+        JSONRoads: JSONRoads,
 
         RefineriesList: Refineries,
         Garages: Garages,
@@ -480,9 +480,9 @@ module.exports.Create = async function (mymap, API) {
         Factories: L.layerGroup().addTo(mymap),
         Refineries: L.layerGroup().addTo(mymap),
         Storage: L.layerGroup().addTo(mymap),
-        WardenRoads: L.layerGroup().addTo(mymap),
-        ColonialRoads: L.layerGroup().addTo(mymap),
-        NeutralRoads: L.layerGroup().addTo(mymap),
+        //WardenRoads: L.layerGroup().addTo(mymap),
+        Roads: L.layerGroup().addTo(mymap),
+        //NeutralRoads: L.layerGroup().addTo(mymap),
 
         Shards: shards,
 
@@ -605,47 +605,47 @@ module.exports.Create = async function (mymap, API) {
             ControlLayer.redraw();
         },
 
-        hideColonial: function () {
+        hideRoads: function () {
             ControlLayer.controls[0] = false;
             ControlLayer.redraw();
         },
 
-        showColonial: function () {
+        showRoads: function () {
             ControlLayer.controls[0] = true;
             ControlLayer.redraw();
         },
 
-        hideWarden: function () {
-            ControlLayer.controls[1] = false;
-            ControlLayer.redraw();
-        },
-
-        showWarden: function () {
-            ControlLayer.controls[1] = true;
-            ControlLayer.redraw();
-        },
-
-        hideNeutral: function () {
-            ControlLayer.controls[3] = false;
-            ControlLayer.controls[2] = false;
-            ControlLayer.redraw();
-        },
-
-        showNeutral: function () {
-            ControlLayer.controls[2] = true;
-            ControlLayer.controls[3] = true;
-            ControlLayer.redraw();
-        },
-
-        hideOffline: function () {
-            ControlLayer.controls[2] = false;
-            ControlLayer.redraw();
-        },
-
-        showOffline: function () {
-            ControlLayer.controls[2] = true;
-            ControlLayer.redraw();
-        },
+        // hideWarden: function () {
+        //     ControlLayer.controls[1] = false;
+        //     ControlLayer.redraw();
+        // },
+        //
+        // showWarden: function () {
+        //     ControlLayer.controls[1] = true;
+        //     ControlLayer.redraw();
+        // },
+        //
+        // hideNeutral: function () {
+        //     ControlLayer.controls[3] = false;
+        //     ControlLayer.controls[2] = false;
+        //     ControlLayer.redraw();
+        // },
+        //
+        // showNeutral: function () {
+        //     ControlLayer.controls[2] = true;
+        //     ControlLayer.controls[3] = true;
+        //     ControlLayer.redraw();
+        // },
+        //
+        // hideOffline: function () {
+        //     ControlLayer.controls[2] = false;
+        //     ControlLayer.redraw();
+        // },
+        //
+        // showOffline: function () {
+        //     ControlLayer.controls[2] = true;
+        //     ControlLayer.redraw();
+        // },
 
         hideSalvage: function () {
             ControlLayer.disableIcons(['MapIconSalvage.webp', 'MapIconSalvageMine.webp', 'MapIconSalvageWarden.webp', 'MapIconSalvageMineWarden.webp', 'MapIconSalvageColonial.webp', 'MapIconSalvageMineColonial.webp']);
@@ -941,8 +941,8 @@ module.exports.Create = async function (mymap, API) {
             for (var i = 0; i < waypoints.length; i++) {
                 let closestPoint = null;
                 let distance = 0.0;
-                for (let key in FoxholeRouter.Roads._layers) {
-                    const layer = FoxholeRouter.Roads._layers[key];
+                for (let key in FoxholeRouter.JSONRoads._layers) {
+                    const layer = FoxholeRouter.JSONRoads._layers[key];
                     for (var k = 0; k < layer._latlngs.length; k++) {
                         const lat = layer._latlngs[k].lat;
                         const wplat = waypoints[i].latLng.lat;
@@ -1198,8 +1198,8 @@ module.exports.Create = async function (mymap, API) {
             for (var i = 0; i < waypoints.length; i++) {
                 let closestPoint = null;
                 let distance = 0.0;
-                for (let key in FoxholeRouter.Roads._layers) {
-                    const layer = FoxholeRouter.Roads._layers[key];
+                for (let key in FoxholeRouter.JSONRoads._layers) {
+                    const layer = FoxholeRouter.JSONRoads._layers[key];
                     for (let k = 0; k < layer._latlngs.length; k++) {
 
                         const wplat = waypoints[i].lat;
