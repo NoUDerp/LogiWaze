@@ -292,7 +292,7 @@ export default async function control(controlArguments: any,
     if (args.drawBorders)
         drawBorders(args.coords, overlayContext, args.width, args.height, args.max_zoom, args.pixelScale, args.hex_sources);
 
-    function drawIcons(ctx: OffscreenCanvasRenderingContext2D, coords, width: number, height: number, pixelScale: number, max_zoom: number, disabledIcons) {
+    function drawIcons(ctx: OffscreenCanvasRenderingContext2D, coords, width: number, height: number, pixelScale: number, max_zoom: number, disabledIcons, icon_sources) {
 
         function zoomScale(zoom, max_zoom): number {
             return .65 * (1 + max_zoom - zoom);
@@ -326,7 +326,7 @@ export default async function control(controlArguments: any,
         }
     }
 
-    drawIcons(overlayContext, args.coords, args.width, args.height, args.pixelScale, args.max_zoom, args.disabled_icons);
+    drawIcons(overlayContext, args.coords, args.width, args.height, args.pixelScale, args.max_zoom, args.disabled_icons, icon_sources);
 
     return overlay.transferToImageBitmap();
 }

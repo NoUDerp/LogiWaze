@@ -3,6 +3,7 @@ import * as L from 'leaflet';
 import * as intersects from 'intersects';
 import Queue from "./Queue";
 import API from "./API";
+import control from "./TileRenderWorker";
 
 class ImageCache {
     private cache: Map<string, Promise<Image>> = new Map<string, Promise<Image>>()
@@ -142,7 +143,7 @@ export default class ControlGrid extends L.GridLayer {
         img.close();
     }
 
-    async renderControlToTempCanvas(c, coords, tile: HTMLCanvasElement) {
+    static renderControl(renderers, c, coords, tile, disabledIcons, drawHexes, draw, controls): Promise<ImageBitmap> {
         c.hd_ratio = 8; // c.coords.z < 2 ? 8 : 16;
         const cTempCanvasWidth = 2 + tile.width / c.t.pixelScale / c.hd_ratio;
         const cTempCanvasHeight = 2 + tile.height / c.t.pixelScale / c.hd_ratio;
@@ -151,10 +152,11 @@ export default class ControlGrid extends L.GridLayer {
         const hdRatio = c.hd_ratio / zoom;
         const grid = {x: c.coords.x * max, y: c.coords.y * max};
 
-        const w = await this.renderers.dequeue();
-        const data = new Promise<ImageBitmap>((resolve) => {
+        return new Promise<ImageBitmap>(async (resolve) => {
+
+            const w = await renderers.dequeue();
             w.onmessage = async e => {
-                this.renderers.enqueue(w);
+                renderers.enqueue(w);
                 resolve(e.data);
             };
             w.postMessage({
@@ -174,14 +176,17 @@ export default class ControlGrid extends L.GridLayer {
                         height: tile.height,
                         max_zoom: c.t.max_zoom,
                         hex_sources: c.t.hex_sources,
-                        disabled_icons: this.disabledIcons,
-                        drawBorders: this.drawHexes,
-                        drawControl: this.draw,
-                        drawRoads: this.controls
+                        disabled_icons: disabledIcons,
+                        drawBorders: drawHexes,
+                        drawControl: draw,
+                        drawRoads: controls
                     }]
             });
         });
-        return await data;
+    }
+
+    renderControlToTempCanvas(c, coords, tile: HTMLCanvasElement) {
+        return ControlGrid.renderControl(this.renderers, c, c.coords, tile, this.disabledIcons, this.drawHexes, this.draw, this.controls);
     }
 
     logImageBitmap(imageBitmap) {
@@ -232,9 +237,9 @@ export default class ControlGrid extends L.GridLayer {
 
     road_sources: any[] = []
     icon_sources: any[] = []
+    webWorkers: boolean
 
-
-    copyImageDataBuffer(originalBitmap: ArrayBuffer): ArrayBuffer {
+    static copyImageDataBuffer(originalBitmap: ArrayBuffer): ArrayBuffer {
         const buffer = new Uint8ClampedArray(originalBitmap.byteLength);
         buffer.set(new Uint8ClampedArray(originalBitmap));
         return buffer.buffer;
@@ -253,10 +258,18 @@ export default class ControlGrid extends L.GridLayer {
         await Promise.all([fonts.Celtic, fonts.Roman, fonts.Italic, fonts.Renner, iconsTask]);
         const icons = await iconsTask;
 
-
         // queue workers for processing control, it will also act as a semaphore
-        for (let i = 0; i < navigator.hardwareConcurrency; i++) {
-            setTimeout(async () => {
+        const tasks = [];
+
+        for (let i = 0; i < navigator.hardwareConcurrency; i++)
+            tasks.push(ControlGrid.createWorker(this.renderers, this.road_sources, this.icon_sources, icons, fonts, API));
+        await Promise.all(tasks);
+        this.webWorkers = tasks.map(async (x) => await x != null).reduce((o, n) => o & n);
+    }
+
+    static createWorker(renderers, road_sources, icon_sources, icons, fonts, API) {
+        return new Promise<Worker | null>(async (resolve) => {
+            try {
                 const w = new Worker(new URL('TileRenderWorker.ts', import.meta.url), {type: 'module'});
 
                 // initialize the worker data
@@ -264,27 +277,29 @@ export default class ControlGrid extends L.GridLayer {
                 for (const [name, data] of icons)
                     workerIcons.push(
                         {
-                            data: this.copyImageDataBuffer(await data),
+                            data: ControlGrid.copyImageDataBuffer(await data),
                             name: name,
                         });
 
                 const fontsCache = {
-                    Celtic: this.copyImageDataBuffer(await fonts.Celtic),
-                    Roman: this.copyImageDataBuffer(await fonts.Roman),
-                    Italic: this.copyImageDataBuffer(await fonts.Italic),
-                    Renner: this.copyImageDataBuffer(await fonts.Renner)
+                    Celtic: ControlGrid.copyImageDataBuffer(await fonts.Celtic),
+                    Roman: ControlGrid.copyImageDataBuffer(await fonts.Roman),
+                    Italic: ControlGrid.copyImageDataBuffer(await fonts.Italic),
+                    Renner: ControlGrid.copyImageDataBuffer(await fonts.Renner)
                 };
 
                 w.onmessage = async e => {
-                    if (e.data === "ok") this.renderers.enqueue(w);
-                    else throw "Error loading worker";
+                    if (e.data === "ok") {
+                        renderers.enqueue(w);
+                        resolve(w);
+                    } else throw "Error loading worker";
                 };
 
                 const transfers = [Array.from(workerIcons.map(i => i.data)), fontsCache.Celtic, fontsCache.Roman, fontsCache.Renner, fontsCache.Italic].flat();
 
                 w.postMessage({
                         operation: "initialize", arguments: {
-                            roads: this.road_sources,
+                            roads: road_sources,
                             variogram:
                                 {
                                     t: API.variogram.t,
@@ -299,14 +314,18 @@ export default class ControlGrid extends L.GridLayer {
                                     M: API.variogram.M,
                                 },
                             icons: workerIcons,
-                            icon_sources: this.icon_sources,
+                            icon_sources: icon_sources,
                             fonts: fontsCache
                         }
                     },
                     transfers);
-            }, 0);
-        }
+            } catch (error) {
+                console.error(error);
+                resolve(null);
+            }
+        });
     }
+
 
     public addIcon(icon, x, y, glow, zoomMin, zoomMax) {
         this.icon_sources.push(
@@ -399,7 +418,20 @@ export default class ControlGrid extends L.GridLayer {
         }
     }
 
-    constructor(MaxNativeZoom: number, MaxZoom: number, Offset, API: API, RoadWidth: number, ControlWidth: number, GridDepth: number) {
+    constructor(MaxNativeZoom
+                :
+                number, MaxZoom
+                :
+                number, Offset, API
+                :
+                API, RoadWidth
+                :
+                number, ControlWidth
+                :
+                number, GridDepth
+                :
+                number
+    ) {
         super(MaxNativeZoom);
         this.updateWhenZooming = false;
         this.noWrap = true;
