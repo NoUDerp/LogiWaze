@@ -16,7 +16,7 @@ let variogram: {
     K: any,
     M: number[],
 };
-let icons;// = new Map<string, ImageBitmap>();
+let icons = new Map<string, Promise<ImageBitmap>>();
 let icon_sources;
 const fontMap = new Map<string, FontFace>();
 
@@ -37,7 +37,7 @@ export default async function control(controlArguments: any,
                                           model,
                                           K,
                                           M
-                                      }, icons: Map<string, ImageBitmap>, icon_sources: any
+                                      }, icons: Map<string, Promise<ImageBitmap>>, icon_sources: any
 ): Promise<ImageBitmap> {
     const controlWidth = controlArguments[0];
     const controlHeight = controlArguments[1];
@@ -292,7 +292,7 @@ export default async function control(controlArguments: any,
     if (args.drawBorders)
         drawBorders(args.coords, overlayContext, args.width, args.height, args.max_zoom, args.pixelScale, args.hex_sources);
 
-    function drawIcons(ctx: OffscreenCanvasRenderingContext2D, coords, width: number, height: number, pixelScale: number, max_zoom: number, disabledIcons, icon_sources) {
+    async function drawIcons(ctx: OffscreenCanvasRenderingContext2D, coords, width: number, height: number, pixelScale: number, max_zoom: number, disabledIcons, icon_sources) {
 
         function zoomScale(zoom, max_zoom): number {
             return .65 * (1 + max_zoom - zoom);
@@ -312,7 +312,7 @@ export default async function control(controlArguments: any,
                 const label_y = j.y * zoom - coords.y * height / pixelScale - label_h * .5;
                 if (intersects.boxBox(0, 0, width / args.pixelScale, height / pixelScale, label_x - 2.0 * shadow, label_y - 2.0 * shadow, label_w + 4.0 * shadow, label_h + 4.0 * shadow)) {
                     const lx = label_x, ly = label_y, lw = label_w, lh = label_h;
-                    const img = icons.get(`MapIcons/${j.icon}`);
+                    const img = await icons.get(`MapIcons/${j.icon}`);
                     if (j.glow) {
                         const old_filter = ctx.filter;
                         ctx.filter = `brightness(0.5) sepia(1) hue-rotate(296deg) saturate(10000%) blur(${shadow}px)`; // blur(10px)
@@ -326,7 +326,7 @@ export default async function control(controlArguments: any,
         }
     }
 
-    drawIcons(overlayContext, args.coords, args.width, args.height, args.pixelScale, args.max_zoom, args.disabled_icons, icon_sources);
+    await drawIcons(overlayContext, args.coords, args.width, args.height, args.pixelScale, args.max_zoom, args.disabled_icons, icon_sources);
 
     return overlay.transferToImageBitmap();
 }
@@ -372,7 +372,7 @@ onmessage = async (e) => {
                     data: ArrayBuffer,
                     name: string
                 }[])
-                    icons.set(i.name, await createImageBitmap(new Blob([i.data], {type: 'image/webp'})));
+                    icons.set(i.name, createImageBitmap(new Blob([i.data], {type: 'image/webp'})));
                 postMessage("ok");
                 break;
             }

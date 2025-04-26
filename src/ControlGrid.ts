@@ -5,20 +5,7 @@ import Queue from "./Queue";
 import API from "./API";
 import control from "./TileRenderWorker";
 import assets from "./MapIcons";
-
-class ImageCache {
-    private cache: Map<string, Promise<Image>> = new Map<string, Promise<Image>>()
-
-    public GetImage(name: string): Promise<Image> {
-        if (!this.cache.has(name))
-            this.cache.set(name, new Promise(resolve => {
-                const i = new Image();
-                i.onload = () => resolve(i);
-                i.src = name;
-            }));
-        return this.cache.get(name);
-    }
-}
+//import TileRenderWorker from 'data-url:./TileRenderWorker';
 
 export default class ControlGrid extends L.GridLayer {
     controls: [] = [true, true, true, true]
@@ -68,14 +55,15 @@ export default class ControlGrid extends L.GridLayer {
         for (let i of icons) delete this.disabledIcons[i];
     }
 
-    async downloadImage(imageUrl): Promise<ArrayBuffer> {
-        const response = await fetch(imageUrl);
-        if (!response.ok)
-            throw new Error(`Failed to fetch image (${imageUrl}): ${response.status} ${response.statusText}`);
-        const length = response.headers.get('content-length');
-        const buffer = new Uint8ClampedArray(length);
-        buffer.set(new Uint8Array(await response.arrayBuffer()));
-        return buffer.buffer;
+    downloadFont(imageUrl): Promise<ArrayBuffer> {
+        return assets.get(imageUrl);
+        // const response = await fetch(imageUrl);
+        // if (!response.ok)
+        //     throw new Error(`Failed to fetch image (${imageUrl}): ${response.status} ${response.statusText}`);
+        // const length = response.headers.get('content-length');
+        // const buffer = new Uint8ClampedArray(length);
+        // buffer.set(new Uint8Array(await response.arrayBuffer()));
+        // return buffer.buffer;
     }
 
     async prepareIcons(icon_sources): Map<string, Promise<ArrayBuffer>> {
@@ -120,16 +108,27 @@ export default class ControlGrid extends L.GridLayer {
         overlay.close();
     }
 
-    async loadTile(c, coords, tile: HTMLCanvasElement): Promise<ImageBitmap> {
+    loadTile(c, coords, tile: HTMLCanvasElement): Promise<ImageBitmap> {
         c.ctx = tile.getContext('2d');
         const z = coords.z;
         const scale = Math.pow(2, Math.max(0, z - c.t.max_native_zoom));
         if (z != Math.floor(z))
             throw "Zoom is not a whole number";
         const filename = `Tiles/${Math.min(z, c.t.max_native_zoom)}_${Math.floor(coords.x / scale)}_${Math.floor(coords.y / scale)}.webp`;
-        const response = await fetch(filename);
-        const imageBlob = await response.blob();
-        return await createImageBitmap(imageBlob);
+        //const response = await fetch(filename);
+        //const key = `${Math.min(z, c.t.max_native_zoom)}_${Math.floor(coords.x / scale)}_${Math.floor(coords.y / scale)}`;
+        return new Promise(resolve => {
+            const im = new Image();
+            im.onload = () => {
+                const cv = new OffscreenCanvas(im.width, im.height);
+                const ctx = cv.getContext('2d');
+                ctx.drawImage(im, 0, 0);
+                //const blob = new Blob([fetch()], {type: "image/webp"});//mimeType});
+                resolve(cv.transferToImageBitmap());// await createImageBitmap(blob));
+            }
+            im.src = filename;
+        });
+        //const blob = new Blob([tiles.get(key)], {type: "image/webp"});//mimeType});
     }
 
     drawTileToContext(tile: HTMLCanvasElement, coords, max_native_zoom: number, img: ImageBitmap, ctx: CanvasRenderingContext2D
@@ -207,19 +206,7 @@ export default class ControlGrid extends L.GridLayer {
     }
 
     renderControlToTempCanvas(c, coords, tile: HTMLCanvasElement) {
-        return ControlGrid.renderControl(this.renderers, c, c.coords, tile, this.disabledIcons, this.drawHexes, this.draw, this.controls, this.road_sources,
-            {
-                t: this.API.variogram.t,
-                x: this.API.variogram.x,
-                y: this.API.variogram.y,
-                nugget: this.API.variogram.nugget,
-                range: this.API.variogram.range,
-                sill: this.API.variogram.sill,
-                A: this.API.variogram.A,
-                n: this.API.variogram.n,
-                K: this.API.variogram.K,
-                M: this.API.variogram.M,
-            }, this.icons, this.icon_sources);
+        return ControlGrid.renderControl(this.webWorkers ? this.renderers : null, c, c.coords, tile, this.disabledIcons, this.drawHexes, this.draw, this.controls, this.road_sources, this.API.variogram, this.icons, this.icon_sources);
     }
 
     logImageBitmap(imageBitmap) {
@@ -281,10 +268,10 @@ export default class ControlGrid extends L.GridLayer {
     async prepare(API: API) {
 
         const fonts = {
-            Celtic: this.downloadImage('./Celtic.woff2'),
-            Roman: this.downloadImage('./Roman.woff2'),
-            Italic: this.downloadImage('./Italic.woff2'),
-            Renner: this.downloadImage('./Renner.ttf')
+            Celtic: this.downloadFont('Celtic.woff2'),
+            Roman: this.downloadFont('Roman.woff2'),
+            Italic: this.downloadFont('Italic.woff2'),
+            Renner: this.downloadFont('Renner.ttf')
         };
 
         const iconsTask = this.prepareIcons(this.icon_sources);
@@ -300,17 +287,14 @@ export default class ControlGrid extends L.GridLayer {
         await Promise.all(tasks);
         this.webWorkers = await tasks.map(async (x) => await x != null).reduce((o, n) => o && n);
         if (!this.webWorkers) {
-            async function createImage(data : ArrayBuffer)
-            {
+            async function createImage(data: ArrayBuffer) {
                 return await createImageBitmap(new Blob([data], {type: 'image/webp'}));
             }
 
             this.icons = new Map<string, ImageBitmap>();
-            for (const i of icons as {
-                data: ArrayBuffer,
-                name: string
-            }[])
-                this.icons.set(i.name, createImage(i.data));
+            for (const [name, data] of icons)
+                if (name.startsWith('MapIcons/'))
+                    this.icons.set(name, createImage(data));
 
             await Promise.all(Array.from(this.icons.values()));
         }
@@ -318,9 +302,15 @@ export default class ControlGrid extends L.GridLayer {
 
     icons: Map<string, ImageBitmap> | null = null;
 
+
+
     static createWorker(renderers, road_sources, icon_sources, icons: Map<string, ImageBitmap>, fonts, API) {
         return new Promise<Worker | null>(async (resolve) => {
             try {
+                // Create a URL for the Blob
+                //const ab = await fetch(TileRenderWorker);
+                //const blob = await ab.blob({ type: 'application/javascript' });
+                //const workerUrl = URL.createObjectURL(blob);
                 const w = new Worker(new URL('TileRenderWorker.ts', import.meta.url), {type: 'module'});
 
                 // initialize the worker data

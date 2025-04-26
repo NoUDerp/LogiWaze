@@ -125,8 +125,17 @@ import MapIconWorkshopWarden_webp from 'data-url:../MapIcons/MapIconWorkshopWard
 import fencing_webp from 'data-url:../MapIcons/fencing.webp';
 import road_route_webp from 'data-url:../MapIcons/road-route.webp';
 
+import celtic from 'data-url:../Celtic.woff2';
+import roman from 'data-url:../Roman.woff2';
+import italic from 'data-url:../Italic.woff2';
+import renner from 'data-url:../Renner.ttf';
+
 export default new Map<string, Promise<ArrayBuffer>>(
     [
+        ['Celtic.woff2', fetch(celtic).then(r => r.arrayBuffer())],
+        ['Roman.woff2', fetch(roman).then(r => r.arrayBuffer())],
+        ['Italic.woff2', fetch(italic).then(r => r.arrayBuffer())],
+        ['Renner.ttf', fetch(renner).then(r => r.arrayBuffer())],
         ['Control.webp', fetch(Control_webp).then(r => r.arrayBuffer())],
         ['Labels.webp', fetch(Labels_webp).then(r => r.arrayBuffer())],
         ['MapIconAmmoFactory.webp', fetch(MapIconAmmoFactory_webp).then(r => r.arrayBuffer())],
