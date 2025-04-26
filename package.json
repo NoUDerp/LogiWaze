@@ -14,8 +14,23 @@
   },
   "type": "module",
   "source": "./src/index.html",
+  "browserslist": "> 0.5%, last 2 versions, not dead",
   "author": "Derp",
   "license": "MIT",
+  "parcel": {
+    "optimizers": {
+      "*.{js,mjs,jsm,jsx,es6,cjs,ts,tsx}": [
+        "@parcel/optimizer-esbuild",
+        {
+          "inlineWorkerThreshold": 100000000
+        }
+      ]
+    },
+    "workerThreshold": 0,
+    "workers": {
+      "format": "esmodule"
+    }
+  },
   "dependencies": {
     "@babel/preset-env": "^7.26.0",
     "@parcel/babel-preset-env": "^2.13.3",
@@ -57,6 +72,7 @@
   },
   "devDependencies": {
     "@parcel/optimizer-data-url": "^2.13.3",
+    "@parcel/optimizer-esbuild": "^2.14.4",
     "@parcel/packager-raw-url": "^2.13.3",
     "@parcel/reporter-bundle-analyzer": "^2.14.4",
     "@parcel/transformer-inline-string": "^2.13.3",
