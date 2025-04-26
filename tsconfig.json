@@ -12,15 +12,21 @@
 {
   "compilerOptions": {
     "sourceMap": true,
-    "removeComments": false,
+    "removeComments": true,
     "incremental": true,
     "target": "ES6",
     "module": "ES6",
     "moduleResolution": "Bundler",
     "rootDir": "./src",
-    "outFile": "./FoxholeRouter.js",
+    //"outFile": "./FoxholeRouter.js",
     //"outDir": "dist",
     "strict": false,
     "skipLibCheck": false
-  }
+  },
+  "references": [
+    // declare the dependencies
+    {
+      "path": "./src/TileRenderWorker.ts"
+    }
+  ]
 }
