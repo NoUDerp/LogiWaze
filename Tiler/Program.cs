@@ -8,6 +8,15 @@ using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp.Processing.Processors.Transforms;
 using SixLabors.ImageSharp.Drawing.Processing;
+using SixLabors.ImageSharp.Formats;
+using SixLabors.ImageSharp.Formats.Bmp;
+using SixLabors.ImageSharp.Formats.Gif;
+using SixLabors.ImageSharp.Formats.Jpeg;
+using SixLabors.ImageSharp.Formats.Png;
+using SixLabors.ImageSharp.Formats.Qoi;
+using SixLabors.ImageSharp.Formats.Tga;
+using SixLabors.ImageSharp.Formats.Tiff;
+using SixLabors.ImageSharp.Formats.Webp;
 
 var commandline = args.Select((x, i) => new { index = i, option = x }).Where(x => x.option.StartsWith('-')).Select(x =>
     new
@@ -28,10 +37,12 @@ if (args.Length == 0 || commandline.ContainsKey("h") || commandline.ContainsKey(
                   "Usage:\n" +
                   $"{executable} image.jpg\n" +
                   " or\n" +
-                  $"{executable} -input image.jpg -size 256 -zoom 6 -filename \"image.jpg-tiles{Path.DirectorySeparatorChar}{{z}}_{{x}}_{{y}}.png\"\n");
+                  $"{executable} -input image.jpg -size 256 -zoom 6 -quality 100 -filename \"image.jpg-tiles{Path.DirectorySeparatorChar}{{z}}_{{x}}_{{y}}.png\"\n");
 
     return;
 }
+
+var quality = commandline.TryGetValue("quality", value: out var q) ? double.Parse(q.First()) : 100d;
 
 var sourceFile = commandline.Count == 0 && args.Length > 0 ? args[0] : commandline["input"].First();
 var tileSize = commandline.TryGetValue("size", value: out var Value) ? int.Parse(Value.First()) : 256;
@@ -65,7 +76,8 @@ for (var zoom = 0; zoom <= maxZoom; zoom++)
     // Scale the entire image
     using var rescaled = new Image<Rgba32>(originalSource.Width, originalSource.Height);
     rescaled.Mutate(x => x.DrawImage(originalSource, new Point(0, 0), 1.0f).Resize(width, height, Sampler));
-    scaled.Mutate(x => x.DrawImage(rescaled, new Point((scaled.Width - width) / 2, (scaled.Height - height) / 2), new GraphicsOptions()));
+    scaled.Mutate(x => x.DrawImage(rescaled, new Point((scaled.Width - width) / 2, (scaled.Height - height) / 2),
+        new GraphicsOptions()));
 
     // Take tiles from it
     Enumerable.Range(0, tiles).SelectMany(x => Enumerable.Range(0, tiles).Select(y => new { x, y }))
@@ -82,17 +94,33 @@ for (var zoom = 0; zoom <= maxZoom; zoom++)
             var Variables = new Dictionary<string, int>(StringComparer.InvariantCultureIgnoreCase)
                 { { "z", zoom }, { "x", c.x }, { "y", c.y } };
 
-            var Filename = Regex.Replace(
-                commandline.ContainsKey("filename") && commandline["filename"].Length > 0
-                    ? commandline["filename"].First()
-                    : $"{sourceFile}-tiles{Path.DirectorySeparatorChar}{{z}}_{{x}}_{{y}}.png",
-                @"{(?<var>[^}]+)}", new MatchEvaluator(m => $"{Variables[m.Groups["var"].Value]}"));
+            var filenameTemplate = commandline.ContainsKey("filename") && commandline["filename"].Length > 0
+                ? commandline["filename"].First()
+                : $"{sourceFile}-tiles{Path.DirectorySeparatorChar}{{z}}_{{x}}_{{y}}.png";
+
+            var Filename = Regex.Replace(filenameTemplate, @"{(?<var>[^}]+)}",
+                m => $"{Variables[m.Groups["var"].Value]}");
+
+            IImageEncoder encoder = Regex.Match(filenameTemplate, @"(\..+)?$").Value.ToLowerInvariant() switch
+            {
+                ".webp" => new WebpEncoder { Quality = (int)quality },
+                ".png" => new PngEncoder(),
+                ".jpg" => new JpegEncoder { Quality = (int)quality },
+                ".jpeg" => new JpegEncoder { Quality = (int)quality },
+                ".tiff" => new TiffEncoder(),
+                ".tga" => new TgaEncoder(),
+                ".qoi" => new QoiEncoder(),
+                ".pbm" => new PngEncoder(),
+                ".bmp" => new BmpEncoder(),
+                ".gif" => new GifEncoder(),
+                _ => throw new NotSupportedException("Output file format not supported.")
+            };
 
             var OutputDirectory = Path.GetDirectoryName(Filename);
 
             if (OutputDirectory != null && !Directory.Exists(OutputDirectory))
                 Directory.CreateDirectory(OutputDirectory);
 
-            tile.Save(Filename);
+            tile.Save(Filename, encoder);
         });
 }

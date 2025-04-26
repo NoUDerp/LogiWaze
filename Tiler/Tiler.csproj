@@ -40,9 +40,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.DotNet.ILCompiler" Version="9.0.1" />
-		<PackageReference Include="Microsoft.NET.ILLink.Tasks" Version="9.0.1" />
-		<PackageReference Include="SixLabors.ImageSharp" Version="3.1.6" />
+		<PackageReference Include="Microsoft.DotNet.ILCompiler" Version="10.0.0-preview.3.25171.5" />
+		<PackageReference Include="Microsoft.NET.ILLink.Tasks" Version="10.0.0-preview.3.25171.5" />
+		<PackageReference Include="SixLabors.ImageSharp" Version="3.1.7" />
 		<PackageReference Include="SixLabors.ImageSharp.Drawing" Version="2.1.5" />
 	</ItemGroup>
 
