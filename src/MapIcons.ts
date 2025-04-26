@@ -1,0 +1,255 @@
+//import fs from "fs";
+
+import Control_webp from 'data-url:../MapIcons/Control.webp';
+import Labels_webp from 'data-url:../MapIcons/Labels.webp';
+import MapIconAmmoFactory_webp from 'data-url:../MapIcons/MapIconAmmoFactory.webp';
+import MapIconAmmoFactoryColonial_webp from 'data-url:../MapIcons/MapIconAmmoFactoryColonial.webp';
+import MapIconAmmoFactoryWarden_webp from 'data-url:../MapIcons/MapIconAmmoFactoryWarden.webp';
+import MapIconCivicCenter_webp from 'data-url:../MapIcons/MapIconCivicCenter.webp';
+import MapIconCivicCenterColonial_webp from 'data-url:../MapIcons/MapIconCivicCenterColonial.webp';
+import MapIconCivicCenterWarden_webp from 'data-url:../MapIcons/MapIconCivicCenterWarden.webp';
+import MapIconCoal_webp from 'data-url:../MapIcons/MapIconCoal.webp';
+import MapIconComponentMine_webp from 'data-url:../MapIcons/MapIconComponentMine.webp';
+import MapIconComponentMineColonial_webp from 'data-url:../MapIcons/MapIconComponentMineColonial.webp';
+import MapIconComponentMineWarden_webp from 'data-url:../MapIcons/MapIconComponentMineWarden.webp';
+import MapIconComponents_webp from 'data-url:../MapIcons/MapIconComponents.webp';
+import MapIconComponentsColonial_webp from 'data-url:../MapIcons/MapIconComponentsColonial.webp';
+import MapIconComponentsWarden_webp from 'data-url:../MapIcons/MapIconComponentsWarden.webp';
+import MapIconConstructionYard_webp from 'data-url:../MapIcons/MapIconConstructionYard.webp';
+import MapIconConstructionYardColonial_webp from 'data-url:../MapIcons/MapIconConstructionYardColonial.webp';
+import MapIconConstructionYardWarden_webp from 'data-url:../MapIcons/MapIconConstructionYardWarden.webp';
+import MapIconFactory_webp from 'data-url:../MapIcons/MapIconFactory.webp';
+import MapIconFactoryColonial_webp from 'data-url:../MapIcons/MapIconFactoryColonial.webp';
+import MapIconFactoryWarden_webp from 'data-url:../MapIcons/MapIconFactoryWarden.webp';
+import MapIconFort_webp from 'data-url:../MapIcons/MapIconFort.webp';
+import MapIconFortColonial_webp from 'data-url:../MapIcons/MapIconFortColonial.webp';
+import MapIconFortCursed_webp from 'data-url:../MapIcons/MapIconFortCursed.webp';
+import MapIconFortCursedColonial_webp from 'data-url:../MapIcons/MapIconFortCursedColonial.webp';
+import MapIconFortCursedWarden_webp from 'data-url:../MapIcons/MapIconFortCursedWarden.webp';
+import MapIconFortWarden_webp from 'data-url:../MapIcons/MapIconFortWarden.webp';
+import MapIconForwardBase1_webp from 'data-url:../MapIcons/MapIconForwardBase1.webp';
+import MapIconForwardBase1Colonial_webp from 'data-url:../MapIcons/MapIconForwardBase1Colonial.webp';
+import MapIconForwardBase1Warden_webp from 'data-url:../MapIcons/MapIconForwardBase1Warden.webp';
+import MapIconForwardBase2_webp from 'data-url:../MapIcons/MapIconForwardBase2.webp';
+import MapIconForwardBase2Colonial_webp from 'data-url:../MapIcons/MapIconForwardBase2Colonial.webp';
+import MapIconForwardBase2Warden_webp from 'data-url:../MapIcons/MapIconForwardBase2Warden.webp';
+import MapIconForwardBase3_webp from 'data-url:../MapIcons/MapIconForwardBase3.webp';
+import MapIconForwardBase3Colonial_webp from 'data-url:../MapIcons/MapIconForwardBase3Colonial.webp';
+import MapIconForwardBase3Warden_webp from 'data-url:../MapIcons/MapIconForwardBase3Warden.webp';
+import MapIconFuel_webp from 'data-url:../MapIcons/MapIconFuel.webp';
+import MapIconFuelColonial_webp from 'data-url:../MapIcons/MapIconFuelColonial.webp';
+import MapIconFuelWarden_webp from 'data-url:../MapIcons/MapIconFuelWarden.webp';
+import MapIconHomeBaseHallColonial_webp from 'data-url:../MapIcons/MapIconHomeBaseHallColonial.webp';
+import MapIconHomeBaseHallWarden_webp from 'data-url:../MapIcons/MapIconHomeBaseHallWarden.webp';
+import MapIconKeep_webp from 'data-url:../MapIcons/MapIconKeep.webp';
+import MapIconKeepColonial_webp from 'data-url:../MapIcons/MapIconKeepColonial.webp';
+import MapIconKeepWarden_webp from 'data-url:../MapIcons/MapIconKeepWarden.webp';
+import MapIconManufacturing_webp from 'data-url:../MapIcons/MapIconManufacturing.webp';
+import MapIconManufacturingColonial_webp from 'data-url:../MapIcons/MapIconManufacturingColonial.webp';
+import MapIconManufacturingWarden_webp from 'data-url:../MapIcons/MapIconManufacturingWarden.webp';
+import MapIconMassProductionFactory_webp from 'data-url:../MapIcons/MapIconMassProductionFactory.webp';
+import MapIconMassProductionFactoryColonial_webp from 'data-url:../MapIcons/MapIconMassProductionFactoryColonial.webp';
+import MapIconMassProductionFactoryWarden_webp from 'data-url:../MapIcons/MapIconMassProductionFactoryWarden.webp';
+import MapIconMedical_webp from 'data-url:../MapIcons/MapIconMedical.webp';
+import MapIconMedicalColonial_webp from 'data-url:../MapIcons/MapIconMedicalColonial.webp';
+import MapIconMedicalWarden_webp from 'data-url:../MapIcons/MapIconMedicalWarden.webp';
+import MapIconObservationTower_webp from 'data-url:../MapIcons/MapIconObservationTower.webp';
+import MapIconObservationTowerColonial_webp from 'data-url:../MapIcons/MapIconObservationTowerColonial.webp';
+import MapIconObservationTowerWarden_webp from 'data-url:../MapIcons/MapIconObservationTowerWarden.webp';
+import MapIconOilWell_webp from 'data-url:../MapIcons/MapIconOilWell.webp';
+import MapIconOilWellColonial_webp from 'data-url:../MapIcons/MapIconOilWellColonial.webp';
+import MapIconOilWellWarden_webp from 'data-url:../MapIcons/MapIconOilWellWarden.webp';
+import MapIconRelicBase_webp from 'data-url:../MapIcons/MapIconRelicBase.webp';
+import MapIconRelicBaseColonial_webp from 'data-url:../MapIcons/MapIconRelicBaseColonial.webp';
+import MapIconRelicBaseWarden_webp from 'data-url:../MapIcons/MapIconRelicBaseWarden.webp';
+import MapIconRocketSite_webp from 'data-url:../MapIcons/MapIconRocketSite.webp';
+import MapIconRocketSiteColonial_webp from 'data-url:../MapIcons/MapIconRocketSiteColonial.webp';
+import MapIconRocketSiteWarden_webp from 'data-url:../MapIcons/MapIconRocketSiteWarden.webp';
+import MapIconSafehouse_webp from 'data-url:../MapIcons/MapIconSafehouse.webp';
+import MapIconSafehouseColonial_webp from 'data-url:../MapIcons/MapIconSafehouseColonial.webp';
+import MapIconSafehouseWarden_webp from 'data-url:../MapIcons/MapIconSafehouseWarden.webp';
+import MapIconSalvage_webp from 'data-url:../MapIcons/MapIconSalvage.webp';
+import MapIconSalvageColonial_webp from 'data-url:../MapIcons/MapIconSalvageColonial.webp';
+import MapIconSalvageMine_webp from 'data-url:../MapIcons/MapIconSalvageMine.webp';
+import MapIconSalvageMineColonial_webp from 'data-url:../MapIcons/MapIconSalvageMineColonial.webp';
+import MapIconSalvageMineWarden_webp from 'data-url:../MapIcons/MapIconSalvageMineWarden.webp';
+import MapIconSalvageWarden_webp from 'data-url:../MapIcons/MapIconSalvageWarden.webp';
+import MapIconScorchedTown_webp from 'data-url:../MapIcons/MapIconScorchedTown.webp';
+import MapIconScorchedTownColonial_webp from 'data-url:../MapIcons/MapIconScorchedTownColonial.webp';
+import MapIconScorchedTownWarden_webp from 'data-url:../MapIcons/MapIconScorchedTownWarden.webp';
+import MapIconSeaport_webp from 'data-url:../MapIcons/MapIconSeaport.webp';
+import MapIconSeaportColonial_webp from 'data-url:../MapIcons/MapIconSeaportColonial.webp';
+import MapIconSeaportWarden_webp from 'data-url:../MapIcons/MapIconSeaportWarden.webp';
+import MapIconShipyard_webp from 'data-url:../MapIcons/MapIconShipyard.webp';
+import MapIconShipyardColonial_webp from 'data-url:../MapIcons/MapIconShipyardColonial.webp';
+import MapIconShipyardWarden_webp from 'data-url:../MapIcons/MapIconShipyardWarden.webp';
+import MapIconStaticBase1_webp from 'data-url:../MapIcons/MapIconStaticBase1.webp';
+import MapIconStaticBase1Colonial_webp from 'data-url:../MapIcons/MapIconStaticBase1Colonial.webp';
+import MapIconStaticBase1Warden_webp from 'data-url:../MapIcons/MapIconStaticBase1Warden.webp';
+import MapIconStaticBase2_webp from 'data-url:../MapIcons/MapIconStaticBase2.webp';
+import MapIconStaticBase2Colonial_webp from 'data-url:../MapIcons/MapIconStaticBase2Colonial.webp';
+import MapIconStaticBase2Warden_webp from 'data-url:../MapIcons/MapIconStaticBase2Warden.webp';
+import MapIconStaticBase3_webp from 'data-url:../MapIcons/MapIconStaticBase3.webp';
+import MapIconStaticBase3Colonial_webp from 'data-url:../MapIcons/MapIconStaticBase3Colonial.webp';
+import MapIconStaticBase3Warden_webp from 'data-url:../MapIcons/MapIconStaticBase3Warden.webp';
+import MapIconStorageFacility_webp from 'data-url:../MapIcons/MapIconStorageFacility.webp';
+import MapIconStorageFacilityColonial_webp from 'data-url:../MapIcons/MapIconStorageFacilityColonial.webp';
+import MapIconStorageFacilityWarden_webp from 'data-url:../MapIcons/MapIconStorageFacilityWarden.webp';
+import MapIconSulfur_webp from 'data-url:../MapIcons/MapIconSulfur.webp';
+import MapIconSulfurColonial_webp from 'data-url:../MapIcons/MapIconSulfurColonial.webp';
+import MapIconSulfurMine_webp from 'data-url:../MapIcons/MapIconSulfurMine.webp';
+import MapIconSulfurMineColonial_webp from 'data-url:../MapIcons/MapIconSulfurMineColonial.webp';
+import MapIconSulfurMineWarden_webp from 'data-url:../MapIcons/MapIconSulfurMineWarden.webp';
+import MapIconSulfurWarden_webp from 'data-url:../MapIcons/MapIconSulfurWarden.webp';
+import MapIconSupplies_webp from 'data-url:../MapIcons/MapIconSupplies.webp';
+import MapIconSuppliesColonial_webp from 'data-url:../MapIcons/MapIconSuppliesColonial.webp';
+import MapIconSuppliesWarden_webp from 'data-url:../MapIcons/MapIconSuppliesWarden.webp';
+import MapIconTechCenter_webp from 'data-url:../MapIcons/MapIconTechCenter.webp';
+import MapIconTechCenterColonial_webp from 'data-url:../MapIcons/MapIconTechCenterColonial.webp';
+import MapIconTechCenterWarden_webp from 'data-url:../MapIcons/MapIconTechCenterWarden.webp';
+import MapIconTownHall_webp from 'data-url:../MapIcons/MapIconTownHall.webp';
+import MapIconTownHallColonial_webp from 'data-url:../MapIcons/MapIconTownHallColonial.webp';
+import MapIconTownHallWarden_webp from 'data-url:../MapIcons/MapIconTownHallWarden.webp';
+import MapIconTroopShip_webp from 'data-url:../MapIcons/MapIconTroopShip.webp';
+import MapIconTroopShipColonial_webp from 'data-url:../MapIcons/MapIconTroopShipColonial.webp';
+import MapIconTroopShipWarden_webp from 'data-url:../MapIcons/MapIconTroopShipWarden.webp';
+import MapIconVehicle_webp from 'data-url:../MapIcons/MapIconVehicle.webp';
+import MapIconVehicleColonial_webp from 'data-url:../MapIcons/MapIconVehicleColonial.webp';
+import MapIconVehicleWarden_webp from 'data-url:../MapIcons/MapIconVehicleWarden.webp';
+import MapIconVictory_webp from 'data-url:../MapIcons/MapIconVictory.webp';
+import MapIconVictoryColonial_webp from 'data-url:../MapIcons/MapIconVictoryColonial.webp';
+import MapIconVictoryWarden_webp from 'data-url:../MapIcons/MapIconVictoryWarden.webp';
+import MapIconWorkshop_webp from 'data-url:../MapIcons/MapIconWorkshop.webp';
+import MapIconWorkshopColonial_webp from 'data-url:../MapIcons/MapIconWorkshopColonial.webp';
+import MapIconWorkshopWarden_webp from 'data-url:../MapIcons/MapIconWorkshopWarden.webp';
+import fencing_webp from 'data-url:../MapIcons/fencing.webp';
+import road_route_webp from 'data-url:../MapIcons/road-route.webp';
+
+export default new Map<string, Promise<ArrayBuffer>>(
+    [
+        ['Control.webp', fetch(Control_webp).then(r => r.arrayBuffer())],
+        ['Labels.webp', fetch(Labels_webp).then(r => r.arrayBuffer())],
+        ['MapIconAmmoFactory.webp', fetch(MapIconAmmoFactory_webp).then(r => r.arrayBuffer())],
+        ['MapIconAmmoFactoryColonial.webp', fetch(MapIconAmmoFactoryColonial_webp).then(r => r.arrayBuffer())],
+        ['MapIconAmmoFactoryWarden.webp', fetch(MapIconAmmoFactoryWarden_webp).then(r => r.arrayBuffer())],
+        ['MapIconCivicCenter.webp', fetch(MapIconCivicCenter_webp).then(r => r.arrayBuffer())],
+        ['MapIconCivicCenterColonial.webp', fetch(MapIconCivicCenterColonial_webp).then(r => r.arrayBuffer())],
+        ['MapIconCivicCenterWarden.webp', fetch(MapIconCivicCenterWarden_webp).then(r => r.arrayBuffer())],
+        ['MapIconCoal.webp', fetch(MapIconCoal_webp).then(r => r.arrayBuffer())],
+        ['MapIconComponentMine.webp', fetch(MapIconComponentMine_webp).then(r => r.arrayBuffer())],
+        ['MapIconComponentMineColonial.webp', fetch(MapIconComponentMineColonial_webp).then(r => r.arrayBuffer())],
+        ['MapIconComponentMineWarden.webp', fetch(MapIconComponentMineWarden_webp).then(r => r.arrayBuffer())],
+        ['MapIconComponents.webp', fetch(MapIconComponents_webp).then(r => r.arrayBuffer())],
+        ['MapIconComponentsColonial.webp', fetch(MapIconComponentsColonial_webp).then(r => r.arrayBuffer())],
+        ['MapIconComponentsWarden.webp', fetch(MapIconComponentsWarden_webp).then(r => r.arrayBuffer())],
+        ['MapIconConstructionYard.webp', fetch(MapIconConstructionYard_webp).then(r => r.arrayBuffer())],
+        ['MapIconConstructionYardColonial.webp', fetch(MapIconConstructionYardColonial_webp).then(r => r.arrayBuffer())],
+        ['MapIconConstructionYardWarden.webp', fetch(MapIconConstructionYardWarden_webp).then(r => r.arrayBuffer())],
+        ['MapIconFactory.webp', fetch(MapIconFactory_webp).then(r => r.arrayBuffer())],
+        ['MapIconFactoryColonial.webp', fetch(MapIconFactoryColonial_webp).then(r => r.arrayBuffer())],
+        ['MapIconFactoryWarden.webp', fetch(MapIconFactoryWarden_webp).then(r => r.arrayBuffer())],
+        ['MapIconFort.webp', fetch(MapIconFort_webp).then(r => r.arrayBuffer())],
+        ['MapIconFortColonial.webp', fetch(MapIconFortColonial_webp).then(r => r.arrayBuffer())],
+        ['MapIconFortCursed.webp', fetch(MapIconFortCursed_webp).then(r => r.arrayBuffer())],
+        ['MapIconFortCursedColonial.webp', fetch(MapIconFortCursedColonial_webp).then(r => r.arrayBuffer())],
+        ['MapIconFortCursedWarden.webp', fetch(MapIconFortCursedWarden_webp).then(r => r.arrayBuffer())],
+        ['MapIconFortWarden.webp', fetch(MapIconFortWarden_webp).then(r => r.arrayBuffer())],
+        ['MapIconForwardBase1.webp', fetch(MapIconForwardBase1_webp).then(r => r.arrayBuffer())],
+        ['MapIconForwardBase1Colonial.webp', fetch(MapIconForwardBase1Colonial_webp).then(r => r.arrayBuffer())],
+        ['MapIconForwardBase1Warden.webp', fetch(MapIconForwardBase1Warden_webp).then(r => r.arrayBuffer())],
+        ['MapIconForwardBase2.webp', fetch(MapIconForwardBase2_webp).then(r => r.arrayBuffer())],
+        ['MapIconForwardBase2Colonial.webp', fetch(MapIconForwardBase2Colonial_webp).then(r => r.arrayBuffer())],
+        ['MapIconForwardBase2Warden.webp', fetch(MapIconForwardBase2Warden_webp).then(r => r.arrayBuffer())],
+        ['MapIconForwardBase3.webp', fetch(MapIconForwardBase3_webp).then(r => r.arrayBuffer())],
+        ['MapIconForwardBase3Colonial.webp', fetch(MapIconForwardBase3Colonial_webp).then(r => r.arrayBuffer())],
+        ['MapIconForwardBase3Warden.webp', fetch(MapIconForwardBase3Warden_webp).then(r => r.arrayBuffer())],
+        ['MapIconFuel.webp', fetch(MapIconFuel_webp).then(r => r.arrayBuffer())],
+        ['MapIconFuelColonial.webp', fetch(MapIconFuelColonial_webp).then(r => r.arrayBuffer())],
+        ['MapIconFuelWarden.webp', fetch(MapIconFuelWarden_webp).then(r => r.arrayBuffer())],
+        ['MapIconHomeBaseHallColonial.webp', fetch(MapIconHomeBaseHallColonial_webp).then(r => r.arrayBuffer())],
+        ['MapIconHomeBaseHallWarden.webp', fetch(MapIconHomeBaseHallWarden_webp).then(r => r.arrayBuffer())],
+        ['MapIconKeep.webp', fetch(MapIconKeep_webp).then(r => r.arrayBuffer())],
+        ['MapIconKeepColonial.webp', fetch(MapIconKeepColonial_webp).then(r => r.arrayBuffer())],
+        ['MapIconKeepWarden.webp', fetch(MapIconKeepWarden_webp).then(r => r.arrayBuffer())],
+        ['MapIconManufacturing.webp', fetch(MapIconManufacturing_webp).then(r => r.arrayBuffer())],
+        ['MapIconManufacturingColonial.webp', fetch(MapIconManufacturingColonial_webp).then(r => r.arrayBuffer())],
+        ['MapIconManufacturingWarden.webp', fetch(MapIconManufacturingWarden_webp).then(r => r.arrayBuffer())],
+        ['MapIconMassProductionFactory.webp', fetch(MapIconMassProductionFactory_webp).then(r => r.arrayBuffer())],
+        ['MapIconMassProductionFactoryColonial.webp', fetch(MapIconMassProductionFactoryColonial_webp).then(r => r.arrayBuffer())],
+        ['MapIconMassProductionFactoryWarden.webp', fetch(MapIconMassProductionFactoryWarden_webp).then(r => r.arrayBuffer())],
+        ['MapIconMedical.webp', fetch(MapIconMedical_webp).then(r => r.arrayBuffer())],
+        ['MapIconMedicalColonial.webp', fetch(MapIconMedicalColonial_webp).then(r => r.arrayBuffer())],
+        ['MapIconMedicalWarden.webp', fetch(MapIconMedicalWarden_webp).then(r => r.arrayBuffer())],
+        ['MapIconObservationTower.webp', fetch(MapIconObservationTower_webp).then(r => r.arrayBuffer())],
+        ['MapIconObservationTowerColonial.webp', fetch(MapIconObservationTowerColonial_webp).then(r => r.arrayBuffer())],
+        ['MapIconObservationTowerWarden.webp', fetch(MapIconObservationTowerWarden_webp).then(r => r.arrayBuffer())],
+        ['MapIconOilWell.webp', fetch(MapIconOilWell_webp).then(r => r.arrayBuffer())],
+        ['MapIconOilWellColonial.webp', fetch(MapIconOilWellColonial_webp).then(r => r.arrayBuffer())],
+        ['MapIconOilWellWarden.webp', fetch(MapIconOilWellWarden_webp).then(r => r.arrayBuffer())],
+        ['MapIconRelicBase.webp', fetch(MapIconRelicBase_webp).then(r => r.arrayBuffer())],
+        ['MapIconRelicBaseColonial.webp', fetch(MapIconRelicBaseColonial_webp).then(r => r.arrayBuffer())],
+        ['MapIconRelicBaseWarden.webp', fetch(MapIconRelicBaseWarden_webp).then(r => r.arrayBuffer())],
+        ['MapIconRocketSite.webp', fetch(MapIconRocketSite_webp).then(r => r.arrayBuffer())],
+        ['MapIconRocketSiteColonial.webp', fetch(MapIconRocketSiteColonial_webp).then(r => r.arrayBuffer())],
+        ['MapIconRocketSiteWarden.webp', fetch(MapIconRocketSiteWarden_webp).then(r => r.arrayBuffer())],
+        ['MapIconSafehouse.webp', fetch(MapIconSafehouse_webp).then(r => r.arrayBuffer())],
+        ['MapIconSafehouseColonial.webp', fetch(MapIconSafehouseColonial_webp).then(r => r.arrayBuffer())],
+        ['MapIconSafehouseWarden.webp', fetch(MapIconSafehouseWarden_webp).then(r => r.arrayBuffer())],
+        ['MapIconSalvage.webp', fetch(MapIconSalvage_webp).then(r => r.arrayBuffer())],
+        ['MapIconSalvageColonial.webp', fetch(MapIconSalvageColonial_webp).then(r => r.arrayBuffer())],
+        ['MapIconSalvageMine.webp', fetch(MapIconSalvageMine_webp).then(r => r.arrayBuffer())],
+        ['MapIconSalvageMineColonial.webp', fetch(MapIconSalvageMineColonial_webp).then(r => r.arrayBuffer())],
+        ['MapIconSalvageMineWarden.webp', fetch(MapIconSalvageMineWarden_webp).then(r => r.arrayBuffer())],
+        ['MapIconSalvageWarden.webp', fetch(MapIconSalvageWarden_webp).then(r => r.arrayBuffer())],
+        ['MapIconScorchedTown.webp', fetch(MapIconScorchedTown_webp).then(r => r.arrayBuffer())],
+        ['MapIconScorchedTownColonial.webp', fetch(MapIconScorchedTownColonial_webp).then(r => r.arrayBuffer())],
+        ['MapIconScorchedTownWarden.webp', fetch(MapIconScorchedTownWarden_webp).then(r => r.arrayBuffer())],
+        ['MapIconSeaport.webp', fetch(MapIconSeaport_webp).then(r => r.arrayBuffer())],
+        ['MapIconSeaportColonial.webp', fetch(MapIconSeaportColonial_webp).then(r => r.arrayBuffer())],
+        ['MapIconSeaportWarden.webp', fetch(MapIconSeaportWarden_webp).then(r => r.arrayBuffer())],
+        ['MapIconShipyard.webp', fetch(MapIconShipyard_webp).then(r => r.arrayBuffer())],
+        ['MapIconShipyardColonial.webp', fetch(MapIconShipyardColonial_webp).then(r => r.arrayBuffer())],
+        ['MapIconShipyardWarden.webp', fetch(MapIconShipyardWarden_webp).then(r => r.arrayBuffer())],
+        ['MapIconStaticBase1.webp', fetch(MapIconStaticBase1_webp).then(r => r.arrayBuffer())],
+        ['MapIconStaticBase1Colonial.webp', fetch(MapIconStaticBase1Colonial_webp).then(r => r.arrayBuffer())],
+        ['MapIconStaticBase1Warden.webp', fetch(MapIconStaticBase1Warden_webp).then(r => r.arrayBuffer())],
+        ['MapIconStaticBase2.webp', fetch(MapIconStaticBase2_webp).then(r => r.arrayBuffer())],
+        ['MapIconStaticBase2Colonial.webp', fetch(MapIconStaticBase2Colonial_webp).then(r => r.arrayBuffer())],
+        ['MapIconStaticBase2Warden.webp', fetch(MapIconStaticBase2Warden_webp).then(r => r.arrayBuffer())],
+        ['MapIconStaticBase3.webp', fetch(MapIconStaticBase3_webp).then(r => r.arrayBuffer())],
+        ['MapIconStaticBase3Colonial.webp', fetch(MapIconStaticBase3Colonial_webp).then(r => r.arrayBuffer())],
+        ['MapIconStaticBase3Warden.webp', fetch(MapIconStaticBase3Warden_webp).then(r => r.arrayBuffer())],
+        ['MapIconStorageFacility.webp', fetch(MapIconStorageFacility_webp).then(r => r.arrayBuffer())],
+        ['MapIconStorageFacilityColonial.webp', fetch(MapIconStorageFacilityColonial_webp).then(r => r.arrayBuffer())],
+        ['MapIconStorageFacilityWarden.webp', fetch(MapIconStorageFacilityWarden_webp).then(r => r.arrayBuffer())],
+        ['MapIconSulfur.webp', fetch(MapIconSulfur_webp).then(r => r.arrayBuffer())],
+        ['MapIconSulfurColonial.webp', fetch(MapIconSulfurColonial_webp).then(r => r.arrayBuffer())],
+        ['MapIconSulfurMine.webp', fetch(MapIconSulfurMine_webp).then(r => r.arrayBuffer())],
+        ['MapIconSulfurMineColonial.webp', fetch(MapIconSulfurMineColonial_webp).then(r => r.arrayBuffer())],
+        ['MapIconSulfurMineWarden.webp', fetch(MapIconSulfurMineWarden_webp).then(r => r.arrayBuffer())],
+        ['MapIconSulfurWarden.webp', fetch(MapIconSulfurWarden_webp).then(r => r.arrayBuffer())],
+        ['MapIconSupplies.webp', fetch(MapIconSupplies_webp).then(r => r.arrayBuffer())],
+        ['MapIconSuppliesColonial.webp', fetch(MapIconSuppliesColonial_webp).then(r => r.arrayBuffer())],
+        ['MapIconSuppliesWarden.webp', fetch(MapIconSuppliesWarden_webp).then(r => r.arrayBuffer())],
+        ['MapIconTechCenter.webp', fetch(MapIconTechCenter_webp).then(r => r.arrayBuffer())],
+        ['MapIconTechCenterColonial.webp', fetch(MapIconTechCenterColonial_webp).then(r => r.arrayBuffer())],
+        ['MapIconTechCenterWarden.webp', fetch(MapIconTechCenterWarden_webp).then(r => r.arrayBuffer())],
+        ['MapIconTownHall.webp', fetch(MapIconTownHall_webp).then(r => r.arrayBuffer())],
+        ['MapIconTownHallColonial.webp', fetch(MapIconTownHallColonial_webp).then(r => r.arrayBuffer())],
+        ['MapIconTownHallWarden.webp', fetch(MapIconTownHallWarden_webp).then(r => r.arrayBuffer())],
+        ['MapIconTroopShip.webp', fetch(MapIconTroopShip_webp).then(r => r.arrayBuffer())],
+        ['MapIconTroopShipColonial.webp', fetch(MapIconTroopShipColonial_webp).then(r => r.arrayBuffer())],
+        ['MapIconTroopShipWarden.webp', fetch(MapIconTroopShipWarden_webp).then(r => r.arrayBuffer())],
+        ['MapIconVehicle.webp', fetch(MapIconVehicle_webp).then(r => r.arrayBuffer())],
+        ['MapIconVehicleColonial.webp', fetch(MapIconVehicleColonial_webp).then(r => r.arrayBuffer())],
+        ['MapIconVehicleWarden.webp', fetch(MapIconVehicleWarden_webp).then(r => r.arrayBuffer())],
+        ['MapIconVictory.webp', fetch(MapIconVictory_webp).then(r => r.arrayBuffer())],
+        ['MapIconVictoryColonial.webp', fetch(MapIconVictoryColonial_webp).then(r => r.arrayBuffer())],
+        ['MapIconVictoryWarden.webp', fetch(MapIconVictoryWarden_webp).then(r => r.arrayBuffer())],
+        ['MapIconWorkshop.webp', fetch(MapIconWorkshop_webp).then(r => r.arrayBuffer())],
+        ['MapIconWorkshopColonial.webp', fetch(MapIconWorkshopColonial_webp).then(r => r.arrayBuffer())],
+        ['MapIconWorkshopWarden.webp', fetch(MapIconWorkshopWarden_webp).then(r => r.arrayBuffer())],
+        ['fencing.webp', fetch(fencing_webp).then(r => r.arrayBuffer())],
+        ['road-route.webp', fetch(road_route_webp).then(r => r.arrayBuffer())]
+    ]
+);

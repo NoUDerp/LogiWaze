@@ -4,6 +4,7 @@ import * as intersects from 'intersects';
 import Queue from "./Queue";
 import API from "./API";
 import control from "./TileRenderWorker";
+import assets from "./MapIcons";
 
 class ImageCache {
     private cache: Map<string, Promise<Image>> = new Map<string, Promise<Image>>()
@@ -84,7 +85,7 @@ export default class ControlGrid extends L.GridLayer {
             if (j.icon != null && !(j.icon in this.disabledIcons)) {
                 const filename = `MapIcons/${j.icon}`;
                 if (!m.has(filename))
-                    m.set(filename, this.downloadImage(filename));
+                    m.set(filename, await assets.get(j.icon));// this.downloadImage(filename));
             }
 
         await Promise.all(m.values());
