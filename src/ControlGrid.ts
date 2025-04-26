@@ -143,7 +143,7 @@ export default class ControlGrid extends L.GridLayer {
         img.close();
     }
 
-    static renderControl(renderers, c, coords, tile, disabledIcons, drawHexes, draw, controls): Promise<ImageBitmap> {
+    static renderControl(renderers: Queue<Worker> | null, c, coords, tile, disabledIcons, drawHexes, draw, controls, road_sources, variogram, icons, icon_sources): Promise<ImageBitmap> {
         c.hd_ratio = 8; // c.coords.z < 2 ? 8 : 16;
         const cTempCanvasWidth = 2 + tile.width / c.t.pixelScale / c.hd_ratio;
         const cTempCanvasHeight = 2 + tile.height / c.t.pixelScale / c.hd_ratio;
@@ -151,42 +151,74 @@ export default class ControlGrid extends L.GridLayer {
         const zoom = Math.pow(2, c.coords.z);
         const hdRatio = c.hd_ratio / zoom;
         const grid = {x: c.coords.x * max, y: c.coords.y * max};
-
-        return new Promise<ImageBitmap>(async (resolve) => {
-
-            const w = await renderers.dequeue();
-            w.onmessage = async e => {
-                renderers.enqueue(w);
-                resolve(e.data);
-            };
-            w.postMessage({
-                operation: "control",
-                arguments: [cTempCanvasWidth, cTempCanvasHeight, hdRatio, grid.x, grid.y,
-                    {
-                        coords: coords,
-                        grid_depth: c.t.grid_depth,
-                        offset: c.t.offset,
-                        roadWidth: c.t.RoadWidth,
-                        controlWidth: c.t.ControlWidth,
-                        grid_x_size: c.t.grid_x_size,
-                        grid_y_size: c.t.grid_y_size,
-                        controls: c.t.controls,
-                        pixelScale: c.t.pixelScale,
-                        width: tile.width,
-                        height: tile.height,
-                        max_zoom: c.t.max_zoom,
-                        hex_sources: c.t.hex_sources,
-                        disabled_icons: disabledIcons,
-                        drawBorders: drawHexes,
-                        drawControl: draw,
-                        drawRoads: controls
-                    }]
+        if (renderers)
+            return new Promise<ImageBitmap>(async (resolve) => {
+                const w = await renderers.dequeue();
+                w.onmessage = async e => {
+                    renderers.enqueue(w);
+                    resolve(e.data);
+                };
+                w.postMessage({
+                    operation: "control",
+                    arguments: [cTempCanvasWidth, cTempCanvasHeight, hdRatio, grid.x, grid.y,
+                        {
+                            coords: coords,
+                            grid_depth: c.t.grid_depth,
+                            offset: c.t.offset,
+                            roadWidth: c.t.RoadWidth,
+                            controlWidth: c.t.ControlWidth,
+                            grid_x_size: c.t.grid_x_size,
+                            grid_y_size: c.t.grid_y_size,
+                            controls: c.t.controls,
+                            pixelScale: c.t.pixelScale,
+                            width: tile.width,
+                            height: tile.height,
+                            max_zoom: c.t.max_zoom,
+                            hex_sources: c.t.hex_sources,
+                            disabled_icons: disabledIcons,
+                            drawBorders: drawHexes,
+                            drawControl: draw,
+                            drawRoads: controls
+                        }]
+                });
             });
-        });
+
+        return control([cTempCanvasWidth, cTempCanvasHeight, hdRatio, grid.x, grid.y,
+            {
+                coords: coords,
+                grid_depth: c.t.grid_depth,
+                offset: c.t.offset,
+                roadWidth: c.t.RoadWidth,
+                controlWidth: c.t.ControlWidth,
+                grid_x_size: c.t.grid_x_size,
+                grid_y_size: c.t.grid_y_size,
+                controls: c.t.controls,
+                pixelScale: c.t.pixelScale,
+                width: tile.width,
+                height: tile.height,
+                max_zoom: c.t.max_zoom,
+                hex_sources: c.t.hex_sources,
+                disabled_icons: disabledIcons,
+                drawBorders: drawHexes,
+                drawControl: draw,
+                drawRoads: controls
+            }], road_sources, variogram, icons, icon_sources);
     }
 
     renderControlToTempCanvas(c, coords, tile: HTMLCanvasElement) {
-        return ControlGrid.renderControl(this.renderers, c, c.coords, tile, this.disabledIcons, this.drawHexes, this.draw, this.controls);
+        return ControlGrid.renderControl(this.renderers, c, c.coords, tile, this.disabledIcons, this.drawHexes, this.draw, this.controls, this.road_sources,
+            {
+                t: this.API.variogram.t,
+                x: this.API.variogram.x,
+                y: this.API.variogram.y,
+                nugget: this.API.variogram.nugget,
+                range: this.API.variogram.range,
+                sill: this.API.variogram.sill,
+                A: this.API.variogram.A,
+                n: this.API.variogram.n,
+                K: this.API.variogram.K,
+                M: this.API.variogram.M,
+            }, this.icons, this.icon_sources);
     }
 
     logImageBitmap(imageBitmap) {
@@ -263,11 +295,29 @@ export default class ControlGrid extends L.GridLayer {
 
         for (let i = 0; i < navigator.hardwareConcurrency; i++)
             tasks.push(ControlGrid.createWorker(this.renderers, this.road_sources, this.icon_sources, icons, fonts, API));
+
         await Promise.all(tasks);
-        this.webWorkers = tasks.map(async (x) => await x != null).reduce((o, n) => o & n);
+        this.webWorkers = await tasks.map(async (x) => await x != null).reduce((o, n) => o && n);
+        if (!this.webWorkers) {
+            async function createImage(data : ArrayBuffer)
+            {
+                return await createImageBitmap(new Blob([data], {type: 'image/webp'}));
+            }
+
+            this.icons = new Map<string, ImageBitmap>();
+            for (const i of icons as {
+                data: ArrayBuffer,
+                name: string
+            }[])
+                this.icons.set(i.name, createImage(i.data));
+
+            await Promise.all(Array.from(this.icons.values()));
+        }
     }
 
-    static createWorker(renderers, road_sources, icon_sources, icons, fonts, API) {
+    icons: Map<string, ImageBitmap> | null = null;
+
+    static createWorker(renderers, road_sources, icon_sources, icons: Map<string, ImageBitmap>, fonts, API) {
         return new Promise<Worker | null>(async (resolve) => {
             try {
                 const w = new Worker(new URL('TileRenderWorker.ts', import.meta.url), {type: 'module'});
