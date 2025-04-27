@@ -22,11 +22,5 @@
     //"outDir": "dist",
     "strict": false,
     "skipLibCheck": false
-  },
-  "references": [
-    // declare the dependencies
-    {
-      "path": "./src/TileRenderWorker.ts"
-    }
-  ]
+  }
 }

@@ -352,7 +352,7 @@ onmessage = async (e) => {
                         M: context.arguments.variogram.M
                     };
 
-                icons = new Map<string, ImageBitmap>();
+                icons = new Map<string, Promise<ImageBitmap>>();
                 icon_sources = context.arguments.icon_sources;
 
                 // not sure if these should be loaded to the window or for each separate web worker context

@@ -5,7 +5,8 @@ import Queue from "./Queue";
 import API from "./API";
 import control from "./TileRenderWorker";
 import assets from "./MapIcons";
-//import TileRenderWorker from 'data-url:./TileRenderWorker';
+//import TileRenderWorker from 'data-url:../dist/TileRenderWorker.js';
+//import TileRenderWorker from 'data-url:./workers/TileRenderWorker.js';
 
 export default class ControlGrid extends L.GridLayer {
     controls: [] = [true, true, true, true]
@@ -15,7 +16,6 @@ export default class ControlGrid extends L.GridLayer {
     shadowSize: number = 20
     pixelScale: number = 1
     disabledIcons: {} = {}
-    //semaphore: Queue<Worker> = new Queue<Worker>()
     public renderers: Queue<Worker> = new Queue<Worker>()
 
 
@@ -303,15 +303,16 @@ export default class ControlGrid extends L.GridLayer {
     icons: Map<string, ImageBitmap> | null = null;
 
 
-
     static createWorker(renderers, road_sources, icon_sources, icons: Map<string, ImageBitmap>, fonts, API) {
         return new Promise<Worker | null>(async (resolve) => {
             try {
                 // Create a URL for the Blob
-                //const ab = await fetch(TileRenderWorker);
-                //const blob = await ab.blob({ type: 'application/javascript' });
-                //const workerUrl = URL.createObjectURL(blob);
-                const w = new Worker(new URL('TileRenderWorker.ts', import.meta.url), {type: 'module'});
+                //const ab = await fetch();//, {type: 'module'});//TileRenderWorker);
+                // const blob = new Blob([await (await fetch(TileRenderWorker)).arrayBuffer()], {type: 'application/javascript'});
+                // const workerUrl = URL.createObjectURL(blob);
+                // const w = new Worker(workerUrl);//, {type: 'module', name: 'Tile Renderer'});
+
+                const w = new Worker(new URL('./TileRenderWorker', import.meta.url), {type: 'module', name: 'Tile Renderer'});
 
                 // initialize the worker data
                 const workerIcons = [];

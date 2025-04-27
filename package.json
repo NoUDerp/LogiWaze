@@ -12,23 +12,21 @@
     "build": "parcel build",
     "debug": "parcel"
   },
-  "type": "module",
-  "source": "./src/index.html",
   "browserslist": "> 0.5%, last 2 versions, not dead",
   "author": "Derp",
   "license": "MIT",
+  "source": [
+    "./src/index.html",
+    "./src/TileRenderWorker.ts"
+  ],
+  "outputFormat": "global",
   "parcel": {
-    "optimizers": {
-      "*.{js,mjs,jsm,jsx,es6,cjs,ts,tsx}": [
-        "@parcel/optimizer-esbuild",
-        {
-          "inlineWorkerThreshold": 100000000
-        }
-      ]
-    },
-    "workerThreshold": 0,
-    "workers": {
-      "format": "esmodule"
+    "targets": {
+      "main": {
+        "includeNodeModules": [
+
+        ]
+      }
     }
   },
   "dependencies": {

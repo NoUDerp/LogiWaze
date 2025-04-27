@@ -15,6 +15,7 @@ function owoTranslate(text) {
 
 module.exports.Create = async function (mymap, API) {
 
+    let hash;
     let feature;
     let p;
     let k;
@@ -40,7 +41,7 @@ module.exports.Create = async function (mymap, API) {
         const scratch = {};
         for (k = 0; k < feature.geometry.coordinates.length; k++) {
             p = feature.geometry.coordinates[k];
-            var hash = p[0].toFixed(3).concat("|").concat(p[1].toFixed(3));
+            hash = p[0].toFixed(3).concat("|").concat(p[1].toFixed(3));
             if (scratch[hash] === true) {
                 feature.geometry.coordinates.splice(k, 1);
                 k--;
@@ -80,7 +81,7 @@ module.exports.Create = async function (mymap, API) {
     function loadPredictorWorker() : Worker | null
     {
         try {
-            return new Worker(new URL('PredictorWorker.ts', import.meta.url), {type: 'module'});
+            return new Worker(new URL('PredictorWorker.ts', import.meta.url), {type: 'module', name: 'Road Control Predictor'});
         }
         catch(error)
         {
@@ -94,13 +95,6 @@ module.exports.Create = async function (mymap, API) {
     for (const d of segments)
         data.push(await d);
 
-    // const ownershipMatrix = [];
-    // for (let c = 0; c < j; c++)
-    //     ownershipMatrix.push(data[c / navigator.hardwareConcurrency][c % navigator.hardwareConcurrency]);
-
-    // calculate the ownership for the entirety of ownershipMatrix by splitting it into batches by hardware processors
-
-
     for (i = 0; i < Paths.features.length; i++) {
         feature = Paths.features[i];
         let warden_features = new Array();
@@ -110,7 +104,7 @@ module.exports.Create = async function (mymap, API) {
         let last_p = null;
         for (k = 0; k < feature.geometry.coordinates.length; k++) {
             const p = feature.geometry.coordinates[k];
-            var hash = p[0].toFixed(3).concat("|").concat(p[1].toFixed(3));
+            hash = p[0].toFixed(3).concat("|").concat(p[1].toFixed(3));
             const increment = (k === 0 || k == feature.geometry.coordinates.length - 1) ? 1 : 2;
 
             Intersections[hash] = Intersections[hash] == null ? increment : (Intersections[hash] + increment);
@@ -125,13 +119,7 @@ module.exports.Create = async function (mymap, API) {
             const index = ownershipMatrixIndex[i] + k;
             const ownershipScore = data[index % navigator.hardwareConcurrency][Math.floor(index / navigator.hardwareConcurrency)];// ownershipMatrix[ownershipMatrixIndex[i] + k];// (await this.API.batchOwnership(w, [{x: p[0], y: p[1]}]))[0];
             const ownership = Number.isNaN(ownershipScore) ? "OFFLINE" : (ownershipScore < -.25 ? "WARDENS" : (ownershipScore > .25 ? "COLONIALS" : "NONE"));
-            // const ownership2 = !(region in API.mapControl) ? "OFFLINE" : API.ownership(p[0], p[1], region).ownership;
-            
-            // if(ownership!=ownership2)
-            // {
-            //     ownership = ownership2;
-            // }
-            
+
             JSONRoads._layers[keys[i]]._latlngs[k].ownership = ownership;
 
             if (API.mapControl[feature.properties.region] != null && ownership != "OFFLINE" && region in API.mapControl)
