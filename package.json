@@ -15,10 +15,7 @@
   "browserslist": "> 0.5%, last 2 versions, not dead",
   "author": "Derp",
   "license": "MIT",
-  "source": [
-    "./src/index.html",
-    "./src/TileRenderWorker.ts"
-  ],
+  "source": "./src/index.html",
   "outputFormat": "global",
   "parcel": {
     "targets": {
