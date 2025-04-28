@@ -17,7 +17,7 @@ var simplifiedPaths = simplified.Select(p => roads.features[p.PathId] switch { v
 
 roads = roads with { features = simplifiedPaths.ToArray() };
 
-await using var file = Console.OpenStandardOutput();
+await using var file = Console.OpenStandardError();
 await JsonSerializer.SerializeAsync(file, roads);
 
 record struct Roads(string type, string name, CRS crs, Feature[] features);

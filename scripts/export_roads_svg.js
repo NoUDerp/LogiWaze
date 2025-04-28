@@ -1,6 +1,6 @@
 import * as fs from "node:fs";
 
-const geojson = JSON.parse(fs.readFileSync('Roads.json', 'utf8'));
+const geojson = JSON.parse(fs.readFileSync('SimpleRoads.json', 'utf8'));
 
 // set the line width
 const width = .3;
