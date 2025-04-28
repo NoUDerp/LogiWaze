@@ -11,7 +11,7 @@ var paths = new Dictionary<int, (PathSimplifier.Path Path, Properties Properties
 foreach(var r in roads.features)
     paths.Add(paths.Count, (new PathSimplifier.Path(paths.Count, r.geometry.coordinates.Select(c => new PathSimplifier.PathPoint(new Vector2(c[0], c[1]))).ToList()), r.properties));
 
-var simplified = PathSimplifier.SimplifyPaths(paths.Values.Select(p => p.Path).ToList(), angleTolerance * 180f / MathF.PI, distanceTolerance);
+var simplified = PathSimplifier.SimplifyPaths(paths.Values.Select(p => p.Path).ToList(), angleTolerance * MathF.PI / 180f, distanceTolerance);
 
 var simplifiedPaths = simplified.Select(p => roads.features[p.PathId] switch { var m => m with { geometry =  m.geometry with { coordinates = p.Points.Select(c => new float[]{c.Position[0], c.Position[1]}).ToArray()} } });
 
