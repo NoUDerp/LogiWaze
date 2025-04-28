@@ -1,7 +1,7 @@
 ﻿//@ts-nocheck
 
 let L = require('leaflet');
-let Paths = require('../Roads.json'); //json-loader!
+let Paths = require('../SimpleRoads.json'); //json-loader!
 let PathFinder = require('./geojson-path-finder/index.js');
 let towns = require('../towns.json');
 let shards = require('../Shards.json');
