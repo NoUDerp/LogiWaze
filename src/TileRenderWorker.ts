@@ -22,22 +22,22 @@ const fontMap = new Map<string, FontFace>();
 
 onerror = (event) => console.log(`TileRenderWorker: ${event}`);
 
-export default async function control(controlArguments: any,
-                                      road_sources: any,
-                                      variogram:
-                                      {
-                                          t,
-                                          x,
-                                          y,
-                                          nugget,
-                                          range,
-                                          sill,
-                                          A,
-                                          n,
-                                          model,
-                                          K,
-                                          M
-                                      }, icons: Map<string, Promise<ImageBitmap>>, icon_sources: any
+export async function control(controlArguments: any,
+                              road_sources: any,
+                              variogram:
+                              {
+                                  t,
+                                  x,
+                                  y,
+                                  nugget,
+                                  range,
+                                  sill,
+                                  A,
+                                  n,
+                                  model,
+                                  K,
+                                  M
+                              }, icons: Map<string, Promise<ImageBitmap>>, icon_sources: any
 ): Promise<ImageBitmap> {
     const controlWidth = controlArguments[0];
     const controlHeight = controlArguments[1];
@@ -331,6 +331,114 @@ export default async function control(controlArguments: any,
     return overlay.transferToImageBitmap();
 }
 
+export async function text(args: {
+    coords: any,
+    max_zoom: any,
+    pixelScale: number,
+    size: { x: number, y: number },
+    sources: any
+    shadowSize: number
+    boring: boolean
+}): Promise<ImageBitmap> {
+    // const args = context.arguments as {
+    //     coords: any,
+    //     max_zoom: any,
+    //     pixelScale: number,
+    //     size: { x: number, y: number },
+    //     sources: any
+    //     shadowSize: number
+    //     boring: boolean
+    // };
+
+    function zoomScale(zoom, max_zoom): number {
+        return .65 * (1 + max_zoom - zoom);
+    }
+
+    const raw_scale = zoomScale(args.coords.z, args.max_zoom);
+    const hd_ratio = args.pixelScale;
+
+    const tile = new OffscreenCanvas(args.size.x * hd_ratio, args.size.y * hd_ratio);
+    const ctx = tile.getContext('2d');
+
+    const zoom = Math.pow(2, args.coords.z);
+    const max = Math.pow(2, args.max_zoom);
+    const sources = args.sources;
+    let shadowSize = args.shadowSize;
+
+    function controlToFont(control, ctx, boring_font) {
+        if (boring_font) {
+            switch (control) {
+
+                case 0:
+                case 1:
+                case 2:
+                case 3:
+
+                    ctx.font = '70px "Renner"';
+                    break;
+                case 4:
+                    ctx.font = '90px "Renner"';
+                    break;
+            }
+
+        } else
+            switch (control) {
+                case 0:
+                    ctx.font = '54px "Roman"';
+                    break;
+                case 1:
+                    ctx.font = '60px "Celtic"';
+                    break;
+                case 2:
+                case 3:
+                    ctx.font = '50px "Italic"';
+                    break;
+                case 4:
+                    ctx.font = '80px "Italic"';
+                    break;
+            }
+    }
+
+    function draw(boring: boolean, ctx: OffscreenCanvasRenderingContext2D) {
+        for (let i = 0; i < sources.length; i++) {
+            let j = sources[i];
+            if (args.coords.z >= j.zoomMin && args.coords.z < j.zoomMax) {
+
+                const scale = raw_scale * j.scale;
+                const text_scale = hd_ratio * scale * zoom / max;
+                const shadow = shadowSize * text_scale;
+                const label_w = j.size.width * zoom * scale * hd_ratio + shadow * 2;
+                const label_h = j.size.height * zoom * scale * hd_ratio + shadow * 2;
+                const label_x = j.x * zoom * hd_ratio - args.coords.x * tile.width - label_w * .5 - shadow;
+                const label_y = j.y * zoom * hd_ratio - args.coords.y * tile.height - label_h * .25 - shadow;
+
+                if (intersects.boxBox(0, 0, tile.width, tile.height, label_x, label_y, label_w, label_h)) {
+                    ctx.setTransform(text_scale, 0, 0, text_scale, label_x + label_w * .5, label_y + label_h * .5);
+                    controlToFont(j.control, ctx, boring);
+                    ctx.shadowColor = "rgba(0, 0, 0, 1)";
+                    ctx.shadowBlur = shadow;
+                    ctx.fillStyle = j.color;
+                    ctx.strokeStyle = j.color;
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(boring ? j.original_text : j.text, 0, 0);
+                    ctx.fillText(boring ? j.original_text : j.text, 0, 0);
+                    ctx.fillText(boring ? j.original_text : j.text, 0, 0);
+                    ctx.fillText(boring ? j.original_text : j.text, 0, 0);
+                    ctx.shadowColor = "rgba(0, 0, 0, 0)";
+                    ctx.shadowBlur = 0;
+                    ctx.setTransform(1, 0, 0, 1, 0, 0);
+                }
+            }
+
+        }
+    }
+
+    draw(args.boring, ctx);
+
+    return tile.transferToImageBitmap();
+}
+
 onmessage = async (e) => {
     try {
         const context = e.data as { operation: string, arguments: any };
@@ -382,107 +490,9 @@ onmessage = async (e) => {
                 postMessage(bitmap, null, [bitmap]);
                 break;
             }
-            case "text": {
-                const args = context.arguments as {
-                    coords: any,
-                    max_zoom: any,
-                    pixelScale: number,
-                    size: { x: number, y: number },
-                    sources: any
-                    shadowSize: number
-                    boring: boolean
-                };
-
-                function zoomScale(zoom, max_zoom): number {
-                    return .65 * (1 + max_zoom - zoom);
-                }
-
-                const raw_scale = zoomScale(args.coords.z, args.max_zoom);
-                const hd_ratio = args.pixelScale;
-
-                const tile = new OffscreenCanvas(args.size.x * hd_ratio, args.size.y * hd_ratio);
-                const ctx = tile.getContext('2d');
-
-                const zoom = Math.pow(2, args.coords.z);
-                const max = Math.pow(2, args.max_zoom);
-                const sources = args.sources;
-                let shadowSize = args.shadowSize;
-
-                function controlToFont(control, ctx, boring_font) {
-                    if (boring_font) {
-                        switch (control) {
-
-                            case 0:
-                            case 1:
-                            case 2:
-                            case 3:
-
-                                ctx.font = '70px "Renner"';
-                                break;
-                            case 4:
-                                ctx.font = '90px "Renner"';
-                                break;
-                        }
-
-                    } else
-                        switch (control) {
-                            case 0:
-                                ctx.font = '54px "Roman"';
-                                break;
-                            case 1:
-                                ctx.font = '60px "Celtic"';
-                                break;
-                            case 2:
-                            case 3:
-                                ctx.font = '50px "Italic"';
-                                break;
-                            case 4:
-                                ctx.font = '80px "Italic"';
-                                break;
-                        }
-                }
-
-                function draw(boring: boolean, ctx: OffscreenCanvasRenderingContext2D) {
-                    for (let i = 0; i < sources.length; i++) {
-                        let j = sources[i];
-                        if (args.coords.z >= j.zoomMin && args.coords.z < j.zoomMax) {
-
-                            const scale = raw_scale * j.scale;
-                            const text_scale = hd_ratio * scale * zoom / max;
-                            const shadow = shadowSize * text_scale;
-                            const label_w = j.size.width * zoom * scale * hd_ratio + shadow * 2;
-                            const label_h = j.size.height * zoom * scale * hd_ratio + shadow * 2;
-                            const label_x = j.x * zoom * hd_ratio - args.coords.x * tile.width - label_w * .5 - shadow;
-                            const label_y = j.y * zoom * hd_ratio - args.coords.y * tile.height - label_h * .25 - shadow;
-
-                            if (intersects.boxBox(0, 0, tile.width, tile.height, label_x, label_y, label_w, label_h)) {
-                                ctx.setTransform(text_scale, 0, 0, text_scale, label_x + label_w * .5, label_y + label_h * .5);
-                                controlToFont(j.control, ctx, boring);
-                                ctx.shadowColor = "rgba(0, 0, 0, 1)";
-                                ctx.shadowBlur = shadow;
-                                ctx.fillStyle = j.color;
-                                ctx.strokeStyle = j.color;
-                                ctx.textAlign = 'center';
-                                ctx.textBaseline = 'middle';
-                                ctx.fillText(boring ? j.original_text : j.text, 0, 0);
-                                ctx.fillText(boring ? j.original_text : j.text, 0, 0);
-                                ctx.fillText(boring ? j.original_text : j.text, 0, 0);
-                                ctx.fillText(boring ? j.original_text : j.text, 0, 0);
-                                ctx.shadowColor = "rgba(0, 0, 0, 0)";
-                                ctx.shadowBlur = 0;
-                                ctx.setTransform(1, 0, 0, 1, 0, 0);
-                            }
-                        }
-
-                    }
-                }
-
-                draw(args.boring, ctx);
-
-                const bm = tile.transferToImageBitmap();
+            case "text": {          
+                const bm = await text(context.arguments);
                 postMessage(bm, null, [bm]);
-
-
                 break;
             }
             default: // always return something

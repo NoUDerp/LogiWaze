@@ -3,7 +3,7 @@ import * as L from 'leaflet';
 import * as intersects from 'intersects';
 import Queue from "./Queue";
 import API from "./API";
-import control from "./TileRenderWorker";
+import {control} from "./TileRenderWorker";
 import assets from "./MapIcons";
 //import TileRenderWorker from 'data-url:../dist/TileRenderWorker.js';
 //import TileRenderWorker from 'data-url:./workers/TileRenderWorker.js';
@@ -312,7 +312,10 @@ export default class ControlGrid extends L.GridLayer {
                 // const workerUrl = URL.createObjectURL(blob);
                 // const w = new Worker(workerUrl);//, {type: 'module', name: 'Tile Renderer'});
 
-                const w = new Worker(new URL('./TileRenderWorker', import.meta.url), {type: 'module', name: 'Tile Renderer'});
+                const w = new Worker(new URL('./TileRenderWorker', import.meta.url), {
+                    type: 'module',
+                    name: 'Tile Renderer'
+                });
 
                 // initialize the worker data
                 const workerIcons = [];
