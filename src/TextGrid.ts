@@ -1,6 +1,8 @@
 //@ts-nocheck
 import L from 'leaflet';
 import ControlGrid from "./ControlGrid";
+import {text} from './TileRenderWorker';
+import {resolve} from "path";
 
 function controlToFont(control, ctx, boring_font) {
     if (boring_font) {
@@ -40,9 +42,9 @@ class TextGrid extends L.GridLayer {
         return .65 * (1 + this.max_zoom - zoom);
     }
 
-    renderers : Queue<Worker>
-    constructor(options, workers : ControlGrid)
-    {
+    renderers: Queue<Worker> | null
+
+    constructor(options, workers: ControlGrid | null) {
         super(options);
         this.renderers = workers;
     }
@@ -78,22 +80,34 @@ class TextGrid extends L.GridLayer {
         tile.style.width = `${tile.width}`;
         tile.style.height = `${tile.height}`;
 
-        if(!this.draw)
-        {
-            setTimeout(()=> done());
+        if (!this.draw) {
+            setTimeout(() => done());
             return tile;
         }
 
-        setTimeout(async() => {
-            const w = await this.renderers.dequeue();
-            const data = new Promise<ImageBitmap>((resolve) => {
-                w.onmessage = async e => {
-                    this.renderers.enqueue(w);
-                    resolve(e.data);
-                };
-                w.postMessage({
-                    operation: "text",
-                    arguments: {
+        setTimeout(async () => {
+            const data = this.renderers != null ?
+                new Promise(async (resolve) => {
+                    const w = await this.renderers.dequeue();
+                    w.onmessage = async e => {
+                        this.renderers.enqueue(w);
+                        resolve(e.data);
+                    };
+                    w.postMessage({
+                        operation: "text",
+                        arguments: {
+                            coords: coords,
+                            max_zoom: this.max_zoom,
+                            pixelScale: this.pixelScale,
+                            size: size,
+                            sources: this.sources,
+                            shadowSize: this.shadowSize,
+                            boring: this.boring
+                        }
+                    });
+                }) :
+                new Promise<ImageBitmap>(async (resolve) => {
+                    resolve(await text({
                         coords: coords,
                         max_zoom: this.max_zoom,
                         pixelScale: this.pixelScale,
@@ -101,23 +115,24 @@ class TextGrid extends L.GridLayer {
                         sources: this.sources,
                         shadowSize: this.shadowSize,
                         boring: this.boring
-                    }
+                    }));
                 });
-            });
+
             const ctx = tile.getContext('2d');
             const image = await data;
             ctx.drawImage(image, 0, 0);
             image.close();
-
             done();
         }, 0);
-
         return tile;
     }
 }
 
-export function Create(MaxZoom, Offset, controlLayer : ControlGrid) {
-    const u = new TextGrid({updateWhenZooming: false, noWrap: true}, controlLayer.renderers);
+export function Create(MaxZoom, Offset, controlLayer: ControlGrid) {
+    const u = new TextGrid({
+        updateWhenZooming: false,
+        noWrap: true
+    }, controlLayer.webWorkers ? controlLayer.renderers : null);
     const size = u.getTileSize();
     u.sources = [];
     u.max_zoom = MaxZoom;
