@@ -1,5 +1,3 @@
-//import fs from "fs";
-
 import Control_webp from 'data-url:../MapIcons/Control.webp';
 import Labels_webp from 'data-url:../MapIcons/Labels.webp';
 import MapIconAmmoFactory_webp from 'data-url:../MapIcons/MapIconAmmoFactory.webp';
@@ -167,10 +165,10 @@ const map = new Map<string, string>(
         ['layers-2x.png', layers_2x_png],
         ['Truck.webp', Truck_webp],
         ['HTD.webp', HTD_webp],
-        ['ColonialRoute.webp', ColonialRoute_webp ],
-        ['WardenRoute.webp', WardenRoute_webp ],
+        ['ColonialRoute.webp', ColonialRoute_webp],
+        ['WardenRoute.webp', WardenRoute_webp],
         ['Flatbed.webp', Flatbed_webp],
-        ['ShortestRoute.webp', ShortestRoute_webp ],
+        ['ShortestRoute.webp', ShortestRoute_webp],
 
         ['Celtic.woff2', celtic],
         ['Roman.woff2', roman],
@@ -305,6 +303,8 @@ const map = new Map<string, string>(
 
 export default {
     get: async function (key: string): Promise<ArrayBuffer> {
+        if (!map.has(key))
+            console.error(`Asset ${key} not available`);
         const k = map.get(key);
         const v = await fetch(k);
         return await (v).arrayBuffer();

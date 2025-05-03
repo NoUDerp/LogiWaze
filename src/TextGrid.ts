@@ -1,7 +1,7 @@
 //@ts-nocheck
 import L from 'leaflet';
 import ControlGrid from "./ControlGrid";
-//import {text} from './TileRenderWorker';
+import {text} from './TileRenderWorker';
 
 function controlToFont(control, ctx, boring_font) {
     if (boring_font) {
@@ -41,11 +41,11 @@ class TextGrid extends L.GridLayer {
         return .65 * (1 + this.max_zoom - zoom);
     }
 
-    renderers: Queue<Worker> | null
+    control:ControlGrid
 
-    constructor(options, workers: ControlGrid | null) {
+    constructor(options, control: ControlGrid) {
         super(options);
-        this.renderers = workers;
+        this.control = control;
     }
 
     shadowSize: number = 20
@@ -85,11 +85,11 @@ class TextGrid extends L.GridLayer {
         }
 
         setTimeout(async () => {
-            const data = //this.renderers != null ?
+            const data = await this.control.webWorkers ?
                 new Promise(async (resolve) => {
-                    const w = await this.renderers.dequeue();
+                    const w = await this.control.renderers.dequeue();
                     w.onmessage = async e => {
-                        this.renderers.enqueue(w);
+                        this.control.renderers.enqueue(w);
                         resolve(e.data);
                     };
                     w.postMessage({
@@ -105,18 +105,23 @@ class TextGrid extends L.GridLayer {
                         }
                     });
                 })
-        // :
-        //         new Promise<ImageBitmap>(async (resolve) => {
-        //             resolve(await text({
-        //                 coords: coords,
-        //                 max_zoom: this.max_zoom,
-        //                 pixelScale: this.pixelScale,
-        //                 size: size,
-        //                 sources: this.sources,
-        //                 shadowSize: this.shadowSize,
-        //                 boring: this.boring
-        //             }));
-        //         });
+                :
+                new Promise<ImageBitmap>(async (resolve) => {
+                    resolve(await text({
+                        coords: coords,
+                        max_zoom: this.max_zoom,
+                        pixelScale: this.pixelScale,
+                        size: size,
+                        sources: this.sources,
+                        shadowSize: this.shadowSize,
+                        boring: this.boring
+                    }, (w, h) => {
+                        const c = document.createElement("canvas");
+                        c.width = w;
+                        c.height = h;
+                        return c;
+                    }));
+                });
 
             const ctx = tile.getContext('2d');
             const image = await data;
@@ -130,9 +135,9 @@ class TextGrid extends L.GridLayer {
 
 export function Create(MaxZoom, Offset, controlLayer: ControlGrid) {
     const u = new TextGrid({
-        updateWhenZooming: false,
+        updateWhenZooming: true,
         noWrap: true
-    }, controlLayer.renderers);
+    }, controlLayer);
     const size = u.getTileSize();
     u.sources = [];
     u.max_zoom = MaxZoom;

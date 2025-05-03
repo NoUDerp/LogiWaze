@@ -1,6 +1,7 @@
 import * as pip from 'point-in-polygon';
 import * as kriging from '@sakitam-gis/kriging';
 import {default as regions, Region} from "./Regions";
+import krig from './PredictorWorker';
 
 const width = 256 / 7;
 const height = width * Math.sqrt(3) / 2;
@@ -103,29 +104,29 @@ export default class API {
     public batchOwnership(worker: Worker | null, tests: { x: number, y: number, region: string }[]): Promise<number[]> {
         const thi = this;
 
-        // if (worker == null) return new Promise<number[]>(resolve => {
-        //     setTimeout(() => {
-        //         resolve(krig(
-        //             {
-        //                 tests: tests,
-        //                 mapControl: this.mapControl,
-        //                 variogram:
-        //                     {
-        //                         t: thi.variogram.t,
-        //                         x: thi.variogram.x,
-        //                         y: thi.variogram.y,
-        //                         nugget: thi.variogram.nugget,
-        //                         range: thi.variogram.range,
-        //                         sill: thi.variogram.sill,
-        //                         A: thi.variogram.A,
-        //                         n: thi.variogram.n,
-        //                         K: thi.variogram.K,
-        //                         M: thi.variogram.M,
-        //                     }
-        //             }));
-        //     }, 0);
-        // });
-        // else
+        if (worker == null) return new Promise<number[]>(resolve => {
+            setTimeout(() => {
+                resolve(krig(
+                    {
+                        tests: tests,
+                        mapControl: this.mapControl,
+                        variogram:
+                            {
+                                t: thi.variogram.t,
+                                x: thi.variogram.x,
+                                y: thi.variogram.y,
+                                nugget: thi.variogram.nugget,
+                                range: thi.variogram.range,
+                                sill: thi.variogram.sill,
+                                A: thi.variogram.A,
+                                n: thi.variogram.n,
+                                K: thi.variogram.K,
+                                M: thi.variogram.M,
+                            }
+                    }));
+            }, 0);
+        });
+        else
             return new Promise<number[]>(resolve => {
                 worker.onmessage = async (d) => resolve(d.data);
 
