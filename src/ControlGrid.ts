@@ -307,15 +307,25 @@ export default class ControlGrid extends L.GridLayer {
         return new Promise<Worker | null>(async (resolve) => {
             try {
                 // Create a URL for the Blob
-                //const ab = await fetch();//, {type: 'module'});//TileRenderWorker);
-                // const blob = new Blob([await (await fetch(TileRenderWorker)).arrayBuffer()], {type: 'application/javascript'});
-                // const workerUrl = URL.createObjectURL(blob);
-                // const w = new Worker(workerUrl);//, {type: 'module', name: 'Tile Renderer'});
-
-                const w = new Worker(new URL('./TileRenderWorker', import.meta.url), {
-                    type: 'module',
-                    name: 'Tile Renderer'
-                });
+                let w;
+                try {
+                    // Safari-compatible: Use relative path instead of import.meta.url
+                    w = new Worker('./TileRenderWorker.ts', {
+                        type: 'module',
+                        name: 'Tile Renderer'
+                    });
+                } catch (error) {
+                    try {
+                        // Fallback to import.meta.url for other browsers
+                        w = new Worker(new URL('./TileRenderWorker', import.meta.url), {
+                            type: 'module',
+                            name: 'Tile Renderer'
+                        });
+                    } catch (fallbackError) {
+                        console.error('Failed to create TileRenderWorker:', fallbackError);
+                        throw fallbackError;
+                    }
+                }
 
                 // initialize the worker data
                 const workerIcons = [];

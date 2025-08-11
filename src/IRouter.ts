@@ -81,11 +81,18 @@ module.exports.Create = async function (mymap, API) {
     function loadPredictorWorker() : Worker | null
     {
         try {
-            return new Worker(new URL('PredictorWorker.ts', import.meta.url), {type: 'module', name: 'Road Control Predictor'});
+            // Safari-compatible: Use relative path instead of import.meta.url
+            return new Worker('./PredictorWorker.ts', {type: 'module', name: 'Road Control Predictor'});
         }
         catch(error)
         {
-            return null;
+            try {
+                // Fallback to import.meta.url for other browsers
+                return new Worker(new URL('PredictorWorker.ts', import.meta.url), {type: 'module', name: 'Road Control Predictor'});
+            } catch(fallbackError) {
+                console.warn('Failed to create PredictorWorker:', fallbackError);
+                return null;
+            }
         }
     }
     const segments = Array.from(matrixSegments.map(s => API.batchOwnership(loadPredictorWorker(), s)));
