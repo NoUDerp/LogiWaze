@@ -310,7 +310,7 @@ export default class ControlGrid extends L.GridLayer {
                 let w;
                 try {
                     // Safari-compatible: Use relative path instead of import.meta.url
-                    w = new Worker('./TileRenderWorker.ts', {
+                    w = new Worker(new URL('./TileRenderWorker.ts', import.meta.url), {
                         type: 'module',
                         name: 'Tile Renderer'
                     });
