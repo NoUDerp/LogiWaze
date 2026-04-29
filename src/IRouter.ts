@@ -196,7 +196,7 @@ module.exports.Create = async function (mymap, API) {
 
     const regions = API.regions;
 
-    const w = 256 / 7;
+    const w = 256 / 10;
     const h = w * Math.sqrt(3) / 2;
 
     regions.forEach(region => ControlLayer.addHex(region.x, -region.y, w, h, !(region.name in API.mapControl)));

@@ -1,21 +1,21 @@
-<map width="7" height="7" force-height="1776" force-width="2048">
+<map width="10" height="7" force-height="1776" force-width="2048">
 	<map x="-1.5" y="0">file:///MapHexes/MapKingsCageHex.png</map>
 	<map x="-2.25" y="-.5">file:///MapHexes/MapWestgateHex.png</map>
 	<map x="-2.25" y=".5">file:///MapHexes/MapFarranacCoastHex.png</map>
 	<map x="2.25" y="-.5">file:///MapHexes/MapEndlessShoreHex.png</map>
 	<map x="2.25" y=".5">file:///MapHexes/MapStlicanShelfHex.png</map>
-	<map x="-3" y="1">file:///MapHexes/MapOarbreakerHex.png</map>
+	<map x="-3.75" y="-.5">file:///MapHexes/MapOarbreakerHex.png</map>
 	<map x="-3" y="0">file:///MapHexes/MapFishermansRowHex.png</map>
 	<map x="-3" y="-1">file:///MapHexes/MapStemaLandingHex.png</map>
 	<map x="3" y="1">file:///MapHexes/MapGodcroftsHex.png</map>
 	<map x="-1.5" y="-1">file:///MapHexes/MapSableportHex.png</map>
 	<map x="3" y="0">file:///MapHexes/MapTempestIslandHex.png</map>
 	<map x="2.25" y="-1.5">file:///MapHexes/MapReaversPassHex.png</map>
-	<map x="3" y="-1">file:///MapHexes/MapTheFingersHex.png</map>
-	<map x="1.5" y="0">file:///MapHexes/MapClahstraHexMap.png</map>
+	<map x="3.75" y="-.5">file:///MapHexes/MapTheFingersHex.png</map>
+	<map x="1.5" y="0">file:///MapHexes/MapClahstraHex.png</map>
 	<map x="0" y="0">file:///MapHexes/MapDeadlandsHex.png</map>
 	<map x="0" y="1">file:///MapHexes/MapCallahansPassageHex.png</map>
-	<map x=".75" y=".5">file:///MapHexes/MapMarbanHollow.png</map>
+	<map x=".75" y=".5">file:///MapHexes/MapMarbanHollowHex.png</map>
 	<map x="0" y="-1">file:///MapHexes/MapUmbralWildwoodHex.png</map>
 	<map x="-.75" y="1.5">file:///MapHexes/MapMooringCountyHex.png</map>
 	<map x="-.75" y="-1.5">file:///MapHexes/MapHeartlandsHex.png</map>
@@ -42,4 +42,18 @@
 	<map x="0" y="-3">file:///MapHexes/MapKalokaiHex.png</map>
 	<map x="-1.5" y="-2">file:///MapHexes/MapAshFieldsHex.png</map>
 	<map x="-2.25" y="-1.5">file:///MapHexes/MapOriginHex.png</map>
+
+	<!-- Update 1.63 Airborne — Northern (NW outer) regions -->
+	<map x="-3" y="1">file:///MapHexes/MapGutterHex.png</map>
+	<map x="-3" y="2">file:///MapHexes/MapKuuraStrandHex.png</map>
+	<map x="-3.75" y=".5">file:///MapHexes/MapPalantineBermHex.png</map>
+	<map x="-3.75" y="1.5">file:///MapHexes/MapPariPeakHex.png</map>
+	<map x="-4.5" y="1">file:///MapHexes/MapOlavisWakeHex.png</map>
+
+	<!-- Update 1.63 Airborne — Southern (SE outer) regions -->
+	<map x="3" y="-1">file:///MapHexes/MapWrestaHex.png</map>
+	<map x="3" y="-2">file:///MapHexes/MapOnyxHex.png</map>
+	<map x="3.75" y=".5">file:///MapHexes/MapLykosIsleHex.png</map>
+	<map x="3.75" y="-1.5">file:///MapHexes/MapTyrantFoothillsHex.png</map>
+	<map x="4.5" y="-1">file:///MapHexes/MapPipersEnclaveHex.png</map>
 </map>

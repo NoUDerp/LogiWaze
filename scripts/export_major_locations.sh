@@ -1,7 +1,7 @@
 #!/bin/bash
 branch="live"
 #"live"
-w=$(echo "256 / 7" |  bc)
+w=$(echo "256 / 10" |  bc)
 k=$(echo "scale=20; $w * sqrt(3) / 2" |  bc)
 k2=$(echo "$k / 2" |  bc)
 w2=$(echo "$w / 2" |  bc)
