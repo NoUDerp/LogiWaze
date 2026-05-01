@@ -69,6 +69,7 @@
     "@parcel/optimizer-data-url": "^2.13.3",
     "@parcel/optimizer-esbuild": "^2.14.4",
     "@parcel/packager-raw-url": "^2.13.3",
+    "@parcel/packager-ts": "^2.13.3",
     "@parcel/reporter-bundle-analyzer": "^2.14.4",
     "@parcel/transformer-inline-string": "^2.13.3",
     "@parcel/transformer-webmanifest": "^2.13.3",

@@ -1,0 +1,10 @@
+{
+  "name": "parcel-namer-stable",
+  "version": "1.0.0",
+  "description": "Parcel namer that emits every entry-bundle with its source filename — no content-hash. Shared chunks fall through to the default namer.",
+  "main": "index.js",
+  "private": true,
+  "engines": {
+    "parcel": "^2.0.0"
+  }
+}
