@@ -128,6 +128,9 @@ export default class API {
         28, 30, 37,                      // Observation Tower, Troop Ship, Rocket Site
         33,                              // Storage Facility
         59, 60,                          // Storm Cannon, Intel Center
+        53, 54,                          // Coastal Gun, Soul Factory
+        70, 71, 72,                      // Rocket Target, Ground Zero, Site With Rocket
+        83, 84,                          // Weather Station, Mortar House
         88, 89, 90, 91, 92,              // Aircraft Depot/Factory/Radar/Runway T1/T2 (1.63 Airborne)
     ]
 

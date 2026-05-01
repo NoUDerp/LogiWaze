@@ -1725,6 +1725,8 @@
                 '<img src="MapIcons/MapIconManufacturing.webp" class="layer-icon">Refineries': Router.Refineries,
                 '<img src="MapIcons/MapIconFactory.webp" class="layer-icon">Factories': Router.Factories,
                 '<img src="MapIcons/MapIconAircraftFactory.webp" class="layer-icon">Aircraft Factories': Router.AircraftFactories,
+                '<img src="MapIcons/MapIconStormCannon.webp" class="layer-icon">Special Bases': Router.SpecialBases,
+                '<img src="MapIcons/MapIconRocketSite.webp" class="layer-icon">Rocket Activity': Router.RocketActivity,
                 '<img src="MapIcons/MapIconStorageFacility.webp" class="layer-icon">Storage': Router.Storage,
                 '<img src="MapIcons/MapIconSalvage.webp" class="layer-icon">Salvage': Router.Salvage,
                 '<img src="MapIcons/MapIconComponents.webp" class="layer-icon">Components': Router.Components,
@@ -2213,6 +2215,12 @@
                             case "Aircraft Factories":
                                 counter |= 1 << 18;
                                 break;
+                            case "Special Bases":
+                                counter |= 1 << 19;
+                                break;
+                            case "Rocket Activity":
+                                counter |= 1 << 20;
+                                break;
                             case "Storage":
                                 counter |= 1 << 9;
                                 break;
@@ -2310,6 +2318,12 @@
                     case "Aircraft Factories":
                         Router.showAircraftFactories();
                         break;
+                    case "Special Bases":
+                        Router.showSpecialBases();
+                        break;
+                    case "Rocket Activity":
+                        Router.showRocketActivity();
+                        break;
                     case "Fuel":
                         Router.showFuel();
                         break;
@@ -2362,6 +2376,12 @@
                         break;
                     case "Aircraft Factories":
                         Router.hideAircraftFactories();
+                        break;
+                    case "Special Bases":
+                        Router.hideSpecialBases();
+                        break;
+                    case "Rocket Activity":
+                        Router.hideRocketActivity();
                         break;
                     case "Fuel":
                         Router.hideFuel();

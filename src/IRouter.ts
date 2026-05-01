@@ -256,6 +256,24 @@ module.exports.Create = async function (mymap, API) {
             icon = 'MapIconAircraftRunwayT1';
         else if (ic.icon == 92)
             icon = 'MapIconAircraftRunwayT2';
+        else if (ic.icon == 53)
+            icon = 'MapIconCoastalGun';
+        else if (ic.icon == 54)
+            icon = 'MapIconSoulFactory';
+        else if (ic.icon == 59)
+            icon = 'MapIconStormCannon';
+        else if (ic.icon == 60)
+            icon = 'MapIconIntelCenter';
+        else if (ic.icon == 70)
+            icon = 'MapIconRocketTarget';
+        else if (ic.icon == 71)
+            icon = 'MapIconRocketGroundZero';
+        else if (ic.icon == 72)
+            icon = 'MapIconRocketSiteWithRocket';
+        else if (ic.icon == 83)
+            icon = 'MapIconWeatherStation';
+        else if (ic.icon == 84)
+            icon = 'MapIconMortarHouse';
         else
             return null;
 
@@ -293,6 +311,8 @@ module.exports.Create = async function (mymap, API) {
             return 'MapIconOilWell.webp';
         if (ic.icon == 61)
             return 'MapIconCoal.webp';
+        if (ic.icon == 75)
+            return 'MapIconFacilityMineOilRig.webp';
         return null;
     };
 
@@ -506,6 +526,8 @@ module.exports.Create = async function (mymap, API) {
         Labels: L.layerGroup().addTo(mymap),
         Factories: L.layerGroup().addTo(mymap),
         AircraftFactories: L.layerGroup().addTo(mymap),
+        SpecialBases: L.layerGroup().addTo(mymap),
+        RocketActivity: L.layerGroup().addTo(mymap),
         Refineries: L.layerGroup().addTo(mymap),
         Storage: L.layerGroup().addTo(mymap),
         //WardenRoads: L.layerGroup().addTo(mymap),
@@ -764,6 +786,26 @@ module.exports.Create = async function (mymap, API) {
 
         hideAircraftFactories: function () {
             ControlLayer.disableIcons(['MapIconAircraftDepot.webp', 'MapIconAircraftDepotWarden.webp', 'MapIconAircraftDepotColonial.webp', 'MapIconAircraftFactory.webp', 'MapIconAircraftFactoryWarden.webp', 'MapIconAircraftFactoryColonial.webp', 'MapIconAircraftRadar.webp', 'MapIconAircraftRadarWarden.webp', 'MapIconAircraftRadarColonial.webp', 'MapIconAircraftRunwayT1.webp', 'MapIconAircraftRunwayT1Warden.webp', 'MapIconAircraftRunwayT1Colonial.webp', 'MapIconAircraftRunwayT2.webp', 'MapIconAircraftRunwayT2Warden.webp', 'MapIconAircraftRunwayT2Colonial.webp']);
+            ControlLayer.redraw();
+        },
+
+        showSpecialBases: function () {
+            ControlLayer.enableIcons(['MapIconCoastalGun.webp', 'MapIconCoastalGunColonial.webp', 'MapIconCoastalGunWarden.webp', 'MapIconSoulFactory.webp', 'MapIconSoulFactoryColonial.webp', 'MapIconSoulFactoryWarden.webp', 'MapIconStormCannon.webp', 'MapIconStormCannonColonial.webp', 'MapIconStormCannonWarden.webp', 'MapIconIntelCenter.webp', 'MapIconIntelCenterColonial.webp', 'MapIconIntelCenterWarden.webp', 'MapIconWeatherStation.webp', 'MapIconWeatherStationColonial.webp', 'MapIconWeatherStationWarden.webp', 'MapIconMortarHouse.webp', 'MapIconMortarHouseColonial.webp', 'MapIconMortarHouseWarden.webp']);
+            ControlLayer.redraw();
+        },
+
+        hideSpecialBases: function () {
+            ControlLayer.disableIcons(['MapIconCoastalGun.webp', 'MapIconCoastalGunColonial.webp', 'MapIconCoastalGunWarden.webp', 'MapIconSoulFactory.webp', 'MapIconSoulFactoryColonial.webp', 'MapIconSoulFactoryWarden.webp', 'MapIconStormCannon.webp', 'MapIconStormCannonColonial.webp', 'MapIconStormCannonWarden.webp', 'MapIconIntelCenter.webp', 'MapIconIntelCenterColonial.webp', 'MapIconIntelCenterWarden.webp', 'MapIconWeatherStation.webp', 'MapIconWeatherStationColonial.webp', 'MapIconWeatherStationWarden.webp', 'MapIconMortarHouse.webp', 'MapIconMortarHouseColonial.webp', 'MapIconMortarHouseWarden.webp']);
+            ControlLayer.redraw();
+        },
+
+        showRocketActivity: function () {
+            ControlLayer.enableIcons(['MapIconRocketSite.webp', 'MapIconRocketSiteColonial.webp', 'MapIconRocketSiteWarden.webp', 'MapIconRocketSiteWithRocket.webp', 'MapIconRocketSiteWithRocketColonial.webp', 'MapIconRocketSiteWithRocketWarden.webp', 'MapIconRocketTarget.webp', 'MapIconRocketTargetColonial.webp', 'MapIconRocketTargetWarden.webp', 'MapIconRocketGroundZero.webp', 'MapIconRocketGroundZeroColonial.webp', 'MapIconRocketGroundZeroWarden.webp']);
+            ControlLayer.redraw();
+        },
+
+        hideRocketActivity: function () {
+            ControlLayer.disableIcons(['MapIconRocketSite.webp', 'MapIconRocketSiteColonial.webp', 'MapIconRocketSiteWarden.webp', 'MapIconRocketSiteWithRocket.webp', 'MapIconRocketSiteWithRocketColonial.webp', 'MapIconRocketSiteWithRocketWarden.webp', 'MapIconRocketTarget.webp', 'MapIconRocketTargetColonial.webp', 'MapIconRocketTargetWarden.webp', 'MapIconRocketGroundZero.webp', 'MapIconRocketGroundZeroColonial.webp', 'MapIconRocketGroundZeroWarden.webp']);
             ControlLayer.redraw();
         },
 
