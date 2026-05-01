@@ -1611,16 +1611,14 @@
 
     // Background.webp is the in-game WorldMapBG (3840x2160). The playable
     // hex grid sits inside it as a smaller cluster — most of the image
-    // is unplayable surrounding territory and ocean. From the Foxhole
-    // wiki Foxhole_World_Map_Full reference, the hex grid bounding box
-    // is ~57% × 64% of the image (centered). To align the in-image hex
-    // grid with the rendered Tiles (which span 256 world units across
-    // the playable hex grid width), we scale the overlay accordingly.
+    // is unplayable surrounding territory and ocean. The hex-grid fraction
+    // was tuned visually against the rendered Tiles (which span 256 world
+    // units across the playable hex grid width).
     const BG_IMG_W = 3840, BG_IMG_H = 2160;
-    const HEX_GRID_FRACTION_W = 0.57;                  // hex grid takes this fraction of image width
+    const HEX_GRID_FRACTION_W = 0.60;                  // hex grid takes this fraction of image width
     const WORLD_PER_PX = 256 / (HEX_GRID_FRACTION_W * BG_IMG_W);
-    const BG_WORLD_W = BG_IMG_W * WORLD_PER_PX;        // ~449
-    const BG_WORLD_H = BG_IMG_H * WORLD_PER_PX;        // ~253
+    const BG_WORLD_W = BG_IMG_W * WORLD_PER_PX;        // ~427
+    const BG_WORLD_H = BG_IMG_H * WORLD_PER_PX;        // ~240
     const MAP_CX = 128, MAP_CY = -128;                 // map center in Leaflet
     L.imageOverlay("Background.webp", [
         [MAP_CY + BG_WORLD_H * .5, MAP_CX - BG_WORLD_W * .5],
@@ -2027,7 +2025,8 @@
                                 wgarageBtn = createButton('Find garage', container, 'MapIcons/MapIconVehicleWarden.webp'),
                                 refineryBtn = createButton('Find refinery', container, 'MapIcons/MapIconManufacturing.webp'),
                                 factoryBtn = createButton('Find factory', container, 'MapIcons/MapIconFactory.webp'),
-                                aircraftFactoryBtn = createButton('Find aircraft factory', container, 'MapIcons/MapIconAircraftFactory.webp');
+                                caircraftFactoryBtn = createButton('Find aircraft factory', container, 'MapIcons/MapIconAircraftFactoryColonial.webp'),
+                                waircraftFactoryBtn = createButton('Find aircraft factory', container, 'MapIcons/MapIconAircraftFactoryWarden.webp');
 
                             L.DomEvent.on(startBtn, 'click', function () {
                                 Router.Control.spliceWaypoints(0, 1, e.latlng);
@@ -2075,8 +2074,17 @@
                                 mymap.closePopup();
                             });
 
-                            L.DomEvent.on(aircraftFactoryBtn, 'click', function () {
-                                var bestAircraftFactory = Router.findStructure(e.latlng, null, Router.AircraftFactoriesList);
+                            L.DomEvent.on(caircraftFactoryBtn, 'click', function () {
+                                var bestAircraftFactory = Router.findStructure(e.latlng, "COLONIALS", Router.AircraftFactoriesList);
+                                if (bestAircraftFactory != null) {
+                                    Router.Control.spliceWaypoints(0, 1, e.latlng);
+                                    Router.Control.spliceWaypoints(1, Router.Control.getWaypoints().length - 1, bestAircraftFactory);
+                                }
+                                mymap.closePopup();
+                            });
+
+                            L.DomEvent.on(waircraftFactoryBtn, 'click', function () {
+                                var bestAircraftFactory = Router.findStructure(e.latlng, "WARDENS", Router.AircraftFactoriesList);
                                 if (bestAircraftFactory != null) {
                                     Router.Control.spliceWaypoints(0, 1, e.latlng);
                                     Router.Control.spliceWaypoints(1, Router.Control.getWaypoints().length - 1, bestAircraftFactory);
