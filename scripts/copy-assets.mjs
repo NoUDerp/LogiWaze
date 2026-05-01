@@ -27,7 +27,15 @@ const files = [
     'ray-start-arrow.svg',
     'ray-end.svg',
     'font.svg',
+    'bug.svg',
 ];
+
+// Directories copied wholesale into dist/. Tiles/ is the static map tile
+// pyramid; MapIcons/ holds runtime-fetched icons used by HTML <img> tags
+// (popup buttons, layer-toggle thumbnails) — runtime canvas rendering uses
+// the data-url'd copies bundled via src/MapIcons.ts, but the HTML refs go
+// through plain file URLs and need the folder present.
+const dirs = ['Tiles', 'MapIcons'];
 
 for (const name of files) {
     const src = resolve(root, name);
@@ -38,13 +46,17 @@ for (const name of files) {
     cpSync(src, resolve(dist, name));
 }
 
-const tilesSrc = resolve(root, 'Tiles');
-const tilesDst = resolve(dist, 'Tiles');
-if (existsSync(tilesSrc)) {
-    cpSync(tilesSrc, tilesDst, { recursive: true });
-    console.log(`copied Tiles/`);
-} else {
-    console.warn('skip: Tiles/ not found — run "npm run map" first');
+for (const dir of dirs) {
+    const src = resolve(root, dir);
+    const dst = resolve(dist, dir);
+    if (existsSync(src)) {
+        cpSync(src, dst, { recursive: true });
+        console.log(`copied ${dir}/`);
+    } else if (dir === 'Tiles') {
+        console.warn('skip: Tiles/ not found — run "npm run map" first');
+    } else {
+        console.warn(`skip: ${dir}/ not found`);
+    }
 }
 
 console.log('assets copied to dist/');
