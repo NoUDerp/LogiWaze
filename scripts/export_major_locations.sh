@@ -1,10 +1,10 @@
 #!/bin/bash
 branch="live"
 #"live"
-w=$(echo "256 / 7" |  bc)
+w=$(echo "scale=20; 256 / 10" |  bc)
 k=$(echo "scale=20; $w * sqrt(3) / 2" |  bc)
-k2=$(echo "$k / 2" |  bc)
-w2=$(echo "$w / 2" |  bc)
+k2=$(echo "scale=20; $k / 2" |  bc)
+w2=$(echo "scale=20; $w / 2" |  bc)
 download()
 {
         (
@@ -20,14 +20,14 @@ download()
         if [ "$f" = "FarranacCoastHex" ]; then offsetx=$(echo "-2.25 * $w" | bc); offsety=$(echo ".5 * $k" | bc); fi
         if [ "$f" = "EndlessShoreHex" ]; then offsetx=$(echo "2.25 * $w" | bc); offsety=$(echo "-.5 * $k" | bc); fi
         if [ "$f" = "StlicanShelfHex" ]; then offsetx=$(echo "2.25 * $w" | bc); offsety=$(echo ".5 * $k" | bc); fi
-        if [ "$f" = "OarbreakerHex" ]; then offsetx=$(echo "-3 * $w" | bc); offsety=$(echo "1 * $k" | bc); fi
+        if [ "$f" = "OarbreakerHex" ]; then offsetx=$(echo "-3.75 * $w" | bc); offsety=$(echo "-0.5 * $k" | bc); fi
         if [ "$f" = "FishermansRowHex" ]; then offsetx=$(echo "-3 * $w" | bc); offsety=$(echo "0" | bc); fi
         if [ "$f" = "StemaLandingHex" ]; then offsetx=$(echo "-3 * $w" | bc); offsety=$(echo "-1 * $k" | bc); fi
         if [ "$f" = "GodcroftsHex" ]; then offsetx=$(echo "3 * $w" | bc); offsety=$(echo "1 * $k" | bc); fi
         if [ "$f" = "SableportHex" ]; then offsetx=$(echo "-1.5 * $w" | bc); offsety=$(echo "-1 * $k" | bc); fi
         if [ "$f" = "TempestIslandHex" ]; then offsetx=$(echo "3 * $w" | bc); offsety=$(echo "0" | bc); fi
         if [ "$f" = "ReaversPassHex" ]; then offsetx=$(echo "2.25 * $w" | bc); offsety=$(echo "-1.5 * $k" | bc); fi
-        if [ "$f" = "TheFingersHex" ]; then offsetx=$(echo "3 * $w" | bc); offsety=$(echo "-1 * $k" | bc); fi
+        if [ "$f" = "TheFingersHex" ]; then offsetx=$(echo "3.75 * $w" | bc); offsety=$(echo "-0.5 * $k" | bc); fi
         if [ "$f" = "ClahstraHex" ]; then offsetx=$(echo "1.5 * $w" | bc); offsety=$(echo "0" | bc); fi
         if [ "$f" = "DeadLandsHex" ]; then offsetx=$(echo "0" | bc); offsety=$(echo "0" | bc); fi
         if [ "$f" = "CallahansPassageHex" ]; then offsetx=$(echo "0" | bc); offsety=$(echo "1 * $k" | bc); fi
@@ -58,6 +58,20 @@ download()
         if [ "$f" = "KalokaiHex" ]; then offsetx=$(echo "0" | bc); offsety=$(echo "-3 * $k" | bc); fi
         if [ "$f" = "AshFieldsHex" ]; then offsetx=$(echo "-1.5 * $w" | bc); offsety=$(echo "-2 * $k" | bc); fi
         if [ "$f" = "OriginHex" ]; then offsetx=$(echo "-2.25 * $w" | bc); offsety=$(echo "-1.5 * $k" | bc); fi
+
+        # Update 1.63 Airborne — Northern (NW outer) regions
+        if [ "$f" = "GutterHex" ]; then offsetx=$(echo "-3 * $w" | bc); offsety=$(echo "1 * $k" | bc); fi
+        if [ "$f" = "KuuraStrandHex" ]; then offsetx=$(echo "-3 * $w" | bc); offsety=$(echo "2 * $k" | bc); fi
+        if [ "$f" = "PalantineBermHex" ]; then offsetx=$(echo "-3.75 * $w" | bc); offsety=$(echo ".5 * $k" | bc); fi
+        if [ "$f" = "PariPeakHex" ]; then offsetx=$(echo "-3.75 * $w" | bc); offsety=$(echo "1.5 * $k" | bc); fi
+        if [ "$f" = "OlavisWakeHex" ]; then offsetx=$(echo "-4.5 * $w" | bc); offsety=$(echo "1 * $k" | bc); fi
+
+        # Update 1.63 Airborne — Southern (SE outer) regions
+        if [ "$f" = "WrestaHex" ]; then offsetx=$(echo "3 * $w" | bc); offsety=$(echo "-1 * $k" | bc); fi
+        if [ "$f" = "OnyxHex" ]; then offsetx=$(echo "3 * $w" | bc); offsety=$(echo "-2 * $k" | bc); fi
+        if [ "$f" = "LykosIsleHex" ]; then offsetx=$(echo "3.75 * $w" | bc); offsety=$(echo ".5 * $k" | bc); fi
+        if [ "$f" = "TyrantFoothillsHex" ]; then offsetx=$(echo "3.75 * $w" | bc); offsety=$(echo "-1.5 * $k" | bc); fi
+        if [ "$f" = "PipersEnclaveHex" ]; then offsetx=$(echo "4.5 * $w" | bc); offsety=$(echo "-1 * $k" | bc); fi
 
 		#if [ "$f" = "StemaLandingHex" ]; then offsetx=$(echo "-4 * $w" | bc); offsety=$(echo "-1 * $k" | bc); fi
 		#if [ "$f" = "StlicanShelfHex" ]; then offsetx=$(echo "3 * $w" | bc); offsety=$(echo "0.5 * $k" | bc); fi

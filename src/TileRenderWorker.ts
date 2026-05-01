@@ -37,9 +37,7 @@ export async function control(controlArguments: any,
                                   model,
                                   K,
                                   M
-                              }, icons: Map<string, Promise<ImageBitmap>>, icon_sources: any, createCanvasCallback: {
-        (w: number, h: number): any
-    }
+                              }, icons: Map<string, Promise<ImageBitmap>>, icon_sources: any
 ): Promise<ImageBitmap> {
     const controlWidth = controlArguments[0];
     const controlHeight = controlArguments[1];
@@ -75,7 +73,7 @@ export async function control(controlArguments: any,
     let controlCanvas;
 
     if (args.drawControl) {
-        controlCanvas = createCanvasCallback(controlWidth, controlHeight);
+        controlCanvas = new OffscreenCanvas(controlWidth, controlHeight);
         const controlContext = controlCanvas.getContext('2d');
         const d = new ImageData(controlWidth, controlHeight);
         let i = 0;
@@ -117,7 +115,7 @@ export async function control(controlArguments: any,
         ctx.stroke();
     }
 
-    function drawValidRegions(tile, ctx, coords, pixelScale: number, max_zoom: number, hex_sources) {
+    function drawValidRegions(tile: OffscreenCanvas, ctx: OffscreenCanvasRenderingContext2D, coords, pixelScale: number, max_zoom: number, hex_sources) {
         const zoom = Math.pow(2, coords.z);
         const lineWidth = Math.pow(2, coords.z);
         const shadow = lineWidth * .5 / Math.pow(2, max_zoom);
@@ -138,7 +136,7 @@ export async function control(controlArguments: any,
         ctx.restore();
     }
 
-    function drawInvalidRegions(ctx, coords, pixelScale: number, max_zoom: number, hex_sources) {
+    function drawInvalidRegions(ctx: OffscreenCanvasRenderingContext2D, coords, pixelScale: number, max_zoom: number, hex_sources) {
         const zoom = Math.pow(2, coords.z);
         const lineWidth = Math.pow(2, coords.z);
         const shadow = lineWidth * .5 / Math.pow(2, max_zoom);
@@ -159,7 +157,7 @@ export async function control(controlArguments: any,
         ctx.restore();
     }
 
-    function drawRoads(ctx, args: {
+    function drawRoads(ctx: OffscreenCanvasRenderingContext2D, args: {
         coords: { x: number, y: number, z: number },
         grid_depth: number,
         offset,
@@ -221,7 +219,7 @@ export async function control(controlArguments: any,
     }
 
     // draw control layer to transparent canvas
-    const overlay = createCanvasCallback(args.width, args.height);
+    const overlay = new OffscreenCanvas(args.width, args.height);
     const overlayContext = overlay.getContext('2d');
 
     // clear
@@ -252,8 +250,8 @@ export async function control(controlArguments: any,
         overlayContext.restore();
     }
 
-    function drawBorders(coords, ctx, width: number, height: number, max_zoom: number, pixelScale: number, hex_sources) {
-        function drawHex(ctx, x, y, w, h, scale) {
+    function drawBorders(coords, ctx: OffscreenCanvasRenderingContext2D, width: number, height: number, max_zoom: number, pixelScale: number, hex_sources) {
+        function drawHex(ctx: OffscreenCanvasRenderingContext2D, x, y, w, h, scale) {
             ctx.lineWidth = scale;
             ctx.beginPath();
             ctx.moveTo(x + w, y);
@@ -294,7 +292,7 @@ export async function control(controlArguments: any,
     if (args.drawBorders)
         drawBorders(args.coords, overlayContext, args.width, args.height, args.max_zoom, args.pixelScale, args.hex_sources);
 
-    async function drawIcons(ctx, coords, width: number, height: number, pixelScale: number, max_zoom: number, disabledIcons, icon_sources) {
+    async function drawIcons(ctx: OffscreenCanvasRenderingContext2D, coords, width: number, height: number, pixelScale: number, max_zoom: number, disabledIcons, icon_sources) {
 
         function zoomScale(zoom, max_zoom): number {
             return .65 * (1 + max_zoom - zoom);
@@ -330,10 +328,7 @@ export async function control(controlArguments: any,
 
     await drawIcons(overlayContext, args.coords, args.width, args.height, args.pixelScale, args.max_zoom, args.disabled_icons, icon_sources);
 
-    if(overlay.transferToImageBitmap)
-        return overlay.transferToImageBitmap();
-
-    return await createImageBitmap(overlay);
+    return overlay.transferToImageBitmap();
 }
 
 export async function text(args: {
@@ -344,8 +339,7 @@ export async function text(args: {
     sources: any
     shadowSize: number
     boring: boolean
-},
-                           createCanvasCallback: { (w: number, h: number): any }): Promise<ImageBitmap> {
+}): Promise<ImageBitmap> {
     // const args = context.arguments as {
     //     coords: any,
     //     max_zoom: any,
@@ -363,7 +357,7 @@ export async function text(args: {
     const raw_scale = zoomScale(args.coords.z, args.max_zoom);
     const hd_ratio = args.pixelScale;
 
-    const tile = createCanvasCallback(args.size.x * hd_ratio, args.size.y * hd_ratio);
+    const tile = new OffscreenCanvas(args.size.x * hd_ratio, args.size.y * hd_ratio);
     const ctx = tile.getContext('2d');
 
     const zoom = Math.pow(2, args.coords.z);
@@ -405,7 +399,7 @@ export async function text(args: {
             }
     }
 
-    function draw(boring: boolean, ctx) {
+    function draw(boring: boolean, ctx: OffscreenCanvasRenderingContext2D) {
         for (let i = 0; i < sources.length; i++) {
             let j = sources[i];
             if (args.coords.z >= j.zoomMin && args.coords.z < j.zoomMax) {
@@ -442,10 +436,7 @@ export async function text(args: {
 
     draw(args.boring, ctx);
 
-    if(tile.transferToImageBitmap)
-        return tile.transferToImageBitmap();
-
-    return await createImageBitmap(tile);
+    return tile.transferToImageBitmap();
 }
 
 onmessage = async (e) => {
@@ -453,66 +444,54 @@ onmessage = async (e) => {
         const context = e.data as { operation: string, arguments: any };
         switch (context.operation) {
             case "initialize": {
-                try {
-                    if(typeof OffscreenCanvas == 'undefined')
-                        throw new Error("OffscreenCanvas is not supported, web worker failing immediately (disabled)");
+                road_sources = context.arguments.roads;
+                variogram =
+                    {
+                        t: context.arguments.variogram.t,
+                        x: context.arguments.variogram.x,
+                        y: context.arguments.variogram.y,
+                        nugget: context.arguments.variogram.nugget,
+                        range: context.arguments.variogram.range,
+                        sill: context.arguments.variogram.sill,
+                        A: context.arguments.variogram.A,
+                        n: context.arguments.variogram.n,
+                        model: variogramExponential,
+                        K: context.arguments.variogram.K,
+                        M: context.arguments.variogram.M
+                    };
 
-                    road_sources = context.arguments.roads;
-                    variogram =
-                        {
-                            t: context.arguments.variogram.t,
-                            x: context.arguments.variogram.x,
-                            y: context.arguments.variogram.y,
-                            nugget: context.arguments.variogram.nugget,
-                            range: context.arguments.variogram.range,
-                            sill: context.arguments.variogram.sill,
-                            A: context.arguments.variogram.A,
-                            n: context.arguments.variogram.n,
-                            model: variogramExponential,
-                            K: context.arguments.variogram.K,
-                            M: context.arguments.variogram.M
-                        };
+                icons = new Map<string, Promise<ImageBitmap>>();
+                icon_sources = context.arguments.icon_sources;
 
-                    icons = new Map<string, Promise<ImageBitmap>>();
-                    icon_sources = context.arguments.icon_sources;
+                // not sure if these should be loaded to the window or for each separate web worker context
+                fontMap.set('Celtic', new FontFace('Celtic', context.arguments.fonts.Celtic as ArrayBuffer));
+                fontMap.set('Roman', new FontFace('Roman', context.arguments.fonts.Roman as ArrayBuffer));
+                fontMap.set('Italic', new FontFace('Italic', context.arguments.fonts.Italic as ArrayBuffer));
+                fontMap.set('Renner', new FontFace('Renner', context.arguments.fonts.Renner as ArrayBuffer));
 
-                    // not sure if these should be loaded to the window or for each separate web worker context
-                    fontMap.set('Celtic', new FontFace('Celtic', context.arguments.fonts.Celtic));
-                    fontMap.set('Roman', new FontFace('Roman', context.arguments.fonts.Roman));
-                    fontMap.set('Italic', new FontFace('Italic', context.arguments.fonts.Italic));
-                    fontMap.set('Renner', new FontFace('Renner', context.arguments.fonts.Renner));
-                    // fontMap.set('Celtic', new FontFace('Celtic', URL.createObjectURL(new Blob([context.arguments.fonts.Celtic], {type:'font/woff2'}))));
-                    // fontMap.set('Roman', new FontFace('Roman', URL.createObjectURL(new Blob([context.arguments.fonts.Roman], {type:'font/woff2'}))));
-                    // fontMap.set('Italic', new FontFace('Italic', URL.createObjectURL(new Blob([context.arguments.fonts.Italic], {type:'font/woff2'}))));
-                    // fontMap.set('Renner', new FontFace('Renner', URL.createObjectURL(new Blob([context.arguments.fonts.Renner], {type:'font/ttf'}))));
+                await Promise.all([fontMap.get('Celtic').load(), fontMap.get('Roman').load(), fontMap.get('Italic').load(), fontMap.get('Renner').load()]);
 
-                    await Promise.all([fontMap.get('Celtic').load(), fontMap.get('Roman').load(), fontMap.get('Italic').load(), fontMap.get('Renner').load()]);
+                self.fonts.add(fontMap.get('Roman'));
+                self.fonts.add(fontMap.get('Celtic'));
+                self.fonts.add(fontMap.get('Renner'));
+                self.fonts.add(fontMap.get('Italic'));
 
-                    self.fonts.add(fontMap.get('Roman'));
-                    self.fonts.add(fontMap.get('Celtic'));
-                    self.fonts.add(fontMap.get('Renner'));
-                    self.fonts.add(fontMap.get('Italic'));
-
-                    for (const i of context.arguments.icons as {
-                        data: ArrayBuffer,
-                        name: string
-                    }[])
-                        icons.set(i.name, createImageBitmap(new Blob([i.data], {type: 'image/webp'})));
-                    postMessage("ok");
-                } catch (error) {
-                    postMessage("failed");
-                    console.error(error);
-                    throw error;
-                }
+                for (const i of context.arguments.icons as {
+                    data: ArrayBuffer,
+                    name: string
+                }[])
+                    icons.set(i.name, createImageBitmap(new Blob([i.data], {type: 'image/webp'})));
+                postMessage("ok");
                 break;
             }
             case "control": {
-                const bitmap = await control(context.arguments, road_sources, variogram, icons, icon_sources, (w, h) => new OffscreenCanvas(w, h));
+
+                const bitmap = await control(context.arguments, road_sources, variogram, icons, icon_sources);
                 postMessage(bitmap, null, [bitmap]);
                 break;
             }
-            case "text": {
-                const bm = await text(context.arguments, (w, h) => new OffscreenCanvas(w, h));
+            case "text": {          
+                const bm = await text(context.arguments);
                 postMessage(bm, null, [bm]);
                 break;
             }

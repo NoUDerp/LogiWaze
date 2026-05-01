@@ -2,6 +2,7 @@
 import L from 'leaflet';
 import ControlGrid from "./ControlGrid";
 import {text} from './TileRenderWorker';
+import {resolve} from "path";
 
 function controlToFont(control, ctx, boring_font) {
     if (boring_font) {
@@ -41,11 +42,11 @@ class TextGrid extends L.GridLayer {
         return .65 * (1 + this.max_zoom - zoom);
     }
 
-    control:ControlGrid
+    renderers: Queue<Worker> | null
 
-    constructor(options, control: ControlGrid) {
+    constructor(options, workers: ControlGrid | null) {
         super(options);
-        this.control = control;
+        this.renderers = workers;
     }
 
     shadowSize: number = 20
@@ -85,11 +86,11 @@ class TextGrid extends L.GridLayer {
         }
 
         setTimeout(async () => {
-            const data = await this.control.webWorkers ?
+            const data = this.renderers != null ?
                 new Promise(async (resolve) => {
-                    const w = await this.control.renderers.dequeue();
+                    const w = await this.renderers.dequeue();
                     w.onmessage = async e => {
-                        this.control.renderers.enqueue(w);
+                        this.renderers.enqueue(w);
                         resolve(e.data);
                     };
                     w.postMessage({
@@ -104,8 +105,7 @@ class TextGrid extends L.GridLayer {
                             boring: this.boring
                         }
                     });
-                })
-                :
+                }) :
                 new Promise<ImageBitmap>(async (resolve) => {
                     resolve(await text({
                         coords: coords,
@@ -115,11 +115,6 @@ class TextGrid extends L.GridLayer {
                         sources: this.sources,
                         shadowSize: this.shadowSize,
                         boring: this.boring
-                    }, (w, h) => {
-                        const c = document.createElement("canvas");
-                        c.width = w;
-                        c.height = h;
-                        return c;
                     }));
                 });
 
@@ -135,9 +130,9 @@ class TextGrid extends L.GridLayer {
 
 export function Create(MaxZoom, Offset, controlLayer: ControlGrid) {
     const u = new TextGrid({
-        updateWhenZooming: true,
+        updateWhenZooming: false,
         noWrap: true
-    }, controlLayer);
+    }, controlLayer.webWorkers ? controlLayer.renderers : null);
     const size = u.getTileSize();
     u.sources = [];
     u.max_zoom = MaxZoom;

@@ -1,18 +1,13 @@
 ﻿//@ts-nocheck
 
-import MapIcons from "./MapIcons";
-
 let L = require('leaflet');
 let Paths = require('../SimpleRoads.json'); //json-loader!
 let PathFinder = require('./geojson-path-finder/index.js');
-let towns = require('../config/towns.json');
-let shards = require('../config/shards.json');
+let towns = require('../towns.json');
+let shards = require('../Shards.json');
 let VectorTextGrid = require('./TextGrid');
-import krigworker from 'data-url:../workers/PredictorWorker.js';
-//import krigworker from './PredictorWorker';
 
 import VectorControlGrid from './ControlGrid';
-import {Create as VectorTextGridCreate} from './TextGrid';
 
 function owoTranslate(text) {
     return text;
@@ -38,8 +33,9 @@ module.exports.Create = async function (mymap, API) {
     const Garages = [];
     const Refineries = [];
     const Factories = [];
+    const AircraftFactories = [];
 
-    const keys = Object.keys(JSONRoads._layers);
+    var keys = Object.keys(JSONRoads._layers);
 
     for (i = 0; i < Paths.features.length; i++) {
         feature = Paths.features[i];
@@ -83,15 +79,16 @@ module.exports.Create = async function (mymap, API) {
         index += feature.geometry.coordinates.length;
     }
 
-    async function loadPredictorWorker(): Promise<Worker | null> {
+    function loadPredictorWorker() : Worker | null
+    {
         try {
-            return new Worker(krigworker, {type: "module", name: 'Road Control Predictor'});
-        } catch (error) {
+            return new Worker(new URL('PredictorWorker.ts', import.meta.url), {type: 'module', name: 'Road Control Predictor'});
+        } catch(error) {
+            console.warn('Failed to create PredictorWorker:', error);
             return null;
         }
     }
-
-    const segments = Array.from(matrixSegments.map(s => loadPredictorWorker().then(pw => API.batchOwnership(pw, s))));
+    const segments = Array.from(matrixSegments.map(s => API.batchOwnership(loadPredictorWorker(), s)));
     await Promise.all(segments);
 
     const data = [];
@@ -100,9 +97,9 @@ module.exports.Create = async function (mymap, API) {
 
     for (i = 0; i < Paths.features.length; i++) {
         feature = Paths.features[i];
-        let warden_features = [];
-        let colonial_features = [];
-        const all_features = [];
+        let warden_features = new Array();
+        let colonial_features = new Array();
+        const all_features = new Array();
         let last_ownership = "NONE";
         let last_p = null;
         for (k = 0; k < feature.geometry.coordinates.length; k++) {
@@ -196,15 +193,11 @@ module.exports.Create = async function (mymap, API) {
     const renderer = L.canvas({tolerance: .2}).addTo(mymap);
 
     const ControlLayer = new VectorControlGrid(7, 8, [128, 128], API, .30, .08 /* road width on map */, GridDepth);
-
-    // for debugging background placement
-    // ControlLayer.setOpacity(.25);
-
-    const RegionLabels = VectorTextGridCreate(8, [128, 128], ControlLayer);
+    const RegionLabels = VectorTextGrid.Create(8, [128, 128], ControlLayer);
 
     const regions = API.regions;
 
-    const w = 256 / 7;
+    const w = 256 / 10;
     const h = w * Math.sqrt(3) / 2;
 
     regions.forEach(region => ControlLayer.addHex(region.x, -region.y, w, h, !(region.name in API.mapControl)));
@@ -216,13 +209,15 @@ module.exports.Create = async function (mymap, API) {
         if (ic.icon == 56 || ic.icon == 5)
             icon = 'MapIconStaticBase1';
         else if (ic.icon == 35)
-            icon = "MapIconSafehouse";
+            icon = "MapIconGarrisonStation";
         else if (ic.icon == 57 || ic.icon == 6)
             icon = 'MapIconStaticBase2';
         else if (ic.icon == 58 || ic.icon == 7)
             icon = 'MapIconStaticBase3';
         else if (ic.icon == 27)
             icon = 'MapIconKeep'
+        else if (ic.icon == 29)
+            icon = 'MapIconFort';
         else if (ic.icon >= 45 && ic.icon <= 47)
             icon = 'MapIconRelicBase';
         else if (ic.icon == 17)
@@ -237,8 +232,48 @@ module.exports.Create = async function (mymap, API) {
             icon = 'MapIconConstructionYard';
         else if (ic.icon == 52)
             icon = 'MapIconSeaport';
+        else if (ic.icon == 18)
+            icon = 'MapIconShipyard';
+        else if (ic.icon == 19)
+            icon = 'MapIconTechCenter';
         else if (ic.icon == 12)
             icon = 'MapIconVehicle';
+        else if (ic.icon == 8)
+            icon = 'MapIconForwardBase1';
+        else if (ic.icon == 28)
+            icon = 'MapIconObservationTower';
+        else if (ic.icon == 30)
+            icon = 'MapIconTroopShip';
+        else if (ic.icon == 37)
+            icon = 'MapIconRocketSite';
+        else if (ic.icon == 88)
+            icon = 'MapIconAircraftDepot';
+        else if (ic.icon == 89)
+            icon = 'MapIconAircraftFactory';
+        else if (ic.icon == 90)
+            icon = 'MapIconAircraftRadar';
+        else if (ic.icon == 91)
+            icon = 'MapIconAircraftRunwayT1';
+        else if (ic.icon == 92)
+            icon = 'MapIconAircraftRunwayT2';
+        else if (ic.icon == 53)
+            icon = 'MapIconCoastalGun';
+        else if (ic.icon == 54)
+            icon = 'MapIconSoulFactory';
+        else if (ic.icon == 59)
+            icon = 'MapIconStormCannon';
+        else if (ic.icon == 60)
+            icon = 'MapIconIntelCenter';
+        else if (ic.icon == 70)
+            icon = 'MapIconRocketTarget';
+        else if (ic.icon == 71)
+            icon = 'MapIconRocketGroundZero';
+        else if (ic.icon == 72)
+            icon = 'MapIconRocketSiteWithRocket';
+        else if (ic.icon == 83)
+            icon = 'MapIconWeatherStation';
+        else if (ic.icon == 84)
+            icon = 'MapIconMortarHouse';
         else
             return null;
 
@@ -262,6 +297,8 @@ module.exports.Create = async function (mymap, API) {
             return 'MapIconSalvage.webp';
         if (ic.icon == 21)
             return 'MapIconComponents.webp';
+        if (ic.icon == 22)
+            return 'MapIconFuel.webp';
         if (ic.icon == 23)
             return 'MapIconSulfur.webp';
         if (ic.icon == 32)
@@ -274,6 +311,8 @@ module.exports.Create = async function (mymap, API) {
             return 'MapIconOilWell.webp';
         if (ic.icon == 61)
             return 'MapIconCoal.webp';
+        if (ic.icon == 75)
+            return 'MapIconFacilityMineOilRig.webp';
         return null;
     };
 
@@ -324,6 +363,8 @@ module.exports.Create = async function (mymap, API) {
                 Refineries.push({lng: th.x + 128, lat: th.y - 128, nuked: th.nuked, ownership: th.control});
             if (data.icon == 34 || data.icon == 51) // factory or MPF
                 Factories.push({lng: th.x + 128, lat: th.y - 128, nuked: th.nuked, ownership: th.control});
+            if (data.icon == 89) // aircraft factory
+                AircraftFactories.push({lng: th.x + 128, lat: th.y - 128, nuked: th.nuked, ownership: th.control});
             ControlLayer.addIcon(icon, th.x, th.y, false, 0, 9);
         }
     }
@@ -450,14 +491,16 @@ module.exports.Create = async function (mymap, API) {
 
     mymap.on('resize', (e) => resizer());
 
+    //mymap.on('dragend', (e) => resizer());
+
     mymap.on('moveend', (e) => resizer());
 
     const playbutton = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/" x="0px" y="0px" width="32px" height="32px" viewBox="20 20 173.7 173.7" enable-background="new 0 0 213.7 213.7" xml:space="preserve"><polygon class="triangle" id="XMLID_18_" fill="none" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" points="73.5,62.5 148.5,105.8 73.5,149.1 "/></svg>';
 
     const speed = beta ? '<tr class="detailed-routeinfo"><td colspan="2"><span class="slow"></span><span class="slidecontainer"><input type="range" min="d /1" max="100" value="50" class="slider" oninput="updateSlider(this)"></span><span class="fast"></span></td></tr>' : '';
 
-    const FoxholeRouter = {
-        summaryTemplate: '<table class="route-summary"><tr class="route-summary-header"><td><img src=\'{icon}\' /><span>{name}</span><span style=\'font-weight: bold; margin-left: 1em\' class=\'summary-routeinfo\'>{distance}</span>'
+    var FoxholeRouter = {
+        summaryTemplate: '<table class="route-summary"><tr class="route-summary-header"><td><img src=\'{icon}.webp\' /><span>{name}</span><span style=\'font-weight: bold; margin-left: 1em\' class=\'summary-routeinfo\'>{distance}</span>'
             .concat(!window.beta ? "" : '<div class="audio-controls detailed-routeinfo"><button class="play-button" style="pointer-events: auto" onclick="window.narrateDirections()">'.concat(playbutton).concat('</button></div>')).concat('</td></tr>').concat(speed).concat('<tr><td class="no-click">{time}</td></tr></table>'),
         TownHalls: L.layerGroup().addTo(mymap),
         RegionLabels: RegionLabels,
@@ -473,6 +516,7 @@ module.exports.Create = async function (mymap, API) {
         RefineriesList: Refineries,
         Garages: Garages,
         FactoriesList: Factories,
+        AircraftFactoriesList: AircraftFactories,
 
         // virtual layers
         BoringFont: L.layerGroup().addTo(mymap),
@@ -481,9 +525,14 @@ module.exports.Create = async function (mymap, API) {
         MapControl: L.layerGroup().addTo(mymap),
         Labels: L.layerGroup().addTo(mymap),
         Factories: L.layerGroup().addTo(mymap),
+        AircraftFactories: L.layerGroup().addTo(mymap),
+        SpecialBases: L.layerGroup().addTo(mymap),
+        RocketActivity: L.layerGroup().addTo(mymap),
         Refineries: L.layerGroup().addTo(mymap),
         Storage: L.layerGroup().addTo(mymap),
+        //WardenRoads: L.layerGroup().addTo(mymap),
         Roads: L.layerGroup().addTo(mymap),
+        //NeutralRoads: L.layerGroup().addTo(mymap),
 
         Shards: shards,
 
@@ -561,7 +610,7 @@ module.exports.Create = async function (mymap, API) {
         },
 
         hideTownHalls: function () {
-            ControlLayer.disableIcons(['MapIconSafehouse.webp', 'MapIconSafehouseWarden.webp', 'MapIconSafehouseColonial.webp', 'MapIconStaticBase1.webp', 'MapIconStaticBase2.webp', 'MapIconStaticBase3.webp', 'MapIconKeep.webp', 'MapIconRelicBase.webp',
+            ControlLayer.disableIcons(['MapIconGarrisonStation.webp', 'MapIconGarrisonStationWarden.webp', 'MapIconGarrisonStationColonial.webp', 'MapIconStaticBase1.webp', 'MapIconStaticBase2.webp', 'MapIconStaticBase3.webp', 'MapIconKeep.webp', 'MapIconRelicBase.webp',
                 'MapIconStaticBase1Warden.webp', 'MapIconStaticBase2Warden.webp', 'MapIconStaticBase3Warden.webp', 'MapIconKeepWarden.webp', 'MapIconRelicBaseWarden.webp',
                 'MapIconStaticBase1Colonial.webp', 'MapIconStaticBase2Colonial.webp', 'MapIconStaticBase3Colonial.webp', 'MapIconKeepColonial.webp', 'MapIconRelicBaseColonial.webp'
             ]);
@@ -579,7 +628,7 @@ module.exports.Create = async function (mymap, API) {
         },
 
         showTownHalls: function () {
-            ControlLayer.enableIcons(['MapIconSafehouse.webp', 'MapIconSafehouseWarden.webp', 'MapIconSafehouseColonial.webp', 'MapIconStaticBase1.webp', 'MapIconStaticBase2.webp', 'MapIconStaticBase3.webp', 'MapIconKeep.webp', 'MapIconRelicBase.webp',
+            ControlLayer.enableIcons(['MapIconGarrisonStation.webp', 'MapIconGarrisonStationWarden.webp', 'MapIconGarrisonStationColonial.webp', 'MapIconStaticBase1.webp', 'MapIconStaticBase2.webp', 'MapIconStaticBase3.webp', 'MapIconKeep.webp', 'MapIconRelicBase.webp',
                 'MapIconStaticBase1Warden.webp', 'MapIconStaticBase2Warden.webp', 'MapIconStaticBase3Warden.webp', 'MapIconKeepWarden.webp', 'MapIconRelicBaseWarden.webp',
                 'MapIconStaticBase1Colonial.webp', 'MapIconStaticBase2Colonial.webp', 'MapIconStaticBase3Colonial.webp', 'MapIconKeepColonial.webp', 'MapIconRelicBaseColonial.webp'
             ]);
@@ -615,6 +664,38 @@ module.exports.Create = async function (mymap, API) {
             ControlLayer.controls[0] = true;
             ControlLayer.redraw();
         },
+
+        // hideWarden: function () {
+        //     ControlLayer.controls[1] = false;
+        //     ControlLayer.redraw();
+        // },
+        //
+        // showWarden: function () {
+        //     ControlLayer.controls[1] = true;
+        //     ControlLayer.redraw();
+        // },
+        //
+        // hideNeutral: function () {
+        //     ControlLayer.controls[3] = false;
+        //     ControlLayer.controls[2] = false;
+        //     ControlLayer.redraw();
+        // },
+        //
+        // showNeutral: function () {
+        //     ControlLayer.controls[2] = true;
+        //     ControlLayer.controls[3] = true;
+        //     ControlLayer.redraw();
+        // },
+        //
+        // hideOffline: function () {
+        //     ControlLayer.controls[2] = false;
+        //     ControlLayer.redraw();
+        // },
+        //
+        // showOffline: function () {
+        //     ControlLayer.controls[2] = true;
+        //     ControlLayer.redraw();
+        // },
 
         hideSalvage: function () {
             ControlLayer.disableIcons(['MapIconSalvage.webp', 'MapIconSalvageMine.webp', 'MapIconSalvageWarden.webp', 'MapIconSalvageMineWarden.webp', 'MapIconSalvageColonial.webp', 'MapIconSalvageMineColonial.webp']);
@@ -698,6 +779,36 @@ module.exports.Create = async function (mymap, API) {
             ControlLayer.redraw();
         },
 
+        showAircraftFactories: function () {
+            ControlLayer.enableIcons(['MapIconAircraftDepot.webp', 'MapIconAircraftDepotWarden.webp', 'MapIconAircraftDepotColonial.webp', 'MapIconAircraftFactory.webp', 'MapIconAircraftFactoryWarden.webp', 'MapIconAircraftFactoryColonial.webp', 'MapIconAircraftRadar.webp', 'MapIconAircraftRadarWarden.webp', 'MapIconAircraftRadarColonial.webp', 'MapIconAircraftRunwayT1.webp', 'MapIconAircraftRunwayT1Warden.webp', 'MapIconAircraftRunwayT1Colonial.webp', 'MapIconAircraftRunwayT2.webp', 'MapIconAircraftRunwayT2Warden.webp', 'MapIconAircraftRunwayT2Colonial.webp']);
+            ControlLayer.redraw();
+        },
+
+        hideAircraftFactories: function () {
+            ControlLayer.disableIcons(['MapIconAircraftDepot.webp', 'MapIconAircraftDepotWarden.webp', 'MapIconAircraftDepotColonial.webp', 'MapIconAircraftFactory.webp', 'MapIconAircraftFactoryWarden.webp', 'MapIconAircraftFactoryColonial.webp', 'MapIconAircraftRadar.webp', 'MapIconAircraftRadarWarden.webp', 'MapIconAircraftRadarColonial.webp', 'MapIconAircraftRunwayT1.webp', 'MapIconAircraftRunwayT1Warden.webp', 'MapIconAircraftRunwayT1Colonial.webp', 'MapIconAircraftRunwayT2.webp', 'MapIconAircraftRunwayT2Warden.webp', 'MapIconAircraftRunwayT2Colonial.webp']);
+            ControlLayer.redraw();
+        },
+
+        showSpecialBases: function () {
+            ControlLayer.enableIcons(['MapIconCoastalGun.webp', 'MapIconCoastalGunColonial.webp', 'MapIconCoastalGunWarden.webp', 'MapIconSoulFactory.webp', 'MapIconSoulFactoryColonial.webp', 'MapIconSoulFactoryWarden.webp', 'MapIconStormCannon.webp', 'MapIconStormCannonColonial.webp', 'MapIconStormCannonWarden.webp', 'MapIconIntelCenter.webp', 'MapIconIntelCenterColonial.webp', 'MapIconIntelCenterWarden.webp', 'MapIconWeatherStation.webp', 'MapIconWeatherStationColonial.webp', 'MapIconWeatherStationWarden.webp', 'MapIconMortarHouse.webp', 'MapIconMortarHouseColonial.webp', 'MapIconMortarHouseWarden.webp']);
+            ControlLayer.redraw();
+        },
+
+        hideSpecialBases: function () {
+            ControlLayer.disableIcons(['MapIconCoastalGun.webp', 'MapIconCoastalGunColonial.webp', 'MapIconCoastalGunWarden.webp', 'MapIconSoulFactory.webp', 'MapIconSoulFactoryColonial.webp', 'MapIconSoulFactoryWarden.webp', 'MapIconStormCannon.webp', 'MapIconStormCannonColonial.webp', 'MapIconStormCannonWarden.webp', 'MapIconIntelCenter.webp', 'MapIconIntelCenterColonial.webp', 'MapIconIntelCenterWarden.webp', 'MapIconWeatherStation.webp', 'MapIconWeatherStationColonial.webp', 'MapIconWeatherStationWarden.webp', 'MapIconMortarHouse.webp', 'MapIconMortarHouseColonial.webp', 'MapIconMortarHouseWarden.webp']);
+            ControlLayer.redraw();
+        },
+
+        showRocketActivity: function () {
+            ControlLayer.enableIcons(['MapIconRocketSite.webp', 'MapIconRocketSiteColonial.webp', 'MapIconRocketSiteWarden.webp', 'MapIconRocketSiteWithRocket.webp', 'MapIconRocketSiteWithRocketColonial.webp', 'MapIconRocketSiteWithRocketWarden.webp', 'MapIconRocketTarget.webp', 'MapIconRocketTargetColonial.webp', 'MapIconRocketTargetWarden.webp', 'MapIconRocketGroundZero.webp', 'MapIconRocketGroundZeroColonial.webp', 'MapIconRocketGroundZeroWarden.webp']);
+            ControlLayer.redraw();
+        },
+
+        hideRocketActivity: function () {
+            ControlLayer.disableIcons(['MapIconRocketSite.webp', 'MapIconRocketSiteColonial.webp', 'MapIconRocketSiteWarden.webp', 'MapIconRocketSiteWithRocket.webp', 'MapIconRocketSiteWithRocketColonial.webp', 'MapIconRocketSiteWithRocketWarden.webp', 'MapIconRocketTarget.webp', 'MapIconRocketTargetColonial.webp', 'MapIconRocketTargetWarden.webp', 'MapIconRocketGroundZero.webp', 'MapIconRocketGroundZeroColonial.webp', 'MapIconRocketGroundZeroWarden.webp']);
+            ControlLayer.redraw();
+        },
+
         screenshot: function () {
             let c = document.createElement("canvas");
             const pixelScale = 1; // temporarily disabled: window.devicePixelRatio;
@@ -770,7 +881,7 @@ module.exports.Create = async function (mymap, API) {
 
             for (let e of document.getElementsByClassName("leaflet-tile")) {
                 if (e.localName == "canvas" && e.classList.contains('logiwaze-text') && e.classList.contains('leaflet-tile-loaded')) { //
-                    const offset = e.style.transform.match(/translate3d\(([^\)]+)\)/i)[1].replace(/px/ig, '').split(',');
+                    var offset = e.style.transform.match(/translate3d\(([^\)]+)\)/i)[1].replace(/px/ig, '').split(',');
                     let x = parseFloat(offset[0]); // these can be extracted from a private member in the e object, this is more work but seems more stable
                     let y = parseFloat(offset[1]);
                     let sx = parseFloat(e.style.width.replace(/px/ig, ''));
@@ -880,17 +991,17 @@ module.exports.Create = async function (mymap, API) {
             let marker = this.marker, marker_shadow = this.marker_shadow;
             if (marker == null) {
                 this.marker = marker = new Image();
+                marker.src = "marker-icon.png";
                 marker.onload = function () {
                     marker_loaded = true;
                     if (marker_shadow_loaded && marker_loaded) drawMarkers(ctx);
                 }
-                marker.src = MapIcons.data_url('marker-icon.png');
                 this.marker_shadow = marker_shadow = new Image();
+                marker_shadow.src = "marker-shadow.png";
                 marker_shadow.onload = function () {
                     marker_shadow_loaded = true;
                     if (marker_shadow_loaded && marker_loaded) drawMarkers(ctx);
                 }
-                marker_shadow.src = MapIcons.data_url("marker-shadow.png");
                 // set up the cache on this
             } else
                 setTimeout(() => drawMarkers(ctx), 0);
@@ -905,7 +1016,6 @@ module.exports.Create = async function (mymap, API) {
         },
 
         route: function (waypoints, callback, context, options) {
-            let routes;
             highlighter.clearLayers();
             // modify new waypoints to find closest ones
             for (var i = 0; i < waypoints.length; i++) {
@@ -913,7 +1023,7 @@ module.exports.Create = async function (mymap, API) {
                 let distance = 0.0;
                 for (let key in FoxholeRouter.JSONRoads._layers) {
                     const layer = FoxholeRouter.JSONRoads._layers[key];
-                    for (let k = 0; k < layer._latlngs.length; k++) {
+                    for (var k = 0; k < layer._latlngs.length; k++) {
                         const lat = layer._latlngs[k].lat;
                         const wplat = waypoints[i].latLng.lat;
                         const lng = layer._latlngs[k].lng;
@@ -934,7 +1044,7 @@ module.exports.Create = async function (mymap, API) {
             let no_warden_path = false;
             let no_colonial_path = false;
 
-            for (let i = 0; i < waypoints.length - 1; i++) {
+            for (var i = 0; i < waypoints.length - 1; i++) {
                 const start = waypoints[i].latLng;
                 const finish = waypoints[i + 1].latLng;
                 if (path == null)
@@ -944,12 +1054,12 @@ module.exports.Create = async function (mymap, API) {
                     }, {geometry: {coordinates: [finish.lng, finish.lat]}});
 
                 else {
-                    const p = FoxholeRouter.pathFinder.findPath({
+                    var p = FoxholeRouter.pathFinder.findPath({
                         name: "path",
                         geometry: {coordinates: [start.lng, start.lat]}
                     }, {geometry: {coordinates: [finish.lng, finish.lat]}});
                     if (p != null && p.path != null) {
-                        for (let k = 0; k < p.path.length; k++)
+                        for (var k = 0; k < p.path.length; k++)
                             path.path.push(p.path[k]);
                         path.weight += p.weight;
                     }
@@ -962,7 +1072,7 @@ module.exports.Create = async function (mymap, API) {
                             geometry: {coordinates: [start.lng, start.lat]}
                         }, {geometry: {coordinates: [finish.lng, finish.lat]}});
                     else {
-                        const p = FoxholeRouter.wardenPathFinder.findPath({
+                        var p = FoxholeRouter.wardenPathFinder.findPath({
                             name: "path",
                             geometry: {coordinates: [start.lng, start.lat]}
                         }, {geometry: {coordinates: [finish.lng, finish.lat]}});
@@ -984,12 +1094,12 @@ module.exports.Create = async function (mymap, API) {
                             geometry: {coordinates: [start.lng, start.lat]}
                         }, {geometry: {coordinates: [finish.lng, finish.lat]}});
                     else {
-                        const p = FoxholeRouter.colonialPathFinder.findPath({
+                        var p = FoxholeRouter.colonialPathFinder.findPath({
                             name: "path",
                             geometry: {coordinates: [start.lng, start.lat]}
                         }, {geometry: {coordinates: [finish.lng, finish.lat]}});
                         if (p != null && p.path != null) {
-                            for (let k = 0; k < p.path.length; k++)
+                            for (var k = 0; k < p.path.length; k++)
                                 colonialPath.path.push(p.path[k]);
                             colonialPath.weight += p.weight;
                         } else
@@ -1009,19 +1119,18 @@ module.exports.Create = async function (mymap, API) {
 
             let call = callback.bind(context);
             const route_builder = function (name, opath, wp) {
-                let text;
                 const coordinates = [];
                 const instructions = [];
                 let accumulated_distance = 0.0;
                 const crossroads = [];
                 let last_region = null;
-                for (let i = 0; i < opath.path.length; i++) {
+                for (var i = 0; i < opath.path.length; i++) {
                     coordinates[i] = L.latLng(opath.path[i][1], opath.path[i][0]);
                     if (i > 0) {
                         const dy = opath.path[i][0] - opath.path[i - 1][0];
                         const dx = opath.path[i][1] - opath.path[i - 1][1];
 
-                        const distance = (Math.sqrt(dx * dx + dy * dy) / 256.0) * 12012.0;
+                        var distance = (Math.sqrt(dx * dx + dy * dy) / 256.0) * 12012.0;
                         const hash = opath.path[i][0].toFixed(3).concat("|").concat(opath.path[i][1].toFixed(3));
                         const lastHash = opath.path[i - 1][0].toFixed(3).concat("|").concat(opath.path[i - 1][1].toFixed(3));
                         const borderStart = BorderCrossings[lastHash] === 1;
@@ -1075,10 +1184,10 @@ module.exports.Create = async function (mymap, API) {
                         const region_change = i == 0 || crossroads[i].regionChange;
                         const turnicon = turns[jangleOut - jangleIn];
                         if (jangleIn == jangleOut)
-                            text = "Continue ".concat(direction).concat(" ").concat(i < crossroads.length - 1 ? crossroads[i + 1].distanceFromLast.toFixed().toString().concat(" meters") : '');
-                        else
-                            text = turns[jangleOut - jangleIn].concat(' and drive ').concat(direction).concat(' for ').concat(crossroads[i + 1].distanceFromLast.toFixed().toString()).concat(" meters");
-
+                            var text = "Continue ".concat(direction).concat(" ").concat(i < crossroads.length - 1 ? crossroads[i + 1].distanceFromLast.toFixed().toString().concat(" meters") : '');
+                        else {
+                            var text = turns[jangleOut - jangleIn].concat(' and drive ').concat(direction).concat(' for ').concat(crossroads[i + 1].distanceFromLast.toFixed().toString()).concat(" meters");
+                        }
                         instructions.push({
                             distance: crossroads[i + 1].distanceFromLast,
                             time: 0,
@@ -1117,7 +1226,7 @@ module.exports.Create = async function (mymap, API) {
                     waypoints: wp,
                     instructions: instructions,
                     coordinates: coordinates,
-                    icon: MapIcons.data_url(`${name.replace(/ /, "")}.webp`)// name.replace(" ", "")
+                    icon: name.replace(" ", "")
                 }
             };
 
@@ -1129,14 +1238,17 @@ module.exports.Create = async function (mymap, API) {
                     (wardenPath != null && wardenPath.path.length == path.path.length && wardenPath.path.reduce(function (result, value, index, array) {
                         if (!result) return false;
                         return path.path[index][0] == wardenPath.path[index][0] && path.path[index][1] == wardenPath.path[index][1];
-                    })) ||
+                    }))
+                    ||
                     (colonialPath != null && colonialPath.path.length == path.path.length && colonialPath.path.reduce(function (result, value, index, array) {
                         if (!result) return false;
                         return path.path[index][0] == colonialPath.path[index][0] && path.path[index][1] == colonialPath.path[index][1];
-                    }))))
-                    routes = [];
+                    }))
+                )
+                )
+                    var routes = [];
                 else
-                    routes = [route_builder("Shortest Route", path, waypoints)];
+                    var routes = [route_builder("Shortest Route", path, waypoints)];
 
                 if (wardenPath != null)
                     routes.unshift(route_builder("Warden Route", wardenPath, waypoints));
@@ -1148,16 +1260,14 @@ module.exports.Create = async function (mymap, API) {
         },
 
         // very work-in-progress
-        findStructure: function (currentLocation, defaultOwnership: string | null, defaultStructures) {
-            let i;
+        findStructure: function (currentLocation, currentOwnership, structures) {
             highlighter.clearLayers();
-
-            let currentOwnership = defaultOwnership;
 
             if (currentOwnership == null)
                 currentOwnership = API.ownership(currentLocation.lng, currentLocation.lat, API.calculateRegion(currentLocation.lng, currentLocation.lat)).ownership;
 
-            const structures = defaultStructures ?? FoxholeRouter.Garages;
+            if (structures == null)
+                structures = FoxholeRouter.Garages;
 
             let waypoints = [currentLocation];
             for (let w of structures)
@@ -1165,7 +1275,7 @@ module.exports.Create = async function (mymap, API) {
                     waypoints.push(w);
 
             // modify new waypoints (structures) to find closest roads (round an exact location to the nearest road)
-            for (i = 0; i < waypoints.length; i++) {
+            for (var i = 0; i < waypoints.length; i++) {
                 let closestPoint = null;
                 let distance = 0.0;
                 for (let key in FoxholeRouter.JSONRoads._layers) {
@@ -1188,12 +1298,12 @@ module.exports.Create = async function (mymap, API) {
             }
 
             let Path = null;
-            let pathfinder = defaultStructures != null ? (currentOwnership === "COLONIALS" ? FoxholeRouter.colonialPathFinder : FoxholeRouter.wardenPathFinder) : FoxholeRouter.pathFinder;
+            let pathfinder = currentOwnership === "COLONIALS" ? FoxholeRouter.colonialPathFinder : FoxholeRouter.wardenPathFinder;
             let bestStructure = null;
 
             if (pathfinder != null && waypoints.length > 0) {
                 const start = waypoints[0].latLng;
-                for (i = 1; i < waypoints.length; i++) {
+                for (var i = 1; i < waypoints.length; i++) {
                     const finish = waypoints[i].latLng;
 
                     if (Path == null) {
@@ -1216,6 +1326,6 @@ module.exports.Create = async function (mymap, API) {
             return bestStructure;
         }
     };
-
     return FoxholeRouter;
 }
+;

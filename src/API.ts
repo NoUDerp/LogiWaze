@@ -3,7 +3,7 @@ import * as kriging from '@sakitam-gis/kriging';
 import {default as regions, Region} from "./Regions";
 import krig from './PredictorWorker';
 
-const width = 256 / 7;
+const width = 256 / 10;
 const height = width * Math.sqrt(3) / 2;
 const halfWidth = width * .5;
 const halfHeight = height * .5;
@@ -38,53 +38,10 @@ export default class API {
 
     public mapControl: object = {}
     public resources: object = {}
-    #w = 256 / 7;
-    #k = 256 / 7 * Math.sqrt(3) / 2;
-    private regionMap: Map<string, { x: number, y: number }> = new Map([
-        ["KingsCageHex", {x: -1.5 * (256 / 7), y: 0}],
-        ["WestgateHex", {x: -2.25 * (256 / 7), y: -.5 * (256 / 7 * Math.sqrt(3) / 2)}],
-        ["FarranacCoastHex", {x: -2.25 * (256 / 7), y: .5 * (256 / 7 * Math.sqrt(3) / 2)}],
-        ["EndlessShoreHex", {x: 2.25 * (256 / 7), y: -.5 * (256 / 7 * Math.sqrt(3) / 2)}],
-        ["StlicanShelfHex", {x: 2.25 * (256 / 7), y: .5 * (256 / 7 * Math.sqrt(3) / 2)}],
-        ["OarbreakerHex", {x: -3 * (256 / 7), y: (256 / 7 * Math.sqrt(3) / 2)}],
-        ["FishermansRowHex", {x: -3 * (256 / 7), y: 0}],
-        ["StemaLandingHex", {x: -3 * (256 / 7), y: -1 * (256 / 7 * Math.sqrt(3) / 2)}],
-        ["GodcroftsHex", {x: 3 * (256 / 7), y: (256 / 7 * Math.sqrt(3) / 2)}],
-        ["SableportHex", {x: -1.5 * (256 / 7), y: -1 * (256 / 7 * Math.sqrt(3) / 2)}],
-        ["TempestIslandHex", {x: 3 * (256 / 7), y: 0}],
-        ["ReaversPassHex", {x: 2.25 * (256 / 7), y: -1.5 * (256 / 7 * Math.sqrt(3) / 2)}],
-        ["TheFingersHex", {x: 3 * (256 / 7), y: -1 * (256 / 7 * Math.sqrt(3) / 2)}],
-        ["ClahstraHex", {x: 1.5 * (256 / 7), y: 0}],
-        ["DeadLandsHex", {x: 0, y: 0}],
-        ["CallahansPassageHex", {x: 0, y: (256 / 7 * Math.sqrt(3) / 2)}],
-        ["MarbanHollow", {x: .75 * (256 / 7), y: .5 * (256 / 7 * Math.sqrt(3) / 2)}],
-        ["UmbralWildwoodHex", {x: 0, y: -1 * (256 / 7 * Math.sqrt(3) / 2)}],
-        ["MooringCountyHex", {x: -.75 * (256 / 7), y: 1.5 * (256 / 7 * Math.sqrt(3) / 2)}],
-        ["HeartlandsHex", {x: -.75 * (256 / 7), y: -1.5 * (256 / 7 * Math.sqrt(3) / 2)}],
-        ["LochMorHex", {x: -.75 * (256 / 7), y: -.5 * (256 / 7 * Math.sqrt(3) / 2)}],
-        ["LinnMercyHex", {x: -.75 * (256 / 7), y: .5 * (256 / 7 * Math.sqrt(3) / 2)}],
-        ["ReachingTrailHex", {x: 0, y: 2 * (256 / 7 * Math.sqrt(3) / 2)}],
-        ["StonecradleHex", {x: -1.5 * (256 / 7), y: (256 / 7 * Math.sqrt(3) / 2)}],
-        ["GreatMarchHex", {x: 0, y: -2 * (256 / 7 * Math.sqrt(3) / 2)}],
-        ["AllodsBightHex", {x: 1.5 * (256 / 7), y: -1.0 * (256 / 7 * Math.sqrt(3) / 2)}],
-        ["WeatheredExpanseHex", {x: 1.5 * (256 / 7), y: (256 / 7 * Math.sqrt(3) / 2)}],
-        ["DrownedValeHex", {x: .75 * (256 / 7), y: -.5 * (256 / 7 * Math.sqrt(3) / 2)}],
-        ["ShackledChasmHex", {x: .75 * (256 / 7), y: -1.5 * (256 / 7 * Math.sqrt(3) / 2)}],
-        ["ViperPitHex", {x: .75 * (256 / 7), y: 1.5 * (256 / 7 * Math.sqrt(3) / 2)}],
-        ["NevishLineHex", {x: -2.25 * (256 / 7), y: 1.5 * (256 / 7 * Math.sqrt(3) / 2)}],
-        ["AcrithiaHex", {x: .75 * (256 / 7), y: -2.5 * (256 / 7 * Math.sqrt(3) / 2)}],
-        ["RedRiverHex", {x: -.75 * (256 / 7), y: -2.5 * (256 / 7 * Math.sqrt(3) / 2)}],
-        ["CallumsCapeHex", {x: -1.5 * (256 / 7), y: 2 * (256 / 7 * Math.sqrt(3) / 2)}],
-        ["SpeakingWoodsHex", {x: -.75 * (256 / 7), y: 2.5 * (256 / 7 * Math.sqrt(3) / 2)}],
-        ["BasinSionnachHex", {x: 0, y: 3 * (256 / 7 * Math.sqrt(3) / 2)}],
-        ["HowlCountyHex", {x: .75 * (256 / 7), y: 2.5 * (256 / 7 * Math.sqrt(3) / 2)}],
-        ["ClansheadValleyHex", {x: 1.5 * (256 / 7), y: 2 * (256 / 7 * Math.sqrt(3) / 2)}],
-        ["MorgensCrossingHex", {x: 2.25 * (256 / 7), y: 1.5 * (256 / 7 * Math.sqrt(3) / 2)}],
-        ["TerminusHex", {x: 1.5 * (256 / 7), y: -2 * (256 / 7 * Math.sqrt(3) / 2)}],
-        ["KalokaiHex", {x: 0, y: -3 * (256 / 7 * Math.sqrt(3) / 2)}],
-        ["AshFieldsHex", {x: -1.5 * (256 / 7), y: -2 * (256 / 7 * Math.sqrt(3) / 2)}],
-        ["OriginHex", {x: -2.25 * (256 / 7), y: -1.5 * (256 / 7 * Math.sqrt(3) / 2)}],
-    ])
+    #w = 256 / 10;
+    #k = 256 / 10 * Math.sqrt(3) / 2;
+    private regionMap: Map<string, { x: number, y: number }> =
+        new Map(regions.map(r => [r.name, {x: r.x, y: r.y}]))
 
     public remapXY(regionName: string): { x: number; y: number } {
         return this.regionMap.has(regionName) ? this.regionMap.get(regionName) : {x: 0, y: 0};
@@ -154,9 +111,36 @@ export default class API {
         return kriging.predict(x - 128, y + 128, this.variogram)
     }
 
-    public townHallIcons: Array<number> = [35, 5, 6, 7, 8, 9, 10, 45, 46, 47, 29, 17, 34, 51, 39, 12, 52, 33, 18, 19, 56, 57, 58, 59, 60]
+    // Foxhole iconTypes routed to mapControl (vs resources). Anything not in
+    // this list falls through to `resources` in update(). See clapfoot/warapi
+    // for the authoritative iconType reference.
+    public townHallIcons: Array<number> = [
+        35,                              // Garrison Station
+        5, 56, 6, 57, 7, 58,             // Town Bases T1/T2/T3
+        8,                               // Forward Base 1
+        45,                              // Relic Base 1 (46/47 retired in U52)
+        27, 29,                          // Keep, Fort
+        17, 34, 51,                      // Refinery, Factory, Mass Production Factory
+        39,                              // Construction Yard
+        12,                              // Vehicle Factory
+        52, 18,                          // Seaport, Shipyard
+        19,                              // Tech Center
+        28, 30, 37,                      // Observation Tower, Troop Ship, Rocket Site
+        33,                              // Storage Facility
+        59, 60,                          // Storm Cannon, Intel Center
+        53, 54,                          // Coastal Gun, Soul Factory
+        70, 71, 72,                      // Rocket Target, Ground Zero, Site With Rocket
+        83, 84,                          // Weather Station, Mortar House
+        88, 89, 90, 91, 92,              // Aircraft Depot/Factory/Radar/Runway T1/T2 (1.63 Airborne)
+    ]
 
-    public krigingControlPointIcons: Array<number> = [/* safe house 35, */5, 6, 7, 8, 9, 10, 45, 46, 47, 29, 56, 57, 58, 59, 60]
+    public krigingControlPointIcons: Array<number> = [
+        5, 56, 6, 57, 7, 58,             // Town Bases T1/T2/T3
+        8,                               // Forward Base 1
+        45,                              // Relic Base 1
+        27, 29,                          // Keep, Fort
+        59, 60,                          // Storm Cannon, Intel Center
+    ]
 
     public war: any
 
@@ -175,7 +159,7 @@ export default class API {
         // iterate here on the maps and collect status
         const p_x = [], p_y = [], p_t = [];
 
-        const xf = 256 / 7;
+        const xf = 256 / 10;
         const yf = xf * Math.sqrt(3) / 2;
         const tasks: Array<Promise<void>> = [];
 

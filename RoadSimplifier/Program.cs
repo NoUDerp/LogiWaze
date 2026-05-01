@@ -8,24 +8,12 @@ var distanceTolerance = float.Parse(args[1]);
 
 var paths = new Dictionary<int, (PathSimplifier.Path Path, Properties Properties)>();
 
-foreach (var r in roads.features)
-    paths.Add(paths.Count,
-        (new PathSimplifier.Path(paths.Count, r.geometry.coordinates.Select(c => new Vector2(c[0], c[1])).ToList()),
-            r.properties));
+foreach(var r in roads.features)
+    paths.Add(paths.Count, (new PathSimplifier.Path(paths.Count, r.geometry.coordinates.Select(c => new PathSimplifier.PathPoint(new Vector2(c[0], c[1]))).ToList()), r.properties));
 
-var simplified = PathSimplifier.SimplifyPaths(paths.Values.Select(p => p.Path).ToList(),
-    angleTolerance * MathF.PI / 180f, distanceTolerance);
+var simplified = PathSimplifier.SimplifyPaths(paths.Values.Select(p => p.Path).ToList(), angleTolerance * MathF.PI / 180f, distanceTolerance);
 
-var simplifiedPaths = simplified.Select(p => roads.features[p.Id] switch
-{
-    var m => m with
-    {
-        geometry = m.geometry with
-        {
-            coordinates = p.Points.Select(c => new float[] { c.X, c.Y }).ToArray()
-        }
-    }
-});
+var simplifiedPaths = simplified.Select(p => roads.features[p.PathId] switch { var m => m with { geometry =  m.geometry with { coordinates = p.Points.Select(c => new float[]{c.Position[0], c.Position[1]}).ToArray()} } });
 
 roads = roads with { features = simplifiedPaths.ToArray() };
 
@@ -34,9 +22,9 @@ await JsonSerializer.SerializeAsync(file, roads);
 
 record struct Roads(string type, string name, CRS crs, Feature[] features);
 
-record struct CRS(string type, @props properties);
+record struct CRS(string type, props properties);
 
-record struct @props(string name);
+record struct props(string name);
 
 record struct Feature(Properties properties, string type, Geometry geometry);
 
@@ -44,445 +32,131 @@ record struct Properties(string region, int tier);
 
 record struct Geometry(string type, float[][] coordinates);
 
-
-public class PathSimplifier
+public static class PathSimplifier
 {
-    /// <summary>
-    /// Represents a path with its points and ID
-    /// </summary>
+    public class PathPoint
+    {
+        public Vector2 Position { get; set; }
+
+        public PathPoint(Vector2 position)
+        {
+            Position = position;
+        }
+    }
+
     public class Path
     {
-        public int Id { get; set; }
-        public List<Vector2> Points { get; set; }
+        public int PathId { get; set; }
+        public List<PathPoint> Points { get; set; }
 
-        public Path(int id, List<Vector2> points)
+        public Path(int pathId, List<PathPoint> points)
         {
-            Id = id;
+            PathId = pathId;
             Points = points;
         }
     }
 
     /// <summary>
-    /// Simplifies multiple sets of paths by merging points where the angle change is less than angleTolerance
-    /// and the resulting distance between adjacent points doesn't exceed distanceTolerance.
-    /// Points that are shared between any paths across all path sets are preserved.
+    /// Simplifies a set of line paths by removing points where the angle change is less than angleToleranceRadians
+    /// and where the resulting gap between points doesn't exceed distanceTolerance.
+    /// Points that are shared between multiple paths are preserved.
     /// </summary>
-    /// <param name="pathSets">Collection of path sets to simplify</param>
-    /// <param name="angleTolerance">Angle tolerance in radians</param>
-    /// <param name="distanceTolerance">Maximum distance tolerance</param>
-    /// <returns>Collection of simplified path sets</returns>
-    public List<List<Path>> SimplifyPathSets(List<List<Path>> pathSets, float angleTolerance, float distanceTolerance)
+    /// <param name="paths">List of paths, where each path has an ID and a list of points</param>
+    /// <param name="angleToleranceRadians">Minimum angle change in radians required to keep a point</param>
+    /// <param name="distanceTolerance">Maximum allowed distance between adjacent points after simplification</param>
+    /// <returns>List of simplified paths</returns>
+    public static List<Path> SimplifyPaths(
+        List<Path> paths, 
+        float angleToleranceRadians, 
+        float distanceTolerance)
     {
-        if (pathSets == null || pathSets.Count == 0)
-            return new List<List<Path>>();
-
-        // Find all shared points across all path sets
-        HashSet<Vector2> sharedPoints = FindSharedPointsAcrossAllSets(pathSets);
+        // Find shared points across different paths
+        HashSet<Vector2> sharedPoints = FindSharedPoints(paths);
         
-        // Create new list to store simplified path sets
-        List<List<Path>> simplifiedPathSets = new List<List<Path>>();
-        
-        // Process each path set
-        foreach (var pathSet in pathSets)
-        {
-            List<Path> simplifiedPathSet = SimplifyPaths(pathSet, angleTolerance, distanceTolerance, sharedPoints);
-            simplifiedPathSets.Add(simplifiedPathSet);
-        }
-        
-        return simplifiedPathSets;
-    }
-
-    /// <summary>
-    /// Simplifies a single set of paths using the provided shared points
-    /// </summary>
-    private static List<Path> SimplifyPaths(List<Path> paths, float angleTolerance, float distanceTolerance, 
-                                    HashSet<Vector2> globalSharedPoints)
-    {
-        if (paths == null || paths.Count == 0)
-            return new List<Path>();
-        
-        // Create new list to store simplified paths
+        // Create new list for simplified paths
         List<Path> simplifiedPaths = new List<Path>();
         
         // Process each path
         foreach (var path in paths)
         {
-            if (path.Points.Count <= 2)
+            if (path.Points.Count < 3)
             {
-                // Path with 2 or fewer points cannot be simplified further
-                simplifiedPaths.Add(new Path(path.Id, new List<Vector2>(path.Points)));
+                // Paths with fewer than 3 points can't be simplified
+                simplifiedPaths.Add(new Path(path.PathId, new List<PathPoint>(path.Points)));
                 continue;
             }
             
-            // Simplify the current path
-            List<Vector2> simplifiedPoints = SimplifyPath(path.Points, angleTolerance, distanceTolerance, globalSharedPoints);
+            List<PathPoint> simplifiedPoints = new List<PathPoint>();
+            simplifiedPoints.Add(path.Points[0]); // Always include the first point
             
-            // Add the simplified path to the result
-            simplifiedPaths.Add(new Path(path.Id, simplifiedPoints));
+            for (int i = 1; i < path.Points.Count - 1; i++)
+            {
+                Vector2 prevPoint = path.Points[i - 1].Position;
+                Vector2 currentPoint = path.Points[i].Position;
+                Vector2 nextPoint = path.Points[i + 1].Position;
+                
+                // Always keep shared points
+                if (sharedPoints.Contains(currentPoint))
+                {
+                    simplifiedPoints.Add(path.Points[i]);
+                    continue;
+                }
+                
+                // Check angle between segments
+                Vector2 prevVector = Vector2.Normalize(currentPoint - prevPoint);
+                Vector2 nextVector = Vector2.Normalize(nextPoint - currentPoint);
+                
+                float dotProduct = Vector2.Dot(prevVector, nextVector);
+                // Clamp dotProduct to valid range for acos
+                dotProduct = Math.Clamp(dotProduct, -1.0f, 1.0f);
+                float angle = (float)Math.Acos(dotProduct);
+                
+                // Check potential distance if this point is removed
+                float distanceBetweenAdjacentPoints = Vector2.Distance(prevPoint, nextPoint);
+                
+                // Keep point if angle is significant or if removing it would create too large a gap
+                if (angle > angleToleranceRadians || distanceBetweenAdjacentPoints > distanceTolerance)
+                {
+                    simplifiedPoints.Add(path.Points[i]);
+                }
+            }
+            
+            simplifiedPoints.Add(path.Points[path.Points.Count - 1]); // Always include the last point
+            simplifiedPaths.Add(new Path(path.PathId, simplifiedPoints));
         }
         
         return simplifiedPaths;
     }
-
-    /// <summary>
-    /// Finds all points that are shared between paths across all path sets
-    /// </summary>
-    private HashSet<Vector2> FindSharedPointsAcrossAllSets(List<List<Path>> pathSets)
-    {
-        // Dictionary to count occurrences of each point
-        Dictionary<Vector2, int> pointCounts = new Dictionary<Vector2, int>(new Vector2EqualityComparer());
-        
-        // Process each path set and count point occurrences
-        foreach (var pathSet in pathSets)
-        {
-            foreach (var path in pathSet)
-            {
-                foreach (var point in path.Points)
-                {
-                    if (pointCounts.ContainsKey(point))
-                        pointCounts[point]++;
-                    else
-                        pointCounts[point] = 1;
-                }
-            }
-        }
-        
-        // Find points that appear more than once
-        HashSet<Vector2> sharedPoints = new HashSet<Vector2>(new Vector2EqualityComparer());
-        foreach (var entry in pointCounts)
-        {
-            if (entry.Value > 1)
-                sharedPoints.Add(entry.Key);
-        }
-        
-        return sharedPoints;
-    }
     
     /// <summary>
-    /// Simplifies a single path by merging points based on angle and distance tolerances
-    /// </summary>
-    static private List<Vector2> SimplifyPath(List<Vector2> points, float angleTolerance, float distanceTolerance, 
-                                      HashSet<Vector2> sharedPoints)
-    {
-        if (points.Count <= 2)
-            return new List<Vector2>(points);
-
-        List<Vector2> result = new List<Vector2>();
-        List<int> pointsToMerge = new List<int>();
-        
-        // Always include the first point
-        result.Add(points[0]);
-        
-        // Process intermediate points
-        for (int i = 1; i < points.Count - 1; i++)
-        {
-            // If this is a shared point, we must keep it as is
-            if (sharedPoints.Contains(points[i]))
-            {
-                // If we have points to merge before this shared point, merge them now
-                if (pointsToMerge.Count > 0)
-                {
-                    pointsToMerge.Add(i - 1); // Include the last point before shared point
-                    result.Add(AveragePoints(points, pointsToMerge));
-                    pointsToMerge.Clear();
-                }
-                
-                result.Add(points[i]);
-                continue;
-            }
-            
-            Vector2 prevPoint = (pointsToMerge.Count == 0) ? result[result.Count - 1] : points[pointsToMerge[0] - 1];
-            Vector2 currentPoint = points[i];
-            Vector2 nextPoint = points[i + 1];
-            
-            // Check angle between segments
-            Vector2 v1 = Vector2.Normalize(currentPoint - prevPoint);
-            Vector2 v2 = Vector2.Normalize(nextPoint - currentPoint);
-            
-            // Calculate angle between vectors using dot product
-            float dotProduct = Vector2.Dot(v1, v2);
-            dotProduct = Math.Clamp(dotProduct, -1.0f, 1.0f); // Ensure value is within valid range for acos
-            float angle = (float)Math.Acos(dotProduct);
-            
-            // Potential merged point if we include current point in merge sequence
-            List<int> potentialMergeList = new List<int>(pointsToMerge);
-            potentialMergeList.Add(i);
-            Vector2 potentialMergedPoint = AveragePoints(points, potentialMergeList);
-            
-            // Check distance criteria for a merged point
-            bool distanceWithinTolerance = true;
-            if (pointsToMerge.Count > 0)
-            {
-                int firstPointIdx = pointsToMerge[0] - 1;
-                Vector2 firstPoint = result[result.Count - 1]; // Point before merge sequence
-                float originalPathLength = 0;
-                
-                // Calculate original path length through all points in merge sequence
-                originalPathLength += Vector2.Distance(firstPoint, points[pointsToMerge[0]]);
-                for (int j = 0; j < pointsToMerge.Count - 1; j++)
-                {
-                    originalPathLength += Vector2.Distance(points[pointsToMerge[j]], points[pointsToMerge[j + 1]]);
-                }
-                originalPathLength += Vector2.Distance(points[pointsToMerge[pointsToMerge.Count - 1]], currentPoint);
-                
-                // Calculate new path length with merged point
-                float newPathLength = Vector2.Distance(firstPoint, potentialMergedPoint) + 
-                                      Vector2.Distance(potentialMergedPoint, nextPoint);
-                
-                distanceWithinTolerance = Math.Abs(newPathLength - originalPathLength) <= distanceTolerance;
-            }
-            
-            // If angle is small enough and distance criteria is met, add to merge candidates
-            if (angle <= angleTolerance && distanceWithinTolerance)
-            {
-                pointsToMerge.Add(i);
-            }
-            else
-            {
-                // Angle too sharp or distance too different, can't merge current point
-                // First merge any accumulated points
-                if (pointsToMerge.Count > 0)
-                {
-                    result.Add(AveragePoints(points, pointsToMerge));
-                    pointsToMerge.Clear();
-                }
-                
-                // Add current point
-                result.Add(currentPoint);
-            }
-        }
-        
-        // Handle any remaining points to merge
-        if (pointsToMerge.Count > 0)
-        {
-            result.Add(AveragePoints(points, pointsToMerge));
-        }
-        
-        // Always include the last point
-        result.Add(points[points.Count - 1]);
-        
-        return result;
-    }
-    
-    /// <summary>
-    /// Averages a collection of points to create a merged point
-    /// </summary>
-    static private Vector2 AveragePoints(List<Vector2> points, List<int> indices)
-    {
-        if (indices.Count == 0)
-            throw new ArgumentException("Cannot average empty list of indices");
-            
-        Vector2 sum = Vector2.Zero;
-        foreach (int idx in indices)
-        {
-            sum += points[idx];
-        }
-        
-        return sum / indices.Count;
-    }
-
-    /// <summary>
-    /// Simplifies a set of paths by merging points where the angle change is less than angleTolerance
-    /// and the resulting distance between adjacent points doesn't exceed distanceTolerance.
-    /// Points that exist in multiple paths are preserved.
-    /// </summary>
-    /// <param name="paths">Collection of paths to simplify</param>
-    /// <param name="angleTolerance">Angle tolerance in radians</param>
-    /// <param name="distanceTolerance">Maximum distance tolerance</param>
-    /// <returns>Collection of simplified paths</returns>
-    public static List<Path> SimplifyPaths(List<Path> paths, float angleTolerance, float distanceTolerance)
-    {
-        if (paths == null || paths.Count == 0)
-            return new List<Path>();
-
-        // Find shared points across this path set
-        HashSet<Vector2> sharedPoints = FindSharedPoints(paths);
-        
-        // Simplify the paths
-        return SimplifyPaths(paths, angleTolerance, distanceTolerance, sharedPoints);
-    }
-    
-    /// <summary>
-    /// Finds points that are shared between multiple paths in a single path set
+    /// Finds points that are shared between multiple paths
     /// </summary>
     private static HashSet<Vector2> FindSharedPoints(List<Path> paths)
     {
-        // Dictionary to count occurrences of each point
-        Dictionary<Vector2, int> pointCounts = new Dictionary<Vector2, int>(new Vector2EqualityComparer());
+        Dictionary<Vector2, int> pointCounts = new Dictionary<Vector2, int>();
         
         // Count occurrences of each point
         foreach (var path in paths)
         {
             foreach (var point in path.Points)
             {
-                if (pointCounts.ContainsKey(point))
-                    pointCounts[point]++;
+                if (pointCounts.ContainsKey(point.Position))
+                {
+                    pointCounts[point.Position]++;
+                }
                 else
-                    pointCounts[point] = 1;
+                {
+                    pointCounts[point.Position] = 1;
+                }
             }
         }
         
-        // Find points that appear in multiple paths
-        HashSet<Vector2> sharedPoints = new HashSet<Vector2>(new Vector2EqualityComparer());
-        foreach (var entry in pointCounts)
-        {
-            if (entry.Value > 1)
-                sharedPoints.Add(entry.Key);
-        }
-        
-        return sharedPoints;
-    }
-    
-    /// <summary>
-    /// Custom equality comparer for Vector2 to handle floating-point comparison
-    /// </summary>
-    private class Vector2EqualityComparer : IEqualityComparer<Vector2>
-    {
-        private const float Epsilon = 0.0001f;
-        
-        public bool Equals(Vector2 x, Vector2 y)
-        {
-            return Math.Abs(x.X - y.X) < Epsilon &&
-                   Math.Abs(x.Y - y.Y) < Epsilon;
-        }
-        
-        public int GetHashCode(Vector2 obj)
-        {
-            // Round to reduce floating-point precision issues
-            int xHash = ((int)(obj.X * 10000)).GetHashCode();
-            int yHash = ((int)(obj.Y * 10000)).GetHashCode();
-            
-            return xHash ^ (yHash << 2);
-        }
+        // Return points that appear in more than one path
+        return new HashSet<Vector2>(
+            pointCounts.Where(kvp => kvp.Value > 1)
+                      .Select(kvp => kvp.Key));
     }
 }
-// public static class PathSimplifier
-// {
-//     public class PathPoint
-//     {
-//         public Vector2 Position { get; set; }
-//
-//         public PathPoint(Vector2 position)
-//         {
-//             Position = position;
-//         }
-//     }
-//
-//     public class Path
-//     {
-//         public int PathId { get; set; }
-//         public List<PathPoint> Points { get; set; }
-//
-//         public Path(int pathId, List<PathPoint> points)
-//         {
-//             PathId = pathId;
-//             Points = points;
-//         }
-//     }
-
-
-//
-//     /// <summary>
-//     /// Simplifies a set of line paths by removing points where the angle change is less than angleToleranceRadians
-//     /// and where the resulting gap between points doesn't exceed distanceTolerance.
-//     /// Points that are shared between multiple paths are preserved.
-//     /// </summary>
-//     /// <param name="paths">List of paths, where each path has an ID and a list of points</param>
-//     /// <param name="angleToleranceRadians">Minimum angle change in radians required to keep a point</param>
-//     /// <param name="distanceTolerance">Maximum allowed distance between adjacent points after simplification</param>
-//     /// <returns>List of simplified paths</returns>
-//     public static List<Path> SimplifyPaths(
-//         List<Path> paths, 
-//         float angleToleranceRadians, 
-//         float distanceTolerance)
-//     {
-//         // Find shared points across different paths
-//         HashSet<Vector2> sharedPoints = FindSharedPoints(paths);
-//         
-//         // Create new list for simplified paths
-//         List<Path> simplifiedPaths = new List<Path>();
-//         
-//         // Process each path
-//         foreach (var path in paths)
-//         {
-//             if (path.Points.Count < 3)
-//             {
-//                 // Paths with fewer than 3 points can't be simplified
-//                 simplifiedPaths.Add(new Path(path.PathId, new List<PathPoint>(path.Points)));
-//                 continue;
-//             }
-//             
-//             List<PathPoint> simplifiedPoints = new List<PathPoint>();
-//             simplifiedPoints.Add(path.Points[0]); // Always include the first point
-//             
-//             for (int i = 1; i < path.Points.Count - 1; i++)
-//             {
-//                 Vector2 prevPoint = path.Points[i - 1].Position;
-//                 Vector2 currentPoint = path.Points[i].Position;
-//                 Vector2 nextPoint = path.Points[i + 1].Position;
-//                 
-//                 // Always keep shared points
-//                 if (sharedPoints.Contains(currentPoint))
-//                 {
-//                     simplifiedPoints.Add(path.Points[i]);
-//                     continue;
-//                 }
-//                 
-//                 // Check angle between segments
-//                 Vector2 prevVector = Vector2.Normalize(currentPoint - prevPoint);
-//                 Vector2 nextVector = Vector2.Normalize(nextPoint - currentPoint);
-//                 
-//                 float dotProduct = Vector2.Dot(prevVector, nextVector);
-//                 // Clamp dotProduct to valid range for acos
-//                 dotProduct = Math.Clamp(dotProduct, -1.0f, 1.0f);
-//                 float angle = (float)Math.Acos(dotProduct);
-//                 
-//                 // Check potential distance if this point is removed
-//                 float distanceBetweenAdjacentPoints = Vector2.Distance(prevPoint, nextPoint);
-//                 
-//                 // Keep point if angle is significant or if removing it would create too large a gap
-//                 if (angle > angleToleranceRadians || distanceBetweenAdjacentPoints > distanceTolerance)
-//                 {
-//                     simplifiedPoints.Add(path.Points[i]);
-//                 }
-//             }
-//             
-//             simplifiedPoints.Add(path.Points[path.Points.Count - 1]); // Always include the last point
-//             simplifiedPaths.Add(new Path(path.PathId, simplifiedPoints));
-//         }
-//         
-//         return simplifiedPaths;
-//     }
-//     
-//     /// <summary>
-//     /// Finds points that are shared between multiple paths
-//     /// </summary>
-//     private static HashSet<Vector2> FindSharedPoints(List<Path> paths)
-//     {
-//         Dictionary<Vector2, int> pointCounts = new Dictionary<Vector2, int>();
-//         
-//         // Count occurrences of each point
-//         foreach (var path in paths)
-//         {
-//             foreach (var point in path.Points)
-//             {
-//                 if (pointCounts.ContainsKey(point.Position))
-//                 {
-//                     pointCounts[point.Position]++;
-//                 }
-//                 else
-//                 {
-//                     pointCounts[point.Position] = 1;
-//                 }
-//             }
-//         }
-//         
-//         // Return points that appear in more than one path
-//         return new HashSet<Vector2>(
-//             pointCounts.Where(kvp => kvp.Value > 1)
-//                       .Select(kvp => kvp.Key));
-//     }
-// }
 // public static class CatmullRomSpline
 // {
 //     /// <summary>

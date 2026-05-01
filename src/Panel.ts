@@ -2,7 +2,6 @@
 let L = require('leaflet');
 let Itinerary = require('./Itinerary.ts');
 let $ = require('jquery');
-import MapIcons from './MapIcons'
 
 class custom_time_formatter extends L.Routing.Formatter {
     constructor(FHR) {
@@ -24,11 +23,11 @@ class custom_time_formatter extends L.Routing.Formatter {
         var t7 = L.Routing.Formatter.prototype.formatTime.call(this, htd_time);
         var a = "<div class=\'detailed-routeinfo\'><table class=\"vehicle-speed-panel\">";
         a = a.concat("<tr>");
-        a = a.concat("<td style=\"text-align: right\"><img src=\'" + MapIcons.data_url('Truck.webp') + "\' class='fast-truck' /></td>");
+        a = a.concat("<td style=\"text-align: right\"><img src=\'Truck.webp\' class='fast-truck' /></td>");
         a = a.concat("<td style=\"text-align: left\">").concat(t2).concat("</td>");
-        a = a.concat("<td style=\"text-align: right\"><img src=\'" + MapIcons.data_url('Flatbed.webp') + "\' class='fast-truck' /></td>");
+        a = a.concat("<td style=\"text-align: right\"><img src=\'Flatbed.webp\' class='fast-truck' /></td>");
         a = a.concat("<td style=\"text-align: left\">").concat(t6).concat("</td>");
-        a = a.concat("<td style=\"text-align: right\"><img src=\'" + MapIcons.data_url('HTD.webp') + "\' class='slowest-truck' /></td>");
+        a = a.concat("<td style=\"text-align: right\"><img src=\'HTD.webp\' class='slowest-truck' /></td>");
         a = a.concat("<td style=\"text-align: left\">").concat(t7).concat("</td>");
         a = a.concat("</tr>");
         a = a.concat("</table></div>");
@@ -509,22 +508,8 @@ let panelFn = (API, Router, Geocoder) => {
         plan: new L.Routing.Plan([], {
             maxGeocoderTolerance: 100000000,
             geocoder: Geocoder,
-            reverseWaypoints: true,
-            createMarker: function (i, waypoint, n) {
-                // Use different icons based on position in the route
-                return L.marker(waypoint.latLng, {
-                    icon: new L.Icon({  // Note the "new" keyword
-                        iconUrl: MapIcons.data_url('marker-icon.png'),
-                        iconRetinaUrl: MapIcons.data_url('marker-icon-2x.png'),
-                        iconSize: [25, 41],
-                        iconAnchor: [12, 41],
-                        popupAnchor: [1, -34]
-                    }),
-                    draggable: true
-                });
-            }
+            reverseWaypoints: true
         }),
-
         routeLine: function (route, options) {
             if (route.name == "Shortest Route")
                 return L.Routing.line(route, {

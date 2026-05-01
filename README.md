@@ -1,5 +1,4 @@
-# LogiWaze
-by Derp
+# foxhole-router
 
 ## Demonstrations
 LogiWaze is a leaflet-based [Foxhole](https://www.foxholegame.com/) logistics router, available at [https://www.logiwaze.com/]
@@ -10,18 +9,12 @@ Alternatively you can experience LogiWaze by opening the index.html from a downl
 
 The original prototyping for this idea was done by Hayden of: [https://foxholestats.com/](https://foxholestats.com/)
 
+## Discussion (via FoxholeStats.com discord)
+[https://discord.gg/dnegnws](https://discord.gg/dnegnws)
+
 ## Building
 
-Pre-requisites: *nodejs, npm*
-
-* download or clone the repository
-```
-git clone https://github.com/NoUDerp/LogiWaze
-```
-
-```
-cd LogiWaze
-```
+Pre-requisites: *nodejs, webpack, spatialite, gdal-bin (gdal tools, specifically ogr2ogr)*
 
 * install the required packages
 ```
@@ -30,10 +23,6 @@ npm install
 
 * build the project
 ```
-# full map build only needs to be run when the map image has changed
-npm run map
-
-# bundle the project into a portable index.html using Parcel 2 
 npm run build
 ```
 ### Updating towns
@@ -43,10 +32,9 @@ Execute the town halls script when all regions are available (if regions are off
 ./export_major_locations > towns.json
 ```
 
-### Building the map
-The map can be updated by placing the new map hex images into the MapHexes/ directory and running the map build. These images are taken directly from the game assets or directly from a map mod assets (as .tga) and converted to .png
+Rebuild the project
 ```
-npm run map
+npm run build
 ```
 
 ### Editing roads
@@ -73,4 +61,14 @@ Roads can be edited by opening the qgis project file included in the repository.
 
 - Do not create a closed loop road in a single path. It is ok to make a loop if it is broken into multiple paths, but a single path closed road will not be able to be processed in the routing (it creates an endless loop)
 
-- There are 3 road tiers. After adding each road segment you will be prompted for it's road tier by QGIS. Colors are used to represent road quality. There are 3 tiers of road. When creating paths, fill in the Region value matching the hex ID/name, and fill in a road tier between 1 and 3. There is a fourth tier *0* used for off-road bridges (intended to mark the bridge but indicate it was not a normal speed). This fourth tier is corrected into one of the regular 3 during building.
+- There are 3 road tiers. After adding each road segment you will be prompted for it's road tier by QGIS. Colors are used to represent road quality. Green (or cyan) represents the highest tier road, this includes gravel roads, concrete, and paved roads, and stone/paved bridges. Yellow (blue) represents dirt roads, and Orange/Red (purple) represents mud roads, and is also used for wooden bridges. Cyan/blue/purple were used as analog colors in the snow regions, but using Green/Yellow/Red is preferrable. 
+
+### Updating the map
+
+The map tiles can be replaced by running the docker container (on x64 architecture) to download the latest maps, stitch them, and tile them (in both png and webp format). This docker command can be executed as:
+
+```
+sudo docker run --rm nouderp/foxhole-leaflet-maker > map.zip
+```
+
+Extract the tiles folder from the archive and replace the contents in the *Tiles* directory and rebuild the project

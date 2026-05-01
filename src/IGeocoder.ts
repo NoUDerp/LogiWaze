@@ -1,7 +1,7 @@
 import L from 'leaflet'
 import API from "./API";
 
-const towns = require('../config/towns.json');
+const towns = require('../towns.json');
 
 export default class FoxholeGeocoder {
     public API: API
