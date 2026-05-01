@@ -1298,7 +1298,13 @@ module.exports.Create = async function (mymap, API) {
             }
 
             let Path = null;
-            let pathfinder = currentOwnership === "COLONIALS" ? FoxholeRouter.colonialPathFinder : FoxholeRouter.wardenPathFinder;
+            // Use the unrestricted pathfinder so distance ranking works even
+            // when the user is in opposite-faction territory (e.g. Colonial
+            // player searching for a Warden aircraft factory). The faction
+            // filter above already restricts WHICH structures are eligible;
+            // the route used to measure distance does not need to be safe
+            // for the requested faction.
+            let pathfinder = FoxholeRouter.pathFinder;
             let bestStructure = null;
 
             if (pathfinder != null && waypoints.length > 0) {
