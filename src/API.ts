@@ -111,9 +111,32 @@ export default class API {
         return kriging.predict(x - 128, y + 128, this.variogram)
     }
 
-    public townHallIcons: Array<number> = [35, 5, 6, 7, 8, 9, 10, 45, 46, 47, 29, 17, 34, 51, 39, 12, 52, 33, 18, 19, 56, 57, 58, 59, 60]
+    // Foxhole iconTypes routed to mapControl (vs resources). Anything not in
+    // this list falls through to `resources` in update(). See clapfoot/warapi
+    // for the authoritative iconType reference.
+    public townHallIcons: Array<number> = [
+        35,                              // Garrison Station (Safehouse)
+        5, 56, 6, 57, 7, 58,             // Town Bases T1/T2/T3
+        8,                               // Forward Base 1
+        45,                              // Relic Base 1 (46/47 retired in U52)
+        27, 29,                          // Keep, Fort
+        17, 34, 51,                      // Refinery, Factory, Mass Production Factory
+        39,                              // Construction Yard
+        12,                              // Vehicle Factory
+        52, 18,                          // Seaport, Shipyard
+        19,                              // Tech Center
+        28, 30, 37,                      // Observation Tower, Troop Ship, Rocket Site
+        33,                              // Storage Facility
+        59, 60,                          // Storm Cannon, Intel Center
+    ]
 
-    public krigingControlPointIcons: Array<number> = [/* safe house 35, */5, 6, 7, 8, 9, 10, 45, 46, 47, 29, 56, 57, 58, 59, 60]
+    public krigingControlPointIcons: Array<number> = [
+        5, 56, 6, 57, 7, 58,             // Town Bases T1/T2/T3
+        8,                               // Forward Base 1
+        45,                              // Relic Base 1
+        27, 29,                          // Keep, Fort
+        59, 60,                          // Storm Cannon, Intel Center
+    ]
 
     public war: any
 

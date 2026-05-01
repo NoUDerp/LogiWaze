@@ -215,6 +215,8 @@ module.exports.Create = async function (mymap, API) {
             icon = 'MapIconStaticBase3';
         else if (ic.icon == 27)
             icon = 'MapIconKeep'
+        else if (ic.icon == 29)
+            icon = 'MapIconFort';
         else if (ic.icon >= 45 && ic.icon <= 47)
             icon = 'MapIconRelicBase';
         else if (ic.icon == 17)
@@ -229,8 +231,20 @@ module.exports.Create = async function (mymap, API) {
             icon = 'MapIconConstructionYard';
         else if (ic.icon == 52)
             icon = 'MapIconSeaport';
+        else if (ic.icon == 18)
+            icon = 'MapIconShipyard';
+        else if (ic.icon == 19)
+            icon = 'MapIconTechCenter';
         else if (ic.icon == 12)
             icon = 'MapIconVehicle';
+        else if (ic.icon == 8)
+            icon = 'MapIconForwardBase1';
+        else if (ic.icon == 28)
+            icon = 'MapIconObservationTower';
+        else if (ic.icon == 30)
+            icon = 'MapIconTroopShip';
+        else if (ic.icon == 37)
+            icon = 'MapIconRocketSite';
         else
             return null;
 
@@ -254,6 +268,8 @@ module.exports.Create = async function (mymap, API) {
             return 'MapIconSalvage.webp';
         if (ic.icon == 21)
             return 'MapIconComponents.webp';
+        if (ic.icon == 22)
+            return 'MapIconFuel.webp';
         if (ic.icon == 23)
             return 'MapIconSulfur.webp';
         if (ic.icon == 32)
