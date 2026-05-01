@@ -115,7 +115,7 @@ export default class API {
     // this list falls through to `resources` in update(). See clapfoot/warapi
     // for the authoritative iconType reference.
     public townHallIcons: Array<number> = [
-        35,                              // Garrison Station (Safehouse)
+        35,                              // Garrison Station
         5, 56, 6, 57, 7, 58,             // Town Bases T1/T2/T3
         8,                               // Forward Base 1
         45,                              // Relic Base 1 (46/47 retired in U52)

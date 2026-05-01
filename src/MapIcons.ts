@@ -99,9 +99,9 @@ import MapIconRocketSiteWithRocketWarden_webp from 'data-url:../MapIcons/MapIcon
 import MapIconRocketTarget_webp from 'data-url:../MapIcons/MapIconRocketTarget.webp';
 import MapIconRocketTargetColonial_webp from 'data-url:../MapIcons/MapIconRocketTargetColonial.webp';
 import MapIconRocketTargetWarden_webp from 'data-url:../MapIcons/MapIconRocketTargetWarden.webp';
-import MapIconSafehouse_webp from 'data-url:../MapIcons/MapIconSafehouse.webp';
-import MapIconSafehouseColonial_webp from 'data-url:../MapIcons/MapIconSafehouseColonial.webp';
-import MapIconSafehouseWarden_webp from 'data-url:../MapIcons/MapIconSafehouseWarden.webp';
+import MapIconGarrisonStation_webp from 'data-url:../MapIcons/MapIconGarrisonStation.webp';
+import MapIconGarrisonStationColonial_webp from 'data-url:../MapIcons/MapIconGarrisonStationColonial.webp';
+import MapIconGarrisonStationWarden_webp from 'data-url:../MapIcons/MapIconGarrisonStationWarden.webp';
 import MapIconSalvage_webp from 'data-url:../MapIcons/MapIconSalvage.webp';
 import MapIconSalvageColonial_webp from 'data-url:../MapIcons/MapIconSalvageColonial.webp';
 import MapIconSalvageMine_webp from 'data-url:../MapIcons/MapIconSalvageMine.webp';
@@ -278,9 +278,9 @@ export default new Map<string, Promise<ArrayBuffer>>(
         ['MapIconRocketTarget.webp', fetch(MapIconRocketTarget_webp).then(r => r.arrayBuffer())],
         ['MapIconRocketTargetColonial.webp', fetch(MapIconRocketTargetColonial_webp).then(r => r.arrayBuffer())],
         ['MapIconRocketTargetWarden.webp', fetch(MapIconRocketTargetWarden_webp).then(r => r.arrayBuffer())],
-        ['MapIconSafehouse.webp', fetch(MapIconSafehouse_webp).then(r => r.arrayBuffer())],
-        ['MapIconSafehouseColonial.webp', fetch(MapIconSafehouseColonial_webp).then(r => r.arrayBuffer())],
-        ['MapIconSafehouseWarden.webp', fetch(MapIconSafehouseWarden_webp).then(r => r.arrayBuffer())],
+        ['MapIconGarrisonStation.webp', fetch(MapIconGarrisonStation_webp).then(r => r.arrayBuffer())],
+        ['MapIconGarrisonStationColonial.webp', fetch(MapIconGarrisonStationColonial_webp).then(r => r.arrayBuffer())],
+        ['MapIconGarrisonStationWarden.webp', fetch(MapIconGarrisonStationWarden_webp).then(r => r.arrayBuffer())],
         ['MapIconSalvage.webp', fetch(MapIconSalvage_webp).then(r => r.arrayBuffer())],
         ['MapIconSalvageColonial.webp', fetch(MapIconSalvageColonial_webp).then(r => r.arrayBuffer())],
         ['MapIconSalvageMine.webp', fetch(MapIconSalvageMine_webp).then(r => r.arrayBuffer())],

@@ -209,7 +209,7 @@ module.exports.Create = async function (mymap, API) {
         if (ic.icon == 56 || ic.icon == 5)
             icon = 'MapIconStaticBase1';
         else if (ic.icon == 35)
-            icon = "MapIconSafehouse";
+            icon = "MapIconGarrisonStation";
         else if (ic.icon == 57 || ic.icon == 6)
             icon = 'MapIconStaticBase2';
         else if (ic.icon == 58 || ic.icon == 7)
@@ -610,7 +610,7 @@ module.exports.Create = async function (mymap, API) {
         },
 
         hideTownHalls: function () {
-            ControlLayer.disableIcons(['MapIconSafehouse.webp', 'MapIconSafehouseWarden.webp', 'MapIconSafehouseColonial.webp', 'MapIconStaticBase1.webp', 'MapIconStaticBase2.webp', 'MapIconStaticBase3.webp', 'MapIconKeep.webp', 'MapIconRelicBase.webp',
+            ControlLayer.disableIcons(['MapIconGarrisonStation.webp', 'MapIconGarrisonStationWarden.webp', 'MapIconGarrisonStationColonial.webp', 'MapIconStaticBase1.webp', 'MapIconStaticBase2.webp', 'MapIconStaticBase3.webp', 'MapIconKeep.webp', 'MapIconRelicBase.webp',
                 'MapIconStaticBase1Warden.webp', 'MapIconStaticBase2Warden.webp', 'MapIconStaticBase3Warden.webp', 'MapIconKeepWarden.webp', 'MapIconRelicBaseWarden.webp',
                 'MapIconStaticBase1Colonial.webp', 'MapIconStaticBase2Colonial.webp', 'MapIconStaticBase3Colonial.webp', 'MapIconKeepColonial.webp', 'MapIconRelicBaseColonial.webp'
             ]);
@@ -628,7 +628,7 @@ module.exports.Create = async function (mymap, API) {
         },
 
         showTownHalls: function () {
-            ControlLayer.enableIcons(['MapIconSafehouse.webp', 'MapIconSafehouseWarden.webp', 'MapIconSafehouseColonial.webp', 'MapIconStaticBase1.webp', 'MapIconStaticBase2.webp', 'MapIconStaticBase3.webp', 'MapIconKeep.webp', 'MapIconRelicBase.webp',
+            ControlLayer.enableIcons(['MapIconGarrisonStation.webp', 'MapIconGarrisonStationWarden.webp', 'MapIconGarrisonStationColonial.webp', 'MapIconStaticBase1.webp', 'MapIconStaticBase2.webp', 'MapIconStaticBase3.webp', 'MapIconKeep.webp', 'MapIconRelicBase.webp',
                 'MapIconStaticBase1Warden.webp', 'MapIconStaticBase2Warden.webp', 'MapIconStaticBase3Warden.webp', 'MapIconKeepWarden.webp', 'MapIconRelicBaseWarden.webp',
                 'MapIconStaticBase1Colonial.webp', 'MapIconStaticBase2Colonial.webp', 'MapIconStaticBase3Colonial.webp', 'MapIconKeepColonial.webp', 'MapIconRelicBaseColonial.webp'
             ]);
