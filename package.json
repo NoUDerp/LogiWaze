@@ -9,7 +9,7 @@
     "clean": "rimraf .parcel-cache dist",
     "map": "rimraf Tiles && node scripts/roads.js && dotnet run --project RoadSimplifier 10 2 < Roads.json 2> SimpleRoads.json && node scripts/export_roads_svg.js > Roads.svg && dotnet run --project MapStitcher MapStitcher/map.xml map.png && node scripts/export_roads_overlay.js Roads.svg map.png composite.png && dotnet run --project Tiler -c Release -a x64 -input composite.png -zoom 7 -quality 70 -filename \"Tiles/{z}_{x}_{y}.webp\"",
     "assets": "node scripts/copy-assets.mjs",
-    "build": "parcel build && node scripts/strip-font-hashes.mjs && node scripts/deploy-to-root.mjs",
+    "build": "parcel build && node scripts/deploy-to-root.mjs",
     "debug": "parcel"
   },
   "type": "module",
