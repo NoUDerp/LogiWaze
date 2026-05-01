@@ -1724,6 +1724,7 @@
                 //'<img src="ShortestRoute.webp" class="layer-icon">Uncontrolled Roads': Router.NeutralRoads,
                 '<img src="MapIcons/MapIconManufacturing.webp" class="layer-icon">Refineries': Router.Refineries,
                 '<img src="MapIcons/MapIconFactory.webp" class="layer-icon">Factories': Router.Factories,
+                '<img src="MapIcons/MapIconAircraftFactory.webp" class="layer-icon">Aircraft Factories': Router.AircraftFactories,
                 '<img src="MapIcons/MapIconStorageFacility.webp" class="layer-icon">Storage': Router.Storage,
                 '<img src="MapIcons/MapIconSalvage.webp" class="layer-icon">Salvage': Router.Salvage,
                 '<img src="MapIcons/MapIconComponents.webp" class="layer-icon">Components': Router.Components,
@@ -2010,7 +2011,8 @@
                                 cgarageBtn = createButton('Find garage', container, 'MapIcons/MapIconVehicleColonial.webp'),
                                 wgarageBtn = createButton('Find garage', container, 'MapIcons/MapIconVehicleWarden.webp'),
                                 refineryBtn = createButton('Find refinery', container, 'MapIcons/MapIconManufacturing.webp'),
-                                factoryBtn = createButton('Find factory', container, 'MapIcons/MapIconFactory.webp');
+                                factoryBtn = createButton('Find factory', container, 'MapIcons/MapIconFactory.webp'),
+                                aircraftFactoryBtn = createButton('Find aircraft factory', container, 'MapIcons/MapIconAircraftFactory.webp');
 
                             L.DomEvent.on(startBtn, 'click', function () {
                                 Router.Control.spliceWaypoints(0, 1, e.latlng);
@@ -2054,6 +2056,15 @@
                                 if (bestFactory != null) {
                                     Router.Control.spliceWaypoints(0, 1, e.latlng);
                                     Router.Control.spliceWaypoints(1, Router.Control.getWaypoints().length - 1, bestFactory);
+                                }
+                                mymap.closePopup();
+                            });
+
+                            L.DomEvent.on(aircraftFactoryBtn, 'click', function () {
+                                var bestAircraftFactory = Router.findStructure(e.latlng, null, Router.AircraftFactoriesList);
+                                if (bestAircraftFactory != null) {
+                                    Router.Control.spliceWaypoints(0, 1, e.latlng);
+                                    Router.Control.spliceWaypoints(1, Router.Control.getWaypoints().length - 1, bestAircraftFactory);
                                 }
                                 mymap.closePopup();
                             });
@@ -2199,6 +2210,9 @@
                             case "Factories":
                                 counter |= 1 << 8;
                                 break;
+                            case "Aircraft Factories":
+                                counter |= 1 << 18;
+                                break;
                             case "Storage":
                                 counter |= 1 << 9;
                                 break;
@@ -2293,6 +2307,9 @@
                     case "Factories":
                         Router.showFactories();
                         break;
+                    case "Aircraft Factories":
+                        Router.showAircraftFactories();
+                        break;
                     case "Fuel":
                         Router.showFuel();
                         break;
@@ -2342,6 +2359,9 @@
                         break;
                     case "Factories":
                         Router.hideFactories();
+                        break;
+                    case "Aircraft Factories":
+                        Router.hideAircraftFactories();
                         break;
                     case "Fuel":
                         Router.hideFuel();

@@ -2,6 +2,21 @@
 
 import Control_webp from 'data-url:../MapIcons/Control.webp';
 import Labels_webp from 'data-url:../MapIcons/Labels.webp';
+import MapIconAircraftDepot_webp from 'data-url:../MapIcons/MapIconAircraftDepot.webp';
+import MapIconAircraftDepotColonial_webp from 'data-url:../MapIcons/MapIconAircraftDepotColonial.webp';
+import MapIconAircraftDepotWarden_webp from 'data-url:../MapIcons/MapIconAircraftDepotWarden.webp';
+import MapIconAircraftFactory_webp from 'data-url:../MapIcons/MapIconAircraftFactory.webp';
+import MapIconAircraftFactoryColonial_webp from 'data-url:../MapIcons/MapIconAircraftFactoryColonial.webp';
+import MapIconAircraftFactoryWarden_webp from 'data-url:../MapIcons/MapIconAircraftFactoryWarden.webp';
+import MapIconAircraftRadar_webp from 'data-url:../MapIcons/MapIconAircraftRadar.webp';
+import MapIconAircraftRadarColonial_webp from 'data-url:../MapIcons/MapIconAircraftRadarColonial.webp';
+import MapIconAircraftRadarWarden_webp from 'data-url:../MapIcons/MapIconAircraftRadarWarden.webp';
+import MapIconAircraftRunwayT1_webp from 'data-url:../MapIcons/MapIconAircraftRunwayT1.webp';
+import MapIconAircraftRunwayT1Colonial_webp from 'data-url:../MapIcons/MapIconAircraftRunwayT1Colonial.webp';
+import MapIconAircraftRunwayT1Warden_webp from 'data-url:../MapIcons/MapIconAircraftRunwayT1Warden.webp';
+import MapIconAircraftRunwayT2_webp from 'data-url:../MapIcons/MapIconAircraftRunwayT2.webp';
+import MapIconAircraftRunwayT2Colonial_webp from 'data-url:../MapIcons/MapIconAircraftRunwayT2Colonial.webp';
+import MapIconAircraftRunwayT2Warden_webp from 'data-url:../MapIcons/MapIconAircraftRunwayT2Warden.webp';
 import MapIconAmmoFactory_webp from 'data-url:../MapIcons/MapIconAmmoFactory.webp';
 import MapIconAmmoFactoryColonial_webp from 'data-url:../MapIcons/MapIconAmmoFactoryColonial.webp';
 import MapIconAmmoFactoryWarden_webp from 'data-url:../MapIcons/MapIconAmmoFactoryWarden.webp';
@@ -138,6 +153,21 @@ export default new Map<string, Promise<ArrayBuffer>>(
         ['Renner.ttf', fetch(renner).then(r => r.arrayBuffer())],
         ['Control.webp', fetch(Control_webp).then(r => r.arrayBuffer())],
         ['Labels.webp', fetch(Labels_webp).then(r => r.arrayBuffer())],
+        ['MapIconAircraftDepot.webp', fetch(MapIconAircraftDepot_webp).then(r => r.arrayBuffer())],
+        ['MapIconAircraftDepotColonial.webp', fetch(MapIconAircraftDepotColonial_webp).then(r => r.arrayBuffer())],
+        ['MapIconAircraftDepotWarden.webp', fetch(MapIconAircraftDepotWarden_webp).then(r => r.arrayBuffer())],
+        ['MapIconAircraftFactory.webp', fetch(MapIconAircraftFactory_webp).then(r => r.arrayBuffer())],
+        ['MapIconAircraftFactoryColonial.webp', fetch(MapIconAircraftFactoryColonial_webp).then(r => r.arrayBuffer())],
+        ['MapIconAircraftFactoryWarden.webp', fetch(MapIconAircraftFactoryWarden_webp).then(r => r.arrayBuffer())],
+        ['MapIconAircraftRadar.webp', fetch(MapIconAircraftRadar_webp).then(r => r.arrayBuffer())],
+        ['MapIconAircraftRadarColonial.webp', fetch(MapIconAircraftRadarColonial_webp).then(r => r.arrayBuffer())],
+        ['MapIconAircraftRadarWarden.webp', fetch(MapIconAircraftRadarWarden_webp).then(r => r.arrayBuffer())],
+        ['MapIconAircraftRunwayT1.webp', fetch(MapIconAircraftRunwayT1_webp).then(r => r.arrayBuffer())],
+        ['MapIconAircraftRunwayT1Colonial.webp', fetch(MapIconAircraftRunwayT1Colonial_webp).then(r => r.arrayBuffer())],
+        ['MapIconAircraftRunwayT1Warden.webp', fetch(MapIconAircraftRunwayT1Warden_webp).then(r => r.arrayBuffer())],
+        ['MapIconAircraftRunwayT2.webp', fetch(MapIconAircraftRunwayT2_webp).then(r => r.arrayBuffer())],
+        ['MapIconAircraftRunwayT2Colonial.webp', fetch(MapIconAircraftRunwayT2Colonial_webp).then(r => r.arrayBuffer())],
+        ['MapIconAircraftRunwayT2Warden.webp', fetch(MapIconAircraftRunwayT2Warden_webp).then(r => r.arrayBuffer())],
         ['MapIconAmmoFactory.webp', fetch(MapIconAmmoFactory_webp).then(r => r.arrayBuffer())],
         ['MapIconAmmoFactoryColonial.webp', fetch(MapIconAmmoFactoryColonial_webp).then(r => r.arrayBuffer())],
         ['MapIconAmmoFactoryWarden.webp', fetch(MapIconAmmoFactoryWarden_webp).then(r => r.arrayBuffer())],

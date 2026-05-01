@@ -33,6 +33,7 @@ module.exports.Create = async function (mymap, API) {
     const Garages = [];
     const Refineries = [];
     const Factories = [];
+    const AircraftFactories = [];
 
     var keys = Object.keys(JSONRoads._layers);
 
@@ -245,6 +246,16 @@ module.exports.Create = async function (mymap, API) {
             icon = 'MapIconTroopShip';
         else if (ic.icon == 37)
             icon = 'MapIconRocketSite';
+        else if (ic.icon == 88)
+            icon = 'MapIconAircraftDepot';
+        else if (ic.icon == 89)
+            icon = 'MapIconAircraftFactory';
+        else if (ic.icon == 90)
+            icon = 'MapIconAircraftRadar';
+        else if (ic.icon == 91)
+            icon = 'MapIconAircraftRunwayT1';
+        else if (ic.icon == 92)
+            icon = 'MapIconAircraftRunwayT2';
         else
             return null;
 
@@ -332,6 +343,8 @@ module.exports.Create = async function (mymap, API) {
                 Refineries.push({lng: th.x + 128, lat: th.y - 128, nuked: th.nuked, ownership: th.control});
             if (data.icon == 34 || data.icon == 51) // factory or MPF
                 Factories.push({lng: th.x + 128, lat: th.y - 128, nuked: th.nuked, ownership: th.control});
+            if (data.icon == 89) // aircraft factory
+                AircraftFactories.push({lng: th.x + 128, lat: th.y - 128, nuked: th.nuked, ownership: th.control});
             ControlLayer.addIcon(icon, th.x, th.y, false, 0, 9);
         }
     }
@@ -483,6 +496,7 @@ module.exports.Create = async function (mymap, API) {
         RefineriesList: Refineries,
         Garages: Garages,
         FactoriesList: Factories,
+        AircraftFactoriesList: AircraftFactories,
 
         // virtual layers
         BoringFont: L.layerGroup().addTo(mymap),
@@ -491,6 +505,7 @@ module.exports.Create = async function (mymap, API) {
         MapControl: L.layerGroup().addTo(mymap),
         Labels: L.layerGroup().addTo(mymap),
         Factories: L.layerGroup().addTo(mymap),
+        AircraftFactories: L.layerGroup().addTo(mymap),
         Refineries: L.layerGroup().addTo(mymap),
         Storage: L.layerGroup().addTo(mymap),
         //WardenRoads: L.layerGroup().addTo(mymap),
@@ -739,6 +754,16 @@ module.exports.Create = async function (mymap, API) {
 
         hideFactories: function () {
             ControlLayer.disableIcons(['MapIconFactory.webp', 'MapIconMassProductionFactory.webp', 'MapIconConstructionYard.webp', 'MapIconFactoryWarden.webp', 'MapIconMassProductionFactoryWarden.webp', 'MapIconConstructionYardWarden.webp', 'MapIconFactoryColonial.webp', 'MapIconMassProductionFactoryColonial.webp', 'MapIconConstructionYardColonial.webp', 'MapIconVehicle.webp', 'MapIconVehicleWarden.webp', 'MapIconVehicleColonial.webp']);
+            ControlLayer.redraw();
+        },
+
+        showAircraftFactories: function () {
+            ControlLayer.enableIcons(['MapIconAircraftDepot.webp', 'MapIconAircraftDepotWarden.webp', 'MapIconAircraftDepotColonial.webp', 'MapIconAircraftFactory.webp', 'MapIconAircraftFactoryWarden.webp', 'MapIconAircraftFactoryColonial.webp', 'MapIconAircraftRadar.webp', 'MapIconAircraftRadarWarden.webp', 'MapIconAircraftRadarColonial.webp', 'MapIconAircraftRunwayT1.webp', 'MapIconAircraftRunwayT1Warden.webp', 'MapIconAircraftRunwayT1Colonial.webp', 'MapIconAircraftRunwayT2.webp', 'MapIconAircraftRunwayT2Warden.webp', 'MapIconAircraftRunwayT2Colonial.webp']);
+            ControlLayer.redraw();
+        },
+
+        hideAircraftFactories: function () {
+            ControlLayer.disableIcons(['MapIconAircraftDepot.webp', 'MapIconAircraftDepotWarden.webp', 'MapIconAircraftDepotColonial.webp', 'MapIconAircraftFactory.webp', 'MapIconAircraftFactoryWarden.webp', 'MapIconAircraftFactoryColonial.webp', 'MapIconAircraftRadar.webp', 'MapIconAircraftRadarWarden.webp', 'MapIconAircraftRadarColonial.webp', 'MapIconAircraftRunwayT1.webp', 'MapIconAircraftRunwayT1Warden.webp', 'MapIconAircraftRunwayT1Colonial.webp', 'MapIconAircraftRunwayT2.webp', 'MapIconAircraftRunwayT2Warden.webp', 'MapIconAircraftRunwayT2Colonial.webp']);
             ControlLayer.redraw();
         },
 
