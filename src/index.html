@@ -1609,21 +1609,19 @@
             //fadeAnimation: false
         });
 
-    // Background.webp is the in-game WorldMapBG (3840x2160). The hex
-    // grid inside it fills the full vertical extent and is centered
-    // horizontally with ocean padding on the sides. To align the
-    // hex-grid in the image with the hex-grid rendered by the Tile
-    // pyramid, we scale the overlay so the image's hex grid maps to
-    // exactly the same world span as the Tiles do (256 units across
-    // the 10-hex world width), then center it on the map center.
-    const BG_IMG_W = 3840, BG_IMG_H = 2160;            // Background.webp dimensions
-    const HEX_GRID_ASPECT = 20480 / 12432;             // MapStitcher composite aspect (1.647)
-    const HEX_GRID_IMG_H = BG_IMG_H;                   // hex grid fills the full image height
-    const HEX_GRID_IMG_W = HEX_GRID_IMG_H * HEX_GRID_ASPECT;
-    const WORLD_PER_PX = 256 / HEX_GRID_IMG_W;         // 256 world units span the hex grid
-    const BG_WORLD_W = BG_IMG_W * WORLD_PER_PX;        // ~276
-    const BG_WORLD_H = BG_IMG_H * WORLD_PER_PX;        // ~155
-    const MAP_CX = 128, MAP_CY = -128;                 // map center in Leaflet (matches Tile coverage)
+    // Background.webp is the in-game WorldMapBG (3840x2160). The playable
+    // hex grid sits inside it as a smaller cluster — most of the image
+    // is unplayable surrounding territory and ocean. From the Foxhole
+    // wiki Foxhole_World_Map_Full reference, the hex grid bounding box
+    // is ~57% × 64% of the image (centered). To align the in-image hex
+    // grid with the rendered Tiles (which span 256 world units across
+    // the playable hex grid width), we scale the overlay accordingly.
+    const BG_IMG_W = 3840, BG_IMG_H = 2160;
+    const HEX_GRID_FRACTION_W = 0.57;                  // hex grid takes this fraction of image width
+    const WORLD_PER_PX = 256 / (HEX_GRID_FRACTION_W * BG_IMG_W);
+    const BG_WORLD_W = BG_IMG_W * WORLD_PER_PX;        // ~449
+    const BG_WORLD_H = BG_IMG_H * WORLD_PER_PX;        // ~253
+    const MAP_CX = 128, MAP_CY = -128;                 // map center in Leaflet
     L.imageOverlay("Background.webp", [
         [MAP_CY + BG_WORLD_H * .5, MAP_CX - BG_WORLD_W * .5],
         [MAP_CY - BG_WORLD_H * .5, MAP_CX + BG_WORLD_W * .5]
